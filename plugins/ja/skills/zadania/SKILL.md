@@ -87,7 +87,7 @@ Puste Obszar znaczy w starych wierszach Dom, więc zadanie prywatne z pustym Obs
 
 | Pole (puste) | Uzupełnij |
 |---|---|
-| Obszar | **Dom** – gdy Kategoria jest budowlana (Media, Kredyt, Czyszczenie działki, Stan zero, SSO, Ogrodzenie, Teren, Przygotowanie do budowy, Wiata kontener, Projektowanie, Zakup działki, Ogród) albo wypełniona jest relacja Harmonogram lub Dziennik budowy. **Prywatne** – Kategoria Zdrowie lub Nauka. Inaczej z nazwy i opisu, tylko gdy jednoznaczne (dziecko, praca, zwykła sprawa prywatna); wątpliwość → „❓” |
+| Obszar | **Dom** – gdy Kategoria jest budowlana (Media, Kredyt, Czyszczenie działki, Stan zero, SSO, Ogrodzenie, Teren, Przygotowanie do budowy, Wiata kontener, Projektowanie, Zakup działki, Ogród). **Prywatne** – Kategoria Zdrowie lub Nauka. Inaczej z nazwy i opisu, tylko gdy jednoznaczne (dziecko, praca, zwykła sprawa prywatna); wątpliwość → „❓” |
 | Kto | Ja – chyba że Status WAITING albo nazwa lub opis wskazuje kogoś innego (wtedy „❓”) |
 | Priority | Medium |
 | Kategoria | Obszar inny niż Dom: z nazwy (Zakup, Zdrowie, Nauka), niejasne → Inne. Obszar Dom zostaw (kategorię nadają `notatka` i `harmonogram`) |

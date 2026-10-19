@@ -54,6 +54,9 @@ Budowa i sprawy osobiste mają **osobne przeglądy**, żeby intensywny dzień na
 budowa → „📆 Przeglądy dzienne – budowa” na stronie DOM (pisze skill `budowa`, sekcja „Wieczorem”); reszta → „📆 Przeglądy
 dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z tego dnia.
 
+**Kolejność wykonania:** kroki 1–2, potem **5** (luki w zadaniach), dopiero potem 3, 4 i 6–10. Krok 5 idzie przed budową, bo
+zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiłoby do przeglądu budowy.
+
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
 2. **Pomysły na rozwój** – `rozwoj-harnessu`, sekcja C: Status Nowy lub pusty → analiza (max 3, najstarsze pierwsze);
    „Pytania do mnie” z odpowiedzią → analizuj dalej. Niczego nie wdrażaj.
@@ -70,8 +73,9 @@ dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z
    stanie bieżącym:
    - zamknięte: Status DONE albo ARCHIVED (osobne liczby); w toku / czeka: IN PROGRESS, WAITING, BLOCKED, ON HOLD;
      dodane lub zmienione: pozostałe (TO DO, PLANNED, SOMEDAY);
-   - wiersze ruszone dziś przez procedury (ślad „→ TASKS” w dzisiejszym bloku „Przetworzone”, krok 4) policz osobno jako
-     „z Dziennika” – ręczne zmiany inwestora nie mają się mieszać z automatycznymi.
+   - wiersze ruszone dziś przez procedury (link do wiersza w śladzie „→ <gdzie>: <link>” w dzisiejszym bloku „Przetworzone”;
+     porównaj z odczytanym widokiem) policz osobno jako „z Dziennika” – ręczne zmiany inwestora nie mają się mieszać
+     z automatycznymi.
 
    **Uzupełnij luki** w tych wierszach według `zadania`, sekcja D (tylko wskazane pola; Status i When nie zmieniaj; wątpliwości
    → jedno zbiorcze „❓” w formacie `wpisy/references/pytania.md`). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie

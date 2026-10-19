@@ -4,6 +4,13 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.5.1] – 2026-10-19
+
+- `przeglad-dnia`, tryb wieczorny: jawna kolejność wykonania – krok 5 (luki w zadaniach) przed budową, żeby zadanie prywatne
+  z pustym Obszarem nie trafiło do przeglądu budowy; rozpoznawanie zadań ruszonych przez procedury po linku w śladzie
+  „→ <gdzie>: <link>” (format z `wpisy`), nie po zgadywanym słowie. `zadania`, sekcja D: bez reguły opartej na relacjach
+  Harmonogram i Dziennik budowy – widok przeglądu dnia ich nie zwraca. PATCH – poprawka treści.
+
 ## ja [1.5.0] – 2026-10-19
 
 - `przeglad-dnia`, tryb wieczorny: nowy krok 5 „Zadania – zmiany dnia i luki w kolumnach” – zadania ze wszystkich obszarów
