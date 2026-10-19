@@ -28,12 +28,12 @@ puste Obszar = stare wiersze budowy. Widoki budowy filtrują „Dom albo puste�
 |---|---|---|
 | Name | tytuł | |
 | Obszar | select | Dom, Prywatne, Dziecko, Praca – budowa: zawsze Dom |
-| PLANNED | status | TO DO, PLANNED, IN PROGRESS, WAITING, ON HOLD, BLOCKED, SOMEDAY, DONE, ARCHIVED |
+| Status | status | TO DO, PLANNED, IN PROGRESS, WAITING, ON HOLD, BLOCKED, SOMEDAY, DONE, ARCHIVED |
 | Priority | select | Highest, High, Medium, Low |
 | Kategoria | select | Media, Kredyt, Czyszczenie działki, Stan zero, SSO, Ogrodzenie, Teren, Przygotowanie do budowy, Wiata kontener, Projektowanie, Zakup działki, Inne, Ogród (+ Zakup, Zdrowie, Nauka – dla spraw prywatnych) |
 | When | data | |
 | Desc | tekst | jedno zdanie; listy i szczegóły – w treści strony (checkboxy) |
-| Kto | select | Ja, Ekipa, Konstruktor, Architekt, Kierownik budowy, Geodeta / geotechnik, Dostawca, Urząd / gestor, Inny – ktoś inny + PLANNED „WAITING” = czekam na |
+| Kto | select | Ja, Ekipa, Konstruktor, Architekt, Kierownik budowy, Geodeta / geotechnik, Dostawca, Urząd / gestor, Inny – ktoś inny + Status „WAITING” = czekam na |
 | Harmonogram | relacja → Harmonogram | krok, z którego wynika zadanie (`harmonogram`) |
 
 ## Porównanie wykonawców – stan zero – `collection://f7ca5f38-8fc3-46e7-8345-8a32cc8b5215`

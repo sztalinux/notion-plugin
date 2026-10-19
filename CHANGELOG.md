@@ -4,6 +4,16 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.5.1] – 2026-10-19
+
+- Kolumna statusu w TASKS nazywa się w Notion „Status”, a procedury i mapy pisały „PLANNED” (to tylko nazwa jednej z opcji
+  statusu). Ujednolicone w `notatka` (i `notion-schematy.md`), `harmonogram`, `przeglad-tygodnia` i mapie Notion budowy;
+  wartości opcji (TO DO, PLANNED, WAITING…) bez zmian. PATCH – poprawka treści.
+
+## ja [1.5.2] – 2026-10-19
+
+- To samo ujednolicenie w `zadania` (tabela pól i statusów, sekcja D) i w mapie Notion `ja`. PATCH – poprawka treści.
+
 ## ja [1.5.1] – 2026-10-19
 
 - `przeglad-dnia`, tryb wieczorny: jawna kolejność wykonania – krok 5 (luki w zadaniach) przed budową, żeby zadanie prywatne

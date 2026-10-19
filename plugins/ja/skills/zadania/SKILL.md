@@ -30,10 +30,10 @@ Bez tej kontroli takie wpisy lądowały w TASKS zamiast na listach i stronach os
    | Name | krótko, bezokolicznik („Umówić stomatologa”) |
    | Obszar | Dziecko – gdy dotyczy dziecka; Praca – sprawy zawodowe; inaczej Prywatne. Budowa/działka/dom → nie tu, `budowa` |
    | When | termin z wpisu; „do piątku” licz od daty wpisu; brak terminu → puste |
-   | PLANNED | z terminem lub „na dniach” → TO DO; „kiedyś” → SOMEDAY (zakup i link do produktu → baza Zakupy, nie zadanie) |
+   | Status | z terminem lub „na dniach” → TO DO; „kiedyś” → SOMEDAY (zakup i link do produktu → baza Zakupy, nie zadanie) |
    | Priority | domyślnie Medium; „pilne”, „koniecznie” → High; drobiazg → Low |
    | Kategoria | Zakup (tylko zadanie dołożone do pozycji Zakupów, sekcja niżej) / Zdrowie / Nauka / Inne |
-   | Kto | Ja; ktoś inny ma coś zrobić → jego rola opisowo w Desc, Kto = Inny, PLANNED WAITING |
+   | Kto | Ja; ktoś inny ma coś zrobić → jego rola opisowo w Desc, Kto = Inny, Status WAITING |
    | Desc | jedno zdanie (skąd, po co); linki, listy, szczegóły – w treści strony |
 3. Termin względny bez daty wpisu (np. „w piątek” w wpisie bez @today) → pytanie, nie zgaduj.
 
@@ -54,7 +54,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 
 ## B. Status istniejącego zadania
 
-| Inwestor pisze | PLANNED |
+| Inwestor pisze | Status |
 |---|---|
 | „zrobiłem X”, „X zrobione”, „załatwione” | DONE |
 | „zacząłem”, „w toku”, „robię” | IN PROGRESS |
@@ -93,7 +93,7 @@ Puste Obszar znaczy w starych wierszach Dom, więc zadanie prywatne z pustym Obs
 | Kategoria | Obszar inny niż Dom: z nazwy (Zakup, Zdrowie, Nauka), niejasne → Inne. Obszar Dom zostaw (kategorię nadają `notatka` i `harmonogram`) |
 | Desc | jedno zdanie z treści strony, gdy ją ma; pusta strona → zostaw puste |
 
-Status (kolumna statusu; w starszych opisach „PLANNED”), When i Name zostają – to decyzje inwestora. Termin wynikający z nazwy
+Status, When i Name zostają – to decyzje inwestora. Termin wynikający z nazwy
 lub opisu („do piątku”, data) → „❓” z proponowaną datą. Wpisanych wartości nie nadpisuj.
 
 ## Zasady
