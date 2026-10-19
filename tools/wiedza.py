@@ -31,6 +31,11 @@ Zasady:
 - publikuj wysyła wyłącznie do repo prywatnego (sprawdza to przed wysyłką).
 - Komunikaty zawierają tylko numery WI/ZRD/SP, ID stron, nazwy właściwości, liczby i statusy HTTP – nigdy
   wartości pól (te drukują wyłącznie wyniki szukaj, temat i duplikaty).
+- Log zapytań: każde `szukaj` na indeksie z `.dom/wiedza/` dopisuje jeden wiersz JSON do `.dom/wiedza/szukaj.log.jsonl`
+  (600; czas UTC, kanał z WIEDZA_KANAL albo „claude-code”/„inny”, zapytanie do 500 znaków, tryb, liczby trafień,
+  top-5 WI, ms, filtry – bez treści wierszy). Przy 2 MB zostaje jedna starsza kopia `szukaj.log.1.jsonl`. WIEDZA_LOG=0 wyłącza log;
+  z --db spoza `.dom/wiedza/` (kopia w czacie) log nie powstaje. Błąd logu nigdy nie zmienia wyniku ani kodu wyjścia.
+  Log czyta obserwator jakości `tools/wiedza_jakosc.py`.
 """
 import argparse
 import base64
@@ -60,6 +65,10 @@ KATALOG = CONF / "wiedza"
 DB_DOMYSLNA = KATALOG / "wiedza.sqlite"
 SEKRETY = CONF / "sekrety.env"
 SYNONIMY = Path(__file__).resolve().parent / "wiedza_synonimy.txt"  # czyta tylko sync; w czacie pliku nie ma
+PLIK_LOGU = "szukaj.log.jsonl"          # w KATALOG; czyta tools/wiedza_jakosc.py
+PLIK_LOGU_STARY = "szukaj.log.1.jsonl"  # jedna kopia po rotacji
+LOG_MAKS_B = 2 * 1024 * 1024
+LOG_MAKS_ZAPYTANIE = 500                # znaków zapytania w logu (wklejony akapit nie trafi w całości)
 
 NOTION_API = "https://api.notion.com"
 GITHUB_API = "https://api.github.com"
@@ -1438,7 +1447,51 @@ def wyszukaj(conn: sqlite3.Connection, zapytanie: str, a) -> tuple:
     return widoczne, pominieto, czesciowe, pelnych
 
 
+def zapisz_log_szukaj(a, start: float, widoczne: list, czesciowe: bool, pelnych: int):
+    """Jeden wiersz logu zapytań (opis w nagłówku modułu). Najlepsza próba: nic nie drukuje, nie tworzy katalogów
+    i nie rzuca wyjątków."""
+    try:
+        if os.environ.get("WIEDZA_LOG") == "0" or not KATALOG.is_dir():
+            return
+        if sciezka_bazy(a).resolve().parent != KATALOG.resolve():
+            return
+        terminy, same_stop = terminy_zapytania(a.zapytanie)
+        tryb = ("stop" if same_stop else "AND" if not czesciowe
+                else "OR-only" if pelnych == 0 else "AND+dopelnienie")
+        kanal = os.environ.get("WIEDZA_KANAL") or ("claude-code" if os.environ.get("CLAUDECODE") else "inny")
+        filtry = {f: getattr(a, f) for f in FILTRY_SZUKAJ + ("temat",) if getattr(a, f) is not None}
+        if a.ciekawostki:
+            filtry["ciekawostki"] = True
+        if a.limit != 12:
+            filtry["limit"] = a.limit
+        rekord = {"ts": teraz_iso(), "kanal": kanal[:20], "q": a.zapytanie[:LOG_MAKS_ZAPYTANIE],
+                  "n_terminow": sum(1 for t, _ in terminy if t != "OR"), "tryb": tryb, "trafien": len(widoczne),
+                  "pelnych": pelnych, "pokazano": min(a.limit, len(widoczne)), "top5": widoczne[:5],
+                  "ms": round((time.perf_counter() - start) * 1000, 1), "filtry": filtry}
+        linia = (json.dumps(rekord, ensure_ascii=False) + "\n").encode("utf-8")
+        import fcntl  # leniwie, jak w blokada()
+        plik = KATALOG / PLIK_LOGU
+        for _ in range(3):
+            # blokada na otwartym pliku: rotację robi jeden proces, a ten, który czekał na stary plik, otwiera nowy
+            fd = os.open(str(plik), os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX)
+                stan = os.fstat(fd)
+                if not plik.exists() or os.stat(str(plik)).st_ino != stan.st_ino:
+                    continue
+                if stan.st_size > LOG_MAKS_B:
+                    os.replace(str(plik), str(KATALOG / PLIK_LOGU_STARY))
+                    continue
+                os.write(fd, linia)  # jeden zapis na wiersz: równoległe procesy nie przeplatają wierszy
+                return
+            finally:
+                os.close(fd)
+    except Exception:  # noqa: BLE001 – log jest dodatkiem, wynik szukaj ma być taki sam jak bez niego
+        pass
+
+
 def cmd_szukaj(a) -> int:
+    start = time.perf_counter()
     mecz = zbuduj_zapytanie_fts(a.zapytanie, "AND")
     if mecz is None:
         blad("puste zapytanie – podaj słowa do wyszukania")
@@ -1452,6 +1505,7 @@ def cmd_szukaj(a) -> int:
         sprzecznosci = otwarte_sp_trafien(conn, widoczne, wyniki)
         stan = meta_bazy(conn).get("zbudowano") or ""
         informacji = conn.execute("SELECT COUNT(*) FROM informacje").fetchone()[0]
+    zapisz_log_szukaj(a, start, widoczne, czesciowe, pelnych)
     if a.json:
         wypisz_json({"stan": stan, "zapytanie": a.zapytanie, "czesciowe": czesciowe, "pelnych": pelnych,
                      "trafien": len(widoczne), "pominieto": pominieto, "wyniki": wyniki, "sprzecznosci": sprzecznosci})
@@ -1696,11 +1750,11 @@ POLECENIA = {"sync": cmd_sync, "szukaj": cmd_szukaj, "temat": cmd_temat, "duplik
              "stan": cmd_stan, "publikuj": cmd_publikuj}
 
 
-def linia_bledu(e: BaseException) -> int:
-    """Ostatnia linia tego pliku na ścieżce wyjątku."""
+def linia_bledu(e: BaseException, plik: str = __file__) -> int:
+    """Ostatnia linia pliku `plik` (domyślnie tego) na ścieżce wyjątku."""
     tb, linia = e.__traceback__, 0
     while tb is not None:
-        if tb.tb_frame.f_code.co_filename == __file__:
+        if tb.tb_frame.f_code.co_filename == plik:
             linia = tb.tb_lineno
         tb = tb.tb_next
     return linia

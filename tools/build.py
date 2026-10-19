@@ -145,6 +145,9 @@ DOZWOLONE = [re.compile(r"noreply@anthropic\.com"),            # stopka Co-Autho
 BINARNE = {".xlsx", ".xls", ".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png", ".heic", ".zip",
            ".sqlite", ".sqlite3", ".db", ".sqlite-wal", ".sqlite-shm", ".sqlite-journal",
            ".sqlite3-wal", ".sqlite3-shm", ".sqlite3-journal", ".db-wal", ".db-shm", ".db-journal"}
+# dane obserwatora jakości wyszukiwania (tools/wiedza_jakosc.py): słowa wierszy indeksu i zapytania inwestora
+DANE_OBSERWATORA = re.compile(r"(^|/)jakosc/|(^|/)(szukaj\.log.*\.jsonl|ki\.json|wlasne\.json|reczna-.*\.jsonl"
+                              r"|historia\.sqlite)$", re.I)
 
 
 def zakazane_slowa() -> list:
@@ -182,7 +185,7 @@ def kontrola_prywatnosci() -> list:
         if (not f.is_file() or set(rel.parts) & POMIJANE_KATALOGI
                 or rel.as_posix().startswith((".claude/skills", ".claude/worktrees"))):
             continue
-        if f.suffix.lower() in BINARNE:
+        if f.suffix.lower() in BINARNE or DANE_OBSERWATORA.search(rel.as_posix()):
             bledy.append(f"{rel}: plik z danymi w repo – dokumenty trzymaj w folderze budowy")
             continue
         if f.suffix.lower() not in TEKSTOWE:
@@ -235,7 +238,7 @@ def kontrola_commitow(zakres: list) -> list:
         bledy += sprawdz_tekst(f"{k} wiadomość", git("show", "-s", "--format=%B", sha), zakazane)
         for sciezka in git("diff-tree", "--no-commit-id", "-r", "--root", "--name-only",
                            "--diff-filter=AMR", sha).splitlines():
-            if Path(sciezka).suffix.lower() in BINARNE:
+            if Path(sciezka).suffix.lower() in BINARNE or DANE_OBSERWATORA.search(sciezka):
                 bledy.append(f"{k} {sciezka}: plik z danymi w commicie")
                 continue
             if Path(sciezka).suffix.lower() not in TEKSTOWE:

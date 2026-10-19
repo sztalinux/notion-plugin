@@ -4,6 +4,20 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.5.0] – 2026-10-19
+
+- Nowe narzędzie `tools/wiedza_jakosc.py` – obserwator jakości wyszukiwania w indeksie wiedzy (POM-10): zbiór złoty
+  (zapytania wyprowadzone z indeksu plus wbudowany zestaw ogólnych pytań z `tools/wiedza_jakosc_pytania.json`), historia
+  przebiegów z porównaniem do poprzedniego i do bazy, alarmy regresji utrzymywane do potwierdzenia w `raport`,
+  porównanie z wyszukiwarką Notion (`notion`, tylko odczyt, budżet żądań), ręczna ocena trafności (`reczna`), własne
+  pytania kontrolne (`dodaj`) i cichy przypominacz tygodniowy (`przypomnij`, hook startu sesji).
+- `tools/wiedza.py szukaj`: lokalny dziennik zapytań `szukaj.log.jsonl` (tylko ta maszyna, tryb 600, rotacja 2 MB,
+  wyłączany `WIEDZA_LOG=0`); kanał zapytania z `WIEDZA_KANAL` albo środowiska Claude Code.
+- Dane obserwatora leżą wyłącznie w `.dom/wiedza/jakosc/` poza repo; `.gitignore`, hook `pre-commit` i `tools/build.py`
+  blokują ich nazwy w repo.
+- Nowy `wiedza/references/indeks-jakosc.md`; `indeks.md` i `przeglad-tygodnia` (Spójność) odsyłają do raportu jakości.
+- `.claude/settings.json`: trzeci hook startu (`wiedza_jakosc.py przypomnij --cicho`) i zezwolenie dla narzędzia.
+
 ## dom-budowa [2.4.1] – 2026-10-18
 
 - `tools/wiedza.py szukaj`: poprawka klasy zapytań, które po 2.4.0 wypadały gorzej niż dawniej (pytanie z rzadkim słowem spoza

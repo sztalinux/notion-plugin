@@ -35,8 +35,7 @@ Czytaj Notion (stronę z linku) mimo wyniku z indeksu, gdy:
 - indeks jest niedostępny (brak pliku, stara wersja schematu – wtedy `python3 tools/wiedza.py sync`) – wróć do dotychczasowej drogi;
 - data stanu (nagłówek wyniku `# indeks: stan …` i `stan`) jest starsza niż 24 h – podaj ją w odpowiedzi.
 
-Po zapisie wiedzy do Notion w sesji interaktywnej uruchom `python3 tools/wiedza.py sync --publikuj`: indeks dostaje nowe wiersze,
-kopia dla czatu – aktualny plik.
+Po zapisie wiedzy do Notion w sesji interaktywnej uruchom `python3 tools/wiedza.py sync --publikuj` (indeks i kopia dla czatu).
 
 ## Czat/telefon i zaplanowane zadania na claude.ai
 
@@ -67,4 +66,5 @@ robi skrypt. Notion przeszukuj tylko wtedy, gdy indeks nie odpowiada na pytanie.
   sprawdź w Notion informację, na której opierasz decyzję.
 - `stan`: `zbudowano` starsze niż 7 dni albo `ostatni pełny sync` starszy niż 14 dni → uruchom `sync --pelny` ręcznie;
   `kopia aktualna: nie` → `python3 tools/wiedza.py publikuj --teraz` (samo `publikuj` bywa odłożone przez odstęp 60 min).
-- Awarie, odnowienie tokenów, odtworzone repo kopii i komunikaty `[wiedza]` → `references/indeks-awarie.md`.
+- Awarie, odnowienie tokenów, odtworzone repo kopii i komunikaty `[wiedza]` → `references/indeks-awarie.md`; jakość
+  wyszukiwania, log zapytań, alarmy `[jakosc]` (tylko Claude Code) → `references/indeks-jakosc.md`.

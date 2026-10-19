@@ -93,6 +93,8 @@ zapisy idą wyłącznie do Notion). Polecenia: `sync`, `szukaj`, `temat`, `dupli
 i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600, poza repo), cztery zmienne: `NOTION_TOKEN` (odczyt Notion),
 `GITHUB_REPO` (prywatne repo kopii dla czatu na telefonie), `GITHUB_TOKEN_SYNC` (zapis kopii na Macu), `GITHUB_TOKEN_SEARCH` (odczyt kopii w czacie).
 Trzy kanały użycia i ograniczenia: `plugins/dom-budowa/skills/wiedza/references/indeks.md`.
+`tools/wiedza_jakosc.py` obserwuje jakość wyszukiwania (log zapytań `szukaj`, zbiory oceny, raport tygodniowy z alarmami,
+ocena ręczna, miesięczne porównanie z Notion; pytania wymyślone: `tools/wiedza_jakosc_pytania.json`) – dane w `.dom/wiedza/`; opis: `plugins/dom-budowa/skills/wiedza/references/indeks-jakosc.md`.
 
 ## Start
 

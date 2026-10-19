@@ -11,6 +11,11 @@ python3 tools/build.py --tozsamosc || {
   echo "Commit zablokowany: tożsamość autora (wyżej) trafiłaby do publicznej historii."
   exit 1
 }
+# Dane obserwatora jakości wyszukiwania (słowa wierszy indeksu, zapytania inwestora) – tylko w .dom/wiedza/
+if git diff --cached --name-only | grep -qiE '(^|/)jakosc/|(^|/)(szukaj\.log.*\.jsonl|ki\.json|wlasne\.json|reczna-.*\.jsonl)$|(^|/)historia\.sqlite'; then
+  echo "Commit zablokowany: w commicie są dane obserwatora jakości (jakosc/, log zapytań) – trzymaj je w .dom/wiedza/."
+  exit 1
+fi
 # Dokumenty i dane nigdy nie mogą trafić do commita
 if git diff --cached --name-only | grep -qiE '^dane/|\.(xlsx|xls|pdf|docx?|zip|jpe?g|png|heic|sqlite3?|db|(sqlite3?|db)-(wal|shm|journal))$'; then
   echo "Commit zablokowany: w commicie jest plik z dane/ albo dokument lub plik bazy (arkusz/PDF/zdjęcie/SQLite)."

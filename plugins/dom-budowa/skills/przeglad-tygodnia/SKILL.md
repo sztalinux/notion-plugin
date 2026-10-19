@@ -57,6 +57,8 @@ Pobierz w jak najmniejszej liczbie zapytań:
       starszy niż 14 dni → zaproponuj ręczny `sync --pelny`; `liczniki.informacje` porównaj z liczbą Informacji w Notion, gdy jest znana
       (duża rozbieżność → `sync --pelny`); `kopia_aktualna` = false → zaproponuj `publikuj --teraz`. Na claude.ai nie ma `tools/`:
       użyj kanału czatu z `indeks.md` (daty kopii tylko informacyjnie); bez dostępu napisz „indeks niedostępny” i czytaj Notion.
+    - jakość wyszukiwania: w Claude Code `python3 tools/wiedza_jakosc.py raport` → alarmy i zapytania bez wyników do decyzji
+      inwestora (`indeks-jakosc.md`); na claude.ai napisz, że raport jakości jest dostępny tylko w Claude Code.
 11. **Zamówienia z wyprzedzeniem**: pozycje na najbliższe dwa etapy, których termin zamówienia (`zakupy/references/wyprzedzenia.md`)
    wypada w ciągu 14 dni; **płatności** – Wydatki „Planowane” z datą w 14 dni i transze po odbiorach, jeśli Excel jest
    dostępny w tym miejscu (inaczej napisz, że to wymaga aktualnego pliku).

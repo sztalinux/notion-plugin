@@ -28,3 +28,9 @@ dane/
 *.db-wal
 *.db-shm
 *.db-journal
+# dane obserwatora jakości wyszukiwania (tools/wiedza_jakosc.py) – tylko w .dom/wiedza/, nigdy w repo
+jakosc/
+szukaj.log*.jsonl
+ki.json
+wlasne.json
+reczna-*.jsonl
