@@ -9,14 +9,16 @@ miejscem zapisu – nigdy nie zapisuj wiedzy do indeksu. Trzy kanały dostępu m
 Indeks odświeża się sam na starcie sesji. Polecenia uruchamiaj z katalogu repo:
 - `python3 tools/wiedza.py szukaj "przerwa robocza płyta" [--etap "Stan zero"] [--limit 12]` – wpisz 2–4 słowa
   treściowe, bez zdania i spójników („czy”, „jak”, „na” program i tak odrzuci). Końcówki fleksyjne program przycina sam,
-  więc „drenażu” znajdzie też „drenaż”. `drena*` (prefiks) i „fraza w cudzysłowie” zostają dokładnie takie, jak wpisano.
-  Gdy do wszystkich słów pasuje mniej niż 5 widocznych informacji, program dopisuje pod nimi pasujące do części słów
-  (nie przy zapytaniu z samych słów wypełniających). Nagłówek mówi wtedy „(dopasowanie częściowe od pozycji k)”,
-  a `--json` – `"czesciowe": true` i `"pelnych": n` (k = n + 1). Linie od pozycji k traktuj jak wskazówkę: pasują
-  tylko do części słów, więc nie opieraj na nich odpowiedzi bez przeczytania tezy. Mało trafień → zapytaj krócej,
-  o jedno pojęcie naraz (np. „przemarzanie”, potem „posadowienie”). Domyślnie pomija Nieaktualne i Ciekawostki
-  (z licznikiem); `--ciekawostki` pokaże też je. Zero linii wyniku po filtrach to nie brak wiedzy – zobacz liczniki
-  `pominięto` i rozluźnij filtr.
+  więc „drenażu” znajdzie też „drenaż” (wyżej stoją informacje z dokładnie wpisaną formą). `drena*` (prefiks)
+  i „fraza w cudzysłowie” zostają dokładnie takie, jak wpisano. Gdy do wszystkich słów pasuje mniej niż 12 widocznych
+  informacji, program dopisuje pod nimi pasujące do części słów (nie przy zapytaniu z samych słów wypełniających) –
+  przy pytaniach z 3+ słowami to zwykły przypadek. Nagłówek mówi wtedy „(dopasowanie częściowe od pozycji k)”,
+  a `--json` – `"czesciowe": true` i `"pelnych": n` (k = n + 1; n = ile informacji ma wszystkie słowa, 0 = żadna).
+  Dopisane linie idą od pasujących do największej liczby słów; traktuj je jak wskazówkę i nie opieraj na nich
+  odpowiedzi bez przeczytania tezy. Mało pełnych trafień (`pelnych` 0–2) → zapytaj krócej, o jedno pojęcie naraz
+  (np. „przemarzanie”, potem „posadowienie”). Domyślnie pomija Nieaktualne i Ciekawostki (z licznikiem);
+  `--ciekawostki` pokaże też je. Zero linii wyniku po filtrach to nie brak wiedzy – zobacz liczniki `pominięto`
+  i rozluźnij filtr.
 - `python3 tools/wiedza.py temat "NAZWA"` – stan wiedzy tematu, Kluczowe i otwarte SP; `duplikaty [--od RRRR-MM-DD]` –
   pary o bardzo podobnej tezie; `stan` – liczniki i daty.
 

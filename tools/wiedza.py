@@ -293,7 +293,9 @@ zrobic potrzebny potrzebna potrzebne potrzeba trzeba nalezy powinien powinna pow
 miedzy pomiedzy moge moga""".split())
 TEMAT_OD = 6                # od tylu liter token traci końcówkę odmiany, najwyżej 2 litery: „przerwie” → przerw*
 TEMAT_MIN = 5               # tyle liter zostaje co najmniej: 6-literowe tracą 1 („termin” → termi*, nie term*)
-DOPELNIJ_PONIZEJ = 5        # szukaj: mniej widocznych trafień AND → dopełnienie trafieniami OR
+# szukaj: mniej widocznych trafień AND → dopełnienie trafieniami OR; tyle co domyślny --limit, bo wąskie AND
+# (5–11 trafień) zostawiało pytaniom naturalnym krótką listę bez wierszy pasujących do części słów
+DOPELNIJ_PONIZEJ = 12
 
 
 def termin_tokenu(slowo: str, prefiks: bool) -> str:
@@ -304,42 +306,48 @@ def termin_tokenu(slowo: str, prefiks: bool) -> str:
     return '"%s"*' % slowo
 
 
-def zbuduj_zapytanie_fts(zapytanie: str, tryb: str = "AND"):
-    """Ciąg MATCH dla informacje_fts albo None, gdy nie zostaje żaden termin; tryb "AND" albo "OR".
-    Frazy i operator `OR` (wielkimi literami) rozpoznawane na surowym wejściu – po normalizuj byłby zwykłym „or”.
+def terminy_zapytania(zapytanie: str) -> tuple:
+    """(terminy, same_stop): lista (termin FTS, forma pełna) albo ("OR", None) – "OR" tylko między dwoma terminami.
+    Forma pełna to "słowo"* tokenu, któremu termin_tokenu uciął końcówkę (premia formy dokładnej w szukaj), inaczej
+    None. Frazy i operator `OR` (wielkimi literami) rozpoznawane na surowym wejściu – po normalizuj byłby zwykłym „or”.
     Potem każdy element osobno: normalizuj, znaki spoza liter i cyfr → odstęp (niedomknięty cudzysłów, `-`, `*`,
     `NEAR(` przestają być składnią); token → "temat"* (termin_tokenu), fraza bez * i bez zmian. Słowa wypełniające
-    (STOP_ZAPYTANIA) wypadają, chyba że zapytanie składa się tylko z nich; nie dotyczy to fraz ani tokenów z `*`.
-    Tryb "OR" z samych słów wypełniających → None: każde z nich trafia przypadkowo („na…”, „w…”)."""
-    terminy = []  # (termin FTS, czy słowo wypełniające) albo ("OR", False)
+    (STOP_ZAPYTANIA) wypadają, chyba że zapytanie składa się tylko z nich (same_stop); nie dotyczy to fraz ani
+    tokenów z `*`."""
+    terminy = []  # (termin FTS, forma pełna, czy słowo wypełniające)
     for m in ELEMENT_ZAPYTANIA.finditer(zapytanie or ""):
         fraza, token = m.groups()
         if token == "OR":
-            terminy.append(("OR", False))
+            terminy.append(("OR", None, False))
         elif fraza is not None:
             slowa = NIE_SLOWO.sub(" ", normalizuj(fraza)).split()
             if slowa:
-                terminy.append(('"%s"' % " ".join(slowa), False))
+                terminy.append(('"%s"' % " ".join(slowa), None, False))
         else:
             prefiks = token.endswith("*")
-            terminy += [(termin_tokenu(s, prefiks), not prefiks and bez_diakrytykow(s) in STOP_ZAPYTANIA)
-                        for s in NIE_SLOWO.sub(" ", normalizuj(token)).split()]
-    same_stop = all(stop for t, stop in terminy if t != "OR")
-    if same_stop and tryb == "OR":
-        return None
-    if not same_stop:
-        terminy = [(t, stop) for t, stop in terminy if not stop]
-    czyste = []  # "OR" tylko między dwoma terminami
-    for t, _ in terminy:
-        if t != "OR" or (czyste and czyste[-1] != "OR"):
-            czyste.append(t)
-    if czyste and czyste[-1] == "OR":
+            for s in NIE_SLOWO.sub(" ", normalizuj(token)).split():
+                termin, pelna = termin_tokenu(s, prefiks), '"%s"*' % s
+                terminy.append((termin, pelna if pelna != termin else None,
+                                not prefiks and bez_diakrytykow(s) in STOP_ZAPYTANIA))
+    same_stop = all(stop for t, _, stop in terminy if t != "OR")
+    czyste = []
+    for t, pelna, stop in terminy:
+        if (same_stop or not stop) and (t != "OR" or (czyste and czyste[-1][0] != "OR")):
+            czyste.append((t, pelna))
+    if czyste and czyste[-1][0] == "OR":
         czyste.pop()
-    if not czyste:
+    return czyste, same_stop
+
+
+def zbuduj_zapytanie_fts(zapytanie: str, tryb: str = "AND"):
+    """Ciąg MATCH dla informacje_fts albo None, gdy nie zostaje żaden termin; tryb "AND" albo "OR" (terminy jak
+    w terminy_zapytania). Tryb "OR" z samych słów wypełniających → None: każde z nich trafia przypadkowo („na…”, „w…”)."""
+    terminy, same_stop = terminy_zapytania(zapytanie)
+    if not terminy or (same_stop and tryb == "OR"):
         return None
     if tryb == "OR":
-        return " OR ".join(t for t in czyste if t != "OR")
-    return " ".join(czyste)
+        return " OR ".join(t for t, _ in terminy if t != "OR")
+    return " ".join(t for t, _ in terminy)
 
 
 def czytaj_tekst(w: dict) -> str:
@@ -1357,17 +1365,23 @@ def wi_tematow(conn: sqlite3.Connection, nazwa: str) -> set:
             if szukana in bez_diakrytykow(n)}
 
 
+def oceny_bm25(conn: sqlite3.Connection, mecz: str) -> dict:
+    """{WI: bm25} trafień ciągu MATCH (wagi kolumn teza, tematy, szczegóły, dla nas, synonimy; mniej = lepiej)."""
+    return dict(conn.execute("SELECT rowid, bm25(informacje_fts, 3.0, 2.0, 1.0, 1.0, 1.5) FROM informacje_fts "
+                             "WHERE informacje_fts MATCH ?", (mecz,)))
+
+
 def wybierz(conn: sqlite3.Connection, mecz: str, a) -> tuple:
-    """(widoczne WI wg bm25 rosnąco – najlepsze ma najmniejszą wartość, liczniki pominiętych) dla ciągu MATCH.
-    Domyślnie pomija Status „Nieaktualne” i Istotność „Ciekawostka”; jawny filtr --status / --istotnosc albo
+    """(widoczne WI wg bm25 rosnąco – najlepsze ma najmniejszą wartość, liczniki pominiętych, {WI: bm25}) dla ciągu
+    MATCH. Domyślnie pomija Status „Nieaktualne” i Istotność „Ciekawostka”; jawny filtr --status / --istotnosc albo
     --ciekawostki to wyłącza."""
     pola = {wi: [normalizuj(x) for x in r] for wi, *r in conn.execute(
         f"SELECT wi, {', '.join(FILTRY_SZUKAJ)} FROM informacje")}
     filtry = {f: normalizuj(getattr(a, f)) for f in FILTRY_SZUKAJ if getattr(a, f) is not None}
     temat = wi_tematow(conn, a.temat) if a.temat is not None else None
+    oceny = oceny_bm25(conn, mecz)
     widoczne, pominieto = [], {"nieaktualne": 0, "ciekawostki": 0}
-    for (wi,) in conn.execute("SELECT rowid FROM informacje_fts WHERE informacje_fts MATCH ? "
-                              "ORDER BY bm25(informacje_fts, 3.0, 2.0, 1.0, 1.0, 1.5), rowid", (mecz,)).fetchall():
+    for wi in sorted(oceny, key=lambda w: (oceny[w], w)):
         wartosci = dict(zip(FILTRY_SZUKAJ, pola.get(wi) or ()))
         if not wartosci or any(wartosci[f] != v for f, v in filtry.items()) or (temat is not None and wi not in temat):
             continue
@@ -1377,7 +1391,51 @@ def wybierz(conn: sqlite3.Connection, mecz: str, a) -> tuple:
             pominieto["ciekawostki"] += 1
         else:
             widoczne.append(wi)
-    return widoczne, pominieto
+    return widoczne, pominieto, oceny
+
+
+def z_premia_formy_dokladnej(conn: sqlite3.Connection, widoczne: list, oceny: dict, pelne: list) -> list:
+    """Trafienia AND od nowa wg bm25 z dodanym bm25 pełnych form przyciętych słów: przycięty temat („termi*”)
+    łapie też inne słowa („terminal”), więc wiersz z dokładnie tym słowem, o które pytano, idzie wyżej."""
+    if not pelne or len(widoczne) < 2:
+        return widoczne
+    suma = {wi: oceny[wi] for wi in widoczne}
+    for pelna in pelne:
+        for wi, wynik in oceny_bm25(conn, pelna).items():
+            if wi in suma:
+                suma[wi] += wynik
+    return sorted(widoczne, key=lambda wi: (suma[wi], wi))
+
+
+def pokrycie(conn: sqlite3.Connection, terminy: list) -> dict:
+    """{WI: ile różnych terminów zapytania zawiera wiersz} – w dowolnej kolumnie, także w synonimach `slowa`."""
+    licznik = {}
+    for termin in dict.fromkeys(terminy):
+        for (wi,) in conn.execute("SELECT rowid FROM informacje_fts WHERE informacje_fts MATCH ?", (termin,)):
+            licznik[wi] = licznik.get(wi, 0) + 1
+    return licznik
+
+
+def wyszukaj(conn: sqlite3.Connection, zapytanie: str, a) -> tuple:
+    """(WI w kolejności wyniku, liczniki pominiętych, czy dopasowanie częściowe, liczba pełnych trafień AND).
+    Mniej niż DOPELNIJ_PONIZEJ widocznych trafień AND i ≥ 2 terminy treściowe (OR inne niż AND, nie same słowa
+    wypełniające) → za trafieniami AND dopisane pozostałe trafienia OR (dopasowanie częściowe od pozycji pelnych + 1),
+    najpierw te z większą liczbą terminów, potem wg bm25: w samym bm25 rzadkie słowo spoza tematu („stać”) wygrywa
+    z wierszami pasującymi do dwóch słów tematycznych. Liczniki pominiętych z OR, bo trafienia OR obejmują AND."""
+    terminy, _ = terminy_zapytania(zapytanie)
+    mecz, mecz_or = zbuduj_zapytanie_fts(zapytanie, "AND"), zbuduj_zapytanie_fts(zapytanie, "OR")
+    widoczne, pominieto, oceny = wybierz(conn, mecz, a)
+    widoczne = z_premia_formy_dokladnej(conn, widoczne, oceny, [p for _, p in terminy if p])
+    czesciowe, pelnych = False, len(widoczne)
+    if len(widoczne) < DOPELNIJ_PONIZEJ and mecz_or is not None and mecz_or != mecz:
+        widoczne_or, pominieto_or, _ = wybierz(conn, mecz_or, a)
+        juz = set(widoczne)
+        dalsze = [wi for wi in widoczne_or if wi not in juz]
+        if dalsze:
+            licznik = pokrycie(conn, [t for t, _ in terminy if t != "OR"])
+            dalsze.sort(key=lambda wi: -licznik.get(wi, 0))  # sortowanie stabilne: przy remisie zostaje bm25
+            widoczne, pominieto, czesciowe = widoczne + dalsze, pominieto_or, True
+    return widoczne, pominieto, czesciowe, pelnych
 
 
 def cmd_szukaj(a) -> int:
@@ -1389,18 +1447,7 @@ def cmd_szukaj(a) -> int:
         blad("--limit musi być co najmniej 1")
         return 1
     with contextlib.closing(otworz_do_odczytu(a)) as conn:
-        widoczne, pominieto = wybierz(conn, mecz, a)
-        # mniej niż DOPELNIJ_PONIZEJ widocznych trafień AND i ≥ 2 terminy treściowe (OR inne niż AND, nie same
-        # słowa wypełniające) → za trafieniami AND dopisane pozostałe trafienia OR, każda grupa wg bm25 (dopasowanie
-        # częściowe od pozycji pelnych + 1); liczniki pominiętych z OR, bo trafienia OR obejmują trafienia AND
-        mecz_or = zbuduj_zapytanie_fts(a.zapytanie, "OR")
-        czesciowe, pelnych = False, len(widoczne)
-        if len(widoczne) < DOPELNIJ_PONIZEJ and mecz_or is not None and mecz_or != mecz:
-            widoczne_or, pominieto_or = wybierz(conn, mecz_or, a)
-            juz = set(widoczne)
-            dalsze = [wi for wi in widoczne_or if wi not in juz]
-            if dalsze:
-                widoczne, pominieto, czesciowe = widoczne + dalsze, pominieto_or, True
+        widoczne, pominieto, czesciowe, pelnych = wyszukaj(conn, a.zapytanie, a)
         wyniki = opisz_informacje(conn, widoczne[:a.limit])
         sprzecznosci = otwarte_sp_trafien(conn, widoczne, wyniki)
         stan = meta_bazy(conn).get("zbudowano") or ""

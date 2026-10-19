@@ -4,6 +4,15 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.4.1] – 2026-10-18
+
+- `tools/wiedza.py szukaj`: poprawka klasy zapytań, które po 2.4.0 wypadały gorzej niż dawniej (pytanie z rzadkim słowem spoza
+  tematu, np. czasownikiem, dostawało największą wagę w rankingu). Dopełnienie częściowe włącza się poniżej 12 trafień
+  dopasowania wszystkich słów (było 5), wiersze dopełnienia są porządkowane najpierw liczbą pasujących słów, a w części
+  z pełnym dopasowaniem wyżej stoją wpisy z dokładną formą wpisanego słowa. Pomiar na 3383 zapytaniach: względem wersji sprzed
+  poprawek 616 wygranych i 16 przegranych, względem 2.4.0 – 48 wygranych i 5 przegranych (straty po 1–2 punkty).
+- `references/indeks.md`: opis dopełnienia częściowego i pola `pelnych` dostosowany do nowych reguł.
+
 ## dom-budowa [2.4.0] – 2026-10-17
 
 - Nowe narzędzie `tools/wiedza.py` – indeks Bazy wiedzy: lokalna kopia czterech baz Notion w SQLite z wyszukiwaniem
