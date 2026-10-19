@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.6.0] – 2026-10-19
+
+- Nowe polecenie `tools/wiedza_jakosc.py sedzia` (moduł `tools/wiedza_sedzia.py`) – sędzia LLM dla obserwatora jakości: niezależny
+  model ocenia, czy wyniki wyszukiwania odpowiadają na ogólne pytania budowlane (0/1/2), z metrykami P@12, MRR, zgodnością z oceną
+  ręczną i porównaniem do poprzedniego przebiegu. Domyślnie tylko na sucho; wysyłka wymaga `--wyslij` i jawnego `--model`.
+- Do modelu idą tylko pytanie, teza, szczegóły, temat i etap; pola „Kto” i „Z kim” są zablokowane na stałe, a każdy wiersz
+  przechodzi filtr danych osobowych i słów zakazanych (normalizacja tekstu, wzorce telefonów, adresów, e-maili, nazw własnych).
+  Model działa bez narzędzi, hooków i serwerów MCP (kontrola zdarzenia init), po kanarku na zmyślonej treści; wyniki wracają
+  wyłącznie jako liczby, oceny leżą w pamięci poza repo. Hook startu nigdy nie wywołuje sędziego.
+- Nowy `wiedza/references/indeks-sedzia.md`; `indeks-jakosc.md` odsyła do niego.
+
 ## dom-budowa [2.5.1] – 2026-10-19
 
 - Kolumna statusu w TASKS nazywa się w Notion „Status”, a procedury i mapy pisały „PLANNED” (to tylko nazwa jednej z opcji

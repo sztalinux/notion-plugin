@@ -95,6 +95,7 @@ i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600
 Trzy kanały użycia i ograniczenia: `plugins/dom-budowa/skills/wiedza/references/indeks.md`.
 `tools/wiedza_jakosc.py` obserwuje jakość wyszukiwania (log zapytań `szukaj`, zbiory oceny, raport tygodniowy z alarmami,
 ocena ręczna, miesięczne porównanie z Notion; pytania wymyślone: `tools/wiedza_jakosc_pytania.json`) – dane w `.dom/wiedza/`; opis: `plugins/dom-budowa/skills/wiedza/references/indeks-jakosc.md`.
+`tools/wiedza_sedzia.py` (polecenie `wiedza_jakosc.py sedzia`, na sucho bez `--wyslij`) – sędzia LLM trafności wyników przez `claude -p` (kanarek izolacji, filtr danych osobowych); opis: `plugins/dom-budowa/skills/wiedza/references/indeks-sedzia.md`.
 
 ## Start
 

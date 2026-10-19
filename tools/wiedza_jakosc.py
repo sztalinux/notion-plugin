@@ -11,6 +11,7 @@ Nie zmienia indeksu ani Notion; indeks otwiera tylko do odczytu.
     python3 tools/wiedza_jakosc.py reczna --wczytaj PLIK             # dokończ albo wczytaj zestaw ocen z pliku
     python3 tools/wiedza_jakosc.py notion [--budzet 300]             # raz w miesiącu: porównanie z Notion przez API
     python3 tools/wiedza_jakosc.py przypomnij --cicho                # hook startu: jedna linia, gdy jest coś do zrobienia
+    python3 tools/wiedza_jakosc.py sedzia [--wyslij]                 # sędzia LLM; bez --wyslij tylko na sucho
 
 Opcje wspólne: --db ŚCIEŻKA (indeks w `<hub>/.dom/wiedza/`; dane obserwatora leżą obok), --json.
 
@@ -36,12 +37,15 @@ Polecenia:
   (nigdy nie drukowany), najwyżej --budzet żądań (z ponowieniami), odstęp 0,35 s; wypisuje i zapisuje same liczby.
 - przypomnij: cisza, chyba że minęło 7 dni od ostatniego raportu, są niepotwierdzone alarmy albo obserwator nie działa
   (wtedy najwyżej raz w tygodniu). Raz w tygodniu sam robi przebieg zloty, gdy poprzedni trwał < 10 s; przebieg
-  odrzucony (sync zmienił indeks) albo po czasie – kolejna próba po dobie. Zawsze kod 0.
+  odrzucony (sync zmienił indeks) albo po czasie – kolejna próba po dobie. Zawsze kod 0. Sędziego nigdy nie woła.
+- sedzia: model ocenia 0/1/2 pierwsze wyniki pytań wymyślonych (opis i zasady prywatności w tools/wiedza_sedzia.py);
+  wynik w historii jako przebieg „sedzia”, jedna linia w raport. Moduł ładowany tylko przez to polecenie.
 
 Dane (poza repo, katalog 700, pliki 600, obok indeksu – domyślnie `.dom/wiedza/`):
 - `szukaj.log.jsonl` (+ `szukaj.log.1.jsonl`) – log zapytań pisany przez `wiedza.py szukaj`;
 - `jakosc/ki.json` (zbiór KI), `jakosc/pytania.json` (pytania i predykaty), `jakosc/wlasne.json` (przypadki z `dodaj`),
-  `jakosc/reczna-*.jsonl` (oceny ręczne), `jakosc/historia.sqlite` (przebiegi, wyniki per zapytanie, alarmy).
+  `jakosc/reczna-*.jsonl` (oceny ręczne), `jakosc/historia.sqlite` (przebiegi, wyniki per zapytanie, alarmy),
+  `jakosc/sedzia.json` (pamięć ocen sędziego: skróty i oceny, bez treści).
 Wyjście: liczby, numery WI, rangi, czasy i ID zapytań; tekst – wyłącznie zapytania z logu (wpisane przez inwestora
 i agentów) oraz, w terminalu, wyniki oceny ręcznej. Zapytań z czatu na telefonie log nie zbiera (kopia w sandboksie).
 """
@@ -242,10 +246,10 @@ def czytaj_jsonl(plik: Path) -> list:
 
 
 @contextlib.contextmanager
-def blokada_przebiegu(m: Miejsca):
-    """Wyłączna blokada `jakosc/.przebieg.lock` (inna niż blokada syncu): True – wzięta, False – trwa inny przebieg."""
+def blokada_przebiegu(m: Miejsca, plik: str = ".przebieg.lock"):
+    """Wyłączna blokada `jakosc/<plik>` (inna niż blokada syncu): True – wzięta, False – trwa inny przebieg."""
     import fcntl
-    fd = os.open(str(m.dane / ".przebieg.lock"), os.O_WRONLY | os.O_CREAT, 0o600)
+    fd = os.open(str(m.dane / plik), os.O_WRONLY | os.O_CREAT, 0o600)
     try:
         try:
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -919,9 +923,10 @@ def raport_dane(m: Miejsca, dni: int) -> dict:
         if p:
             dane["zloty"] = {"id": p[0]["id"], "ts": p[0]["ts"], "metryki": p[0]["metryki"], "porownania":
                              porownania(h, p[0]["id"]), "baza": baza["id"] if baza else None}
-        n = przebiegi(h, "notion", 1)
-        if n:
-            dane["notion"] = {"id": n[0]["id"], "ts": n[0]["ts"], "metryki": n[0]["metryki"]}
+        for rodzaj in ("notion", "sedzia"):
+            n = przebiegi(h, rodzaj, 1)
+            if n:
+                dane[rodzaj] = {"id": n[0]["id"], "ts": n[0]["ts"], "metryki": n[0]["metryki"]}
         dane["alarmy"] = otwarte_alarmy(h)
         with h:
             h.execute("UPDATE alarmy SET potwierdzony = 1 WHERE potwierdzony = 0")
@@ -973,12 +978,22 @@ def cmd_raport(a) -> int:
               f"{proc(r['razem']['trafne_proc'])} z {r['razem']['ocen']}")
     if "notion" in d:
         print(f"Notion (API, {d['notion']['ts'][:10]}): {opis_notion(d['notion']['metryki'])}")
+    if "sedzia" in d:
+        print(opis_sedziego(d["sedzia"]))
     if d["zero_zapytania"]:
         print(f"zapytania z logu bez wyników ({len(d['zero_zapytania'])}) – kandydaci na synonim albo informację:")
         for q in d["zero_zapytania"][:20]:
             print(f"  - {W.skroc(q, 120)}")
     print("\n".join(f"ALARM: {x['tekst']}" for x in d["alarmy"]) or "alarmy: brak")
     return 0
+
+
+def opis_sedziego(s: dict) -> str:
+    sm = s["metryki"]
+    return (f"sędzia LLM #{s['id']} ({s['ts'][:10]}, {sm.get('model')}): "
+            f"P@{sm.get('top')} ścisłe {proc(sm.get('p_scisle'))} / łagodne {proc(sm.get('p_lagodne'))} · pytań bez "
+            f"trafnego {sm.get('bez_trafnego')}/{sm.get('pytan_ocenionych')} · odfiltrowanych wierszy "
+            f"{sm.get('odfiltrowane')} (opis: indeks-sedzia.md)")
 
 
 # ------------------------------------------------------------------ ocena ręczna
@@ -1345,11 +1360,23 @@ def zbuduj_parser() -> argparse.ArgumentParser:
     p.add_argument("--budzet", type=int, default=300, help="najwyżej tyle żądań do Notion (domyślnie 300)")
     p = sub.add_parser("przypomnij", parents=[wspolne], help="hook startu: linia, gdy raport albo alarmy czekają")
     p.add_argument("--cicho", action="store_true", help="nic nie pisz, gdy nic nie czeka")
+    p = sub.add_parser("sedzia", parents=[wspolne], help="sędzia LLM: ocena 0/1/2 wyników pytań (bez --wyslij: na sucho)")
+    p.add_argument("--wyslij", action="store_true", help="wyślij do modelu (bez tego tylko podsumowanie)")
+    p.add_argument("--pytania", type=int, help="próbka tylu pytań wymyślonych (domyślnie wszystkie)")
+    p.add_argument("--top", type=int, default=TOP, help=f"kandydatów na pytanie, 1–{TOP} (domyślnie {TOP})")
+    p.add_argument("--model", default="sonnet", help="model claude, zapisywany w historii (domyślnie sonnet)")
+    p.add_argument("--rownolegle", type=int, default=3, help="wywołań naraz, 1–6 (domyślnie 3)")
+    p.add_argument("--pola", help="dodatkowe pola: dla_naszej_budowy,komentarz (Kto, Z kim, źródła nigdy)")
     return ap
 
 
+def cmd_sedzia(a) -> int:
+    import wiedza_sedzia  # leniwie: przypomnij (hook), zloty i raport nie ładują sędziego
+    return wiedza_sedzia.cmd_sedzia(a, sys.modules[__name__])
+
+
 POLECENIA = {"zloty": cmd_zloty, "dodaj": cmd_dodaj, "raport": cmd_raport, "reczna": cmd_reczna,
-             "notion": cmd_notion, "przypomnij": cmd_przypomnij}
+             "notion": cmd_notion, "przypomnij": cmd_przypomnij, "sedzia": cmd_sedzia}
 
 
 def main(argv=None) -> int:

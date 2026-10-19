@@ -67,9 +67,8 @@ przez `script` ani pty. Wynik („trafne %”) widać w `raport`. Raz po większ
 - Wyjście poleceń: liczby, numery WI, rangi, czasy i ID; tekst – tylko zapytania z logu (wpisane przez inwestora
   i agentów) i, w terminalu inwestora, wyniki oceny ręcznej. Token Notion nigdy nie jest drukowany.
 
-## Sędzia LLM – tylko projekt, nie wdrożony
+## Sędzia LLM
 
-Ocena trafności przez model językowy jest możliwa tylko po osobnej, ponownej zgodzie inwestora (reguła organizacji
-o danych w AI). Warunki, gdyby ją przyjął: do modelu idą wyłącznie teza i szczegóły (bez „Dla naszej budowy”,
-komentarzy, „Kto”, źródeł, linków, numerów WI), po filtrze danych osobowych i kwot; mała próba (np. 30 zapytań);
-wynik tylko jako liczby (P@12, nDCG@12). Bez tej zgody wystarcza ocena ręczna.
+`sedzia` – model ocenia 0/1/2 pierwsze 12 wyników pytań wymyślonych (zgoda inwestora 19.10.2026: bez danych
+osobowych). Domyślnie na sucho; wysyłka tylko `--wyslij` po zgodzie inwestora. Co idzie do modelu, filtr, jak czytać
+wynik: `references/indeks-sedzia.md`. Hook startu nigdy go nie woła.
