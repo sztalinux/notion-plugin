@@ -63,9 +63,12 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 | „odpuszczam”, „nieaktualne” | ARCHIVED |
 
 1. Szukaj we **wszystkich obszarach** wśród niezakończonych (wyszukiwarka z parametrem bazy TASKS – słowa z wpisu, potem porównanie treści i statusu).
+   Brak trafienia → sprawdź jeszcze zadania zamknięte (DONE, ARCHIVED) z ostatnią edycją w ostatnich 7 dniach: inwestor zamyka
+   zadania także ręcznie w Notion, więc wpis „zrobiłem X” bywa spóźniony. Jest takie → nic nie zmieniaj, w śladzie
+   „→ już zamknięte (ręcznie)” z odnośnikiem.
 2. Jedno trafienie → zmień status; w treści strony dopisz linię „<data>: <co się stało> (z Dziennika)”. Zadanie budowy
    (Obszar Dom/puste) z powiązanym krokiem Harmonogramu → status kroku zostaw procedurze `harmonogram` (przekaż jej sprawę).
-3. Brak trafienia → Dziennik „❓”: „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
+3. Brak trafienia także wśród świeżo zamkniętych → Dziennik „❓”: „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
 4. Kilka trafień → „❓” z listą (nazwa, termin) do wyboru.
 
 ## C. Odczyt
@@ -75,6 +78,23 @@ Strona ✅ Zadania ma zakładki: 📅 Dziś i tydzień (wszystkie obszary; widok
 jutro → „📅 Jutro – wszystko”; sprawy jednego obszaru → widok jego zakładki (ID: `ja/references/notion-mapa.md`).
 Pokaż w tabeli: zadanie | obszar | termin | status; zadania po terminie osobno na górze. SOMEDAY pokazuj tylko licznikiem,
 chyba że pyta o nie wprost.
+
+## D. Luki w kolumnach (wieczorny przegląd dnia)
+
+Inwestor dodaje i edytuje zadania ręcznie w Notion, często bez pól – np. z widoku „📅 Dziś”, który nie ustawia Obszaru.
+Puste Obszar znaczy w starych wierszach Dom, więc zadanie prywatne z pustym Obszarem trafiłoby do przeglądu budowy.
+`przeglad-dnia` (krok 5) uzupełnia luki w wierszach zmienionych tego dnia, bez pytań w rozmowie:
+
+| Pole (puste) | Uzupełnij |
+|---|---|
+| Obszar | **Dom** – gdy Kategoria jest budowlana (Media, Kredyt, Czyszczenie działki, Stan zero, SSO, Ogrodzenie, Teren, Przygotowanie do budowy, Wiata kontener, Projektowanie, Zakup działki, Ogród) albo wypełniona jest relacja Harmonogram lub Dziennik budowy. **Prywatne** – Kategoria Zdrowie lub Nauka. Inaczej z nazwy i opisu, tylko gdy jednoznaczne (dziecko, praca, zwykła sprawa prywatna); wątpliwość → „❓” |
+| Kto | Ja – chyba że Status WAITING albo nazwa lub opis wskazuje kogoś innego (wtedy „❓”) |
+| Priority | Medium |
+| Kategoria | Obszar inny niż Dom: z nazwy (Zakup, Zdrowie, Nauka), niejasne → Inne. Obszar Dom zostaw (kategorię nadają `notatka` i `harmonogram`) |
+| Desc | jedno zdanie z treści strony, gdy ją ma; pusta strona → zostaw puste |
+
+Status (kolumna statusu; w starszych opisach „PLANNED”), When i Name zostają – to decyzje inwestora. Termin wynikający z nazwy
+lub opisu („do piątku”, data) → „❓” z proponowaną datą. Wpisanych wartości nie nadpisuj.
 
 ## Zasady
 

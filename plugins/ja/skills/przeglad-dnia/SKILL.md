@@ -1,6 +1,6 @@
 ---
 name: przeglad-dnia
-description: Zaplanowane przebiegi bez inwestora (claude.ai, poza projektem) w dwóch trybach – SZYBKI (co godzinę lub co 2 godziny w ciągu dnia) rozkłada nowe wpisy z „📓 Dziennika” (i strony z widgetu na najwyższym poziomie Private) na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY robi podsumowanie dnia i plan na jutro – sprawy osobiste w „📆 Przeglądy dzienne” pod Dziennikiem, budowa osobno w „📆 Przeglądy dzienne – budowa” na DOM (z odnośnikiem między nimi) – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów. Używaj, gdy uruchamia go zaplanowane zadanie („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
+description: Zaplanowane przebiegi bez inwestora (claude.ai, poza projektem) w dwóch trybach – SZYBKI (co godzinę lub co 2 godziny w ciągu dnia) rozkłada nowe wpisy z „📓 Dziennika” (i strony z widgetu na najwyższym poziomie Private) na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan na jutro – sprawy osobiste w „📆 Przeglądy dzienne” pod Dziennikiem, budowa osobno w „📆 Przeglądy dzienne – budowa” na DOM (z odnośnikiem między nimi) – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów. Używaj, gdy uruchamia go zaplanowane zadanie („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
 ---
 
 # Przegląd dnia – tryb szybki i wieczorny
@@ -10,7 +10,7 @@ Dwa zaplanowane zadania na claude.ai, oba **poza projektem** (pliki projektu „
 | Zadanie | Kiedy | Polecenie | Co robi |
 |---|---|---|---|
 | Dziennik – szybki przebieg | co 1–2 h w ciągu dnia (np. 8–22) | „Dziennik – szybki przebieg (skill przeglad-dnia z pluginu ja, tryb szybki)” | rozkłada nowe wpisy; pusto → koniec bez zapisów |
-| Przegląd dnia | raz wieczorem (np. 21:30) | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + podsumowanie dnia + plan na jutro + pomysły |
+| Przegląd dnia | raz wieczorem (np. 21:30) | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + podsumowanie dnia + zmiany w zadaniach + plan na jutro + pomysły |
 
 Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia” / „podsumuj dzień” = tryb wieczorny.
 
@@ -60,13 +60,28 @@ dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z
 3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i jutro budowy i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze). Weź z niego link do wpisu i 1 linię skrótu.
 4. **Dziś – sprawy osobiste** (tylko odczyt): blok dzisiejszego dnia w „Przetworzone” (wpisy obszarów innych niż Budowa,
-   liczby per obszar), TASKS zamknięte dziś z Obszarem Prywatne / Dziecko / Praca (widok, ostatnia edycja dziś), dzień pracy
-   z Dziennika produktywności, liczba wpisów emocji z dziś (bez treści), nowe punkty na stronie dziecka, wpisy w „❓”.
-5. **Jutro – sprawy osobiste** (tylko odczyt): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
+   liczby per obszar), dzień pracy z Dziennika produktywności, liczba wpisów emocji z dziś (bez treści), nowe punkty na stronie
+   dziecka, wpisy w „❓”. Zadania zmienione dziś – krok 5.
+5. **Zadania – zmiany dnia i luki w kolumnach** (wszystkie obszary; inwestor zmienia statusy i kończy zadania sam w Notion,
+   więc nie ma ich we wpisach). Odczyt: widok TASKS „🤖 Zmiany – od wczoraj (przegląd dnia)” (tryb view, ID w
+   `ja/references/notion-mapa.md`; `has_more` → następna strona). Widok daje dwa dni, bo „dziś” w filtrze Notion zależy od
+   strefy konta – **dzień utnij sam**: zostaw wiersze z `Last edited time` od północy czasu polskiego (czasy w wyniku są w UTC:
+   północ to 22:00 UTC poprzedniego dnia latem, 23:00 zimą). Notion nie trzyma historii – nie pisz „z X na Y”, klasyfikuj po
+   stanie bieżącym:
+   - zamknięte: Status DONE albo ARCHIVED (osobne liczby); w toku / czeka: IN PROGRESS, WAITING, BLOCKED, ON HOLD;
+     dodane lub zmienione: pozostałe (TO DO, PLANNED, SOMEDAY);
+   - wiersze ruszone dziś przez procedury (ślad „→ TASKS” w dzisiejszym bloku „Przetworzone”, krok 4) policz osobno jako
+     „z Dziennika” – ręczne zmiany inwestora nie mają się mieszać z automatycznymi.
+
+   **Uzupełnij luki** w tych wierszach według `zadania`, sekcja D (tylko wskazane pola; Status i When nie zmieniaj; wątpliwości
+   → jedno zbiorcze „❓” w formacie `wpisy/references/pytania.md`). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie
+   (krok 8) i do linii „🤖” weź liczby per kategoria, nazwy zamkniętych i zmienionych (max 5 na obszar, reszta „+k”) i listę
+   uzupełnionych pól.
+6. **Jutro – sprawy osobiste** (tylko odczyt): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
    (When < dziś, niezakończone), suplementy z Buy = tak (licznik), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)
    sprawdź ID, jeśli któryś odczyt się nie powiedzie.
-6. **Research** (baza 🔎 Research, RES-n; widok „🔎 Do zrobienia” – ID w `ja/references/notion-mapa.md`): weź max 2 najstarsze.
+7. **Research** (baza 🔎 Research, RES-n; widok „🔎 Do zrobienia” – ID w `ja/references/notion-mapa.md`): weź max 2 najstarsze.
    Dla każdego przeczytaj zlecenie i powiązany zakup / zadanie, zrób research w sieci (aktualne źródła, ceny i sklepy w Polsce)
    i dopisz w treści strony „## Wynik (asystent, data)”: Rekomendacja (1–2 zdania), Opcje (tabela: co, cena orientacyjna,
    plusy, minusy, link), Na co uważać, Źródła. Pole Rekomendacja = jedno zdanie, Status „Gotowy”, Zrobiono = data; w Uwagach
@@ -75,10 +90,12 @@ dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z
    Status „Pytania do mnie”, a w Dzienniku „❓” linię „RES-n: <pytanie> (wzmianka)”. Research nie podejmuje decyzji i nie
    zmienia statusów zakupów ani zadań. **Zabezpieczenie** (tylko wieczorem – szybki ma być tani): każda linia RES-n w „❓”,
    której research nie ma już Statusu „Pytania do mnie”, idzie do „Przetworzone” z dopiskiem „→ rozwiązane poza Dziennikiem”.
-7. **Wpis w „📆 Przeglądy dzienne”** (`3faf5982-09e7-81df-a361-cc65fddb81f4`, pod Dziennikiem) – **codziennie**, także
+8. **Wpis w „📆 Przeglądy dzienne”** (`3faf5982-09e7-81df-a361-cc65fddb81f4`, pod Dziennikiem) – **codziennie**, także
    w spokojny dzień: zwijany nagłówek „Przegląd dnia – <dzień tygodnia> <data>” na górze strony (najnowszy pierwszy):
    ```
    **Dziś:** 3–6 punktów – prywatne / dziecko / praca (bez treści emocji – tylko „emocje: n wpisów”)
+   **Zadania (wszystkie obszary):** zamknięte n (nazwy) · w toku / czeka n · dodane lub zmienione n · z Dziennika n ·
+   uzupełniono n wierszy (pola)   ← brak zmian → „bez zmian”
    **Czeka na Ciebie:** n pytań w ❓ (rozwiń w Dzienniku)
    **Jutro – plan:** zadania z terminem wg priorytetu, po terminie na górze, „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Research:** n gotowych, m czeka na Ciebie – wzmianki stron RES-n (brak researchu → pomiń linię)
@@ -88,12 +105,12 @@ dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z
    **Ręczny przebieg** (prośba w rozmowie) = osobny wpis z tą samą datą i dopiskiem „(ręczne)”, kolejne „(ręczne 2)”… –
    tak samo w przeglądzie budowy. Nigdy nie nadpisuj wcześniejszego wpisu – sprostowanie to jedna linia kursywą na jego
    górze z odesłaniem.
-8. **Linia „🤖”** – na górze dzisiejszego bloku w „Przetworzone”, w tej samej edycji Dziennika co krok 1:
+9. **Linia „🤖”** – na górze dzisiejszego bloku w „Przetworzone”, w tej samej edycji Dziennika co krok 1:
    ```
-   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · czeka na Ciebie 1 · pomysły – 1 · research: 1 gotowy · jutro: 2 prywatne, 3 budowa → przeglądy
+   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · zadania: 3 zamknięte, uzupełniono 2 · czeka na Ciebie 1 · pomysły – 1 · research: 1 gotowy · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy
    ```
-9. **Odpowiedź** (log zadania): linia „🤖” + lista zapisów (gdzie, link) i błędów.
+10. **Odpowiedź** (log zadania): linia „🤖” + lista zapisów (gdzie, link) i błędów.
 
 ## Koszt i częstotliwość
 

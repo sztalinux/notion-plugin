@@ -29,6 +29,7 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 | Przegląd dnia – sprawy osobiste (dziś / jutro; ręczne „(ręczne)”) | 📆 Przeglądy dzienne (pod Dziennikiem) | `3faf5982-09e7-81df-a361-cc65fddb81f4` | – |
 | Przegląd tygodnia – sprawy osobiste | 📅 Przeglądy tygodniowe (pod Dziennikiem) | `3faf5982-09e7-81e3-a6af-e3786ca4a074` | – |
 | Widoki do przeglądu tygodnia (tryb view) | TASKS „🤖 Tydzień – prywatne”, Wpisy emocji „🤖 Ostatni tydzień”, Dziennik produktywności „🤖 Ostatni tydzień” | `view://3faf5982-09e7-81b5-ad0a-000c1cfabfa0`, `view://3faf5982-09e7-81ec-83af-000c8b518d37`, `view://3faf5982-09e7-81af-9ea1-000cbe3dd643` | – |
+| Widok do przeglądu dnia (tryb view) | TASKS „🤖 Zmiany – od wczoraj (przegląd dnia)” – wszystkie obszary, ostatnia edycja od wczoraj, najnowsze pierwsze; czasy w UTC, dzień tnie procedura (`przeglad-dnia`, krok 5) | `view://3fef5982-09e7-81ec-b46b-000c107597a5` | Name, Obszar, Status, When, Priority, Kategoria, Kto, Desc, Harmonogram, Research, Last edited time |
 | Relacja z narzeczoną (do przegadania, prezenty, wspólny czas, daty) | 💞 Relacja (pod 👨‍👩‍👧 Rodzina) | `3faf5982-09e7-81ac-9071-d72e1036eb1f` | sekcje: 💬 Do przegadania, 🎁 Prezenty i niespodzianki, 💡 Wspólny czas i randki, 📅 Ważne daty |
 | Strona startowa ze skrótami | 📌 DASHBOARD (zakładki obszarów; podstrona 🗺 Mapa Notion) | `8ef0a264-9b9e-4463-8e2e-2c64887f110d` | – |
 | **Poza zasięgiem asystenta** | 🔒 Prywatne i jej podstrony – nie czytaj, nie przeszukuj, nie cytuj (`ja`, zasada 5) | `3faf5982-09e7-816b-92ab-d8b79c61ad92` | – |

@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.5.0] – 2026-10-19
+
+- `przeglad-dnia`, tryb wieczorny: nowy krok 5 „Zadania – zmiany dnia i luki w kolumnach” – zadania ze wszystkich obszarów
+  zmienione tego dnia (także ręcznie w Notion): zamknięte, w toku, dodane lub zmienione, osobno te ruszone przez procedury;
+  wynik w nowej linii „Zadania” wpisu w Przeglądach dziennych i w liczniku linii „🤖”. Odczyt przez nowy widok TASKS
+  „🤖 Zmiany – od wczoraj (przegląd dnia)”, dzień cięty po czasie polskim. Kolejne kroki przenumerowane (Jutro 6, Research 7,
+  wpis 8, linia „🤖” 9, odpowiedź 10).
+- `zadania`: nowa sekcja D – reguły uzupełniania pustych kolumn (Obszar, Kto, Priority, Kategoria, Desc; Status i When bez zmian,
+  wątpliwości do „❓”); „zrobiłem X” szuka też zadań zamkniętych w ostatnich 7 dniach, żeby ręcznie zamknięte zadanie
+  nie dawało fałszywego „nie znalazłem”.
+- Mapa Notion `ja`: widok przeglądu dnia z ID. README i `AGENTS.md`: opis przeglądu dnia.
+
 ## dom-budowa [2.5.0] – 2026-10-19
 
 - Nowe narzędzie `tools/wiedza_jakosc.py` – obserwator jakości wyszukiwania w indeksie wiedzy (POM-10): zbiór złoty
