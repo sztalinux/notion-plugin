@@ -81,10 +81,18 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    → jedno zbiorcze „❓” w formacie `wpisy/references/pytania.md`). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie
    (krok 8) i do linii „🤖” weź liczby per kategoria, nazwy zamkniętych i zmienionych (max 5 na obszar, reszta „+k”) i listę
    uzupełnionych pól.
-6. **Jutro – sprawy osobiste** (tylko odczyt): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
+6. **Jutro – sprawy osobiste** (odczyt; jedyny zapis – zadanie z suplementami, niżej): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
    (When < dziś, niezakończone), suplementy z Buy = tak (licznik), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)
    sprawdź ID, jeśli któryś odczyt się nie powiedzie.
+
+   **Suplementy do zamówienia:** gdy jest choć jeden z Buy = tak, poszukaj w TASKS (wyszukiwarka z parametrem bazy, „suple”,
+   wśród niezakończonych) otwartego zadania „Zamówić suple”. Jest → dopisz do niego brakujące suplementy (Name i treść strony),
+   bez dublowania. Brak → załóż jedno zbiorcze: Name „Zamówić suple: <nazwy>”, Obszar Prywatne, Kategoria Zakup, Kto Ja,
+   Priority Medium, Status TO DO, When = dzień przeglądu + 3 dni (najpóźniej, nigdy dalej), Desc jedno zdanie, lista (nazwa,
+   kto, link) w treści strony. Nie ruszaj pola Buy ani bazy 🛒 Zakupy – odznaczenie robi `suple` po „kupiłem”, a zadanie
+   zamyka `zadania` po „zamówiłem” / „zrobione”. Dopisz „zadanie: zamówić suple (<termin>)” albo „suple: zadanie już jest”
+   w „Jutro – plan” wpisu (krok 8) i w linii „🤖” (krok 9). Tylko tryb wieczorny; szybki przebieg bez zmian.
 7. **Research** (baza 🔎 Research, RES-n; widok „🔎 Do zrobienia” – ID w `ja/references/notion-mapa.md`): weź max 2 najstarsze.
    Dla każdego przeczytaj zlecenie i powiązany zakup / zadanie, zrób research w sieci (aktualne źródła, ceny i sklepy w Polsce)
    i dopisz w treści strony „## Wynik (asystent, data)”: Rekomendacja (1–2 zdania), Opcje (tabela: co, cena orientacyjna,

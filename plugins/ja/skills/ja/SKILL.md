@@ -98,5 +98,8 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
 
 ## Domknięcie rozmowy
 
-Na koniec pracy, która coś zmieniła: **Zmienione** (co i gdzie, link) · **Otwarte** (pytania czekające na inwestora) ·
-**Następny krok** (jedna rzecz). Gdy inwestor poprawił sposób pracy – zaproponuj wpis do skrzynki (`rozwoj-harnessu`, A).
+Na koniec pracy, która coś zmieniła, trzy bloki w tej kolejności: **🛑 Potrzebuję Twojej odpowiedzi** (na samej górze, tylko
+gdy coś stoi: czego dotyczy + jedno pytanie z propozycją domyślną; pytania zapisane w „❓” wymień jedną linią) ·
+**✅ Zrobione** (co i gdzie, link) · **⏳ Niezrobione** (co pominięto lub odłożono i dlaczego). Brak 🛑 oznacza, że nic nie
+wisi na inwestorze – nie dopisuj ostrzeżeń „na wszelki wypadek”. Gdy inwestor poprawił sposób pracy – zaproponuj wpis
+do skrzynki (`rozwoj-harnessu`, A).

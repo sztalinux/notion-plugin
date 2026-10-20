@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.5.3] – 2026-10-20
+
+- HZ-10: `przeglad-dnia`, tryb wieczorny, krok 6 – gdy suplement ma Buy = tak, przegląd zakłada jedno zbiorcze zadanie
+  „Zamówić suple: <nazwy>” z terminem najdalej za 3 dni (albo dopisuje do istniejącego, bez dublowania); pola Buy i bazy
+  Zakupy nie rusza; wzmianka w „Jutro – plan” i w linii „🤖”.
+- `ja`, „Domknięcie rozmowy”: stały format odpowiedzi – 🛑 Potrzebuję Twojej odpowiedzi (na górze, tylko gdy coś stoi),
+  ✅ Zrobione, ⏳ Niezrobione. PATCH – zmiany treści. (Reguła równoległych sesji i ten sam format w `CLAUDE.md`.)
+
 ## dom-budowa [2.6.0] – 2026-10-19
 
 - Nowe polecenie `tools/wiedza_jakosc.py sedzia` (moduł `tools/wiedza_sedzia.py`) – sędzia LLM dla obserwatora jakości: niezależny
