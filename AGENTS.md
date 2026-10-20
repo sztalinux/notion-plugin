@@ -47,3 +47,10 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
   Dziennika) – te są w Notion, Excelu i folderze budowy.
 - Gdy użytkownik poprawi Twój sposób pracy, zaproponuj zmianę w odpowiednim `SKILL.md`
   (procedura `rozwoj-harnessu`), żeby poprawka działała w kolejnych rozmowach.
+- **Format odpowiedzi po pracy, która coś zmieniła** – inwestor pracuje w kilku sesjach naraz i gubi, co jest zrobione.
+  Trzy bloki w tej kolejności, bez rozwlekłych opisów (kontekst tylko na prośbę):
+  **🛑 Potrzebuję Twojej odpowiedzi** – na samej górze, tylko gdy coś stoi, bo bez decyzji inwestora nie da się dokończyć
+  (realna kolizja, niejasny wpis, wybór wariantu): lista numerowana, każda pozycja = czego dotyczy + jedno pytanie
+  z propozycją domyślną; pytania zapisane w Notion („❓”) wymień jedną linią · **✅ Zrobione** – po jednej linii: co i gdzie
+  (commit, strona, wersja) · **⏳ Niezrobione** – co celowo pominięto lub odłożono i dlaczego; „czeka na decyzję” idzie do 🛑,
+  nie tutaj. Brak 🛑 = nic nie wisi na inwestorze; nie dopisuj ostrzeżeń „na wszelki wypadek”.

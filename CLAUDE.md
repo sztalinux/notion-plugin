@@ -19,7 +19,7 @@ Zanim zajmiesz się czymkolwiek innym:
     pliki (`git add <pliki>`, nie `git add -A`; obce zmiany zostaw bez komentarza). Zatrzymaj się dopiero na realnej
     kolizji zauważonej w trakcie pracy: obce niezacommitowane zmiany w tym samym miejscu pliku, który sam edytujesz,
     albo ta sama strona lub baza Notion jest właśnie zmieniana w sposób wykluczający Twój zapis. Zrób wtedy wszystko, co się
-    da bez kolizji, a kolizję zgłoś w bloku „🛑 Potrzebuję Twojej odpowiedzi” (sekcja „Format odpowiedzi” niżej).
+    da bez kolizji, a kolizję zgłoś w bloku „🛑 Potrzebuję Twojej odpowiedzi” (format odpowiedzi – `AGENTS.md`, zasady).
     Przed commitem `git pull` – gdy inna sesja podbiła wersję pluginu, ustaw swoją wyżej.
 1. `git pull` – żeby pracować na aktualnej wersji.
 2. Sprawdź skrzynkę **„Zmiany do harnessu”** w Notion (`collection://e217448a-60ec-4af6-8584-8f368315109c`),
@@ -40,17 +40,3 @@ Zanim zajmiesz się czymkolwiek innym:
 (walidator i hook `pre-commit` pomagają, ale nie zastępują przejrzenia `git diff`).
 
 Nie pomijaj tego kroku, nawet gdy pierwsza wiadomość dotyczy czegoś innego – wykonaj go najpierw, krótko.
-
-## Format odpowiedzi – żeby nic się nie gubiło
-
-Inwestor pracuje w kilku sesjach naraz i gubi się, co jest zrobione, a co czeka. Odpowiedź po pracy, która coś zmieniła,
-ma stałą, krótką budowę (kontekst i opisy dawaj tylko na prośbę):
-
-1. **🛑 Potrzebuję Twojej odpowiedzi** – na samej górze, tylko gdy coś stoi, bo bez decyzji inwestora nie da się dokończyć
-   (realna kolizja sesji, niejasny wpis, wybór między wariantami). Lista numerowana: czego dotyczy + jedno pytanie
-   z propozycją domyślną. Pytania zapisane w Notion („❓”) wymień tu jedną linią. Nic innego tu nie wpisuj.
-2. **✅ Zrobione** – po jednej linii: co i gdzie (commit, strona, wersja).
-3. **⏳ Niezrobione** – co celowo pominięto lub odłożono i dlaczego. Pozycja „czeka na decyzję” idzie do punktu 1, nie tutaj.
-
-Brak punktu 1 oznacza, że nic na inwestorze nie wisi – nie zapełniaj odpowiedzi ostrzeżeniami ani uwagami „na wszelki
-wypadek”.

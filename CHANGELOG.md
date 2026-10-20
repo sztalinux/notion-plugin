@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.6.1] – 2026-10-20
+
+- `budowa` („Domknięcie każdej rozmowy”) i `etap` (wynik w rozmowie): ten sam stały format odpowiedzi co w `ja` – 🛑 Potrzebuję
+  Twojej odpowiedzi (na górze, tylko gdy coś stoi), ✅ Zrobione, ⏳ Niezrobione. PATCH – zmiana treści.
+
+## ja [1.5.4] – 2026-10-20
+
+- Format odpowiedzi po pracy (🛑 / ✅ / ⏳) jest teraz jedną regułą w `AGENTS.md` (czytają ją wszyscy agenci), a nie tylko w `CLAUDE.md`
+  i `ja`; `wpisy` (podsumowanie) i `rozwoj-harnessu` (krok B.8) używają go też.
+- `rozwoj-harnessu`, B.6: usunięte „obce zmiany zgłoś” – równoległe sesje nie są powodem do uwag w odpowiedzi; kolizję zgłasza się
+  tylko, gdy realnie utrudnia zmianę (`CLAUDE.md`, 0a). PATCH – zmiana treści.
+
 ## ja [1.5.3] – 2026-10-20
 
 - HZ-10: `przeglad-dnia`, tryb wieczorny, krok 6 – gdy suplement ma Buy = tak, przegląd zakłada jedno zbiorcze zadanie

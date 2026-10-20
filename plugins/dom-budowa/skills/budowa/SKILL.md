@@ -175,10 +175,11 @@ własny przegląd, żeby nie zasłaniała spraw osobistych.
 
 ## Domknięcie każdej rozmowy
 
-Na koniec pracy, która coś zmieniła, podaj krótko:
+Na koniec pracy, która coś zmieniła, trzy bloki w tej kolejności (ten sam format co w `AGENTS.md` i skillu `ja`):
 
-- **Zmienione:** co i gdzie (plik/strona Notion/wiersz).
-- **Otwarte:** pytania i decyzje, które czekają (z adresatem: konstruktor, wykonawca…).
-- **Następny krok:** jedna konkretna rzecz.
+- **🛑 Potrzebuję Twojej odpowiedzi** – na samej górze, tylko gdy coś stoi: czego dotyczy + jedno pytanie z propozycją domyślną.
+- **✅ Zrobione** – po jednej linii: co i gdzie (plik, strona Notion, wiersz).
+- **⏳ Niezrobione** – co pominięto lub odłożono i dlaczego, także pytania czekające na kogoś innego (konstruktor,
+  wykonawca…) – z adresatem i terminem.
 
-Jeśli powstały nowe pytania lub decyzje, zapisz je procedurą `notatka`.
+Brak 🛑 oznacza, że nic nie wisi na inwestorze. Jeśli powstały nowe pytania lub decyzje, zapisz je procedurą `notatka`.

@@ -98,7 +98,8 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    Kolejny przebieg tego dnia (np. ręczny) – druga linia „🤖 … (ręczne)” w tym samym bloku. W rozmowie z inwestorem
    przy > 3 wpisach pokaż plan (tabela: wpis | obszar | gdzie trafi | pytanie?) i poproś o „ok”, chyba że powiedział
    „bez pytania”; w przeglądzie dnia – bez pytań.
-8. **Podsumuj:** przetworzone (wpis → gdzie), do wyjaśnienia (wpis: pytanie), pominięte; Zmienione / Otwarte / Następny krok.
+8. **Podsumuj** w blokach z `ja` („Domknięcie rozmowy”): 🛑 wpisy do wyjaśnienia (wpis: pytanie) · ✅ przetworzone (wpis → gdzie) ·
+   ⏳ pominięte i dlaczego.
    „Przetworzone” czyści przegląd tygodnia (bloki dni starsze niż 14 dni, po zgodzie).
 
 ## Bez inwestora
