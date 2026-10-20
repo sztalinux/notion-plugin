@@ -14,7 +14,7 @@ Konfiguracja projektu „Dom” na claude.ai (instrukcje, wiedza): `references/c
 | Gdzie jesteś | Co robisz |
 |---|---|
 | Czat, telefon, Cowork, inne AI (bez repo) | **Zgłoszenie** do skrzynki w Notion – sekcja A |
-| Claude Code w folderze repo | **Wdrożenie** skrzynki do plików + push – sekcja B (robisz to też na starcie każdej sesji) |
+| Claude Code w folderze repo | **Wdrożenie** skrzynki do plików + push – sekcja B (na starcie sesji tylko po zaznaczeniu „Skrzynka zmian” na liście startowej, `CLAUDE.md`) |
 | Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, Excel) | **Pomysł** do bazy „Pomysły na rozwój” → analiza → wdrożenie na polecenie – sekcja C |
 
 Skrzynka = konkretna reguła, wchodzi od razu. Pomysł = coś do przemyślenia; nic nie wchodzi samo, decyduje inwestor.
@@ -45,7 +45,7 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
 2. Sprawdź w skrzynce, czy podobny wpis już nie czeka – jeśli tak, uzupełnij go zamiast dublować.
 3. Zapisz jednym wywołaniem, Status „Do wdrożenia”. Od tej chwili zmiana obowiązuje wszędzie
    (procedura `budowa`, sekcja „Na starcie”).
-4. Potwierdź jedną linią: „Zapisane jako HZ-n – obowiązuje od teraz, wejdzie do repo przy następnej sesji Claude Code”.
+4. Potwierdź jedną linią: „Zapisane jako HZ-n – obowiązuje od teraz, wejdzie do repo, gdy zaznaczysz „Skrzynka zmian” na starcie sesji Claude Code”.
 
 ## B. Wdrożenie (tylko Claude Code w folderze repo)
 
@@ -94,7 +94,7 @@ Treść strony: pomysł inwestora (nie zmieniaj), pod nim sekcja „Analiza” p
 sprawdź, czy podobny już jest (uzupełnij zamiast dublować); nowy wiersz – tytuł, Obszar, w treści „## Pomysł (kto, data)”
 i słowa inwestora. Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to nie pomysł – sekcja A.
 
-**Analiza** (wpisy Nowy lub pusty; w przeglądzie dnia `przeglad-dnia` automatycznie, inaczej na prośbę i na starcie Claude Code):
+**Analiza** (wpisy Nowy lub pusty; w przeglądzie dnia `przeglad-dnia` automatycznie, inaczej na prośbę):
 1. Przeczytaj pomysł i przejrzyj, co już jest: procedury (mapy w `ja` i `budowa`, odpowiednie `SKILL.md`), mapy Notion
    (`ja/references/notion-mapa.md`, `budowa/references/notion-mapa.md`), inne pomysły (zależności, duplikaty). Wiersz dodany
    ręcznie z pustymi polami → uzupełnij je przy analizie (Obszar, Status, Nakład, Wymaga ode mnie).

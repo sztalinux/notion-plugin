@@ -1,14 +1,42 @@
 @AGENTS.md
 
-## Claude Code w tym repozytorium – obowiązkowo na starcie każdej sesji
+## Claude Code w tym repozytorium – start sesji i zasady pracy
 
 To repozytorium jest źródłem harnessu – dwóch pluginów: `ja` (`plugins/ja/skills/`) i `dom-budowa`
 (`plugins/dom-budowa/skills/`). Procedury czytasz z dysku (`.claude/skills/` – dowiązanie na każdy skill obu pluginów,
 odtwarza je `python3 tools/build.py`), a nie z pluginów zainstalowanych na koncie (te są tu wyłączone w `.claude/settings.json`).
 
-Zanim zajmiesz się czymkolwiek innym:
+### Start sesji: lista wyboru, domyślnie nic
 
-0. Jednorazowo (jeśli `git config core.hooksPath` nie zwraca `.githooks`): `git config core.hooksPath .githooks`
+Na starcie nic nie uruchamia się samo (hooków startowych nie ma w `.claude/settings.json`) – inwestor nie zawsze chce, żeby
+sesja coś robiła. Pierwszą czynnością sesji, przed czymkolwiek innym i także gdy pierwsza wiadomość jest zadaniem, jest jedno
+pytanie z listą wielokrotnego wyboru (narzędzie AskUserQuestion, `multiSelect`), **bez żadnej zaznaczonej pozycji**:
+
+- Pytanie „Harness i repo”:
+  - **Skrzynka zmian** – `git pull`; wpisy „Zmiany do harnessu” (`collection://e217448a-60ec-4af6-8584-8f368315109c`) ze Statusem
+    „Do wdrożenia” **albo pustym** (inwestor dodaje je ręcznie bez pól – uzupełnij je, HZ-3) wdroż wg
+    `plugins/ja/skills/rozwoj-harnessu/SKILL.md`, sekcja „Wdrożenie” (zmiana plików → wersja → CHANGELOG →
+    `python3 tools/build.py` → commit → push → oznaczenie wpisów jako „Wdrożone”). Wpis niejasny albo sprzeczny z inną
+    procedurą – zapytaj inwestora przed wdrożeniem. Skrzynka pusta – jedna linia „Harness aktualny (dom-budowa X.Y.Z, ja X.Y.Z)”.
+  - **Pomysły** – jedna linia „Pomysły: n nowych do analizy, m »Do zrobienia«” z bazy „Pomysły na rozwój”
+    (`collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3`; pomiń przy zerach). Niczego z niej nie analizuj ani nie wdrażaj bez
+    polecenia „zrób POM-n” (`rozwoj-harnessu`, sekcja C).
+  - **git pull** – zaktualizuj repo.
+- Pytanie „Dane i dokumenty”:
+  - **Dokumenty budowy** – `python3 tools/dokumenty.py`; „Przewodnik zmieniony” → od razu przepisz stronę przewodnika w Notion
+    (`dokumenty`, sekcja C), bez pytania. Nowe pliki do sklasyfikowania – zaproponuj ich obsługę wg
+    `plugins/dom-budowa/skills/dokumenty/SKILL.md` (jedna linia); listy „Kopia awaryjna” nie przypominaj.
+  - **Indeks wiedzy** – `python3 tools/wiedza.py sync --publikuj --cicho`, potem `python3 tools/wiedza_jakosc.py przypomnij --cicho`;
+    wynik w jednej linii.
+
+Wykonaj tylko to, co inwestor zaznaczył. Brak zaznaczenia, odrzucenie pytania albo „nic” = nic z listy, od razu zadanie
+z pierwszej wiadomości. Przed wyborem nie czytaj Notion i nie uruchamiaj skryptów (opisy opcji bez liczb). Gdy pytanie jest
+niemożliwe (tryb nieinteraktywny) – pomiń listę i nic nie uruchamiaj. Prośba w trakcie sesji („wdróż skrzynkę”, „odśwież
+indeks”) działa tak samo jak zaznaczenie.
+
+### Zasady pracy w repo
+
+0. Przed pierwszym commitem w sesji (jeśli `git config core.hooksPath` nie zwraca `.githooks`): `git config core.hooksPath .githooks`
    – włącza hooki prywatności: `pre-commit` (pliki + autor), `commit-msg` (wiadomość), `pre-push` (każdy wysyłany commit).
    Autor commitów: imię inwestora albo login – dozwolone; e-mail tylko `…@users.noreply.github.com` (historia jest publiczna).
    W historii nigdy nie mogą się znaleźć dane innych osób (projektanci, wykonawcy, urzędy) – raz wypchniętych
@@ -21,22 +49,6 @@ Zanim zajmiesz się czymkolwiek innym:
     albo ta sama strona lub baza Notion jest właśnie zmieniana w sposób wykluczający Twój zapis. Zrób wtedy wszystko, co się
     da bez kolizji, a kolizję zgłoś w bloku „🛑 Potrzebuję Twojej odpowiedzi” (format odpowiedzi – `AGENTS.md`, zasady).
     Przed commitem `git pull` – gdy inna sesja podbiła wersję pluginu, ustaw swoją wyżej.
-1. `git pull` – żeby pracować na aktualnej wersji.
-2. Sprawdź skrzynkę **„Zmiany do harnessu”** w Notion (`collection://e217448a-60ec-4af6-8584-8f368315109c`),
-   wpisy ze Statusem „Do wdrożenia” **albo pustym** (inwestor dodaje je ręcznie bez pól – uzupełnij je, HZ-3).
-3. Jeśli są – wdroż je od razu wg `plugins/ja/skills/rozwoj-harnessu/SKILL.md`, sekcja „Wdrożenie”
-   (zmiana plików → wersja → CHANGELOG → `python3 tools/build.py` → commit → push → oznaczenie wpisów jako „Wdrożone”).
-   Jeśli wpis jest niejasny albo sprzeczny z inną procedurą – zapytaj inwestora, zanim go wdrożysz.
-4. Jeśli skrzynka jest pusta – napisz jedną linię „Harness aktualny (dom-budowa X.Y.Z, ja X.Y.Z)”.
-4a. Baza **„Pomysły na rozwój”** (`collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3`): dopisz jedną linię „Pomysły: n nowych do analizy,
-    m »Do zrobienia«” (pomiń przy zerach). Niczego z niej nie wdrażaj bez polecenia „zrób POM-n”
-    (`rozwoj-harnessu`, sekcja C).
-5. Raport „[dokumenty]” z hooka startowego (`tools/dokumenty.py`): „Przewodnik zmieniony” → od razu przepisz stronę
-   przewodnika w Notion (`dokumenty`, sekcja C), bez pytania. Jeśli są nowe pliki do sklasyfikowania –
-   zaproponuj ich obsługę wg `plugins/dom-budowa/skills/dokumenty/SKILL.md` (jedna linia); jeśli jest lista
-   „Kopia awaryjna” – nie przypominaj (wgrywanie opcjonalne). Potem przejdź do zadania.
 
 **Repo jest publiczne** – przed każdym commitem sprawdź, że nie ma w nim danych osobowych ani danych projektu
 (walidator i hook `pre-commit` pomagają, ale nie zastępują przejrzenia `git diff`).
-
-Nie pomijaj tego kroku, nawet gdy pierwsza wiadomość dotyczy czegoś innego – wykonaj go najpierw, krótko.

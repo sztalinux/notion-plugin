@@ -6,7 +6,8 @@ miejscem zapisu – nigdy nie zapisuj wiedzy do indeksu. Trzy kanały dostępu m
 
 ## Claude Code – sesja interaktywna w repo
 
-Indeks odświeża się sam na starcie sesji. Polecenia uruchamiaj z katalogu repo:
+Indeks odświeża się na żądanie – pozycją „Indeks wiedzy” z listy startowej Claude Code albo poleceniem `sync` poniżej; bez tego bywa
+nieaktualny. Polecenia uruchamiaj z katalogu repo:
 - `python3 tools/wiedza.py szukaj "przerwa robocza płyta" [--etap "Stan zero"] [--limit 12]` – wpisz 2–4 słowa
   treściowe, bez zdania i spójników („czy”, „jak”, „na” program i tak odrzuci). Końcówki fleksyjne program przycina sam,
   więc „drenażu” znajdzie też „drenaż” (wyżej stoją informacje z dokładnie wpisaną formą). `drena*` (prefiks)

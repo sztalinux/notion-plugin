@@ -29,7 +29,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     plugins/ja/skills/                ← procedury osobiste (Dziennik, zadania, emocje, dziecko, suple, przegląd dnia, harness)
     plugins/dom-budowa/skills/        ← procedury budowy
     .claude/skills/, .agents/skills/  ← dowiązania na każdy skill obu pluginów (odtwarza tools/build.py)
-    .claude/settings.json             ← zezwolenia + dwa hooki startowe (tools/dokumenty.py, tools/wiedza.py sync --publikuj --cicho)
+    .claude/settings.json             ← zezwolenia (hooków startowych nie ma – lista wyboru na starcie sesji: CLAUDE.md)
     .githooks/                        ← pre-commit (pliki, autor), commit-msg (wiadomość), pre-push (każdy wysyłany commit)
     tools/build.py                    ← walidacja (w tym dane osobowe) + dowiązania skilli + paczki dist/ (po jednej na plugin)
     tools/dokumenty.py                ← indeks folderu budowy i paczka dla claude.ai
@@ -41,9 +41,9 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
 ```
 Telefon / czat ── poprawka sposobu pracy ──► Notion „Zmiany do harnessu” (obowiązuje od razu)
                                                    │
-Claude Code (komputer, start sesji) ◄──────────────┘
-   ├─ hook 1 (tools/dokumenty.py): skan folderu budowy → paczka `_Do claude.ai/` + lista „do wgrania”
-   ├─ hook 2 (tools/wiedza.py sync --publikuj --cicho): odświeża indeks Bazy wiedzy z Notion i publikuje kopię dla czatu
+Claude Code (komputer; na starcie lista wyboru, domyślnie nic) ◄──┘
+   ├─ „Dokumenty budowy” (tools/dokumenty.py): skan folderu budowy → paczka `_Do claude.ai/` + lista „do wgrania”
+   ├─ „Indeks wiedzy” (tools/wiedza.py sync --publikuj --cicho): odświeża indeks Bazy wiedzy z Notion i publikuje kopię dla czatu
    ├─ klasyfikuje nowe dokumenty (procedura `dokumenty`)
    └─ wdraża zmiany harnessu → wersja → commit → push ──► GitHub sztalinux/notion-plugin
                                                                │ ręczne odświeżenie pluginów (claude-ai-projekt.md)
@@ -129,7 +129,7 @@ ocena ręczna, miesięczne porównanie z Notion; pytania wymyślone: `tools/wied
   poziomie Private – też trafi do Dziennika). Szybki przebieg co 1–2 h i wieczorny przegląd dnia rozłożą to według bazy „🧭 Obszary
   Dziennika”, a pod niejasnymi dopisze pytania w „❓”. Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
   Ręcznie: „przerób dziennik”.
-- Poprawki „na przyszłość” z telefonu trafiają do skrzynki w Notion; Claude Code wdroży je przy starcie.
+- Poprawki „na przyszłość” z telefonu trafiają do skrzynki w Notion; Claude Code wdroży je po zaznaczeniu „Skrzynka zmian” na starcie sesji.
 - Dzień na budowie → powiedz asystentowi, co się działo (telefon wystarczy) – trafi do Dziennika budowy; zdjęcia wrzuć do `Dom/Zdjęcia/RRRR-MM-DD_<krok>/`.
 - Przed krokiem „bez odwrotu” (beton, zasypka, tynki) zapytaj „co sprawdzić przed …” – dostaniesz bramkę z listą zdjęć do zrobienia.
 - Każda zmiana w repo = podbita wersja zmienionego pluginu w `plugins/<plugin>/.claude-plugin/plugin.json` (inaczej claude.ai

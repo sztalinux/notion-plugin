@@ -1,13 +1,13 @@
 ---
 name: dokumenty
-description: Porządek w dokumentach budowy (folder budowy na komputerze inwestora) i paczka aktualnych plików dla claude.ai. Używaj, gdy raport „[dokumenty]” na starcie sesji pokazuje nowe lub zmienione pliki, gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co mam wgrać do claude.ai”, „wgrałem”, albo pyta, gdzie jest dany dokument lub która wersja jest aktualna.
+description: Porządek w dokumentach budowy (folder budowy na komputerze inwestora) i paczka aktualnych plików dla claude.ai. Używaj, gdy raport „[dokumenty]” (z listy startowej) pokazuje nowe lub zmienione pliki, gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co mam wgrać do claude.ai”, „wgrałem”, albo pyta, gdzie jest dany dokument lub która wersja jest aktualna.
 ---
 
 # Dokumenty budowy
 
 Wszystkie pliki od projektantów, wykonawców i urzędów leżą w **folderze budowy** na komputerze inwestora
 (katalog dwa poziomy nad repo harnessu; inny – zmienna `DOM_HUB`). Inwestor wrzuca je tam, najlepiej do `_Przychodzące/`.
-Skrypt `tools/dokumenty.py` (uruchamiany automatycznie na starcie każdej sesji Claude Code) prowadzi indeks plików
+Skrypt `tools/dokumenty.py` (uruchamiany z listy startowej Claude Code – pozycja „Dokumenty budowy” – albo na polecenie) prowadzi indeks plików
 i buduje folder `_Do claude.ai/` – paczkę do wgrania w wiedzy projektu „Dom” na claude.ai.
 
 **Przewodnik po dokumentach** (każdy aktualny dokument: co to jest, na jakie pytania odpowiada, gdzie leży, plus mapa

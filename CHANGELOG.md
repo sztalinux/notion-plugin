@@ -4,6 +4,19 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.6.2] – 2026-10-20
+
+- Start sesji Claude Code nie uruchamia już niczego sam: hooki `SessionStart` (skan dokumentów, synchronizacja indeksu wiedzy
+  z publikacją kopii, przypominacz jakości wyszukiwania) usunięte z `.claude/settings.json`; polecenia zostają jako pozycje listy
+  wyboru na starcie sesji („Dokumenty budowy”, „Indeks wiedzy”). `dokumenty` i `wiedza/references/indeks.md` opisują to wprost.
+  PATCH – zmiana treści.
+
+## ja [1.5.5] – 2026-10-20
+
+- Lista wyboru na starcie sesji Claude Code (`CLAUDE.md`): Skrzynka zmian, Pomysły, git pull, Dokumenty budowy, Indeks wiedzy –
+  domyślnie nic nie zaznaczone; wcześniej skrzynka, pomysły i przewodnik wykonywały się automatycznie. `ja` („Na starcie rozmowy”)
+  i `rozwoj-harnessu` (tabela, krok A.4, sekcja C) zgodne z tym; `AGENTS.md` i README opisują nowy start. PATCH – zmiana treści.
+
 ## dom-budowa [2.6.1] – 2026-10-20
 
 - `budowa` („Domknięcie każdej rozmowy”) i `etap` (wynik w rozmowie): ten sam stały format odpowiedzi co w `ja` – 🛑 Potrzebuję

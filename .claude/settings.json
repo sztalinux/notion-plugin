@@ -20,31 +20,5 @@
     "dom-budowa@notion-plugin": false,
     "ja@notion-plugin": false,
     "dom-budowa@dom-budowa": false
-  },
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/tools/dokumenty.py\"",
-            "timeout": 120,
-            "statusMessage": "Sprawdzam dokumenty budowy…"
-          },
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/tools/wiedza.py\" sync --publikuj --cicho",
-            "timeout": 120,
-            "statusMessage": "Synchronizuję indeks wiedzy…"
-          },
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/tools/wiedza_jakosc.py\" przypomnij --cicho",
-            "timeout": 30,
-            "statusMessage": "Sprawdzam jakość wyszukiwania…"
-          }
-        ]
-      }
-    ]
   }
 }
