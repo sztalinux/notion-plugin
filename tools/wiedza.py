@@ -6,9 +6,9 @@ Plik indeksu: `.dom/wiedza/wiedza.sqlite` w folderze-centrum (hub) – domyślni
 albo zmienna DOM_HUB; w czacie podaje się --db <katalog>/wiedza.sqlite.
 
     python3 tools/wiedza.py sync [--pelny] [--publikuj]   # pobierz zmiany z Notion (hook na starcie: --publikuj --cicho)
-    python3 tools/wiedza.py szukaj "ZAPYTANIE" [--etap …] [--istotnosc …] [--status …] [--rodzaj …] [--temat …]
-                                               [--ciekawostki] [--limit 12]
-    python3 tools/wiedza.py temat "NAZWA"                 # stan wiedzy, Kluczowe i otwarte SP tematu
+    python3 tools/wiedza.py szukaj "ZAPYTANIE" ["ZAPYTANIE 2" …] [--etap …] [--istotnosc …] [--status …] [--rodzaj …]
+                                               [--temat …] [--ciekawostki] [--krotko] [--limit 12]
+    python3 tools/wiedza.py temat "NAZWA" [--lista] [--krotko] [--ciekawostki]   # stan wiedzy, Kluczowe, otwarte SP
     python3 tools/wiedza.py duplikaty [--od RRRR-MM-DD] [--prog 0.82] [--temat NAZWA]
     python3 tools/wiedza.py stan                          # liczniki, daty synchronizacji i publikacji
     python3 tools/wiedza.py publikuj [--teraz] [--wymus] [--reset]   # kopia indeksu do prywatnego repo GITHUB_REPO
@@ -305,6 +305,17 @@ TEMAT_MIN = 5               # tyle liter zostaje co najmniej: 6-literowe tracą 
 # szukaj: mniej widocznych trafień AND → dopełnienie trafieniami OR; tyle co domyślny --limit, bo wąskie AND
 # (5–11 trafień) zostawiało pytaniom naturalnym krótką listę bez wierszy pasujących do części słów
 DOPELNIJ_PONIZEJ = 12
+# szukaj z kilkoma zapytaniami: wyniki łączone przez reciprocal rank fusion – suma 1 / (RRF_K + pozycja) po
+# zapytaniach; 60 to wartość z literatury (nie strojona na zbiorze testowym), wiersz z kilku list idzie wyżej
+RRF_K = 60
+LIMIT_DOMYSLNY = 12
+LIMIT_KROTKO = 25           # linia --krotko ma ok. 1/3 długości pełnej: 25 linii to ok. połowa znaków 12 pełnych
+KROTKO_TEZA = 220
+KROTKO_TEMAT = 30           # znaków nazwy tematu
+KROTKO_TEMATOW = 3
+KROTKO_ZRODEL = 2
+KROTKO_DYLEMAT = 160
+TYP_AUTORA_KONIEC = re.compile(r" / | \(")   # „Twórca / popularyzator” → „Twórca”
 
 
 def termin_tokenu(slowo: str, prefiks: bool) -> str:
@@ -1342,6 +1353,32 @@ def linia_informacji(w: dict) -> str:
     return linia
 
 
+def skrot_listy(elementy: list, n: int) -> str:
+    return "; ".join(elementy[:n]) + (f" +{len(elementy) - n}" if len(elementy) > n else "")
+
+
+def linia_krotka(w: dict, znacznik: str = "") -> str:
+    """Linia --krotko dla czatu: teza skrócona, bez tytułów źródeł, „Kto”, komentarza i linku (są w `temat`
+    i w Notion). Status tylko inny niż „Nowe”; SP-n, „źr: Notatnik” i sam znak 💬 zostają – na nich opierają się
+    reguły procedury `wiedza` (sprzeczności, ustalenia, komentarz inwestora)."""
+    zrodla = [f"ZRD-{z['zrd']} {jedna_linia(TYP_AUTORA_KONIEC.split(z['typ_autora'])[0])}/"
+              f"{jedna_linia(z['wiarygodnosc'][:1])}" for z in w["zrodla"]]
+    if w["notatnik"]:
+        zrodla.append("Notatnik")
+    czesci = [f"WI-{w['wi']}" + (f" {znacznik}" if znacznik else ""), jedna_linia(w["istotnosc"]),
+              jedna_linia(w["etap"])]
+    if normalizuj(w["status"]) not in ("", "nowe"):
+        czesci.append(jedna_linia(w["status"]))
+    czesci += [skroc(w["teza"], KROTKO_TEZA),
+               "T: " + (skrot_listy([skroc(t, KROTKO_TEMAT) for t in w["tematy"]], KROTKO_TEMATOW) or "–"),
+               "źr: " + (skrot_listy(zrodla, KROTKO_ZRODEL) or "–")]
+    if w["sp"]:
+        czesci.append(", ".join(f"SP-{n}" for n in w["sp"]))
+    if w["komentarz"].strip():
+        czesci.append("💬")
+    return " · ".join(czesci)
+
+
 def otwarte_sp(conn: sqlite3.Connection, numery: set) -> list:
     """Sprzeczności z `numery` o Statusie „Czeka na decyzję” albo „Do sprawdzenia u projektanta”, rosnąco."""
     return [{"sp": sp, "status": status or "", "dylemat": dylemat or "", "notion_url": url or ""}
@@ -1362,7 +1399,9 @@ def otwarte_sp_trafien(conn: sqlite3.Connection, trafienia: list, wyniki: list) 
             + [dict(otwarte[n], w_widocznych=False) for n in dalsze])
 
 
-def linia_sp(s: dict) -> str:
+def linia_sp(s: dict, krotko: bool = False) -> str:
+    if krotko:
+        return f"SP-{s['sp']} · {jedna_linia(s['status'])} · {skroc(s['dylemat'], KROTKO_DYLEMAT)}"
     return f"SP-{s['sp']} · {jedna_linia(s['status'])} · {jedna_linia(s['dylemat'])} · {s['notion_url'] or '–'}"
 
 
@@ -1431,31 +1470,62 @@ def wyszukaj(conn: sqlite3.Connection, zapytanie: str, a) -> tuple:
     wypełniające) → za trafieniami AND dopisane pozostałe trafienia OR (dopasowanie częściowe od pozycji pelnych + 1),
     najpierw te z większą liczbą terminów, potem wg bm25: w samym bm25 rzadkie słowo spoza tematu („stać”) wygrywa
     z wierszami pasującymi do dwóch słów tematycznych. Liczniki pominiętych z OR, bo trafienia OR obejmują AND."""
+    return wyszukaj_poziomy(conn, zapytanie, a)[:4]
+
+
+def wyszukaj_poziomy(conn: sqlite3.Connection, zapytanie: str, a, odetnij: bool = False) -> tuple:
+    """Jak wyszukaj, z piątym elementem: poziomy dopełnienia albo None (bez dopełnienia) – {"slow": n terminów,
+    "prog": ⌈n/2⌉, "polowa": ile dopisanych wierszy ma co najmniej próg terminów, "dowolne": ile mniej,
+    "odciete": czy `dowolne` odcięto}. Kolejność się nie zmienia (dopisane idą od największej liczby terminów), więc
+    poziom „co najmniej ⌈n/2⌉” stoi zawsze przed „którekolwiek”. odetnij (tryby --krotko i kilka zapytań): wiersze
+    poniżej progu wypadają, gdy pełne trafienia i poziom progu razem dają co najmniej DOPELNIJ_PONIZEJ – szum
+    pojedynczych słów nie zajmuje wtedy miejsca na liście ani w sekcji sprzeczności."""
     terminy, _ = terminy_zapytania(zapytanie)
     mecz, mecz_or = zbuduj_zapytanie_fts(zapytanie, "AND"), zbuduj_zapytanie_fts(zapytanie, "OR")
     widoczne, pominieto, oceny = wybierz(conn, mecz, a)
     widoczne = z_premia_formy_dokladnej(conn, widoczne, oceny, [p for _, p in terminy if p])
-    czesciowe, pelnych = False, len(widoczne)
+    czesciowe, pelnych, poziom = False, len(widoczne), None
     if len(widoczne) < DOPELNIJ_PONIZEJ and mecz_or is not None and mecz_or != mecz:
         widoczne_or, pominieto_or, _ = wybierz(conn, mecz_or, a)
         juz = set(widoczne)
         dalsze = [wi for wi in widoczne_or if wi not in juz]
         if dalsze:
-            licznik = pokrycie(conn, [t for t, _ in terminy if t != "OR"])
+            tresciowe = list(dict.fromkeys(t for t, _ in terminy if t != "OR"))
+            licznik = pokrycie(conn, tresciowe)
             dalsze.sort(key=lambda wi: -licznik.get(wi, 0))  # sortowanie stabilne: przy remisie zostaje bm25
+            prog = -(-len(tresciowe) // 2)
+            polowa = sum(1 for wi in dalsze if licznik.get(wi, 0) >= prog)
+            poziom = {"slow": len(tresciowe), "prog": prog, "polowa": polowa, "dowolne": len(dalsze) - polowa,
+                      "odciete": False}
+            if odetnij and poziom["dowolne"] and pelnych + polowa >= DOPELNIJ_PONIZEJ:
+                dalsze, poziom["odciete"] = dalsze[:polowa], True
             widoczne, pominieto, czesciowe = widoczne + dalsze, pominieto_or, True
-    return widoczne, pominieto, czesciowe, pelnych
+    return widoczne, pominieto, czesciowe, pelnych, poziom
 
 
-def zapisz_log_szukaj(a, start: float, widoczne: list, czesciowe: bool, pelnych: int):
-    """Jeden wiersz logu zapytań (opis w nagłówku modułu). Najlepsza próba: nic nie drukuje, nie tworzy katalogów
-    i nie rzuca wyjątków."""
+def opis_poziomu(poziom) -> str:
+    """Dopisek nagłówka po „dopasowanie częściowe od pozycji k”: ile wierszy z którego poziomu dopełnienia."""
+    if not poziom:
+        return ""
+    czesci = []
+    if poziom["prog"] > 1:
+        czesci.append(f"co najmniej {poziom['prog']} z {poziom['slow']} słów – {poziom['polowa']}")
+    if poziom["dowolne"] or poziom["prog"] <= 1:
+        czesci.append(f"którekolwiek słowo – {poziom['dowolne']}" + (" odcięte" if poziom["odciete"] else ""))
+    return ": " + ", ".join(czesci)
+
+
+def zapisz_log_szukaj(a, start: float, widoczne: list, czesciowe: bool, pelnych: int, zapytanie: str = None,
+                      wiele: int = 1):
+    """Jeden wiersz logu zapytań (opis w nagłówku modułu); przy kilku zapytaniach – wiersz na każde, z polem
+    `wiele` (ile zapytań w wywołaniu). Najlepsza próba: nic nie drukuje, nie tworzy katalogów i nie rzuca wyjątków."""
     try:
         if os.environ.get("WIEDZA_LOG") == "0" or not KATALOG.is_dir():
             return
         if sciezka_bazy(a).resolve().parent != KATALOG.resolve():
             return
-        terminy, same_stop = terminy_zapytania(a.zapytanie)
+        zapytanie = a.zapytanie[0] if zapytanie is None else zapytanie
+        terminy, same_stop = terminy_zapytania(zapytanie)
         tryb = ("stop" if same_stop else "AND" if not czesciowe
                 else "OR-only" if pelnych == 0 else "AND+dopelnienie")
         kanal = os.environ.get("WIEDZA_KANAL") or ("claude-code" if os.environ.get("CLAUDECODE") else "inny")
@@ -1464,10 +1534,14 @@ def zapisz_log_szukaj(a, start: float, widoczne: list, czesciowe: bool, pelnych:
             filtry["ciekawostki"] = True
         if a.limit != 12:
             filtry["limit"] = a.limit
-        rekord = {"ts": teraz_iso(), "kanal": kanal[:20], "q": a.zapytanie[:LOG_MAKS_ZAPYTANIE],
+        if a.krotko:
+            filtry["krotko"] = True
+        rekord = {"ts": teraz_iso(), "kanal": kanal[:20], "q": zapytanie[:LOG_MAKS_ZAPYTANIE],
                   "n_terminow": sum(1 for t, _ in terminy if t != "OR"), "tryb": tryb, "trafien": len(widoczne),
                   "pelnych": pelnych, "pokazano": min(a.limit, len(widoczne)), "top5": widoczne[:5],
                   "ms": round((time.perf_counter() - start) * 1000, 1), "filtry": filtry}
+        if wiele > 1:
+            rekord["wiele"] = wiele
         linia = (json.dumps(rekord, ensure_ascii=False) + "\n").encode("utf-8")
         import fcntl  # leniwie, jak w blokada()
         plik = KATALOG / PLIK_LOGU
@@ -1492,45 +1566,126 @@ def zapisz_log_szukaj(a, start: float, widoczne: list, czesciowe: bool, pelnych:
 
 def cmd_szukaj(a) -> int:
     start = time.perf_counter()
-    mecz = zbuduj_zapytanie_fts(a.zapytanie, "AND")
-    if mecz is None:
+    if all(zbuduj_zapytanie_fts(q, "AND") is None for q in a.zapytanie):
         blad("puste zapytanie – podaj słowa do wyszukania")
         return 1
+    if a.limit is None:
+        a.limit = LIMIT_KROTKO if a.krotko else LIMIT_DOMYSLNY
     if a.limit < 1:
         blad("--limit musi być co najmniej 1")
         return 1
+    if len(a.zapytanie) > 1:
+        return szukaj_wiele(a, start)
     with contextlib.closing(otworz_do_odczytu(a)) as conn:
-        widoczne, pominieto, czesciowe, pelnych = wyszukaj(conn, a.zapytanie, a)
+        widoczne, pominieto, czesciowe, pelnych, poziom = wyszukaj_poziomy(conn, a.zapytanie[0], a, odetnij=a.krotko)
         wyniki = opisz_informacje(conn, widoczne[:a.limit])
         sprzecznosci = otwarte_sp_trafien(conn, widoczne, wyniki)
         stan = meta_bazy(conn).get("zbudowano") or ""
         informacji = conn.execute("SELECT COUNT(*) FROM informacje").fetchone()[0]
     zapisz_log_szukaj(a, start, widoczne, czesciowe, pelnych)
     if a.json:
-        wypisz_json({"stan": stan, "zapytanie": a.zapytanie, "czesciowe": czesciowe, "pelnych": pelnych,
-                     "trafien": len(widoczne), "pominieto": pominieto, "wyniki": wyniki, "sprzecznosci": sprzecznosci})
+        wypisz_json({"stan": stan, "zapytanie": a.zapytanie[0], "czesciowe": czesciowe, "pelnych": pelnych,
+                     "trafien": len(widoczne), "pominieto": pominieto, "wyniki": wyniki, "sprzecznosci": sprzecznosci,
+                     "poziom": poziom})
         return 0
     pominiete = ", ".join(f"{k} {n}" for k, n in pominieto.items() if n)
-    naglowek = f"# indeks: stan {lokalnie(stan)} · {informacji} informacji · zapytanie: {a.zapytanie}"
+    naglowek = f"# indeks: stan {lokalnie(stan)} · {informacji} informacji · zapytanie: {a.zapytanie[0]}"
     naglowek += "".join(f" · {f}: {getattr(a, f)}" for f in FILTRY_SZUKAJ + ("temat",) if getattr(a, f) is not None)
     naglowek += f" · trafień: {len(widoczne)}"
     if len(widoczne) > a.limit:
         naglowek += f" (pokazano {a.limit})"
     if czesciowe:
-        naglowek += f" (dopasowanie częściowe od pozycji {pelnych + 1})"
+        naglowek += f" (dopasowanie częściowe od pozycji {pelnych + 1}{opis_poziomu(poziom)})"
     if pominiete:
         naglowek += f" (pominięto: {pominiete})"
     print(naglowek)
+    wypisz_wyniki(a, wyniki, {}, sprzecznosci, pominiete)
+    return 0
+
+
+def wypisz_wyniki(a, wyniki: list, znaczniki: dict, sprzecznosci: list, pominiete: str):
+    """Linie wyników (pełne albo --krotko, ze znacznikiem zapytań przy kilku), sekcja otwartych SP i stopka.
+    --krotko: SP niesione tylko przez dalsze trafienia – same numery w jednej linii (pełne linie: `temat`, Notion)."""
     for w in wyniki:
-        print(linia_informacji(w))
+        znacznik = znaczniki.get(w["wi"], "")
+        if a.krotko:
+            print(linia_krotka(w, znacznik))
+        else:
+            numer = f"WI-{w['wi']}"
+            print(numer + (f" {znacznik}" if znacznik else "") + linia_informacji(w)[len(numer):])
     if sprzecznosci:
-        dalsze = sum(not s["w_widocznych"] for s in sprzecznosci)
+        dalsze = [s for s in sprzecznosci if not s["w_widocznych"]]
         print("## Otwarte sprzeczności w trafieniach"
-              + (f" ({dalsze} tylko w dalszych trafieniach)" if dalsze else ""))
+              + (f" ({len(dalsze)} tylko w dalszych trafieniach)" if dalsze else ""))
         for s in sprzecznosci:
-            print(linia_sp(s) + ("" if s["w_widocznych"] else " · (tylko w dalszych trafieniach)"))
+            if a.krotko and not s["w_widocznych"]:
+                continue
+            print(linia_sp(s, a.krotko) + ("" if s["w_widocznych"] else " · (tylko w dalszych trafieniach)"))
+        if a.krotko and dalsze:
+            print("tylko w dalszych trafieniach: " + ", ".join(f"SP-{s['sp']}" for s in dalsze))
     if pominiete:
         print(f"# pominięto: {pominiete} – ciekawostki pokaże --ciekawostki, nieaktualne --status Nieaktualne")
+
+
+def polacz_rrf(listy: dict) -> list:
+    """{numer zapytania: [WI w kolejności]} → [(WI, [numery zapytań, które go znalazły])] wg sumy 1 / (RRF_K +
+    pozycja); remis – lepsza najwyższa pozycja, potem mniejszy numer WI."""
+    punkty = {}
+    for nr, lista in listy.items():
+        for poz, wi in enumerate(lista, 1):
+            p = punkty.setdefault(wi, [0.0, poz, []])
+            p[0] += 1 / (RRF_K + poz)
+            p[1] = min(p[1], poz)
+            p[2].append(nr)
+    return [(wi, punkty[wi][2]) for wi in sorted(punkty, key=lambda w: (-punkty[w][0], punkty[w][1], w))]
+
+
+def szukaj_wiele(a, start: float) -> int:
+    """szukaj z kilkoma zapytaniami: każde osobno (dopełnienie z odcięciem, jak --krotko), wyniki połączone bez
+    duplikatów (polacz_rrf), przy linii znacznik `[1,3]` – numery zapytań (w kolejności podania), które ją znalazły.
+    Zapytanie bez terminów (np. samo „OR” albo znaki interpunkcji) jest pomijane z dopiskiem w nagłówku."""
+    numery = [(nr, q) for nr, q in enumerate(a.zapytanie, 1) if zbuduj_zapytanie_fts(q, "AND") is not None]
+    with contextlib.closing(otworz_do_odczytu(a)) as conn:
+        listy, opisy = {}, []
+        for nr, q in numery:
+            t0 = time.perf_counter()
+            widoczne, pominieto, czesciowe, pelnych, poziom = wyszukaj_poziomy(conn, q, a, odetnij=True)
+            listy[nr] = widoczne
+            opisy.append({"nr": nr, "zapytanie": q, "trafien": len(widoczne), "czesciowe": czesciowe,
+                          "pelnych": pelnych, "poziom": poziom, "pominieto": pominieto})
+            zapisz_log_szukaj(a, t0, widoczne, czesciowe, pelnych, q, len(a.zapytanie))
+        polaczone = polacz_rrf(listy)
+        wyniki = opisz_informacje(conn, [wi for wi, _ in polaczone[:a.limit]])
+        sprzecznosci = otwarte_sp_trafien(conn, [wi for wi, _ in polaczone], wyniki)
+        stan = meta_bazy(conn).get("zbudowano") or ""
+        informacji = conn.execute("SELECT COUNT(*) FROM informacje").fetchone()[0]
+    znaczniki = {wi: "[" + ",".join(map(str, nr)) + "]" for wi, nr in polaczone}
+    puste = [nr for nr in range(1, len(a.zapytanie) + 1) if nr not in listy]
+    if a.json:
+        wypisz_json({"stan": stan, "zapytania": opisy, "puste": puste, "trafien": len(polaczone),
+                     "wyniki": [dict(w, zapytania=listy_nr) for w, (_, listy_nr) in zip(wyniki, polaczone)],
+                     "sprzecznosci": sprzecznosci})
+        return 0
+    segmenty = []
+    for o in opisy:
+        s = f"{o['nr']}) {o['zapytanie']} – trafień {o['trafien']}"
+        if o["czesciowe"]:
+            s += f" (częściowe od {o['pelnych'] + 1}{opis_poziomu(o['poziom'])})"
+        pom = ", ".join(f"{k} {n}" for k, n in o["pominieto"].items() if n)
+        if pom:
+            s += f" (pominięto: {pom})"
+        segmenty.append(s)
+    naglowek = f"# indeks: stan {lokalnie(stan)} · {informacji} informacji · zapytania: " + " · ".join(segmenty)
+    if puste:
+        naglowek += " · puste (bez słów): " + ", ".join(map(str, puste))
+    naglowek += "".join(f" · {f}: {getattr(a, f)}" for f in FILTRY_SZUKAJ + ("temat",) if getattr(a, f) is not None)
+    naglowek += f" · razem bez powtórzeń: {len(polaczone)}"
+    if len(polaczone) > a.limit:
+        naglowek += f" (pokazano {a.limit})"
+    print(naglowek)
+    wypisz_wyniki(a, wyniki, znaczniki, sprzecznosci, "")
+    if any(n for o in opisy for n in o["pominieto"].values()):
+        print("# pominięto (liczby przy zapytaniach) – ciekawostki pokaże --ciekawostki, nieaktualne --status Nieaktualne")
     return 0
 
 
@@ -1566,26 +1721,43 @@ def cmd_temat(a) -> int:
         liczniki = {"kluczowe": istotnosci["kluczowe"], "wazne": istotnosci["ważne"],
                     "ciekawostki": istotnosci["ciekawostka"], "sporne": statusy["sporne"], "nowe": statusy["nowe"]}
         kluczowe = opisz_informacje(conn, [wi for wi, ist, _ in aktualne if ist == "kluczowe"])
+        # --lista: wszystkie widoczne (jak szukaj: bez Ciekawostek, chyba że --ciekawostki) – Kluczowe, Ważne,
+        # pozostałe, na końcu Ciekawostki; w grupie rosnąco po WI
+        kolejnosc = {"kluczowe": 0, "ważne": 1, "ciekawostka": 3}
+        lista = None
+        if a.lista:
+            wszystkie = sorted(aktualne, key=lambda x: (kolejnosc.get(x[1], 2), x[0]))
+            lista = opisz_informacje(conn, [wi for wi, ist, _ in wszystkie if ist != "ciekawostka" or a.ciekawostki])
         # znane ograniczenie: SP powiązane tylko z Tematem (bez informacji tematu) tu nie wystąpią
         sp = otwarte_sp(conn, {n for (n,) in conn.execute(
             "SELECT s.sp FROM informacje_sp x JOIN informacje_tematy it ON it.wi = x.wi "
             "JOIN sprzecznosci s ON s.id = x.sp_id WHERE it.temat_id = ?", (id_,))})
         stan = meta_bazy(conn).get("zbudowano") or ""
     if a.json:
-        wypisz_json({"stan": stan, "nazwa": nazwa, "stan_wiedzy": stan_wiedzy, "etap": etap, "w_skrocie": w_skrocie,
-                     "liczniki": liczniki, "kluczowe": kluczowe, "sp": sp, "notion_url": url})
+        wynik = {"stan": stan, "nazwa": nazwa, "stan_wiedzy": stan_wiedzy, "etap": etap, "w_skrocie": w_skrocie,
+                 "liczniki": liczniki, "kluczowe": kluczowe, "sp": sp, "notion_url": url}
+        if lista is not None:
+            wynik["informacje"] = lista
+        wypisz_json(wynik)
         return 0
     print(f"# indeks: stan {lokalnie(stan)} · temat: {jedna_linia(nazwa)} · {url or '–'}")
     print(f"Stan wiedzy: {jedna_linia(stan_wiedzy)} · Etap: {jedna_linia(etap)}")
     print(f"W skrócie: {jedna_linia(w_skrocie)}")
     print(f"Liczniki (bez nieaktualnych): Kluczowe {liczniki['kluczowe']} · Ważne {liczniki['wazne']} · "
           f"Ciekawostki {liczniki['ciekawostki']} · Sporne {liczniki['sporne']} · Nowe {liczniki['nowe']}")
-    print("## Kluczowe")
-    for w in kluczowe:
-        print(linia_informacji(w))
+    linia = linia_krotka if a.krotko else linia_informacji
+    if lista is None:
+        print("## Kluczowe")
+        for w in kluczowe:
+            print(linia(w))
+    else:
+        print(f"## Wszystkie informacje tematu ({len(lista)}; Kluczowe, Ważne, pozostałe" + (
+            ", Ciekawostki)" if a.ciekawostki else f"; bez Ciekawostek: {liczniki['ciekawostki']} – --ciekawostki)"))
+        for w in lista:
+            print(linia(w))
     print("## Otwarte sprzeczności tematu")
     for s in sp:
-        print(linia_sp(s))
+        print(linia_sp(s, a.krotko))
     return 0
 
 
@@ -1719,16 +1891,26 @@ def zbuduj_parser() -> argparse.ArgumentParser:
                    help="po udanym syncu publikacja jak `publikuj` (pod tą samą blokadą; z --cicho w limicie czasu)")
     p = sub.add_parser("szukaj", parents=[wspolne],
                        help=f"szukanie w Informacjach (AND; poniżej {DOPELNIJ_PONIZEJ} trafień dopełnione przez OR)")
-    p.add_argument("zapytanie", help='słowa (prefiks*), "fraza" albo OR między słowami')
+    p.add_argument("zapytanie", nargs="+",
+                   help='słowa (prefiks*), "fraza" albo OR między słowami; kilka zapytań w osobnych cudzysłowach – '
+                        "każde osobno, wyniki połączone bez powtórzeń, przy linii numery zapytań [1,3]")
     p.add_argument("--etap", help="równy Etap")
     p.add_argument("--istotnosc", help="równa Istotność (włącza też ciekawostki)")
     p.add_argument("--status", help="równy Status (włącza też nieaktualne)")
     p.add_argument("--rodzaj", help="równy Rodzaj")
     p.add_argument("--temat", help="część nazwy tematu")
     p.add_argument("--ciekawostki", action="store_true", help="pokaż też Istotność „Ciekawostka”")
-    p.add_argument("--limit", type=int, default=12, help="najwyżej tyle linii (domyślnie 12)")
+    p.add_argument("--krotko", action="store_true",
+                   help=f"zwarta linia (teza do {KROTKO_TEZA} zn., tematy, typ autora/wiarygodność; bez tytułów, Kto, "
+                        f"linków) – dla czatu; domyślny limit {LIMIT_KROTKO}")
+    p.add_argument("--limit", type=int,
+                   help=f"najwyżej tyle linii (domyślnie {LIMIT_DOMYSLNY}, z --krotko {LIMIT_KROTKO})")
     p = sub.add_parser("temat", parents=[wspolne], help="stan wiedzy, liczniki, Kluczowe i otwarte SP tematu")
     p.add_argument("nazwa", help="nazwa tematu albo jej część")
+    p.add_argument("--lista", action="store_true",
+                   help="wszystkie widoczne informacje tematu zamiast samych Kluczowych")
+    p.add_argument("--krotko", action="store_true", help="zwarte linie jak w szukaj --krotko")
+    p.add_argument("--ciekawostki", action="store_true", help="z --lista: także Istotność „Ciekawostka”")
     p = sub.add_parser("duplikaty", parents=[wspolne], help="pary informacji o bardzo podobnych tezach")
     p.add_argument("--od", help="RRRR-MM-DD: co najmniej jedna z pary dodana od tej daty (lokalnie)")
     p.add_argument("--prog", type=float, default=0.82, help="minimalne podobieństwo tez (domyślnie 0.82)")

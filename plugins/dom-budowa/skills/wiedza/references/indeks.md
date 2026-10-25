@@ -19,9 +19,20 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   odpowiedzi bez przeczytania tezy. Mało pełnych trafień (`pelnych` 0–2) → zapytaj krócej, o jedno pojęcie naraz
   (np. „przemarzanie”, potem „posadowienie”). Domyślnie pomija Nieaktualne i Ciekawostki (z licznikiem);
   `--ciekawostki` pokaże też je. Zero linii wyniku po filtrach to nie brak wiedzy – zobacz liczniki `pominięto`
-  i rozluźnij filtr.
-- `python3 tools/wiedza.py temat "NAZWA"` – stan wiedzy tematu, Kluczowe i otwarte SP; `duplikaty [--od RRRR-MM-DD]` –
-  pary o bardzo podobnej tezie; `stan` – liczniki i daty.
+  i rozluźnij filtr. Przy 3+ słowach nagłówek podaje też poziomy dopełnienia: ile linii pasuje do co najmniej połowy
+  słów, ile do któregokolwiek (`--json`: pole `poziom`).
+- Kilka sformułowań naraz: `szukaj "woda przy ławie" "drenaż opaskowy" "odwodnienie fundamentu"` – każde szukane
+  osobno, wyniki połączone bez powtórzeń (wyżej te, które znalazło kilka sformułowań); przy linii `WI-n [1,3]` –
+  numery sformułowań, które ją znalazły. Linie pasujące do pojedynczego słowa odpadają, gdy pełnych trafień i trafień
+  „co najmniej połowa słów” jest razem 12 lub więcej. Jedno zapytanie działa jak dotąd.
+- `--krotko` – zwarta linia (domyślnie 25 linii, ok. 1/3 długości pełnej):
+  `WI-n · Istotność · Etap · [Status, gdy nie „Nowe”] · teza (do 220 zn.) · T: tematy (do 3) · źr: ZRD-n typ autora/wiarygodność [· Notatnik] · SP-n · 💬`.
+  Bez tytułów źródeł, „Kto”, linków i treści komentarza – gdy ich potrzebujesz (reguła niezależności źródeł,
+  `wiedza`, A.5; komentarz inwestora 💬, sekcja H), uruchom pełne `szukaj` albo otwórz stronę w Notion. Otwarte SP
+  niesione tylko przez dalsze trafienia – same numery w jednej linii.
+- `python3 tools/wiedza.py temat "NAZWA"` – stan wiedzy tematu, Kluczowe i otwarte SP; `--lista` – wszystkie widoczne
+  informacje tematu (Kluczowe, Ważne, pozostałe; Ciekawostki z `--ciekawostki`), zwykle z `--krotko`;
+  `duplikaty [--od RRRR-MM-DD]` – pary o bardzo podobnej tezie; `stan` – liczniki i daty.
 
 Linia wyniku: `WI-n · Istotność · Etap · Status · teza · T: tematy · ZRD-n „tytuł” (Kto: …; typ autora; wiarygodność) · SP-n · link`.
 - Segment `Kto` jest obowiązkowy: bez niego nie zastosujesz reguły „ten sam autor to nie potwierdzenie” (`wiedza`, A.5).
@@ -49,7 +60,8 @@ curl -sf -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github.r
 python3 /tmp/wiedza.py szukaj "przerwa robocza" --db /tmp/wiedza.sqlite
 ```
 
-- Pozostałe polecenia (`temat`, `duplikaty`, `stan`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`.
+- Pozostałe polecenia (`temat`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`,
+  `temat --lista`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`.
 - Katalog `/tmp` bywa pusty w kolejnej wiadomości – pobierz oba pliki ponownie (stronę dostępu masz już przeczytaną).
 - Brak strony, tokena, sieci albo błąd pobrania → napisz „indeks niedostępny” i czytaj Notion bezpośrednio.
 - Nie uruchamiaj `sync` ani `publikuj`. Po zapisie wiedzy napisz wprost: „indeks dogoni przy najbliższym sync na Macu”.
