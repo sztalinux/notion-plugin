@@ -71,7 +71,9 @@ python3 /tmp/wiedza.py szukaj "przerwa robocza" --db /tmp/wiedza.sqlite
 
 Katalog roboczy jest neutralny, hooków repo nie ma. Uruchamiaj wyłącznie `szukaj`, `temat`, `duplikaty` i `stan`,
 przez bezwzględną ścieżkę `tools/wiedza.py` podaną w prompcie skryptu. Nigdy `sync` ani `publikuj` – sync po każdym filmie
-robi skrypt. Notion przeszukuj tylko wtedy, gdy indeks nie odpowiada na pytanie.
+robi skrypt. Notion przeszukuj tylko wtedy, gdy indeks nie odpowiada na pytanie. W nocy jedno zapytanie w cudzysłowie na
+wywołanie i linia pełna – bez kilku zapytań naraz i bez `--krotko`: reguła niezależności potrzebuje „Kto”, a kontrola
+nocna odtwarza tylko pierwsze zapytanie i czyta nagłówek pojedynczego `szukaj`.
 
 ## Ograniczenia kopii
 
