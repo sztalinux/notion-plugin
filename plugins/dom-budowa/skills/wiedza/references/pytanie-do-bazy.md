@@ -2,8 +2,7 @@
 
 Cel: odpowiedź uwzględnia **całą** istotną wiedzę z bazy (z numerami WI), mówi, co przeczytała, i wprost – czego nie wie
 ani nie sprawdziła. Pomiar (26.10.2026, 15 pytań bez Notion): stara droga (jedno zapytanie) – w odpowiedzi 73% Kluczowych i 42%
-Ważnych tez; ta procedura – w skrócie 89% / 57%, po rozwinięciu 100% / 81% (przy 36% Kluczowych widzianych po jednym
-zapytaniu na szerokim pytaniu) – dlatego głębokość i cały temat są obowiązkowe. Wołają ją: `wiedza` E, router
+Ważnych tez; ta procedura – w skrócie 89% / 57%, po rozwinięciu 100% / 81% – dlatego głębokość i cały temat są obowiązkowe. Wołają ją: `wiedza` E, router
 `budowa` (zasada 10) i każda procedura, która pyta bazę (`etap`, `zakupy`, `harmonogram`, `przygotowanie`, `analiza-techniczna`,
 przeglądy). Polecenia i kanały: `indeks.md`.
 

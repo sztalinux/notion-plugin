@@ -148,7 +148,7 @@ własny przegląd, żeby nie zasłaniała spraw osobistych.
        linkiem, datą i typem autora (producent, wykonawca, portal, norma, ekspert); oceń wiarygodność wg
        `wiedza/references/ocena-zrodla.md` i podaj ją. Nie mieszaj z naszymi materiałami w jednym zdaniu.
     W odpowiedzi rozdziel warstwy: „W Twoich materiałach: …” / „Otwarte: …” / „Z internetu (do potwierdzenia): …”.
-    Na końcu zaproponuj zapis wartościowej informacji z internetu do Bazy wiedzy (procedura `wiedza`) – tylko za zgodą.
+    Informacji z internetu nie zapisuj do Bazy wiedzy i nie proponuj zapisu – tylko na wyraźną prośbę inwestora (procedura `wiedza`).
     Kolejność wyszukiwania nie zmienia hierarchii wiarygodności z zasady 1 (projekt > opinie > oferty > notatki > internet).
 11. **Strona „🔒 Prywatne” jest poza zasięgiem asystenta** (nie czytaj, pomijaj w wynikach wyszukiwania, nie cytuj – plugin `ja`, zasada 5).
     **Notion jest źródłem prawdy i inwestor edytuje go ręcznie** – obok asystenta. Dlatego: przed każdym zapisem
