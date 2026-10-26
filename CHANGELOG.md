@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.8.1] – 2026-10-26
+
+- `wiedza/references/porzadki.md`: wiersz główny scalenia to najpełniejszy wiersz, nie najdłuższa teza – kolejno ocena
+  inwestora, liczba źródeł, relacja Notatnik, wyższa Istotność, dopiero potem długość tezy; wybór inny niż w arkuszu
+  odnotuj w logu i raporcie. Sprzeczność: ten sam dylemat co otwarty wpis Rejestru → dopnij wiersz do jego relacji
+  Informacje zamiast zakładać nowy SP.
+- `notatka/references/scalanie.md`: pkt 1a – nie wycofuj listy kontrolnej (punkty do odhaczenia w treści albo więcej niż
+  2 relacje Wiedza); taki wpis zostaje, pomiń z powodem.
+- `etap/SKILL.md`, „Otwarte sprawy etapu”: wpisy Typ „Pamiętać” niezależnie od Statusu, poza „Odrzucone”. PATCH – poprawki
+  treści po porządkach w bazie wiedzy.
+
 ## dom-budowa [2.8.0] – 2026-10-26
 
 - Nowa referencja `wiedza/references/porzadki.md` – reguły porządków w bazie wiedzy po przeglądzie bazy: nigdy nie usuwaj

@@ -22,8 +22,10 @@ nieodwracalne (relacje, rollupy), dlatego każda zmiana ma ślad do cofnięcia, 
 
 1. **Łańcuchy:** grupy, które mają wspólny wiersz, połącz – jeden wiersz główny na cały łańcuch; „Scalone do WI-x”
    wskazuje ostateczny wiersz główny, nigdy pośredni.
-2. **Wiersz główny:** zwykle najpełniejsza teza (przy remisie niższy WI). Wiersz z oceną inwestora (Status „Przejrzane”,
-   Istotność po przejrzeniu, Mój komentarz) zostaje głównym albo grupę pomiń – jego ocena nie może zniknąć w wycofanym.
+2. **Wiersz główny – najpełniejszy wiersz, nie najdłuższa teza:** kolejno ocena inwestora (Status „Przejrzane”, Istotność
+   po przejrzeniu, Mój komentarz), liczba źródeł, relacja Notatnik, wyższa Istotność, dopiero potem długość tezy (przy remisie
+   niższy WI). Wiersz z oceną inwestora zostaje głównym albo grupę pomiń – jego ocena nie może zniknąć w wycofanym. Wybór inny
+   niż w arkuszu odnotuj w logu i w raporcie.
 3. **Nie wycofuj wiersza „Sporne” ani powiązanego z wpisem Rejestru „Czeka na decyzję” / „Do sprawdzenia u projektanta”** –
    wycofanie rozstrzygnęłoby spór po cichu. Taki wiersz może być głównym. Ta sama para w grupie SPRZECZNOŚĆ i scalenia →
    tylko wpis w Rejestrze, scalenie pomiń.
@@ -45,7 +47,8 @@ nieodwracalne (relacje, rollupy), dlatego każda zmiana ma ślad do cofnięcia, 
 
 Wpis w Rejestrze wg `sprzecznosci.md` (wszystkie pola zgłoszenia, Status „Czeka na decyzję”, relacje Informacje, Źródła,
 Tematy); nic nie rozstrzygaj, Statusu wierszy wiedzy nie zmieniaj. Przed zapisem sprawdź Rejestr: jest już wpis z obiema
-tezami (w dowolnym Statusie) → pomiń. Różne zalecenia dla różnych warunków to nie sprzeczność (`sprzecznosci.md`) → pomiń.
+tezami (w dowolnym Statusie) → pomiń. Ten sam dylemat co otwarty wpis Rejestru → dopnij wiersz do jego relacji Informacje,
+nie zakładaj nowego SP. Różne zalecenia dla różnych warunków to nie sprzeczność (`sprzecznosci.md`) → pomiń.
 
 ## ZŁY TEMAT, DO AKTUALIZACJI
 
