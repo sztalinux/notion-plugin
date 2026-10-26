@@ -1477,7 +1477,7 @@ def wyszukaj_poziomy(conn: sqlite3.Connection, zapytanie: str, a, odetnij: bool 
     """Jak wyszukaj, z piątym elementem: poziomy dopełnienia albo None (bez dopełnienia) – {"slow": n terminów,
     "prog": ⌈n/2⌉, "polowa": ile dopisanych wierszy ma co najmniej próg terminów, "dowolne": ile mniej,
     "odciete": czy `dowolne` odcięto}. Kolejność się nie zmienia (dopisane idą od największej liczby terminów), więc
-    poziom „co najmniej ⌈n/2⌉” stoi zawsze przed „którekolwiek”. odetnij (tryby --krotko i kilka zapytań): wiersze
+    poziom „co najmniej ⌈n/2⌉” stoi zawsze przed „którekolwiek”. odetnij (pojedyncze zapytanie z --krotko): wiersze
     poniżej progu wypadają, gdy pełne trafienia i poziom progu razem dają co najmniej DOPELNIJ_PONIZEJ – szum
     pojedynczych słów nie zajmuje wtedy miejsca na liście ani w sekcji sprzeczności."""
     terminy, _ = terminy_zapytania(zapytanie)
@@ -1641,7 +1641,7 @@ def polacz_rrf(listy: dict) -> list:
 
 
 def szukaj_wiele(a, start: float) -> int:
-    """szukaj z kilkoma zapytaniami: każde osobno (dopełnienie z odcięciem, jak --krotko), wyniki połączone bez
+    """szukaj z kilkoma zapytaniami: każde osobno (dopełnienie bez odcięcia), wyniki połączone bez
     duplikatów (polacz_rrf), przy linii znacznik `[1,3]` – numery zapytań (w kolejności podania), które ją znalazły.
     Zapytanie bez terminów (np. samo „OR” albo znaki interpunkcji) jest pomijane z dopiskiem w nagłówku."""
     numery = [(nr, q) for nr, q in enumerate(a.zapytanie, 1) if zbuduj_zapytanie_fts(q, "AND") is not None]
@@ -1649,7 +1649,7 @@ def szukaj_wiele(a, start: float) -> int:
         listy, opisy = {}, []
         for nr, q in numery:
             t0 = time.perf_counter()
-            widoczne, pominieto, czesciowe, pelnych, poziom = wyszukaj_poziomy(conn, q, a, odetnij=True)
+            widoczne, pominieto, czesciowe, pelnych, poziom = wyszukaj_poziomy(conn, q, a)
             listy[nr] = widoczne
             opisy.append({"nr": nr, "zapytanie": q, "trafien": len(widoczne), "czesciowe": czesciowe,
                           "pelnych": pelnych, "poziom": poziom, "pominieto": pominieto})

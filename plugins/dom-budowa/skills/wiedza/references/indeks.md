@@ -23,13 +23,13 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   słów, ile do któregokolwiek (`--json`: pole `poziom`).
 - Kilka sformułowań naraz: `szukaj "woda przy ławie" "drenaż opaskowy" "odwodnienie fundamentu"` – każde szukane
   osobno, wyniki połączone bez powtórzeń (wyżej te, które znalazło kilka sformułowań); przy linii `WI-n [1,3]` –
-  numery sformułowań, które ją znalazły. Linie pasujące do pojedynczego słowa odpadają, gdy pełnych trafień i trafień
-  „co najmniej połowa słów” jest razem 12 lub więcej. Jedno zapytanie działa jak dotąd.
+  numery sformułowań, które ją znalazły. Jedno zapytanie działa jak dotąd.
 - `--krotko` – zwarta linia (domyślnie 25 linii, ok. 1/3 długości pełnej):
   `WI-n · Istotność · Etap · [Status, gdy nie „Nowe”] · teza (do 220 zn.) · T: tematy (do 3) · źr: ZRD-n typ autora/wiarygodność [· Notatnik] · SP-n · 💬`.
   Bez tytułów źródeł, „Kto”, linków i treści komentarza – gdy ich potrzebujesz (reguła niezależności źródeł,
   `wiedza`, A.5; komentarz inwestora 💬, sekcja H), uruchom pełne `szukaj` albo otwórz stronę w Notion. Otwarte SP
-  niesione tylko przez dalsze trafienia – same numery w jednej linii.
+  niesione tylko przez dalsze trafienia – same numery w jednej linii. Przy jednym zapytaniu linie pasujące do pojedynczego
+  słowa odpadają, gdy pełnych trafień i trafień „co najmniej połowa słów” jest razem 12 lub więcej.
 - `python3 tools/wiedza.py temat "NAZWA"` – stan wiedzy tematu, Kluczowe i otwarte SP; `--lista` – wszystkie widoczne
   informacje tematu (Kluczowe, Ważne, pozostałe; Ciekawostki z `--ciekawostki`), zwykle z `--krotko`;
   `duplikaty [--od RRRR-MM-DD]` – pary o bardzo podobnej tezie; `stan` – liczniki i daty.
