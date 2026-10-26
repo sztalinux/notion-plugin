@@ -4,6 +4,23 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.7.0] – 2026-10-26
+
+- `tools/wiedza.py szukaj` przyjmuje kilka zapytań naraz (`szukaj "q1" "q2" "q3"`): każde szukane osobno, wyniki łączone
+  reciprocal rank fusion bez powtórzeń, przy linii znacznik `WI-n [1,3]` (które zapytania ją znalazły). Jedno zapytanie
+  działa jak dotąd; w nocy dalej jedno zapytanie w cudzysłowie i linia pełna.
+- `--krotko`: zwarta linia dla czatu (teza do 220 zn., tematy, źródła jako ZRD-n typ/wiarygodność, bez tytułów, „Kto” i linków),
+  domyślnie 25 linii. Przy jednym zapytaniu z `--krotko` linie pasujące do pojedynczego słowa odpadają, gdy pełnych trafień
+  i „co najmniej połowa słów” jest 12 lub więcej; przy kilku zapytaniach bez odcinania.
+- `temat NAZWA --lista [--krotko]` – wszystkie widoczne informacje tematu.
+- Poziomy dopełnienia: nagłówek i `--json` (`poziom`) podają, ile dopisanych linii pasuje do co najmniej połowy słów,
+  a ile do któregokolwiek. Domyślny wynik i `--json` poza tym bez zmian (regresja: 1219/1219 przypadków identycznych).
+- `tools/wiedza_synonimy.txt`: 9 grup – formy odmienione w `pf`, `rekuperacja`, `bk`, `wieniec`, `ocieplenie` i nowe grupy
+  `betonowanie`, `okno`, `zasypka`, `stempel` (wybrane pomiarem, bez alarmu obserwatora).
+- Pomiar na zamrożonym zestawie (53 pytania, ten sam stan bazy): recall@widziane 3 sformułowania + `--krotko` 42,0% wobec
+  25,3% dziś (+16,7 pkt) przy 0,62× znaków wyniku; obserwator jakości – 0 alarmów. Opis: `wiedza/references/indeks.md`.
+  MINOR – nowe flagi.
+
 ## dom-budowa [2.6.2] – 2026-10-20
 
 - Start sesji Claude Code nie uruchamia już niczego sam: hooki `SessionStart` (skan dokumentów, synchronizacja indeksu wiedzy
