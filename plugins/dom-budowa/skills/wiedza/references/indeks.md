@@ -30,9 +30,23 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   `wiedza`, A.5; komentarz inwestora 💬, sekcja H), uruchom pełne `szukaj` albo otwórz stronę w Notion. Otwarte SP
   niesione tylko przez dalsze trafienia – same numery w jednej linii. Przy jednym zapytaniu linie pasujące do pojedynczego
   słowa odpadają, gdy pełnych trafień i trafień „co najmniej połowa słów” jest razem 12 lub więcej.
+  Pod trafieniami sekcja „Podobne do trafień (po znaczeniu)”: do 8 linii `WI-n ≈WI-m` – informacje bliskie znaczeniem
+  trafieniu WI-m (jednemu z 5 pierwszych), także opisane innymi słowami albo z innego tematu. To podpowiedź:
+  przeczytaj tezę, zanim ją uwzględnisz – bywa o sąsiednim zagadnieniu. Brak sekcji = kopia bez list podobnych
+  albo nic nie przekracza progu.
+- `--sens` (tylko Mac, gdy działa Ollama) – ranking po słowach łączony z rankingiem po znaczeniu zapytania; łapie
+  informacje opisane innymi słowami niż pytanie. Bez Ollamy nagłówek mówi „sens: niedostępny – same słowa” i wynik
+  jest zwykłym `szukaj`.
 - `python3 tools/wiedza.py temat "NAZWA"` – stan wiedzy tematu, Kluczowe i otwarte SP; `--lista` – wszystkie widoczne
   informacje tematu (Kluczowe, Ważne, pozostałe; Ciekawostki z `--ciekawostki`), zwykle z `--krotko`;
-  `duplikaty [--od RRRR-MM-DD]` – pary o bardzo podobnej tezie; `stan` – liczniki i daty.
+  `duplikaty [--od RRRR-MM-DD]` – kandydaci na duplikaty: pary z list podobnych od progu 0,84 (`--sens`; bez list –
+  po słowach, `--slowa` wymusza słowa). Podobieństwo nie odróżnia duplikatu od informacji bliskiej tematem (ok. 1 na 10 par to
+  duplikat) – każdą parę oceń sam, zanim zaproponujesz scalenie; `stan` – liczniki, daty i stan list podobnych.
+- Odciski znaczenia liczy `sync` na Macu na końcu, po publikacji, gdy działa Ollama z modelem bge-m3 (nowe i zmienione
+  informacje, potem listy podobnych; z `--cicho` najwyżej 20 s, reszta przy następnym sync; nowe listy trafiają do
+  kopii czatu z następną publikacją). Ollama wyłączona → krok pominięty po cichu,
+  wszystko inne działa jak dotąd. Pierwsze pełne liczenie (ok. 3 min) albo po zmianie modelu:
+  `python3 tools/wiedza_sens.py przelicz`; `python3 tools/wiedza_sens.py stan` – czy Ollama działa i ile odcisków.
 
 Linia wyniku: `WI-n · Istotność · Etap · Status · teza · T: tematy · ZRD-n „tytuł” (Kto: …; typ autora; wiarygodność) · SP-n · link`.
 - Segment `Kto` jest obowiązkowy: bez niego nie zastosujesz reguły „ten sam autor to nie potwierdzenie” (`wiedza`, A.5).
@@ -60,8 +74,9 @@ curl -sf -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github.r
 python3 /tmp/wiedza.py szukaj "przerwa robocza" --db /tmp/wiedza.sqlite
 ```
 
-- Pozostałe polecenia (`temat`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`,
-  `temat --lista`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`.
+- Pozostałe polecenia (`temat`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`
+  z sekcją podobnych, `temat --lista`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`. `--sens`
+  tu nie działa (brak Ollamy) – daje zwykły wynik po słowach.
 - Katalog `/tmp` bywa pusty w kolejnej wiadomości – pobierz oba pliki ponownie (stronę dostępu masz już przeczytaną).
 - Brak strony, tokena, sieci albo błąd pobrania → napisz „indeks niedostępny” i czytaj Notion bezpośrednio.
 - Nie uruchamiaj `sync` ani `publikuj`. Po zapisie wiedzy napisz wprost: „indeks dogoni przy najbliższym sync na Macu”.

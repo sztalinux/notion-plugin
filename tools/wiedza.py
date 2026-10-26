@@ -7,9 +7,9 @@ albo zmienna DOM_HUB; w czacie podaje się --db <katalog>/wiedza.sqlite.
 
     python3 tools/wiedza.py sync [--pelny] [--publikuj]   # pobierz zmiany z Notion (hook na starcie: --publikuj --cicho)
     python3 tools/wiedza.py szukaj "ZAPYTANIE" ["ZAPYTANIE 2" …] [--etap …] [--istotnosc …] [--status …] [--rodzaj …]
-                                               [--temat …] [--ciekawostki] [--krotko] [--limit 12]
+                                               [--temat …] [--ciekawostki] [--krotko] [--limit 12] [--sens]
     python3 tools/wiedza.py temat "NAZWA" [--lista] [--krotko] [--ciekawostki]   # stan wiedzy, Kluczowe, otwarte SP
-    python3 tools/wiedza.py duplikaty [--od RRRR-MM-DD] [--prog 0.82] [--temat NAZWA]
+    python3 tools/wiedza.py duplikaty [--od RRRR-MM-DD] [--prog 0.84] [--temat NAZWA] [--sens | --slowa]
     python3 tools/wiedza.py stan                          # liczniki, daty synchronizacji i publikacji
     python3 tools/wiedza.py publikuj [--teraz] [--wymus] [--reset]   # kopia indeksu do prywatnego repo GITHUB_REPO
 
@@ -22,6 +22,10 @@ nieoczekiwanego błędu na stderr zamiast samej nazwy typu i linii.
 Zasady:
 - Moduł nigdy nie pisze do Notion: wysyła tylko zapytania o wiersze baz (query) i odczyt schematu bazy.
 - szukaj, temat, duplikaty i stan działają na samym pliku: bez tokena, bez sieci i bez pliku synonimów.
+- Odciski znaczenia (tools/wiedza_sens.py, Ollama, tylko Mac): sync na końcu (po publikacji) liczy odciski nowych
+  i zmienionych informacji (osobny plik `wektory.sqlite`, nie idzie do czatu) i listy podobnych (tabela `podobne`
+  w indeksie – idzie do czatu z następną publikacją); Ollama nie działa → krok pominięty po cichu. Z list korzystają `szukaj --krotko` (sekcja
+  „podobne do trafień”) i `duplikaty`; `szukaj --sens` (Mac) łączy ranking po słowach z rankingiem po znaczeniu.
 - sync i publikuj czytają NOTION_TOKEN, GITHUB_TOKEN_SYNC i GITHUB_REPO z `.dom/sekrety.env` (chmod 600);
   wartości nigdy nie są wypisywane ani zapisywane.
 - Dane leżą w `.dom/wiedza/` w hubie (katalog 700, pliki 600), nigdy w repozytorium; bez katalogu `.dom` sync
@@ -96,6 +100,7 @@ LIMIT_PLIKU_MB = 50
 SCHEMAT_WERSJA = 1          # PRAGMA user_version; podbij przy zmianie schematu, normalizacji albo treści FTS
 ZNACZNIK = 0x57494544       # PRAGMA application_id („WIED”): plik jest indeksem wiedzy – w każdej wersji schematu
 BUDZET_CICHO = 110          # s na całe sync --cicho (pobór i publikacja) liczone od startu; hook ma limit 120 s
+BUDZET_SENS_CICHO = 20      # s na odciski i listy podobnych po publikacji, w granicach BUDZET_CICHO (po 1 filmie kilka s)
 GITHUB_WERSJA = "2022-11-28"
 MB = 1024 * 1024
 WZORZEC_REPO = re.compile(r"[\w.-]+/[\w.-]+")
@@ -316,6 +321,13 @@ KROTKO_TEMATOW = 3
 KROTKO_ZRODEL = 2
 KROTKO_DYLEMAT = 160
 TYP_AUTORA_KONIEC = re.compile(r" / | \(")   # „Twórca / popularyzator” → „Twórca”
+# --krotko: sekcja „podobne do trafień” z tabeli `podobne` (odciski znaczenia, tools/wiedza_sens.py) – sąsiedzi
+# PODOBNE_Z_TRAFIEN pierwszych pokazanych trafień z podobieństwem co najmniej PODOBNE_PROG, najwyżej PODOBNE_LINII
+# linii; wartości skalibrowane na zamrożonym zestawie pytań Z1 (2026-10-26)
+PODOBNE_PROG = 0.7
+PODOBNE_Z_TRAFIEN = 5
+PODOBNE_LINII = 8
+SENS_LISTA = 50             # szukaj --sens: tyle najbliższych znaczeniem na zapytanie idzie do łączenia RRF
 
 
 def termin_tokenu(slowo: str, prefiks: bool) -> str:
@@ -515,6 +527,14 @@ CREATE TABLE meta        (klucz TEXT PRIMARY KEY, wartosc TEXT);
 CREATE VIRTUAL TABLE informacje_fts USING fts5(teza, tematy, szczegoly, dla_nas, slowa,
                           tokenize='unicode61 remove_diacritics 2');  -- rowid = wi
 """
+# Listy podobnych (tools/wiedza_sens.py) – dopisane do schematu 1 bez przebudowy: indeks bez tej tabeli dostaje ją
+# przy otwarciu do zapisu (otworz_db), a odczyt (kopia w czacie sprzed zmiany) działa bez niej. Poza hashem
+# danych – zmianę list niesie meta.podobne_policzone.
+SCHEMAT_PODOBNE = """
+CREATE TABLE IF NOT EXISTS podobne (wi INTEGER, wi_podobne INTEGER, podobienstwo REAL,
+                          PRIMARY KEY (wi, wi_podobne)) WITHOUT ROWID;
+"""
+SCHEMAT += SCHEMAT_PODOBNE
 # treść indeksu do hasha publikacji; sync_stan, meta i FTS (pochodna) poza nim
 TABELE_DANYCH = ("tematy", "zrodla", "sprzecznosci", "informacje",
                  "informacje_tematy", "informacje_zrodla", "informacje_sp", "informacje_notatnik")
@@ -606,6 +626,10 @@ def otworz_db(sciezka: Path, zapis: bool) -> sqlite3.Connection:
                 raise sqlite3.DatabaseError("quick_check")
             conn.execute("PRAGMA journal_mode = DELETE")
             wersja = conn.execute("PRAGMA user_version").fetchone()[0]
+            if wersja == SCHEMAT_WERSJA and nazwy == nazwy_schematu() - {"podobne"}:
+                with conn:
+                    conn.executescript(SCHEMAT_PODOBNE)  # dopisanie bez przebudowy (SCHEMAT_PODOBNE)
+                nazwy.add("podobne")
             if wersja != SCHEMAT_WERSJA or nazwy != nazwy_schematu():
                 if nazwy:
                     powod = (f"w schemacie {wersja}, wymagany {SCHEMAT_WERSJA}" if wersja != SCHEMAT_WERSJA
@@ -631,12 +655,14 @@ def otworz_db(sciezka: Path, zapis: bool) -> sqlite3.Connection:
 
 
 def hash_danych(conn: sqlite3.Connection) -> str:
-    """SHA-256 treści indeksu (TABELE_DANYCH w kolejności klucza głównego), wersji schematu i meta.synonimy_sha.
-    Zmiana samego czasu synchronizacji lub publikacji (reszta meta, sync_stan) nie zmienia hasha."""
+    """SHA-256 treści indeksu (TABELE_DANYCH w kolejności klucza głównego), wersji schematu, meta.synonimy_sha
+    i meta.podobne_policzone (czas ostatniej zmiany list podobnych). Zmiana samego czasu synchronizacji lub
+    publikacji (reszta meta, sync_stan) nie zmienia hasha."""
     h = hashlib.sha256()
     wersja = conn.execute("PRAGMA user_version").fetchone()[0]
-    synonimy = conn.execute("SELECT wartosc FROM meta WHERE klucz = 'synonimy_sha'").fetchone()
-    h.update(json.dumps([wersja, synonimy[0] if synonimy else None]).encode("utf-8"))
+    meta = meta_bazy(conn)
+    h.update(json.dumps([wersja, meta.get("synonimy_sha")] + (
+        [meta["podobne_policzone"]] if "podobne_policzone" in meta else [])).encode("utf-8"))
     for tabela in TABELE_DANYCH:
         h.update(f"\n#{tabela}".encode("utf-8"))
         # kolumna 1 to klucz główny tabel głównych; w tabelach relacji kluczem jest para (1, 2)
@@ -927,6 +953,34 @@ def zglos_wyjatek(e: BaseException, przedrostek: str = "", cicho: bool = False):
         traceback.print_exception(type(e), e, e.__traceback__, file=sys.stderr)
 
 
+def licz_odciski(conn: sqlite3.Connection, sciezka: Path, cicho: bool, termin):
+    """Hak syncu po publikacji: odciski nowych i zmienionych informacji i listy podobnych (tools/wiedza_sens.py,
+    Ollama na Macu). Po, nie przed: wysyłka indeksu (ok. 13 MB) zajmuje prawie cały BUDZET_CICHO, więc każda sekunda
+    przed nią odkładałaby kopię dla czatu; zmienione listy (meta.podobne_policzone w hashu) wysyła następna
+    publikacja. Brak modułu albo źródło niedostępne (Ollama nie działa) → nic, także bez --cicho; inny błąd – jedna
+    linia, sync i tak kończy się sukcesem. Pod --cicho najwyżej BUDZET_SENS_CICHO s i nie po terminie (niepoliczone
+    – na następny sync), bez linii raportu. Pierwsze pełne liczenie (kilka minut): `wiedza_sens.py przelicz` albo
+    sync bez --cicho."""
+    try:
+        import wiedza_sens
+    except ImportError:
+        return
+    koniec = None
+    if cicho:
+        koniec = time.monotonic() + BUDZET_SENS_CICHO
+        if termin is not None:
+            koniec = min(koniec, termin)
+    try:
+        linia = wiedza_sens.po_sync(conn, sciezka, CONF, koniec)
+    except wiedza_sens.Niedostepny:
+        return
+    except Exception as e:  # noqa: BLE001 – odciski są dodatkiem, sync już zapisał dane
+        zglos_wyjatek(e, "odciski: ", cicho)
+        return
+    if linia and not cicho:
+        print(linia)
+
+
 def cmd_sync(a) -> int:
     """Kody: 0 przy sukcesie i warunkach miękkich (worktree, brak .dom, tokena, sieci, zajęta blokada, limit czasu,
     Notion 5xx/429); błąd twardy (HTTP 4xx, mapowanie, baza, obcy plik --db) → 1, a z --cicho 0 (hook i nocne
@@ -966,6 +1020,7 @@ def cmd_sync(a) -> int:
                         opublikuj(conn, sciezka, sekrety, cicho=a.cicho, termin=termin)
                     except Exception as e:  # noqa: BLE001 – treść wyjątku może nieść wartości pól
                         zglos_wyjatek(e, "publikacja: ", a.cicho)
+                licz_odciski(conn, sciezka, a.cicho, termin)
                 return 0
             except BladPoboru as e:
                 przyczyna = tekst_bledu(e.przyczyna, sekrety)
@@ -1280,6 +1335,11 @@ nawet dlatego powinien powinna powinno zamiast""".split())
 # tokeny krótkiej nie wypchną jej bliskiej kopii.
 CZESTOSC_MIN = 50
 CZESTOSC_UDZIAL = 0.08
+DUPLIKATY_PROG_SLOWA = 0.82
+# Po znaczeniu: kalibracja 26.10.2026 na parach ocenionych przez sędziego Z6 – podobieństwo nie odróżnia duplikatu
+# od informacji bliskiej tematem (przy każdym progu ok. 1 na 10 par to duplikat), więc to lista kandydatów do decyzji;
+# próg trzyma ją krótką (ok. 50 par w całej bazie)
+DUPLIKATY_PROG_SENS = 0.84
 SONDA_RZADKIE = 8
 SONDA_POSPOLITE = 2
 KANDYDACI_NA_TEZE = 5
@@ -1399,6 +1459,35 @@ def otwarte_sp_trafien(conn: sqlite3.Connection, trafienia: list, wyniki: list) 
             + [dict(otwarte[n], w_widocznych=False) for n in dalsze])
 
 
+def podobne_w_indeksie(conn: sqlite3.Connection):
+    """Liczba wierszy tabeli `podobne`; None, gdy jej nie ma (kopia sprzed list podobnych)."""
+    if not conn.execute("SELECT 1 FROM sqlite_master WHERE name = 'podobne'").fetchone():
+        return None
+    return conn.execute("SELECT COUNT(*) FROM podobne").fetchone()[0]
+
+
+def podobne_trafien(conn: sqlite3.Connection, pokazane: list, a) -> list:
+    """[(WI, WI trafienia, podobieństwo)] – sąsiedzi PODOBNE_Z_TRAFIEN pierwszych pokazanych trafień od
+    PODOBNE_PROG, bez pokazanych i bez powtórzeń, po tych samych filtrach co trafienia; najpierw sąsiedzi
+    wyższego trafienia, w nim wg podobieństwa. Bez tabeli `podobne` → []."""
+    if not podobne_w_indeksie(conn):
+        return []
+    ocen, juz, wynik = filtr_szukaj(conn, a), set(pokazane), []
+    for wi in pokazane[:PODOBNE_Z_TRAFIEN]:
+        for p, s in conn.execute("SELECT wi_podobne, podobienstwo FROM podobne WHERE wi = ? AND podobienstwo >= ? "
+                                 "ORDER BY podobienstwo DESC, wi_podobne", (wi, PODOBNE_PROG)):
+            if p not in juz and ocen(p) == "":
+                juz.add(p)
+                wynik.append((p, wi, s))
+    return wynik[:PODOBNE_LINII]
+
+
+def opisz_podobne(conn: sqlite3.Connection, podobne: list) -> list:
+    """Opisy sąsiadów (opisz_informacje) z polami podobne_do i podobienstwo – do --json i linii ≈WI-n."""
+    return [dict(w, podobne_do=do, podobienstwo=s)
+            for w, (_, do, s) in zip(opisz_informacje(conn, [p for p, _, _ in podobne]), podobne)]
+
+
 def linia_sp(s: dict, krotko: bool = False) -> str:
     if krotko:
         return f"SP-{s['sp']} · {jedna_linia(s['status'])} · {skroc(s['dylemat'], KROTKO_DYLEMAT)}"
@@ -1419,25 +1508,38 @@ def oceny_bm25(conn: sqlite3.Connection, mecz: str) -> dict:
                              "WHERE informacje_fts MATCH ?", (mecz,)))
 
 
-def wybierz(conn: sqlite3.Connection, mecz: str, a) -> tuple:
-    """(widoczne WI wg bm25 rosnąco – najlepsze ma najmniejszą wartość, liczniki pominiętych, {WI: bm25}) dla ciągu
-    MATCH. Domyślnie pomija Status „Nieaktualne” i Istotność „Ciekawostka”; jawny filtr --status / --istotnosc albo
-    --ciekawostki to wyłącza."""
+def filtr_szukaj(conn: sqlite3.Connection, a):
+    """Funkcja WI → None (nie przechodzi filtrów --etap/--istotnosc/--status/--rodzaj/--temat albo nie ma jej
+    w indeksie), "nieaktualne" / "ciekawostki" (pomijane domyślnie; jawny filtr --status / --istotnosc albo
+    --ciekawostki to wyłącza) albo "" (widoczna)."""
     pola = {wi: [normalizuj(x) for x in r] for wi, *r in conn.execute(
         f"SELECT wi, {', '.join(FILTRY_SZUKAJ)} FROM informacje")}
     filtry = {f: normalizuj(getattr(a, f)) for f in FILTRY_SZUKAJ if getattr(a, f) is not None}
     temat = wi_tematow(conn, a.temat) if a.temat is not None else None
+
+    def ocen(wi):
+        wartosci = dict(zip(FILTRY_SZUKAJ, pola.get(wi) or ()))
+        if not wartosci or any(wartosci[f] != v for f, v in filtry.items()) or (temat is not None and wi not in temat):
+            return None
+        if wartosci["status"] == "nieaktualne" and "status" not in filtry:
+            return "nieaktualne"
+        if wartosci["istotnosc"] == "ciekawostka" and not (a.ciekawostki or "istotnosc" in filtry):
+            return "ciekawostki"
+        return ""
+    return ocen
+
+
+def wybierz(conn: sqlite3.Connection, mecz: str, a) -> tuple:
+    """(widoczne WI wg bm25 rosnąco – najlepsze ma najmniejszą wartość, liczniki pominiętych, {WI: bm25}) dla ciągu
+    MATCH, po filtrach (filtr_szukaj)."""
+    ocen = filtr_szukaj(conn, a)
     oceny = oceny_bm25(conn, mecz)
     widoczne, pominieto = [], {"nieaktualne": 0, "ciekawostki": 0}
     for wi in sorted(oceny, key=lambda w: (oceny[w], w)):
-        wartosci = dict(zip(FILTRY_SZUKAJ, pola.get(wi) or ()))
-        if not wartosci or any(wartosci[f] != v for f, v in filtry.items()) or (temat is not None and wi not in temat):
-            continue
-        if wartosci["status"] == "nieaktualne" and "status" not in filtry:
-            pominieto["nieaktualne"] += 1
-        elif wartosci["istotnosc"] == "ciekawostka" and not (a.ciekawostki or "istotnosc" in filtry):
-            pominieto["ciekawostki"] += 1
-        else:
+        powod = ocen(wi)
+        if powod:
+            pominieto[powod] += 1
+        elif powod is not None:
             widoczne.append(wi)
     return widoczne, pominieto, oceny
 
@@ -1536,6 +1638,8 @@ def zapisz_log_szukaj(a, start: float, widoczne: list, czesciowe: bool, pelnych:
             filtry["limit"] = a.limit
         if a.krotko:
             filtry["krotko"] = True
+        if getattr(a, "sens", False):
+            filtry["sens"] = True
         rekord = {"ts": teraz_iso(), "kanal": kanal[:20], "q": zapytanie[:LOG_MAKS_ZAPYTANIE],
                   "n_terminow": sum(1 for t, _ in terminy if t != "OR"), "tryb": tryb, "trafien": len(widoczne),
                   "pelnych": pelnych, "pokazano": min(a.limit, len(widoczne)), "top5": widoczne[:5],
@@ -1574,19 +1678,23 @@ def cmd_szukaj(a) -> int:
     if a.limit < 1:
         blad("--limit musi być co najmniej 1")
         return 1
-    if len(a.zapytanie) > 1:
+    if len(a.zapytanie) > 1 or a.sens:
         return szukaj_wiele(a, start)
     with contextlib.closing(otworz_do_odczytu(a)) as conn:
         widoczne, pominieto, czesciowe, pelnych, poziom = wyszukaj_poziomy(conn, a.zapytanie[0], a, odetnij=a.krotko)
         wyniki = opisz_informacje(conn, widoczne[:a.limit])
+        podobne = opisz_podobne(conn, podobne_trafien(conn, widoczne[:a.limit], a)) if a.krotko else None
         sprzecznosci = otwarte_sp_trafien(conn, widoczne, wyniki)
         stan = meta_bazy(conn).get("zbudowano") or ""
         informacji = conn.execute("SELECT COUNT(*) FROM informacje").fetchone()[0]
     zapisz_log_szukaj(a, start, widoczne, czesciowe, pelnych)
     if a.json:
-        wypisz_json({"stan": stan, "zapytanie": a.zapytanie[0], "czesciowe": czesciowe, "pelnych": pelnych,
-                     "trafien": len(widoczne), "pominieto": pominieto, "wyniki": wyniki, "sprzecznosci": sprzecznosci,
-                     "poziom": poziom})
+        wynik = {"stan": stan, "zapytanie": a.zapytanie[0], "czesciowe": czesciowe, "pelnych": pelnych,
+                 "trafien": len(widoczne), "pominieto": pominieto, "wyniki": wyniki, "sprzecznosci": sprzecznosci,
+                 "poziom": poziom}
+        if podobne is not None:
+            wynik["podobne"] = podobne
+        wypisz_json(wynik)
         return 0
     pominiete = ", ".join(f"{k} {n}" for k, n in pominieto.items() if n)
     naglowek = f"# indeks: stan {lokalnie(stan)} · {informacji} informacji · zapytanie: {a.zapytanie[0]}"
@@ -1599,13 +1707,14 @@ def cmd_szukaj(a) -> int:
     if pominiete:
         naglowek += f" (pominięto: {pominiete})"
     print(naglowek)
-    wypisz_wyniki(a, wyniki, {}, sprzecznosci, pominiete)
+    wypisz_wyniki(a, wyniki, {}, sprzecznosci, pominiete, podobne)
     return 0
 
 
-def wypisz_wyniki(a, wyniki: list, znaczniki: dict, sprzecznosci: list, pominiete: str):
-    """Linie wyników (pełne albo --krotko, ze znacznikiem zapytań przy kilku), sekcja otwartych SP i stopka.
-    --krotko: SP niesione tylko przez dalsze trafienia – same numery w jednej linii (pełne linie: `temat`, Notion)."""
+def wypisz_wyniki(a, wyniki: list, znaczniki: dict, sprzecznosci: list, pominiete: str, podobne=None):
+    """Linie wyników (pełne albo --krotko, ze znacznikiem zapytań przy kilku), sekcja podobnych (--krotko), sekcja
+    otwartych SP i stopka. --krotko: SP niesione tylko przez dalsze trafienia – same numery w jednej linii (pełne
+    linie: `temat`, Notion)."""
     for w in wyniki:
         znacznik = znaczniki.get(w["wi"], "")
         if a.krotko:
@@ -1613,6 +1722,10 @@ def wypisz_wyniki(a, wyniki: list, znaczniki: dict, sprzecznosci: list, pominiet
         else:
             numer = f"WI-{w['wi']}"
             print(numer + (f" {znacznik}" if znacznik else "") + linia_informacji(w)[len(numer):])
+    if podobne:
+        print("## Podobne do trafień (po znaczeniu; ≈WI-n – podobna do trafienia WI-n)")
+        for w in podobne:
+            print(linia_krotka(w, f"≈WI-{w['podobne_do']}"))
     if sprzecznosci:
         dalsze = [s for s in sprzecznosci if not s["w_widocznych"]]
         print("## Otwarte sprzeczności w trafieniach"
@@ -1640,31 +1753,59 @@ def polacz_rrf(listy: dict) -> list:
     return [(wi, punkty[wi][2]) for wi in sorted(punkty, key=lambda w: (-punkty[w][0], punkty[w][1], w))]
 
 
+def rankingi_sens(a, zapytania: list) -> tuple:
+    """szukaj --sens (tylko Mac): (rankingi po znaczeniu z tools/wiedza_sens.py albo None, dopisek do nagłówka).
+    Brak modułu (czat), Ollama wyłączona, brak odcisków albo inny błąd → None i zwykłe szukanie po słowach."""
+    try:
+        import wiedza_sens
+    except ImportError:
+        return None, "sens: niedostępny (tylko na Macu) – same słowa"
+    try:
+        return wiedza_sens.rankingi(sciezka_bazy(a), zapytania, CONF), "sens: tak"
+    except wiedza_sens.Niedostepny as e:
+        return None, f"sens: niedostępny ({e}) – same słowa"
+    except Exception as e:  # noqa: BLE001 – szukanie ma działać bez odcisków; treść wyjątku bez wartości pól
+        return None, f"sens: błąd {type(e).__name__} – same słowa"
+
+
 def szukaj_wiele(a, start: float) -> int:
-    """szukaj z kilkoma zapytaniami: każde osobno (dopełnienie bez odcięcia), wyniki połączone bez
-    duplikatów (polacz_rrf), przy linii znacznik `[1,3]` – numery zapytań (w kolejności podania), które ją znalazły.
+    """szukaj z kilkoma zapytaniami albo z --sens: każde osobno (dopełnienie bez odcięcia), wyniki połączone bez
+    duplikatów (polacz_rrf), przy linii znacznik `[1,3]` – numery zapytań (w kolejności podania), które ją znalazły
+    po słowach albo po znaczeniu (--sens: druga lista RRF na zapytanie, SENS_LISTA najbliższych).
     Zapytanie bez terminów (np. samo „OR” albo znaki interpunkcji) jest pomijane z dopiskiem w nagłówku."""
     numery = [(nr, q) for nr, q in enumerate(a.zapytanie, 1) if zbuduj_zapytanie_fts(q, "AND") is not None]
+    sens, opis_sens = rankingi_sens(a, [q for _, q in numery]) if a.sens else (None, "")
     with contextlib.closing(otworz_do_odczytu(a)) as conn:
         listy, opisy = {}, []
-        for nr, q in numery:
+        ocen = filtr_szukaj(conn, a) if sens else None
+        for i, (nr, q) in enumerate(numery):
             t0 = time.perf_counter()
             widoczne, pominieto, czesciowe, pelnych, poziom = wyszukaj_poziomy(conn, q, a)
             listy[nr] = widoczne
             opisy.append({"nr": nr, "zapytanie": q, "trafien": len(widoczne), "czesciowe": czesciowe,
                           "pelnych": pelnych, "poziom": poziom, "pominieto": pominieto})
+            if sens:
+                # ranking po znaczeniu jako osobna lista RRF (klucz -nr), po tych samych filtrach
+                listy[-nr] = [wi for wi, _ in sens[i] if ocen(wi) == ""][:SENS_LISTA]
             zapisz_log_szukaj(a, t0, widoczne, czesciowe, pelnych, q, len(a.zapytanie))
-        polaczone = polacz_rrf(listy)
+        polaczone = [(wi, sorted(set(abs(nr) for nr in nr_list))) for wi, nr_list in polacz_rrf(listy)]
         wyniki = opisz_informacje(conn, [wi for wi, _ in polaczone[:a.limit]])
+        podobne = (opisz_podobne(conn, podobne_trafien(conn, [wi for wi, _ in polaczone[:a.limit]], a))
+                   if a.krotko else None)
         sprzecznosci = otwarte_sp_trafien(conn, [wi for wi, _ in polaczone], wyniki)
         stan = meta_bazy(conn).get("zbudowano") or ""
         informacji = conn.execute("SELECT COUNT(*) FROM informacje").fetchone()[0]
     znaczniki = {wi: "[" + ",".join(map(str, nr)) + "]" for wi, nr in polaczone}
     puste = [nr for nr in range(1, len(a.zapytanie) + 1) if nr not in listy]
     if a.json:
-        wypisz_json({"stan": stan, "zapytania": opisy, "puste": puste, "trafien": len(polaczone),
-                     "wyniki": [dict(w, zapytania=listy_nr) for w, (_, listy_nr) in zip(wyniki, polaczone)],
-                     "sprzecznosci": sprzecznosci})
+        wynik = {"stan": stan, "zapytania": opisy, "puste": puste, "trafien": len(polaczone),
+                 "wyniki": [dict(w, zapytania=listy_nr) for w, (_, listy_nr) in zip(wyniki, polaczone)],
+                 "sprzecznosci": sprzecznosci}
+        if podobne is not None:
+            wynik["podobne"] = podobne
+        if a.sens:
+            wynik["sens"] = opis_sens
+        wypisz_json(wynik)
         return 0
     segmenty = []
     for o in opisy:
@@ -1679,11 +1820,13 @@ def szukaj_wiele(a, start: float) -> int:
     if puste:
         naglowek += " · puste (bez słów): " + ", ".join(map(str, puste))
     naglowek += "".join(f" · {f}: {getattr(a, f)}" for f in FILTRY_SZUKAJ + ("temat",) if getattr(a, f) is not None)
+    if a.sens:
+        naglowek += f" · {opis_sens}"
     naglowek += f" · razem bez powtórzeń: {len(polaczone)}"
     if len(polaczone) > a.limit:
         naglowek += f" (pokazano {a.limit})"
     print(naglowek)
-    wypisz_wyniki(a, wyniki, znaczniki, sprzecznosci, "")
+    wypisz_wyniki(a, wyniki, znaczniki, sprzecznosci, "", podobne)
     if any(n for o in opisy for n in o["pominieto"].values()):
         print("# pominięto (liczby przy zapytaniach) – ciekawostki pokaże --ciekawostki, nieaktualne --status Nieaktualne")
     return 0
@@ -1771,6 +1914,17 @@ def tokeny_tezy(tekst: str) -> set:
     return {t for t in NIE_SLOWO.sub(" ", tekst).split() if len(t) >= 5 and not t.isdigit() and t not in STOP_SLOWA}
 
 
+def pary_podobne(conn: sqlite3.Connection, tezy: dict, nowe: set, prog: float) -> list:
+    """duplikaty po znaczeniu: [(podobieństwo, WI mniejsze, WI większe)] z tabeli `podobne` od progu, obie
+    informacje w `tezy`, co najmniej jedna w `nowe`; para raz (lista bywa jednostronna – wyższa wartość)."""
+    pary = {}
+    for wi, p, s in conn.execute("SELECT wi, wi_podobne, podobienstwo FROM podobne WHERE podobienstwo >= ?", (prog,)):
+        if wi in tezy and p in tezy and (wi in nowe or p in nowe):
+            klucz = (min(wi, p), max(wi, p))
+            pary[klucz] = max(pary.get(klucz, 0.0), s)
+    return [(s, x, y) for (x, y), s in pary.items()]
+
+
 def cmd_duplikaty(a) -> int:
     od = None
     if a.od:
@@ -1779,10 +1933,14 @@ def cmd_duplikaty(a) -> int:
         except ValueError:
             blad("--od: podaj datę w formacie RRRR-MM-DD")
             return 1
-    if not 0 < a.prog <= 1:
+    if a.prog is not None and not 0 < a.prog <= 1:
         blad("--prog: podaj liczbę z przedziału (0, 1]")
         return 1
     with contextlib.closing(otworz_do_odczytu(a)) as conn:
+        # po znaczeniu, gdy indeks ma listy podobnych; --slowa albo kopia bez list – po słowach jak dotąd
+        sens = not a.slowa and bool(podobne_w_indeksie(conn))
+        if a.prog is None:
+            a.prog = DUPLIKATY_PROG_SENS if sens else DUPLIKATY_PROG_SLOWA
         temat = wi_tematow(conn, a.temat) if a.temat is not None else None
         tezy = {}  # WI → (teza, teza po bez_diakrytykow, data lokalna dodania); bez „Nieaktualne”
         for wi, teza, status, dodano in conn.execute("SELECT wi, teza, status, dodano FROM informacje ORDER BY wi"):
@@ -1793,6 +1951,28 @@ def cmd_duplikaty(a) -> int:
                                     "ORDER BY z.zrd"):
             zrodla.setdefault(wi, []).append(zrd)
         stan = meta_bazy(conn).get("zbudowano") or ""
+        # --od przed parowaniem: kandydaci tylko dla nowych tez; para obu nowych liczona raz (od mniejszego WI)
+        nowe = {wi for wi, (_, _, dodano) in tezy.items() if od is None or (dodano and dodano >= od)}
+        pary = pary_podobne(conn, tezy, nowe, a.prog) if sens else pary_po_slowach(tezy, nowe, a.prog)
+    pary.sort(key=lambda p: (-p[0], p[1], p[2]))
+    metoda = "znaczenie" if sens else "słowa" + (" (brak list podobnych)" if a.sens else "")
+    if a.json:
+        wypisz_json({"stan": stan, "prog": a.prog, "od": a.od, "metoda": metoda, "pary": [
+            {"wi_a": x, "wi_b": y, "ratio": round(r, 4), "teza_a": tezy[x][0], "teza_b": tezy[y][0],
+             "zrodla_a": zrodla.get(x, []), "zrodla_b": zrodla.get(y, [])} for r, x, y in pary]})
+        return 0
+    print(f"# indeks: stan {lokalnie(stan)} · duplikaty ({metoda}): próg {a.prog}" + (f" · od {a.od}" if a.od else "")
+          + (f" · temat: {a.temat}" if a.temat is not None else ""))
+    for r, x, y in pary:
+        zr = [", ".join(f"ZRD-{n}" for n in zrodla.get(w, [])) or "–" for w in (x, y)]
+        print(f"WI-{x} ↔ WI-{y} · {r:.2f} · {skroc(tezy[x][0], 80)} | {skroc(tezy[y][0], 80)} · "
+              f"źródła: {zr[0]} / {zr[1]}")
+    print(f"# par: {len(pary)}")
+    return 0
+
+
+def pary_po_slowach(tezy: dict, nowe: set, prog: float) -> list:
+    """duplikaty po słowach (difflib, bez autojunk – ten zaniżał ratio długich tez): [(ratio, WI, WI)]."""
     # indeks odwrócony token → WI zamiast porównywać każdą parę; kandydaci z najrzadszych tokenów (CZESTOSC_*,
     # SONDA_*), bo długie listy tokenów pospolitych dawały kwadratowo wiele kandydatów
     tokeny = {wi: tokeny_tezy(znormalizowana) for wi, (_, znormalizowana, _) in tezy.items()}
@@ -1802,8 +1982,6 @@ def cmd_duplikaty(a) -> int:
     for wi, ts in tokeny.items():
         for t in ts:
             indeks.setdefault(t, []).append(wi)
-    # --od przed parowaniem: kandydaci tylko dla nowych tez; para obu nowych liczona raz (od mniejszego WI)
-    nowe = {wi for wi, (_, _, dodano) in tezy.items() if od is None or (dodano and dodano >= od)}
     pary = []
     for x in sorted(nowe):
         kolejnosc = sorted(tokeny[x], key=lambda t: (czestosc[t], t))
@@ -1812,30 +1990,17 @@ def cmd_duplikaty(a) -> int:
         kandydaci = {y for t in sonda for y in indeks[t] if y != x and (y not in nowe or y > x)}
         lx = len(tezy[x][1])
         wspolne = ((len(tokeny[x] & tokeny[y]), abs(lx - len(tezy[y][1])), y) for y in kandydaci
-                   if 2 * min(lx, len(tezy[y][1])) >= a.prog * (lx + len(tezy[y][1])))
+                   if 2 * min(lx, len(tezy[y][1])) >= prog * (lx + len(tezy[y][1])))
         for n, _, y in heapq.nlargest(KANDYDACI_NA_TEZE, wspolne, key=lambda p: (p[0], -p[1], -p[2])):
             if n < 3:
                 break
             p, q = min(x, y), max(x, y)
-            miara = difflib.SequenceMatcher(None, tezy[p][1], tezy[q][1])
-            if miara.quick_ratio() >= a.prog:  # górne ograniczenie ratio – tańsze odsianie
+            miara = difflib.SequenceMatcher(None, tezy[p][1], tezy[q][1], autojunk=False)
+            if miara.quick_ratio() >= prog:  # górne ograniczenie ratio – tańsze odsianie
                 r = miara.ratio()
-                if r >= a.prog:
+                if r >= prog:
                     pary.append((r, p, q))
-    pary.sort(key=lambda p: (-p[0], p[1], p[2]))
-    if a.json:
-        wypisz_json({"stan": stan, "prog": a.prog, "od": a.od, "pary": [
-            {"wi_a": x, "wi_b": y, "ratio": round(r, 4), "teza_a": tezy[x][0], "teza_b": tezy[y][0],
-             "zrodla_a": zrodla.get(x, []), "zrodla_b": zrodla.get(y, [])} for r, x, y in pary]})
-        return 0
-    print(f"# indeks: stan {lokalnie(stan)} · duplikaty: próg {a.prog}" + (f" · od {a.od}" if a.od else "")
-          + (f" · temat: {a.temat}" if a.temat is not None else ""))
-    for r, x, y in pary:
-        zr = [", ".join(f"ZRD-{n}" for n in zrodla.get(w, [])) or "–" for w in (x, y)]
-        print(f"WI-{x} ↔ WI-{y} · {r:.2f} · {skroc(tezy[x][0], 80)} | {skroc(tezy[y][0], 80)} · "
-              f"źródła: {zr[0]} / {zr[1]}")
-    print(f"# par: {len(pary)}")
-    return 0
+    return pary
 
 
 def cmd_stan(a) -> int:
@@ -1852,12 +2017,14 @@ def cmd_stan(a) -> int:
         # nigdy nie opublikowano → brak opublikowano_sha → kopia nieaktualna
         aktualna = meta.get("opublikowano_sha") == hash_danych(conn)
         schemat = conn.execute("PRAGMA user_version").fetchone()[0]
+        podobne = {"wierszy": podobne_w_indeksie(conn), "policzone": meta.get("podobne_policzone"),
+                   "model": meta.get("podobne_model"), "bez_listy": meta.get("podobne_brakuje")}
     dane = {"liczniki": liczniki, "sync_stan": sync, "zbudowano": meta.get("zbudowano"),
             "ostatni_pelny": meta.get("ostatni_pelny"), "opublikowano_kiedy": meta.get("opublikowano_kiedy"),
             "publikacje_liczba": int(meta.get("publikacje_liczba") or 0),
             "historia_mb": round(float(meta.get("historia_mb") or 0), 1), "kopia_aktualna": aktualna,
             "rozmiar_mb": round(sciezka.stat().st_size / MB, 2), "sqlite": sqlite3.sqlite_version,
-            "fts5": fts5, "schemat": schemat}
+            "fts5": fts5, "schemat": schemat, "podobne": podobne}
     if a.json:
         wypisz_json(dane)
         return 0
@@ -1872,6 +2039,11 @@ def cmd_stan(a) -> int:
     print(f"zbudowano: {lokalnie(dane['zbudowano'])} · ostatni pełny sync: {lokalnie(dane['ostatni_pelny'])}")
     print(f"publikacja: {lokalnie(dane['opublikowano_kiedy'])} · publikacji {dane['publikacje_liczba']} · "
           f"historia ok. {historia} MB · kopia aktualna: {'tak' if aktualna else 'nie'}")
+    if podobne["wierszy"] is None:
+        print("listy podobnych: brak (indeks sprzed list – `szukaj --krotko` bez sekcji podobnych)")
+    else:
+        print(f"listy podobnych: {podobne['wierszy']} wierszy · policzone {lokalnie(podobne['policzone'])} · model "
+              f"{podobne['model'] or '–'} · informacji bez listy {podobne['bez_listy'] or '–'}")
     if dane["historia_mb"] > LIMIT_HISTORII_MB:
         ostrzez(f"historia prywatnego repo ponad {LIMIT_HISTORII_MB} MB – uruchom publikuj --reset "
                 "(jeden commit z bieżącymi plikami zamiast całej historii)")
@@ -1902,7 +2074,10 @@ def zbuduj_parser() -> argparse.ArgumentParser:
     p.add_argument("--ciekawostki", action="store_true", help="pokaż też Istotność „Ciekawostka”")
     p.add_argument("--krotko", action="store_true",
                    help=f"zwarta linia (teza do {KROTKO_TEZA} zn., tematy, typ autora/wiarygodność; bez tytułów, Kto, "
-                        f"linków) – dla czatu; domyślny limit {LIMIT_KROTKO}")
+                        f"linków) – dla czatu; domyślny limit {LIMIT_KROTKO}; pod trafieniami do {PODOBNE_LINII} "
+                        "podobnych po znaczeniu (≈WI-n)")
+    p.add_argument("--sens", action="store_true",
+                   help="tylko Mac: ranking po słowach łączony z rankingiem po znaczeniu (Ollama); bez niej same słowa")
     p.add_argument("--limit", type=int,
                    help=f"najwyżej tyle linii (domyślnie {LIMIT_DOMYSLNY}, z --krotko {LIMIT_KROTKO})")
     p = sub.add_parser("temat", parents=[wspolne], help="stan wiedzy, liczniki, Kluczowe i otwarte SP tematu")
@@ -1911,10 +2086,16 @@ def zbuduj_parser() -> argparse.ArgumentParser:
                    help="wszystkie widoczne informacje tematu zamiast samych Kluczowych")
     p.add_argument("--krotko", action="store_true", help="zwarte linie jak w szukaj --krotko")
     p.add_argument("--ciekawostki", action="store_true", help="z --lista: także Istotność „Ciekawostka”")
-    p = sub.add_parser("duplikaty", parents=[wspolne], help="pary informacji o bardzo podobnych tezach")
+    p = sub.add_parser("duplikaty", parents=[wspolne],
+                       help="kandydaci na duplikaty: pary z list podobnych (po znaczeniu), bez list – po słowach")
     p.add_argument("--od", help="RRRR-MM-DD: co najmniej jedna z pary dodana od tej daty (lokalnie)")
-    p.add_argument("--prog", type=float, default=0.82, help="minimalne podobieństwo tez (domyślnie 0.82)")
+    p.add_argument("--prog", type=float, help=f"minimalne podobieństwo (domyślnie {DUPLIKATY_PROG_SENS} po znaczeniu, "
+                                              f"{DUPLIKATY_PROG_SLOWA} po słowach)")
     p.add_argument("--temat", help="tylko informacje tematu (część nazwy)")
+    tryb = p.add_mutually_exclusive_group()
+    tryb.add_argument("--sens", action="store_true",
+                      help="po znaczeniu z list podobnych (domyślnie, gdy są; bez list – po słowach z dopiskiem)")
+    tryb.add_argument("--slowa", action="store_true", help="po słowach (difflib) także wtedy, gdy są listy podobnych")
     sub.add_parser("stan", parents=[wspolne], help="liczniki, daty synchronizacji i publikacji, wersje")
     p = sub.add_parser("publikuj", parents=[wspolne],
                        help="kopia indeksu, wiedza.py i synonimów do prywatnego repo z GITHUB_REPO")
