@@ -10,9 +10,8 @@ nie czyta. Oceny 0/1/2 z pamięci sędziego (`jakosc/sedzia.json`, klucz jak w `
 nie jest oceniany drugi raz). Treść jest w pliku (escapowana), który otwiera inwestor; wyjście programu (także
 --json): liczby, ID pytań i ścieżka pliku.
 
---ocen-notion --wyslij: nieocenione wiersze Notion idą do modelu tą samą ścieżką co w `sedzia` (filtr danych
-osobowych na każdym polu, na całości i na dokładnie wysyłanej paczce, kanarek, pamięć ocen, blokada sędziego). Bez
-tego nic nie jest wysyłane do żadnego modelu. Notion: tylko odczyt (jeden GET schematu i POST …/query), najwyżej
+--ocen-notion --wyslij: nieocenione wiersze Notion idą do modelu tą samą ścieżką co w `sedzia` (bez filtra danych
+osobowych – zasada 6, kanarek, pamięć ocen, blokada sędziego). Bez tego nic nie jest wysyłane do żadnego modelu. Notion: tylko odczyt (jeden GET schematu i POST …/query), najwyżej
 --budzet żądań, token z sekrety.env nigdy nie drukowany, błędy tylko jako status HTTP.
 """
 import contextlib
@@ -387,7 +386,7 @@ def przebieg(a, J) -> int:
     sprawdz_opcje(a)
     m = J.Miejsca(a)
     m.przygotuj()
-    filtr = S.Filtr(S.plik_listy(m))
+    filtr = S.Filtr()
     polecenie = S.wymagania_wysylki(m, filtr) if a.wyslij else None
     ostrzezenia = []
     with contextlib.ExitStack() as stos:

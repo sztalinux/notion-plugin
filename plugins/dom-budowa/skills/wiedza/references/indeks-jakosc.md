@@ -29,7 +29,8 @@ Narzędzie: `python3 tools/wiedza_jakosc.py` – tylko Claude Code na Macu (na c
 - `dodaj "zapytanie" --powinno WI-12,WI-40` – przypadek „to powinno się znaleźć”; od tej chwili każda jego strata
   to alarm. Dodawaj, gdy inwestor mówi „tego nie znalazł” albo odpowiedź opierała się na złych wierszach.
 - `raport [--dni 7]` – raport tygodniowy (opis niżej); `--json` dla agenta. Raport potwierdza pokazane alarmy.
-- `reczna [--n 30]` – ocena ręczna (sekcja niżej); `notion [--budzet 300]` – porównanie z Notion, tylko odczyt.
+- `reczna [--n 30]` – ocena ręczna (sekcja niżej); `notion [--budzet 300]` – porównanie z Notion, tylko odczyt;
+  `pokaz [--pytania 30]` – lokalny HTML: pytanie → indeks → Notion (opis w `indeks-sedzia.md`).
 - `przypomnij --cicho` – hook startu sesji: jedna linia, gdy raport tygodniowy czeka, są niepotwierdzone alarmy
   albo obserwator nie działa („obserwator nie działa: Typ” – najwyżej raz w tygodniu). Raz w tygodniu sam robi
   przebieg `zloty`; przebieg odrzucony przez równoległy sync albo dłuższy niż 10 s – kolejna próba po dobie.
@@ -58,7 +59,8 @@ nazwie tematu) każdy wzór. Plik można rozszerzać; `--odnowa` go nie rusza. Z
 `python3 tools/wiedza_jakosc.py reczna` uruchamia inwestor sam, w terminalu: dla każdego z 5 pierwszych wyników
 naciska y (trafny), n (nietrafny), s (pomiń), q (przerwa – to samo polecenie wznawia). Tekst wyników pokazuje tylko
 w terminalu; uruchomione przez agenta podaje same liczby. To higiena, nie zabezpieczenie – agent nie uruchamia jej
-przez `script` ani pty. Wynik („trafne %”) widać w `raport`. Raz po większej zmianie `szukaj`, ok. 30–45 minut.
+przez `script` ani pty. Gotowy zestaw par wczytuje `reczna --wczytaj PLIK` (wiersze: zestaw, id, q, wi, oceny).
+Wynik („trafne %”) widać w `raport`, zgodność z sędzią (y ↔ ocena 2) w wyniku `sedzia`. Raz po większej zmianie `szukaj`, ok. 30–45 minut.
 
 ## Prywatność
 
@@ -69,6 +71,6 @@ przez `script` ani pty. Wynik („trafne %”) widać w `raport`. Raz po większ
 
 ## Sędzia LLM
 
-`sedzia` – model ocenia 0/1/2 pierwsze 12 wyników pytań wymyślonych (zgoda inwestora 19.10.2026: bez danych
-osobowych). Domyślnie na sucho; wysyłka tylko `--wyslij` po zgodzie inwestora. Co idzie do modelu, filtr, jak czytać
+`sedzia` – model ocenia 0/1/2 pierwsze 12 wyników pytań wymyślonych (bez filtra danych osobowych – decyzja inwestora
+z 26.10.2026). Domyślnie na sucho; wysyłka tylko `--wyslij` po zgodzie inwestora. Co idzie do modelu, jak czytać
 wynik: `references/indeks-sedzia.md`. Hook startu nigdy go nie woła.
