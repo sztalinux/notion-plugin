@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.9.0] – 2026-10-26
+
+- Nowe narzędzie `tools/wiedza_sens.py` – odciski znaczenia informacji Bazy wiedzy (model lokalny bge-m3 przez Ollamę,
+  tylko Mac) w osobnym pliku obok indeksu i listy „podobne” (do 10 sąsiadów) w indeksie; liczone przyrostowo przez
+  `wiedza.py sync` po publikacji, bez Ollamy krok jest pomijany po cichu.
+- `tools/wiedza.py`: `szukaj --krotko` z sekcją „Podobne do trafień (po znaczeniu)” (do 8 linii, działa też w czacie
+  z kopii indeksu); `szukaj --sens` (Mac) – ranking po słowach łączony z rankingiem po znaczeniu; `duplikaty` –
+  kandydaci z list podobnych (`--slowa` – po staremu); `stan` – stan list podobnych. Tryb pełny `szukaj` bez zmian.
+- `wiedza/references/indeks.md`: opis sekcji podobnych, `--sens`, nowych `duplikaty` i działania bez Ollamy.
+- `notatka/references/scalanie.md`, pkt 1a: wpis zbierający ustalenia z kilku informacji albo dylemat otwartego SP
+  też zostaje. MINOR – nowe narzędzie i flagi wyszukiwania.
+
 ## dom-budowa [2.8.1] – 2026-10-26
 
 - `wiedza/references/porzadki.md`: wiersz główny scalenia to najpełniejszy wiersz, nie najdłuższa teza – kolejno ocena

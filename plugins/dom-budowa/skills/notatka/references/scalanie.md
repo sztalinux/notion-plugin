@@ -6,7 +6,8 @@ log PRZED/PO poza repo, nigdy nie usuwaj stron): `wiedza/references/porzadki.md`
 1. **Nie wycofuj wpisu otwartego** (Status „Otwarte” albo „Do omówienia”) – zniknąłby z widoków spraw do zamknięcia na DOM.
    Taki wpis zostaje; najwyżej podepnij relację Wiedza.
 1a. **Nie wycofuj listy kontrolnej:** wpis z punktami do odhaczenia w treści albo z więcej niż 2 relacjami Wiedza zbiera
-    działania lub kilka tez – to nie duplikat jednej tezy; zostaje (pomiń z powodem).
+    działania lub kilka tez – to nie duplikat jednej tezy; zostaje (pomiń z powodem). To samo, gdy treść wpisu zbiera
+    ustalenia z kilku informacji (WI-n) albo dylemat z otwartego wpisu Rejestru sprzeczności.
 2. **Wpis zostaje jeden** (krok 2 procedury): treść duplikatu dopisz w treści strony wpisu głównego z datą, Źródła połącz
    („…; …”), relację Wiedza przenieś.
 3. **Wpis wycofany:** Status „Odrzucone” i na samym początku treści strony linia
