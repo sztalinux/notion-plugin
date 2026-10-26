@@ -276,9 +276,28 @@ def pytania_proby(J, m, n, ostrzezenia: list) -> list:
     return wszystkie
 
 
+def wiersz_planu(conn, qid: str, wysylane_q: str, ranga: int, wi: int, pola: list, filtr: Filtr, pred) -> tuple:
+    """(wiersz planu, treść kandydata). Wiersz: do wysłania albo None (odfiltrowany), klucz bazowy pamięci (bez
+    modelu – ten sam dla tej samej pary pytanie–wiersz w każdym poleceniu) i trafność z predykatu słów. Treść zostaje
+    w pamięci procesu (podgląd lokalny `pokaz`)."""
+    w = kandydat(conn, wi, pola)
+    czysty = all(filtr.czysty(v) for v in w.values())
+    return {"ranga": ranga, "wi": wi, "wiersz": w if czysty else None,
+            "klucz": f"{qid}|{sha(wysylane_q, 8)}|{wi}|{sha(jako_json(w))}" if czysty else None,
+            "pred": bool(pred(wi))}, w
+
+
+def odfiltruj_calosc(p: dict, filtr: Filtr):
+    """Całość: wszystkie wiersze odpadły albo trafienie na styku pól → pytanie odfiltrowane, nic z niego nie idzie."""
+    wysylane = [w["wiersz"] for w in p["wiersze"] if w["wiersz"] is not None]
+    if p["wiersze"] and (not wysylane or not filtr.czysty(tresc_zapytania(p["q_wysylane"], wysylane))):
+        p["odfiltrowane"] = True
+        for w in p["wiersze"]:
+            w["wiersz"] = w["klucz"] = None
+
+
 def zbuduj_plan(J, m, conn, a, pola: list, filtr: Filtr, ostrzezenia: list) -> list:
-    """Na pytanie: kandydaci z pierwszych --top wyników (ta sama ścieżka co zloty), wiersz do wysłania albo None
-    (odfiltrowany), klucz bazowy pamięci (bez modelu) i automatyczna trafność z predykatu słów."""
+    """Na pytanie: kandydaci z pierwszych --top wyników (ta sama ścieżka co zloty) – wiersze z wiersz_planu."""
     K = J.Korpus(conn)
     plan = []
     with J.szybka_normalizacja():
@@ -288,17 +307,9 @@ def zbuduj_plan(J, m, conn, a, pola: list, filtr: Filtr, ostrzezenia: list) -> l
                  "odfiltrowane": not filtr.czysty(wysylane_q), "wiersze": []}
             if not p["odfiltrowane"]:
                 pred = K.predykat(wzory)
-                for ranga, wi in enumerate(J.szukaj_listy(conn, q)[:a.top], 1):
-                    w = kandydat(conn, wi, pola)
-                    czysty = all(filtr.czysty(v) for v in w.values())
-                    p["wiersze"].append({"ranga": ranga, "wi": wi, "wiersz": w if czysty else None,
-                                         "klucz": f"{qid}|{sha(wysylane_q, 8)}|{wi}|{sha(jako_json(w))}"
-                                         if czysty else None, "pred": bool(pred(wi))})
-                wysylane = [w["wiersz"] for w in p["wiersze"] if w["wiersz"] is not None]
-                if p["wiersze"] and (not wysylane or not filtr.czysty(tresc_zapytania(wysylane_q, wysylane))):
-                    p["odfiltrowane"] = True   # całość: wszystkie wiersze odpadły albo trafienie na styku pól
-                    for w in p["wiersze"]:
-                        w["wiersz"] = w["klucz"] = None
+                p["wiersze"] = [wiersz_planu(conn, qid, wysylane_q, ranga, wi, pola, filtr, pred)[0]
+                                for ranga, wi in enumerate(J.szukaj_listy(conn, q)[:a.top], 1)]
+                odfiltruj_calosc(p, filtr)
             plan.append(p)
     return plan
 
@@ -511,6 +522,35 @@ def kanarek(wyw: Wywolania, dopisek: str = "") -> dict:
     return dict(spis, czas_s=round(time.monotonic() - t0, 1), model=wynik[2])
 
 
+def wymagania_wysylki(m, filtr: Filtr) -> str:
+    """Przed czymkolwiek z bazy: lista słów zakazanych i polecenie modelu (claude albo atrapa w testach)."""
+    if not filtr.slowa:
+        raise BladSedziego("brak listy słów zakazanych (<hub>/.dom/zakazane-w-repo.txt) – bez niej sędzia nic nie "
+                           "wysyła (filtr nazwisk i firm w treści wierszy)")
+    return polecenie_modelu(m)
+
+
+def wyslij_plan(J, m, a, plan: list, pamiec: dict, polecenie: str) -> tuple:
+    """Jedyna ścieżka wysyłki (sedzia i pokaz): kanarek przed pierwszym wierszem z bazy (tylko gdy jest co
+    wysłać), potem ocen_plan; sprzątanie katalogu procesu i uprawnień danych zawsze. (stan, statystyki)."""
+    wyw = Wywolania(polecenie, a.model)
+    try:
+        spis = kanarek(wyw) if do_wyslania(plan, pamiec, a.model) else None
+        if spis and not a.json:
+            print(f"  kanarek: OK ({spis['czas_s']:.1f} s; narzędzia {spis['narzedzia']}, MCP {spis['mcp']}, "
+                  f"pluginy spoza wbudowanych {spis['pluginy_obce']}, hooki {spis['hooki']})", flush=True)
+        wyw.liczba = 0
+        return ocen_plan(J, m, a, plan, pamiec, wyw)
+    finally:
+        wyw.sprzataj()
+        J.zaostrz(m.dane)
+
+
+POWODY = {"przerwane": "przerwano (Ctrl-C)", "limit": "limit użycia modelu",
+          "izolacja": "proces modelu miał obce narzędzia, MCP, pluginy, skille albo hooki – przerwane",
+          "bledy": f"{KOLEJNE_BLEDY} pytania z rzędu z błędem albo złą odpowiedzią"}
+
+
 def polecenie_modelu(m) -> str:
     wlasne = os.environ.get("WIEDZA_SEDZIA_POLECENIE")
     if wlasne:
@@ -715,10 +755,7 @@ def przebieg(a, J) -> int:
     m = J.Miejsca(a)
     m.przygotuj()
     filtr = Filtr(plik_listy(m))
-    if a.wyslij and not filtr.slowa:
-        raise BladSedziego("brak listy słów zakazanych (<hub>/.dom/zakazane-w-repo.txt) – bez niej sędzia nic nie "
-                           "wysyła (filtr nazwisk i firm w treści wierszy)")
-    polecenie = polecenie_modelu(m) if a.wyslij else None
+    polecenie = wymagania_wysylki(m, filtr) if a.wyslij else None
     ostrzezenia = []
     with contextlib.ExitStack() as stos:
         if a.wyslij:
@@ -743,21 +780,9 @@ def przebieg(a, J) -> int:
                 print("  wysyłka do modelu: python3 tools/wiedza_jakosc.py sedzia --wyslij (te same opcje)")
             return 0
         t0 = time.monotonic()
-        wyw = Wywolania(polecenie, a.model)
-        try:
-            spis = kanarek(wyw) if s["wywolan"] else None
-            if spis and not a.json:
-                print(f"  kanarek: OK ({spis['czas_s']:.1f} s; narzędzia {spis['narzedzia']}, MCP {spis['mcp']}, "
-                      f"pluginy spoza wbudowanych {spis['pluginy_obce']}, hooki {spis['hooki']})", flush=True)
-            wyw.liczba = 0
-            stan, stat = ocen_plan(J, m, a, plan, pamiec, wyw)
-        finally:
-            wyw.sprzataj()
-            J.zaostrz(m.dane)
+        stan, stat = wyslij_plan(J, m, a, plan, pamiec, polecenie)
         if stan != "ok":
-            powod = {"przerwane": "przerwano (Ctrl-C)", "limit": "limit użycia modelu",
-                     "izolacja": "proces modelu miał obce narzędzia, MCP, pluginy, skille albo hooki – przerwane",
-                     "bledy": f"{KOLEJNE_BLEDY} pytania z rzędu z błędem albo złą odpowiedzią"}[stan]
+            powod = POWODY[stan]
             if a.json:
                 W.wypisz_json({"blad": stan, "zapisany": False, "wywolan": stat["wywolan"],
                                "bledy_wywolan": stat["bledy"], "odpowiedzi_zle": stat["zle"]})

@@ -12,6 +12,7 @@ Nie zmienia indeksu ani Notion; indeks otwiera tylko do odczytu.
     python3 tools/wiedza_jakosc.py notion [--budzet 300]             # raz w miesiącu: porównanie z Notion przez API
     python3 tools/wiedza_jakosc.py przypomnij --cicho                # hook startu: jedna linia, gdy jest coś do zrobienia
     python3 tools/wiedza_jakosc.py sedzia [--wyslij]                 # sędzia LLM; bez --wyslij tylko na sucho
+    python3 tools/wiedza_jakosc.py pokaz [--pytania 30]              # lokalny HTML: pytanie → indeks → Notion
 
 Opcje wspólne: --db ŚCIEŻKA (indeks w `<hub>/.dom/wiedza/`; dane obserwatora leżą obok), --json.
 
@@ -40,12 +41,14 @@ Polecenia:
   odrzucony (sync zmienił indeks) albo po czasie – kolejna próba po dobie. Zawsze kod 0. Sędziego nigdy nie woła.
 - sedzia: model ocenia 0/1/2 pierwsze wyniki pytań wymyślonych (opis i zasady prywatności w tools/wiedza_sedzia.py);
   wynik w historii jako przebieg „sedzia”, jedna linia w raport. Moduł ładowany tylko przez to polecenie.
+- pokaz: lokalny plik `jakosc/porownanie-*.html` (treść tylko dla inwestora) – pytanie, wyniki indeksu i Notion przez
+  API (przybliżenie), oceny sędziego z pamięci; wyjście: liczby i ścieżka (tools/wiedza_porownanie.py).
 
 Dane (poza repo, katalog 700, pliki 600, obok indeksu – domyślnie `.dom/wiedza/`):
 - `szukaj.log.jsonl` (+ `szukaj.log.1.jsonl`) – log zapytań pisany przez `wiedza.py szukaj`;
 - `jakosc/ki.json` (zbiór KI), `jakosc/pytania.json` (pytania i predykaty), `jakosc/wlasne.json` (przypadki z `dodaj`),
   `jakosc/reczna-*.jsonl` (oceny ręczne), `jakosc/historia.sqlite` (przebiegi, wyniki per zapytanie, alarmy),
-  `jakosc/sedzia.json` (pamięć ocen sędziego: skróty i oceny, bez treści).
+  `jakosc/sedzia.json` (pamięć ocen sędziego: skróty i oceny, bez treści), `jakosc/porownanie-*.html` (z treścią).
 Wyjście: liczby, numery WI, rangi, czasy i ID zapytań; tekst – wyłącznie zapytania z logu (wpisane przez inwestora
 i agentów) oraz, w terminalu, wyniki oceny ręcznej. Zapytań z czatu na telefonie log nie zbiera (kopia w sandboksie).
 """
@@ -1367,6 +1370,14 @@ def zbuduj_parser() -> argparse.ArgumentParser:
     p.add_argument("--model", default="sonnet", help="model claude, zapisywany w historii (domyślnie sonnet)")
     p.add_argument("--rownolegle", type=int, default=3, help="wywołań naraz, 1–6 (domyślnie 3)")
     p.add_argument("--pola", help="dodatkowe pola: dla_naszej_budowy,komentarz (Kto, Z kim, źródła nigdy)")
+    p = sub.add_parser("pokaz", parents=[wspolne], help="lokalny HTML do porównania: pytanie → indeks → Notion")
+    p.add_argument("--pytania", type=int, default=30, help="próbka tylu pytań wymyślonych (domyślnie 30, jak sedzia)")
+    p.add_argument("--top", type=int, default=TOP, help=f"wierszy na listę, 1–{TOP} (domyślnie {TOP})")
+    p.add_argument("--model", default="sonnet", help="model, którego oceny pokazać (domyślnie sonnet)")
+    p.add_argument("--budzet", type=int, default=150, help="najwyżej tyle żądań do Notion (domyślnie 150)")
+    p.add_argument("--wyslij", action="store_true", help="tylko z --ocen-notion")
+    p.add_argument("--ocen-notion", action="store_true", help="nieocenione wiersze Notion do modelu (z --wyslij)")
+    p.set_defaults(rownolegle=3)
     return ap
 
 
@@ -1375,8 +1386,13 @@ def cmd_sedzia(a) -> int:
     return wiedza_sedzia.cmd_sedzia(a, sys.modules[__name__])
 
 
+def cmd_pokaz(a) -> int:
+    import wiedza_porownanie  # leniwie, jak sędzia
+    return wiedza_porownanie.cmd_pokaz(a, sys.modules[__name__])
+
+
 POLECENIA = {"zloty": cmd_zloty, "dodaj": cmd_dodaj, "raport": cmd_raport, "reczna": cmd_reczna,
-             "notion": cmd_notion, "przypomnij": cmd_przypomnij, "sedzia": cmd_sedzia}
+             "notion": cmd_notion, "przypomnij": cmd_przypomnij, "sedzia": cmd_sedzia, "pokaz": cmd_pokaz}
 
 
 def main(argv=None) -> int:

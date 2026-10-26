@@ -68,4 +68,13 @@ każde pytanie jest ocenione; inaczej „uruchom ponownie” (pamięć: tylko br
 - Hook startu (`przypomnij`) ani zaplanowane zadania nigdy nie wołają sędziego – tak ma zostać.
 - Nie wypisuj do rozmowy treści wierszy ani odpowiedzi modelu – nie ma ich w wyjściu, nie szukaj ich w plikach.
 
+## Porównanie z Notion do przejrzenia (`pokaz`)
+
+`python3 tools/wiedza_jakosc.py pokaz [--pytania 30]` zapisuje lokalny `jakosc/porownanie-RRRRMMDD-GGMM.html` (600):
+ta sama próbka pytań co `sedzia`, pierwsze 12 wyników `szukaj` i wyniki API Notion (przybliżenie: filtr `contains`
+bez rankingu i semantyki MCP, lista po WI malejąco), oceny z pamięci sędziego, wiersze wspólne i odfiltrowane.
+Plik z treścią otwiera inwestor – nie czytaj go i nic z niego nie wypisuj; program podaje liczby i ścieżkę. Notion
+tylko odczyt (`--budzet`, domyślnie 150). `--ocen-notion --wyslij` (po zgodzie inwestora) ocenia nieocenione
+wiersze Notion tą samą ścieżką co `sedzia`; bez tego nic nie idzie do modelu.
+
 Testy: zmienna `WIEDZA_SEDZIA_POLECENIE` wskazuje atrapę modelu zamiast `claude` (przy prawdziwym hubie – odmowa).
