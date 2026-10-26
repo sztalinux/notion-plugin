@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.8.0] – 2026-10-26
+
+- Nowa referencja `wiedza/references/porzadki.md` – reguły porządków w bazie wiedzy po przeglądzie bazy: nigdy nie usuwaj
+  stron; bieżący stan każdej grupy przed zapisem i log PRZED/PO poza repo; łańcuchy scaleń z jednym wierszem głównym;
+  wycofany wiersz – Status „Nieaktualne” i „Scalone do WI-x (data)” na początku Szczegółów; na główny suma Tematów,
+  Sprzeczności i Notatnika, dopisane brakujące szczegóły z warunkami obu tez, Źródła tylko niezależne; Mój komentarz
+  inwestora nietknięty; nie wycofuj wierszy w otwartym sporze; SPRZECZNOŚĆ – wpis w Rejestrze bez rozstrzygania; ZŁY TEMAT –
+  tylko relacja Tematy; filtry „Status ≠ Nieaktualne” w widokach Informacji. Odesłanie w `wiedza/SKILL.md`.
+- Nowa referencja `notatka/references/scalanie.md` (odesłanie w kroku 2 `notatka`): wpis wycofany – Status „Odrzucone”
+  i „Scalone do WI-x / <wpis> (data)” na początku treści, bez zmiany struktury bazy; wpisów otwartych nie wycofuj;
+  widoki Notatnika z filtrem „Status ≠ Odrzucone”. MINOR – nowe reguły i referencje.
+
 ## dom-budowa [2.7.0] – 2026-10-26
 
 - `tools/wiedza.py szukaj` przyjmuje kilka zapytań naraz (`szukaj "q1" "q2" "q3"`): każde szukane osobno, wyniki łączone

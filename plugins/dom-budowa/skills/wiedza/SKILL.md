@@ -11,6 +11,7 @@ oznaczyć co nowe, co potwierdzone, a co sprzeczne – i niczego spornego nie ro
 Struktura Notion, ID baz, pola i plan zapisu: `references/notion-wiedza.md`.
 Ocena źródła: `references/ocena-zrodla.md`. Sprzeczności (ADR): `references/sprzecznosci.md`.
 Szukanie w bazie (indeks lokalny, trzy kanały dostępu): `references/indeks.md`. Zapisy wsadowe: `budowa`, zasada 6.
+Porządki (scalanie duplikatów, zły temat, sprzeczności z przeglądu bazy): `references/porzadki.md` – nigdy nie usuwaj stron.
 
 **Każda informacja ma źródło** – relację Źródła (wpis w Rozmowach i źródłach: film, rozmowa, dokument, notatki własne)
 albo relację Notatnik (ustalenie lub decyzja naszej budowy, sekcja F). Informacji bez źródła nie zapisuj. Źródło nieznane

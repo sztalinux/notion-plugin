@@ -31,6 +31,7 @@ branżą i adresatem, tak żeby dało się ją filtrować i zamknąć.
    i nie linkuj wpisów do siebie: zostaje jedno źródło prawdy. Zaktualizuj istniejący (status, dopisek z datą);
    nowy szczegół dopisz w treści jego strony (z datą), a gdy informacja pochodzi z innego źródła niż to w polu Źródło –
    dodaj drugie źródło do Źródła (np. „…; pulpit DOM, 10.2026”).
+   Duplikat już zapisany albo wpis dublujący wiedzę wycofaj wg `references/scalanie.md` (Status „Odrzucone” + „Scalone do …”).
 3. **Pokaż plan zapisu** jako tabelę (Nazwa | Typ | Etap | Branża | Do kogo | Priorytet | Status).
    Przy 1–3 oczywistych wpisach zapisz od razu; przy więcej lub przy niepewnej klasyfikacji – poproś o „ok”.
 4. **Zapisz jednym wywołaniem na bazę** (wiele stron w jednej operacji; zasada 6 z `budowa`), wartości pól dokładnie
