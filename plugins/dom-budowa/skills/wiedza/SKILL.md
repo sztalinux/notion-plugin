@@ -10,7 +10,8 @@ oznaczyć co nowe, co potwierdzone, a co sprzeczne – i niczego spornego nie ro
 
 Struktura Notion, ID baz, pola i plan zapisu: `references/notion-wiedza.md`.
 Ocena źródła: `references/ocena-zrodla.md`. Sprzeczności (ADR): `references/sprzecznosci.md`.
-Szukanie w bazie (indeks lokalny, trzy kanały dostępu): `references/indeks.md`. Zapisy wsadowe: `budowa`, zasada 6.
+Szukanie w bazie (indeks lokalny, trzy kanały dostępu): `references/indeks.md`; pytanie do bazy: `references/pytanie-do-bazy.md`;
+porównanie nowego źródła z bazą: `references/porownanie.md`. Zapisy wsadowe: `budowa`, zasada 6.
 Porządki (scalanie duplikatów, zły temat, sprzeczności z przeglądu bazy): `references/porzadki.md` – nigdy nie usuwaj stron.
 
 **Każda informacja ma źródło** – relację Źródła (wpis w Rozmowach i źródłach: film, rozmowa, dokument, notatki własne)
@@ -50,9 +51,11 @@ w odpowiedzi zaznacz, że wymaga potwierdzenia. Dzięki temu przy każdej inform
    przewidzieć albo sprawdzić – nie etap, którego dotyczy temat. Np. pion ciepłej wody → Stan zero (otwór w stropie P-1),
    odpływ skroplin klimatyzacji → Stan zero (kanalizacja podposadzkowa), membrana dachowa → SSO, gładzie → Deweloperski.
    „Cała budowa” tylko dla zasad bez konkretnego momentu (organizacja, budżet, umowy).
-5. **Porównanie z tym, co wiemy** – dla każdej jednostki przeszukaj: Informacje (te same Tematy + słowa kluczowe),
-   „W skrócie” tematów, Rejestr sprzeczności (także rozstrzygnięte), decyzje w Notatniku budowy, ściągę projektu
-   (`budowa/references/projekt.md`). Informacje sprawdzaj poleceniem `szukaj` z tezą jednostki: 2–4 słowa kluczowe, bez zdania
+5. **Porównanie z całym tematem – przed zapisem.** Najpierw skończ ekstrakcję (pkt 3–4), nadaj jednostkom numery
+   T-1, T-2… i dopiero potem porównuj – temat po temacie, każdą jednostkę z całym tematem i z trafieniami z innych
+   tematów; przed pierwszym zapisem spisz listę relacji T-n → WI-x. Jak: `references/porownanie.md`. Przeszukaj też:
+   „W skrócie” tematów, Rejestr sprzeczności (także rozstrzygnięte), decyzje w Notatniku budowy (wszystkie wpisy z tym
+   samym Etapem i Branżą – filtr bazy, nie szukanie tekstu), ściągę projektu (`budowa/references/projekt.md`). Informacje sprawdzaj poleceniem `szukaj` z tezą jednostki: 2–4 słowa kluczowe, bez zdania
    i słów pomocniczych (końcówki fleksyjne obcina narzędzie; `*` = prefiks, np. `drena*`), nie przeglądaniem bazy; wynik niesie
    „Kto” do reguły „ten sam autor” (niżej). Polecenie i kanał: `references/indeks.md` (przebieg nocny – bezwzględna ścieżka z promptu). Sklasyfikuj:
    | Wynik | Działanie |
@@ -106,19 +109,17 @@ podaje ocenę albo uwagę („WI-12 ciekawostka”, „do WI-20: nie zgadzam si�
 
 ## E. Pytanie do bazy („co wiemy o drenażu?”)
 
-1. Zacznij od indeksu: `szukaj` i `temat` (`references/indeks.md`); Notion czytaj dopiero po szczegóły, przed decyzją
-   i przed zapisem. Stan indeksu starszy niż 24 h – podaj jego datę w odpowiedzi. Indeks niedostępny → dotychczasowa droga:
-   znajdź temat(y) w Tematach (nazwa i „W skrócie”); pobierz ich Informacje (Status ≠ Nieaktualne) i wpisy Rejestru
-   (Status ≠ Zastąpione) – jednym zapytaniem na bazę. Dodaj decyzje z Notatnika (Typ „Decyzja”) o tej branży.
+1. Szukaj i odpowiadaj wg `references/pytanie-do-bazy.md`: kilka sformułowań naraz, poziom głębokości (szybko / normalnie /
+   dokładnie), cały główny temat, Notatnik po polach, stała forma odpowiedzi z zasięgiem. Polecenia i kanały:
+   `references/indeks.md`. Notion czytaj po szczegóły, przed decyzją i przed zapisem. Stan indeksu starszy niż 24 h – podaj
+   jego datę w odpowiedzi. Indeks niedostępny → dotychczasowa droga: znajdź temat(y) w Tematach (nazwa i „W skrócie”);
+   pobierz ich Informacje (Status ≠ Nieaktualne) i wpisy Rejestru (Status ≠ Zastąpione) – jednym zapytaniem na bazę.
    Gdy dwa tematy pokrywają ten sam zakres, nie łącz ich wiedzy po cichu – zgłoś to inwestorowi jako sprawę porządkową.
 2. Kolejność w obrębie stanu wiedzy: Kluczowe → Ważne → nieocenione; Ciekawostki tylko jako licznik („+ n ciekawostek –
    pokazać?”), chyba że pytanie dotyczy właśnie ich. Przy informacji z **Moim komentarzem** podaj go obok („Twoja uwaga: …”);
-   komentarz sprzeciwu oznacz – to nie jest wiedza „obowiązująca u nas”, dopóki sprawa nie jest rozstrzygnięta.
-   Odpowiedz w kolejności: **co obowiązuje u nas** (decyzje z ich Statusem – „Do omówienia” to jeszcze nie ustalenie;
-   rozstrzygnięcia SP, projekt – ze źródłem) → **stan wiedzy**
-   (punkty z WI-x, liczby z warunkami; przy rozbieżnych warunkach podaj oba) → **otwarte sprzeczności** (SP-n, od kiedy czekają)
-   → **luki** (czego baza nie wie – zaproponuj, kogo zapytać lub jakie źródło przerobić). Inwestor chce odpowiedzi od razu →
-   wyszukaj w internecie i podaj osobno, z oznaczeniem `[internet]`, źródłem i oceną wiarygodności (`budowa`, zasada 10).
+   komentarz sprzeciwu oznacz – to nie jest wiedza „obowiązująca u nas”, dopóki sprawa nie jest rozstrzygnięta. Kolejność
+   odpowiedzi (u nas ustalone → stan wiedzy z WI-x, liczby z warunkami, przy rozbieżnych warunkach oba → otwarte SP → luki),
+   internet `[internet]` i tryb doradcy: `pytanie-do-bazy.md`, pkt 7–9.
 3. Nie dopisuj wiedzy z własnej pamięci do odpowiedzi jako „z bazy”. Własne uzupełnienie oznacz `[opinia]` i zaproponuj
    zapis dopiero po potwierdzeniu źródłem.
 4. Nic nie zapisuj (tryb tylko do odczytu), chyba że inwestor poprosi o zanotowanie luki jako „Doczytać” (`notatka`).

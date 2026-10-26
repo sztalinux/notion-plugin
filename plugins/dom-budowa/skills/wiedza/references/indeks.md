@@ -3,6 +3,8 @@
 Cel: znaleźć w Bazie wiedzy informacje, tematy i sprzeczności szybko, bez przeszukiwania Notion (jest wolne i limitowane).
 Indeks to lokalna kopia czterech baz (SQLite FTS5), tylko do odczytu. Notion zostaje jedynym źródłem prawdy i jedynym
 miejscem zapisu – nigdy nie zapisuj wiedzy do indeksu. Trzy kanały dostępu mają różne polecenia; wybierz swój.
+Ten plik opisuje polecenia. **Jak szukać i odpowiadać na pytanie** (kilka sformułowań, głębokość, cały temat, Notatnik,
+forma odpowiedzi) – `pytanie-do-bazy.md`.
 
 ## Claude Code – sesja interaktywna w repo
 
@@ -69,15 +71,18 @@ Tu nie ma `tools/` ani repo. Przeczytaj raz na rozmowę stronę Notion „🔑 A
 i wstaw jej pola w miejsce `<GITHUB_REPO>` i `<TOKEN>`. Nigdy nie zapisuj tokena w odpowiedzi, notatce ani pliku.
 
 ```
-curl -sf -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github.raw" -o /tmp/wiedza.sqlite https://api.github.com/repos/<GITHUB_REPO>/contents/wiedza.sqlite
-curl -sf -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github.raw" -o /tmp/wiedza.py https://api.github.com/repos/<GITHUB_REPO>/contents/wiedza.py
-python3 /tmp/wiedza.py szukaj "przerwa robocza" --db /tmp/wiedza.sqlite
+test -s /tmp/wiedza.sqlite || curl -sf -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github.raw" -o /tmp/wiedza.sqlite https://api.github.com/repos/<GITHUB_REPO>/contents/wiedza.sqlite
+test -s /tmp/wiedza.py || curl -sf -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github.raw" -o /tmp/wiedza.py https://api.github.com/repos/<GITHUB_REPO>/contents/wiedza.py
+python3 /tmp/wiedza.py szukaj "przerwa robocza" "przerwa w betonowaniu" "szew roboczy" --krotko --limit 100 --db /tmp/wiedza.sqlite
 ```
 
+- Jedno wywołanie robi wszystko: pobiera tylko brakujące pliki (`test -s`) i szuka. Jak dobrać zapytania, limit i cały temat –
+  `pytanie-do-bazy.md` (poziomy szybko / normalnie / dokładnie).
 - Pozostałe polecenia (`temat`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`
   z sekcją podobnych, `temat --lista`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`. `--sens`
   tu nie działa (brak Ollamy) – daje zwykły wynik po słowach.
-- Katalog `/tmp` bywa pusty w kolejnej wiadomości – pobierz oba pliki ponownie (stronę dostępu masz już przeczytaną).
+- Katalog `/tmp` bywa pusty w kolejnej wiadomości – `test -s` pobierze pliki ponownie (stronę dostępu masz już przeczytaną,
+  nie czytaj jej drugi raz).
 - Brak strony, tokena, sieci albo błąd pobrania → napisz „indeks niedostępny” i czytaj Notion bezpośrednio.
 - Nie uruchamiaj `sync` ani `publikuj`. Po zapisie wiedzy napisz wprost: „indeks dogoni przy najbliższym sync na Macu”.
 - Daty w kopii podawaj informacyjnie: bez nowych danych nie ma nowej publikacji, więc starsza data nie jest alarmem.

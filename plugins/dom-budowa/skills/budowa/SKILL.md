@@ -137,9 +137,10 @@ własny przegląd, żeby nie zasłaniała spraw osobistych.
    danych („Firma A”, „Jan Kowalski”).
 10. **Kolejność szukania odpowiedzi** (pytania o naszą budowę i wiedzę budowlaną):
     1) **materiały inwestora** – Baza wiedzy (Tematy, Informacje), ustalenia i decyzje w Notatniku, ściąga i dokumenty
-       projektu (przewodnik; dokument – poproś o niego, zasada 7); wiedzy szukaj **najpierw w indeksie**
-       (`python3 tools/wiedza.py szukaj "2–4 słowa"`; kanały czatu i przebiegu nocnego: `wiedza/references/indeks.md`),
-       do Notion sięgaj po szczegóły, przed decyzją i przed zapisem wiedzy; indeks niedostępny → od razu Notion;
+       projektu (przewodnik; dokument – poproś o niego, zasada 7); wiedzy szukaj **najpierw w indeksie, drogą z
+       `wiedza/references/pytanie-do-bazy.md`** (kilka sformułowań naraz, `--krotko`, poziom głębokości, cały temat;
+       polecenia i kanały: `wiedza/references/indeks.md`), do Notion sięgaj po szczegóły, przed decyzją i przed
+       zapisem wiedzy; indeks niedostępny → od razu Notion;
     2) **miejsca, gdzie temat się pojawił, ale nie jest rozstrzygnięty** – otwarte Pytania/Doczytać/Do omówienia
        w Notatniku, Rejestr sprzeczności, Rozmowy i źródła, Dziennik budowy, „Co już wiem z rozmów i ofert”, archiwum
        starych notatek – pokaż je jako otwarte, nie jako ustalenie;

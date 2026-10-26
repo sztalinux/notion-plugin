@@ -27,7 +27,9 @@ branżą i adresatem, tak żeby dało się ją filtrować i zamknąć.
    | kilka luźnych, niejasnych wpisów naraz / „przerób dziennik” | → procedura `wpisy` (plugin `ja`) | wyjaśnia, potem wraca tu |
    | rozmowa z projektantem/wykonawcą, film, artykuł – „kto co powiedział” | → procedura `wiedza` (Rozmowy i źródła, Informacje, Tematy) | stąd tylko działania do Notatnika |
 
-2. **Sprawdź duplikaty:** wyszukaj w Notatniku 2–3 słowa kluczowe. Jeśli wpis istnieje – nie twórz drugiego
+2. **Sprawdź duplikaty:** odczytaj wszystkie wpisy Notatnika z tym samym Etapem i Branżą co nowy (filtr bazy, bez
+   Odrzuconych; zwykle kilkanaście – nie szukaj po 2–3 słowach, bo wpis o tym samym bywa nazwany inaczej) i porównaj
+   z nowym wpisem, dopiero potem zapisuj. Jeśli wpis istnieje – nie twórz drugiego
    i nie linkuj wpisów do siebie: zostaje jedno źródło prawdy. Zaktualizuj istniejący (status, dopisek z datą);
    nowy szczegół dopisz w treści jego strony (z datą), a gdy informacja pochodzi z innego źródła niż to w polu Źródło –
    dodaj drugie źródło do Źródła (np. „…; pulpit DOM, 10.2026”).
