@@ -8,11 +8,11 @@ sesji) ocenia, czy każdy z pierwszych N wyników `szukaj` odpowiada na pytanie 
 
 Do modelu idzie tylko: pytanie wymyślone (`pytania.json`, nie zapytania z logu), lokalny numer kandydata, teza,
 szczegóły, tematy i etap; --pola może dodać dla_naszej_budowy i komentarz. „Kto”, „Z kim” i tytuły źródeł nigdy.
-Tekst jest normalizowany (NFKC, bez znaków niewidocznych, jednolite myślniki i spacje) i dokładnie ten tekst przechodzi
-filtr i jest wysyłany. Filtr: telefony i ciągi 9+ cyfr, e-mail (także „(at)”), kody pocztowe, adresy, działki, KW,
-PESEL/NIP/REGON, tytuły i formy prawne z nazwą, dwa wyrazy z wielkiej litery w środku zdania, słowa z listy zakazanych
-po rdzeniu. Trafienie = wiersz odfiltrowany, poza metrykami. Przed pierwszym wierszem z bazy – wywołanie kanarkowe na
-zmyślonej treści (izolacja procesu i poprawny JSON). Wyjście, historia i pamięć ocen: liczby, ID pytań, numery WI.
+Tekst jest normalizowany (NFKC, bez znaków niewidocznych, jednolite myślniki i spacje) i dokładnie ten tekst jest
+wysyłany. Filtra danych osobowych przed modelem nie ma (decyzja inwestora z 26.10.2026: dane osobowe nie mogą trafić do
+publicznego repo, ale model Claude – ta sama usługa co czat – może je widzieć); pilnuje tego kontrola repo (hooki,
+`tools/build.py`), a wyniki i pamięć ocen zawierają tylko liczby, ID pytań i numery WI. Przed pierwszym wierszem z bazy –
+wywołanie kanarkowe na zmyślonej treści (izolacja procesu i poprawny JSON).
 
 Pamięć ocen: `jakosc/sedzia.json` (klucz: pytanie, WI, skrót wysyłanego wiersza, model, skrót promptu) – powtórny
 przebieg woła model tylko dla zmienionych par; przerwany (Ctrl-C) wznawia się od miejsca przerwania.
@@ -78,7 +78,7 @@ KANAREK_KANDYDACI = [
     {"teza": "Dachówka ceramiczna jest cięższa od blachodachówki.", "szczegoly": "Wymaga mocniejszej więźby."}]
 
 
-# ------------------------------------------------------------------ normalizacja i filtr danych osobowych
+# ------------------------------------------------------------------ normalizacja tekstu
 MYSLNIKI = dict.fromkeys(map(ord, "‐‑‒–—―−﹘﹣－"), "-")
 
 
@@ -95,119 +95,20 @@ def normalizuj_tekst(tekst) -> str:
     return " ".join("".join(znaki).split())
 
 
-DUZA = "A-ZĄĆĘŁŃÓŚŹŻ"
-WZORCE = [   # (kategoria, wzorzec) – nadzbiór wzorców kontroli prywatności repo (tools/build.py)
-    ("cyfry", re.compile(r"\d(?:[\s.()+-]*\d){8,}")),                       # telefony z separatorami, konta, PESEL
-    ("e-mail", re.compile(r"@|[(\[]\s*(?:at|małpa|malpa)\s*[)\]]|\bma[łl]p|"
-                          r"\s(?:at)\s+[\w-]+(?:\.|\s+(?:dot|kropka)\s+)[a-z]{2,}", re.I)),
-    ("www", re.compile(r"https?://|\bwww\.", re.I)),
-    ("kod pocztowy", re.compile(r"\b\d{2}\s?-\s?\d{3}\b")),
-    ("adres", re.compile(r"\b(?:ul|al|os|pl)\.\s*\w|\b(?:ulic|alej|osiedl)\w*", re.I)),
-    ("działka", re.compile(r"\bdz\.\s*ew|ewidencyjn|\bobręb|\bdziałk\w*\s+(?:nr|numer)\b|\bdziałk\w*\D{0,30}\d+\s*/\s*\d+"
-                           r"|\bnr\.?\s*ew", re.I)),
-    ("księga wieczysta", re.compile(r"\b[a-z]{2}\d[a-z]\s*/\s*\d{8}\s*/\s*\d\b|\bksi[ęe]g\w*\s+wieczyst|\bkw\s*(?:nr|numer)",
-                                    re.I)),
-    ("identyfikator", re.compile(r"\b(?:pesel|nip|regon|krs)\b", re.I)),
-    ("tytuł z nazwą", re.compile(r"\b(?i:pan|pani|pana|panu|panem|panią|panie|państwo|p\.|inż\.?|mgr|dr|prof\.?|"
-                                 r"kierownik\w*|majster\w*|konstruktor\w*|architekt\w*|projektant\w*|geodet\w*|"
-                                 r"wykonawc\w*|firm\w*|ekip\w*|hurtowni\w*)\s+[" + DUZA + "]")),
-    ("forma prawna", re.compile(r"\bsp\.\s*z\s*o\.?\s*o\b|\bs\.\s*c\.|\bs\.\s*a\.|\bsp\.\s*[jkp]\.|\bp\.?\s*h\.?\s*u\b"
-                                r"|\bsp[óo]łk\w*", re.I)),
-]
-OTWIERAJACE = "\"'„“”«»([{"
-KONCZACE_ZDANIE = ".!?:;…"
-BEZPIECZNE_WIELKIE = frozenset()   # pary terminów (bez diakrytyków, małe) zwolnione z heurystyki dwóch wyrazów
-
-
-def wyraz_z_wielkiej(rdzen: str) -> bool:
-    return (len(rdzen) >= 2 and rdzen[0].isupper() and not rdzen.isupper()
-            and re.fullmatch(r"[^\W\d_]+(?:-[^\W\d_]+)*", rdzen) is not None)
-
-
-def dwa_wielkie(tekst: str) -> bool:
-    """Dwa kolejne wyrazy z wielkiej litery, z których pierwszy nie zaczyna zdania ani pola (imię i nazwisko, firma)."""
-    tokeny = tekst.split()
-    for i in range(len(tokeny) - 1):
-        a, b = tokeny[i], tokeny[i + 1]
-        poczatek = i == 0 or tokeny[i - 1][-1] in KONCZACE_ZDANIE or tokeny[i - 1] in ("-", "•", "*")
-        ra, rb = a.lstrip(OTWIERAJACE), b.strip(OTWIERAJACE + KONCZACE_ZDANIE + ",")
-        if (not poczatek and a[-1].isalpha() and wyraz_z_wielkiej(ra) and wyraz_z_wielkiej(rb)
-                and (W.bez_diakrytykow(ra), W.bez_diakrytykow(rb)) not in BEZPIECZNE_WIELKIE):
-            return True
-    return False
-
-
-def warianty_slowa(slowo: str) -> set:
-    """Słowo z listy (małe, bez polskich znaków) i jego zapisy: x↔ks, bez ruchomego „e” (Marek → Mark-a)."""
-    w = {slowo}
-    if "x" in slowo:
-        w.add(slowo.replace("x", "ks"))
-    if "ks" in slowo:
-        w.add(slowo.replace("ks", "x"))
-    for s in list(w):
-        if len(s) >= 5 and s[-2] == "e" and s[-1] not in "aeiouy":
-            w.add(s[:-2] + s[-1])
-    return w
-
-
 class Filtr:
-    """Wzorce, heurystyka nazw i lista słów zakazanych `<hub>/.dom/zakazane-w-repo.txt` (hub z --db). Słowa listy:
-    całe wpisy, każdy wyraz po rdzeniu (przedrostek max(4, długość−2) od początku wyrazu; ≤ 3 litery – cały wyraz)
-    i wpis bez spacji w tekście bez spacji – wszystko bez wielkości liter i polskich znaków. Listy nigdy nie drukuje."""
+    """Zgodność wsteczna: `kolejka_kontrola.py` sprzed Z9 importuje `Filtr`. Od 26.10.2026 (zasada 6) do modeli Claude
+    idzie treść bazy bez filtra danych osobowych, więc `czysty` jest zawsze prawdą. Do usunięcia po wdrożeniu kolejki."""
 
-    def __init__(self, plik_listy: Path):
-        slowa = []
-        for lista in (plik_listy, W.REPO / "dane" / "prywatne.txt"):
-            with contextlib.suppress(OSError, UnicodeDecodeError):
-                slowa += [s.strip() for s in lista.read_text(encoding="utf-8").splitlines()
-                          if s.strip() and not s.strip().startswith("#")]
-        self.slowa, rdzenie, self.ciagi = [], set(), set()
-        for s in slowa:
-            s = W.bez_diakrytykow(normalizuj_tekst(s))
-            if not s:
-                continue
-            self.slowa.append(s)
-            wyrazy = re.findall(r"\w+", s)
-            ciag = "".join(wyrazy)
-            if len(ciag) >= 5:
-                self.ciagi.add(ciag)
-            for wyraz in wyrazy:
-                if wyraz.isalpha() and len(wyraz) >= 3:
-                    for v in warianty_slowa(wyraz):
-                        rdzenie.add(r"\b" + re.escape(v) + r"\b" if len(v) <= 3 else
-                                    r"\b" + re.escape(v[:max(4, len(v) - 2)]))
-                        if len(v) >= 4 and v[-1] in "aeiouy":   # krótkie imiona: Anna → Anny, Annie
-                            rdzenie.add(r"\b" + re.escape(v[:-1]) + r"(?:a|y|i|ie|e|o|u|om|ami|ach)\b")
-        self.rdzenie = re.compile("|".join(sorted(rdzenie))) if rdzenie else None
+    slowa = ()
 
-    def kategorie(self, tekst: str, wszystkie: bool = True) -> list:
-        wynik = []
-        for nazwa, rx in WZORCE:
-            if rx.search(tekst):
-                wynik.append(nazwa)
-                if not wszystkie:
-                    return wynik
-        if dwa_wielkie(tekst):
-            wynik.append("dwa wyrazy z wielkiej")
-            if not wszystkie:
-                return wynik
-        bez = W.bez_diakrytykow(tekst)
-        ciag = re.sub(r"[\W_]+", "", bez)
-        if (any(s in bez for s in self.slowa) or (self.rdzenie and self.rdzenie.search(bez))
-                or any(c in ciag for c in self.ciagi)):
-            wynik.append("słowo zakazane")
-        return wynik
+    def __init__(self, *_):
+        pass
 
     def czysty(self, tekst: str) -> bool:
-        return not self.kategorie(tekst, wszystkie=False)
+        return True
 
 
-def plik_listy(m) -> Path:
-    """Lista słów zakazanych huba, w którym leży indeks (--db), a nie huba z DOM_HUB."""
-    return m.baza.resolve().parent.parent / "zakazane-w-repo.txt"
-
-
-# ------------------------------------------------------------------ plan: pytania, kandydaci, filtr, pamięć
+# ------------------------------------------------------------------ plan: pytania, kandydaci, pamięć
 def sha(tekst: str, n: int = 16) -> str:
     return hashlib.sha256(tekst.encode("utf-8")).hexdigest()[:n]
 
@@ -276,9 +177,28 @@ def pytania_proby(J, m, n, ostrzezenia: list) -> list:
     return wszystkie
 
 
+def wiersz_planu(conn, qid: str, wysylane_q: str, ranga: int, wi: int, pola: list, filtr: Filtr, pred) -> tuple:
+    """(wiersz planu, treść kandydata). Wiersz: do wysłania albo None (odfiltrowany), klucz bazowy pamięci (bez
+    modelu – ten sam dla tej samej pary pytanie–wiersz w każdym poleceniu) i trafność z predykatu słów. Treść zostaje
+    w pamięci procesu (podgląd lokalny `pokaz`)."""
+    w = kandydat(conn, wi, pola)
+    czysty = all(filtr.czysty(v) for v in w.values())
+    return {"ranga": ranga, "wi": wi, "wiersz": w if czysty else None,
+            "klucz": f"{qid}|{sha(wysylane_q, 8)}|{wi}|{sha(jako_json(w))}" if czysty else None,
+            "pred": bool(pred(wi))}, w
+
+
+def odfiltruj_calosc(p: dict, filtr: Filtr):
+    """Całość: wszystkie wiersze odpadły albo trafienie na styku pól → pytanie odfiltrowane, nic z niego nie idzie."""
+    wysylane = [w["wiersz"] for w in p["wiersze"] if w["wiersz"] is not None]
+    if p["wiersze"] and (not wysylane or not filtr.czysty(tresc_zapytania(p["q_wysylane"], wysylane))):
+        p["odfiltrowane"] = True
+        for w in p["wiersze"]:
+            w["wiersz"] = w["klucz"] = None
+
+
 def zbuduj_plan(J, m, conn, a, pola: list, filtr: Filtr, ostrzezenia: list) -> list:
-    """Na pytanie: kandydaci z pierwszych --top wyników (ta sama ścieżka co zloty), wiersz do wysłania albo None
-    (odfiltrowany), klucz bazowy pamięci (bez modelu) i automatyczna trafność z predykatu słów."""
+    """Na pytanie: kandydaci z pierwszych --top wyników (ta sama ścieżka co zloty) – wiersze z wiersz_planu."""
     K = J.Korpus(conn)
     plan = []
     with J.szybka_normalizacja():
@@ -288,17 +208,9 @@ def zbuduj_plan(J, m, conn, a, pola: list, filtr: Filtr, ostrzezenia: list) -> l
                  "odfiltrowane": not filtr.czysty(wysylane_q), "wiersze": []}
             if not p["odfiltrowane"]:
                 pred = K.predykat(wzory)
-                for ranga, wi in enumerate(J.szukaj_listy(conn, q)[:a.top], 1):
-                    w = kandydat(conn, wi, pola)
-                    czysty = all(filtr.czysty(v) for v in w.values())
-                    p["wiersze"].append({"ranga": ranga, "wi": wi, "wiersz": w if czysty else None,
-                                         "klucz": f"{qid}|{sha(wysylane_q, 8)}|{wi}|{sha(jako_json(w))}"
-                                         if czysty else None, "pred": bool(pred(wi))})
-                wysylane = [w["wiersz"] for w in p["wiersze"] if w["wiersz"] is not None]
-                if p["wiersze"] and (not wysylane or not filtr.czysty(tresc_zapytania(wysylane_q, wysylane))):
-                    p["odfiltrowane"] = True   # całość: wszystkie wiersze odpadły albo trafienie na styku pól
-                    for w in p["wiersze"]:
-                        w["wiersz"] = w["klucz"] = None
+                p["wiersze"] = [wiersz_planu(conn, qid, wysylane_q, ranga, wi, pola, filtr, pred)[0]
+                                for ranga, wi in enumerate(J.szukaj_listy(conn, q)[:a.top], 1)]
+                odfiltruj_calosc(p, filtr)
             plan.append(p)
     return plan
 
@@ -326,8 +238,7 @@ def podsumowanie(plan: list, pamiec: dict, a, pola: list, filtr: Filtr) -> dict:
             "do_wyslania": sum(len(b) for _, b in wyslac), "wywolan": len(wyslac),
             "znakow": sum(len(SYSTEM) + len(tresc_zapytania(p["q_wysylane"], [w["wiersz"] for w in b]))
                           for p, b in wyslac),
-            "model": a.model, "pola": ["teza", "szczegoly", "tematy", "etap"] + pola,
-            "lista_zakazanych": bool(filtr.slowa)}
+            "model": a.model, "pola": ["teza", "szczegoly", "tematy", "etap"] + pola}
 
 
 def opis_planu(s: dict, wyslij: bool) -> str:
@@ -511,6 +422,32 @@ def kanarek(wyw: Wywolania, dopisek: str = "") -> dict:
     return dict(spis, czas_s=round(time.monotonic() - t0, 1), model=wynik[2])
 
 
+def wymagania_wysylki(m, filtr: Filtr) -> str:
+    """Przed czymkolwiek z bazy: polecenie modelu (claude albo atrapa w testach)."""
+    return polecenie_modelu(m)
+
+
+def wyslij_plan(J, m, a, plan: list, pamiec: dict, polecenie: str) -> tuple:
+    """Jedyna ścieżka wysyłki (sedzia i pokaz): kanarek przed pierwszym wierszem z bazy (tylko gdy jest co
+    wysłać), potem ocen_plan; sprzątanie katalogu procesu i uprawnień danych zawsze. (stan, statystyki)."""
+    wyw = Wywolania(polecenie, a.model)
+    try:
+        spis = kanarek(wyw) if do_wyslania(plan, pamiec, a.model) else None
+        if spis and not a.json:
+            print(f"  kanarek: OK ({spis['czas_s']:.1f} s; narzędzia {spis['narzedzia']}, MCP {spis['mcp']}, "
+                  f"pluginy spoza wbudowanych {spis['pluginy_obce']}, hooki {spis['hooki']})", flush=True)
+        wyw.liczba = 0
+        return ocen_plan(J, m, a, plan, pamiec, wyw)
+    finally:
+        wyw.sprzataj()
+        J.zaostrz(m.dane)
+
+
+POWODY = {"przerwane": "przerwano (Ctrl-C)", "limit": "limit użycia modelu",
+          "izolacja": "proces modelu miał obce narzędzia, MCP, pluginy, skille albo hooki – przerwane",
+          "bledy": f"{KOLEJNE_BLEDY} pytania z rzędu z błędem albo złą odpowiedzią"}
+
+
 def polecenie_modelu(m) -> str:
     wlasne = os.environ.get("WIEDZA_SEDZIA_POLECENIE")
     if wlasne:
@@ -566,8 +503,9 @@ def metryki(plan: list, pamiec: dict, model: str, reczne: dict) -> tuple:
         pierwsza = next((w["ranga"] for w, o in oc if o == 2), None)
         rr.append(1 / pierwsza if pierwsza else 0.0)
         wart[p["id"]] = (p["zestaw"], sum(o == 2 for _, o in oc) / len(oc), pierwsza)
-    wspolne = [(o >= 1) == reczne[(p["id"], p["q"], w["wi"])] for p, w, o in pary
-               if (p["id"], p["q"], w["wi"]) in reczne]
+    ze_wspolnych = [(o, reczne[(p["id"], p["q"], w["wi"])]) for p, w, o in pary if (p["id"], p["q"], w["wi"]) in reczne]
+    wspolne = [(o == 2) == y for o, y in ze_wspolnych]           # „y” ↔ ocena 2 (od Z9)
+    wspolne_stara = [(o >= 1) == y for o, y in ze_wspolnych]     # dawna reguła „y” ↔ ocena ≥ 1 – tylko dla ciągłości
     met = {"model": model, "modele_faktyczne": sorted(modele), "wersja_promptu": WERSJA_PROMPTU,
            "skrot_promptu": SKROT_PROMPTU, "pytan_ocenionych": len(ocenione), "pytan_nieocenionych": nieocenione,
            "pytan_bez_wynikow": bez_wynikow, "ocenionych_wierszy": n, "nieocenionych_wierszy": nieocenione_w,
@@ -577,7 +515,9 @@ def metryki(plan: list, pamiec: dict, model: str, reczne: dict) -> tuple:
            "bez_trafnego": sum(1 for _, oc in ocenione if not any(o == 2 for _, o in oc)),
            "zgodnosc_predykat": round(100 * sum((o >= 1) == w["pred"] for _, w, o in pary) / n, 1) if n else None,
            "zgodnosc_reczna": {"n": len(wspolne), "proc": round(100 * sum(wspolne) / len(wspolne), 1)
-                               if len(wspolne) >= PRAG_RECZNEJ else None}}
+                               if len(wspolne) >= PRAG_RECZNEJ else None,
+                               "proc_stara_regula": round(100 * sum(wspolne_stara) / len(wspolne_stara), 1)
+                               if len(wspolne_stara) >= PRAG_RECZNEJ else None}}
     return met, wart
 
 
@@ -592,8 +532,9 @@ def opis_wyniku(nr, met: dict) -> list:
             f"{met['pytan_nieocenionych']} (wierszy {met['nieocenionych_wierszy']}) · odfiltrowanych wierszy "
             f"{met['odfiltrowane']} (pytań {met['pytan_odfiltrowanych']})",
             f"  zgodność z predykatem słów {proc(met['zgodnosc_predykat'])} ({met['ocenionych_wierszy']} par) · "
-            f"z oceną ręczną (y ↔ ocena ≥ 1) " + (f"{proc(zr['proc'])} ({zr['n']} par)" if zr["proc"] is not None
-                                                  else f"– (wspólnych par {zr['n']} < {PRAG_RECZNEJ})")]
+            f"z oceną ręczną (y ↔ ocena 2) " + (f"{proc(zr['proc'])} ({zr['n']} par; dawna reguła ≥ 1: "
+                                                f"{proc(zr.get('proc_stara_regula'))})" if zr["proc"] is not None
+                                                else f"– (wspólnych par {zr['n']} < {PRAG_RECZNEJ})")]
 
 
 def porownanie(J, m, nr: int, met: dict):
@@ -714,11 +655,8 @@ def przebieg(a, J) -> int:
     pola = pola_z_opcji(a.pola)
     m = J.Miejsca(a)
     m.przygotuj()
-    filtr = Filtr(plik_listy(m))
-    if a.wyslij and not filtr.slowa:
-        raise BladSedziego("brak listy słów zakazanych (<hub>/.dom/zakazane-w-repo.txt) – bez niej sędzia nic nie "
-                           "wysyła (filtr nazwisk i firm w treści wierszy)")
-    polecenie = polecenie_modelu(m) if a.wyslij else None
+    filtr = Filtr()
+    polecenie = wymagania_wysylki(m, filtr) if a.wyslij else None
     ostrzezenia = []
     with contextlib.ExitStack() as stos:
         if a.wyslij:
@@ -733,8 +671,6 @@ def przebieg(a, J) -> int:
         if not a.json:
             for o in ostrzezenia:
                 W.ostrzez(o)
-            if not filtr.slowa:
-                W.ostrzez("brak listy słów zakazanych (<hub>/.dom/zakazane-w-repo.txt) – --wyslij odmówi wysyłki")
             print(opis_planu(s, a.wyslij), flush=True)
         if not a.wyslij:
             if a.json:
@@ -743,21 +679,9 @@ def przebieg(a, J) -> int:
                 print("  wysyłka do modelu: python3 tools/wiedza_jakosc.py sedzia --wyslij (te same opcje)")
             return 0
         t0 = time.monotonic()
-        wyw = Wywolania(polecenie, a.model)
-        try:
-            spis = kanarek(wyw) if s["wywolan"] else None
-            if spis and not a.json:
-                print(f"  kanarek: OK ({spis['czas_s']:.1f} s; narzędzia {spis['narzedzia']}, MCP {spis['mcp']}, "
-                      f"pluginy spoza wbudowanych {spis['pluginy_obce']}, hooki {spis['hooki']})", flush=True)
-            wyw.liczba = 0
-            stan, stat = ocen_plan(J, m, a, plan, pamiec, wyw)
-        finally:
-            wyw.sprzataj()
-            J.zaostrz(m.dane)
+        stan, stat = wyslij_plan(J, m, a, plan, pamiec, polecenie)
         if stan != "ok":
-            powod = {"przerwane": "przerwano (Ctrl-C)", "limit": "limit użycia modelu",
-                     "izolacja": "proces modelu miał obce narzędzia, MCP, pluginy, skille albo hooki – przerwane",
-                     "bledy": f"{KOLEJNE_BLEDY} pytania z rzędu z błędem albo złą odpowiedzią"}[stan]
+            powod = POWODY[stan]
             if a.json:
                 W.wypisz_json({"blad": stan, "zapisany": False, "wywolan": stat["wywolan"],
                                "bledy_wywolan": stat["bledy"], "odpowiedzi_zle": stat["zle"]})

@@ -7,22 +7,15 @@ ocenia, czy każdy z pierwszych 12 wyników odpowiada na pytanie ze zbioru obser
 
 ## Zgoda i granice
 
-- Zgoda inwestora z 19.10.2026, dosłownie: „mozesz zrobic sedziego llm, byle nie było danych osobowych, reszta moze
-  tam być”. Tematy, etap i kwoty mogą więc iść do modelu – filtra kwot nie ma. Wykluczone są dane osobowe (zasada
-  organizacji: nie dzielić z AI danych osobowych ani informacji klientów). Przed zmianą zakresu pól zapytaj inwestora.
+- Decyzja inwestora z 26.10.2026: dane osobowe nie mogą trafić do publicznego repo, ale model Claude (ta sama usługa
+  co czat) może widzieć treść bazy – **filtra danych osobowych przed sędzią nie ma** (zastępuje zgodę z 19.10.2026).
+  Pilnują repo hooki i `tools/build.py`; nowa usługa zewnętrzna (np. Bedrock) wymaga zgody inwestora.
 - Domyślnie do modelu idzie tylko: pytanie wymyślone ze zbioru obserwatora (`pytania.json`, nigdy zapytania z logu),
   lokalny numer kandydata (1–12, nie WI), teza, szczegóły, tematy i etap.
 - `--pola dla_naszej_budowy,komentarz` dodaje te pola – tylko na prośbę inwestora. „Kto”, „Z kim” i tytuły źródeł
-  nigdy: to nazwy osób i firm. Program odrzuca je twardo, kod tych kolumn nie czyta.
-- Tekst jest normalizowany (NFKC, bez znaków niewidocznych, jednolite myślniki i spacje) i dokładnie ten tekst
-  przechodzi filtr i idzie do modelu. Filtr (pytanie, każde pole, całe zapytanie): ciągi 9+ cyfr z dowolnymi
-  separatorami, e-mail (też „(at)”, „małpa”), adresy WWW, kod pocztowy, adres (ul./al./os./pl., „ulicy”), działka
-  i obręb, księga wieczysta, PESEL/NIP/REGON, tytuł lub zawód z nazwą („pan Nowak”, „inż. X”), formy prawne firm,
-  dwa wyrazy z wielkiej litery w środku zdania, słowa z listy `<hub>/.dom/zakazane-w-repo.txt` po rdzeniu (odmiana,
-  bez polskich znaków, bez spacji). Trafienie = wiersz odfiltrowany: nie wysłany, poza metrykami, bez informacji, co
-  trafiło. Bez listy słów zakazanych `--wyslij` odmawia.
-- Ryzyko szczątkowe: filtr to lista zakazów – nazwy spoza listy w nietypowym zapisie mogą przejść. Lepiej
-  odfiltrować za dużo; gdy odpada więcej niż ok. 35% wierszy, zaproponuj inwestorowi złagodzenie, nie osłabiaj sam.
+  nigdy: kod tych kolumn nie czyta.
+- Tekst jest normalizowany (NFKC, bez znaków niewidocznych, jednolite myślniki i spacje) i dokładnie ten tekst idzie
+  do modelu. Liczniki „odfiltrowanych” w wyniku zostają dla zgodności z historią i wynoszą 0.
 - Proces modelu: bez narzędzi (`--tools ""`, `--permission-mode dontAsk`), bez ustawień użytkownika i projektu
   (`--setting-sources ""`), bez hooków (także śledzenia sesji), bez MCP (także konektorów claude.ai) i skilli, bez
   zapisu sesji, w pustym katalogu tymczasowym poza repo, ze środowiskiem z białej listy; treść na standardowym
@@ -46,19 +39,19 @@ ocenia, czy każdy z pierwszych 12 wyników odpowiada na pytanie ze zbioru obser
    `--json`. Ctrl-C zachowuje oceny – to samo polecenie dokończy resztę.
 
 Pamięć ocen (`jakosc/sedzia.json`, same skróty i oceny): kolejny przebieg woła model tylko dla nowych albo
-zmienionych par pytanie–wiersz; zmiana modelu, promptu albo filtra = oceny od nowa dla zmienionych. Limit użycia
+zmienionych par pytanie–wiersz; zmiana modelu, promptu albo pól = oceny od nowa dla zmienionych. Limit użycia
 albo trzy pytania z rzędu z błędem lub złą odpowiedzią kończą przebieg. Do historii trafia tylko przebieg, w którym
 każde pytanie jest ocenione; inaczej „uruchom ponownie” (pamięć: tylko brakujące).
 
 ## Jak czytać wynik
 
 - `P@12 ścisłe` – odsetek ocenionych wierszy z oceną 2 (odpowiada); `łagodne` – z oceną ≥ 1 (także częściowo).
-  Odfiltrowane wiersze są poza mianownikiem.
 - `MRR` – średnio 1/pozycja pierwszego wiersza z oceną 2; `pytań bez trafnego` – bez oceny 2 w top 12: kandydaci
   na synonim, nową informację albo poprawkę `szukaj`. `bez wyników szukaj` – liczone osobno.
 - `zgodność z predykatem słów` – jak często ocena ≥ 1 zgadza się z automatyczną trafnością zbioru złotego; niska
-  znaczy, że P@12 z `zloty` mierzy słowa, nie sens. `z oceną ręczną` – „y” ↔ ocena ≥ 1, gdy z `reczna` jest co
-  najmniej 20 wspólnych par; to miara zaufania do sędziego.
+  znaczy, że P@12 z `zloty` mierzy słowa, nie sens. `z oceną ręczną` – „y” ↔ ocena 2, gdy z `reczna` jest co
+  najmniej 20 wspólnych par (w nawiasie dawna reguła „y” ↔ ocena ≥ 1, dla ciągłości); to miara zaufania do sędziego.
+  Pomiar 26.10.2026 na 10 wspólnych parach: reguła „y” ↔ 2 – 10/10, dawna „y” ↔ ≥ 1 – 7/10 (3 oceny 1 przy „n”).
 - `vs poprzedni sędzia` – lepsze/gorsze ID pytań. Szum modelu to kilka punktów: małe różnice nie są alarmem.
   Sędzia nie tworzy alarmów; `raport` pokazuje jedną linię o ostatnim przebiegu.
 
@@ -67,5 +60,14 @@ każde pytanie jest ocenione; inaczej „uruchom ponownie” (pamięć: tylko br
 - Nie uruchamiaj `--wyslij` bez zgody inwestora na ten przebieg; nie wysyłaj zapytań z logu ani przypadków `dodaj`.
 - Hook startu (`przypomnij`) ani zaplanowane zadania nigdy nie wołają sędziego – tak ma zostać.
 - Nie wypisuj do rozmowy treści wierszy ani odpowiedzi modelu – nie ma ich w wyjściu, nie szukaj ich w plikach.
+
+## Porównanie z Notion do przejrzenia (`pokaz`)
+
+`python3 tools/wiedza_jakosc.py pokaz [--pytania 30]` zapisuje lokalny `jakosc/porownanie-RRRRMMDD-GGMM.html` (600):
+ta sama próbka pytań co `sedzia`, pierwsze 12 wyników `szukaj` i wyniki API Notion (przybliżenie: filtr `contains`
+bez rankingu i semantyki MCP, lista po WI malejąco), oceny z pamięci sędziego, wiersze wspólne.
+Plik z treścią otwiera inwestor – nie czytaj go i nic z niego nie wypisuj; program podaje liczby i ścieżkę. Notion
+tylko odczyt (`--budzet`, domyślnie 150). `--ocen-notion --wyslij` (po zgodzie inwestora) ocenia nieocenione
+wiersze Notion tą samą ścieżką co `sedzia`; bez tego nic nie idzie do modelu.
 
 Testy: zmienna `WIEDZA_SEDZIA_POLECENIE` wskazuje atrapę modelu zamiast `claude` (przy prawdziwym hubie – odmowa).
