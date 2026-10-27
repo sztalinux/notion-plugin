@@ -4,6 +4,26 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.10.0] – 2026-10-27
+
+- Nowa procedura `wiedza/references/pytanie-do-bazy.md` – jak szukać i odpowiadać na pytanie do bazy (czat na telefonie,
+  Claude Code, zaplanowane zadania): kilka sformułowań w jednym `szukaj --krotko`, trzy poziomy głębokości
+  (szybko / normalnie / dokładnie – dobór po rodzaju pytania lub słowem inwestora), cały główny temat (`temat --lista --krotko`),
+  czytanie długich wyników porcjami (narzędzie ucina wynik powyżej ok. 30 tys. znaków), Notatnik po polach (Etap + „Cała budowa”,
+  Typ, Status), „nie ma w bazie” dopiero po całej drodze, internet jako podpora bez propozycji zapisu, forma odpowiedzi
+  dwuwarstwowa (skrót ze wszystkimi Kluczowymi → „Rozwinąć?”), budżet wywołań. Pomiar na 15 pytaniach: Kluczowe tezy
+  w odpowiedzi 73% → 89% (skrót) → 100% (po rozwinięciu).
+- `wiedza/SKILL.md`: sekcja E odsyła do nowej procedury; A.5 – porównanie nowego źródła z całym tematem (numeracja T-n, lista
+  relacji przed zapisem) wg nowego `references/porownanie.md`. `references/indeks.md`: kanał czatu pobiera kopię tylko gdy jej
+  brak (`test -s`), przykład z kilkoma sformułowaniami.
+- `budowa/SKILL.md`, zasada 10: szukanie drogą z `pytanie-do-bazy.md`; informacji z internetu nie proponuje się do zapisu.
+  `notatka/SKILL.md`, krok 2: duplikaty w Notatniku sprawdzane filtrem Etap + Branża, nie 2–3 słowami.
+- Narzędzia jakości: `tools/wiedza_sedzia.py` – sędzia bez filtra danych osobowych przed modelem Claude (decyzja inwestora
+  z 26.10.2026; filtr zostaje dla repo i commitów), zgodność z oceną ręczną liczona regułą „y” ↔ ocena 2 (dawna obok);
+  `wiedza_jakosc.py reczna --wczytaj PLIK` (gotowy zestaw par); nowe `tools/wiedza_porownanie.py` (`wiedza_jakosc.py pokaz`
+  – lokalny HTML pytanie → indeks → Notion, tylko odczyt). Hook `pre-commit` i `build.py` blokują też `porownanie-*.html`.
+  Dokumentacja: `references/indeks-sedzia.md`, `indeks-jakosc.md`, README.
+
 ## dom-budowa [2.9.0] – 2026-10-26
 
 - Nowe narzędzie `tools/wiedza_sens.py` – odciski znaczenia informacji Bazy wiedzy (model lokalny bge-m3 przez Ollamę,
