@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.12.2] – 2026-10-28
+
+- `wiedza.py etap`: wszystkie Kluczowe (etapu, „Cała budowa” i innych etapów) w pierwszej sekcji, Ważne wg tematów dalej –
+  test z telefonu 28.10.2026 pokazał, że czat czyta w całości tylko 3 z 16 części, a resztę przegląda; to, co najważniejsze,
+  ma więc być na początku. `pytanie-do-bazy.md`: zapis tego wyniku i reguła „pierwsze części z Kluczowymi zawsze w całości”.
+- `etap/SKILL.md`: „co i jak kontrolować” idzie przez poziom „cały etap” z `--kontrola`, także na telefonie – sam Notatnik
+  nie wystarcza (test 28.10: czat odpowiedział tylko z migawki Notatnika, bez bazy wiedzy).
+
 ## dom-budowa [2.12.1] – 2026-10-28
 
 - `budowa/SKILL.md`, zasada 13: wpis do Skrzynki słowami, bez pól Notion (uwaga inwestora: struktura baz może się zmienić,

@@ -1939,36 +1939,38 @@ def dopasuj_etap(conn: sqlite3.Connection, nazwa: str):
 
 
 def sekcje_etapu(conn: sqlite3.Connection, etap: str, a) -> list:
-    """[(nagłówek sekcji, [opisy informacji], czy linie mają Etap)]: tezy K+W etapu i „Cała budowa” pogrupowane tematami (teza raz, pod
-    pierwszym tematem alfabetycznie; w temacie Kluczowe, potem Ważne, rosnąco po WI), dalej Kluczowe z innych etapów,
+    """[(nagłówek sekcji, [opisy informacji], czy linie mają Etap)]: najpierw WSZYSTKIE Kluczowe (etapu, „Cała budowa”
+    i innych etapów – czat na telefonie czyta w całości tylko pierwsze części, więc to, co najważniejsze, idzie na początek),
+    potem Ważne etapu i „Cała budowa” pogrupowane tematami (teza raz, pod pierwszym tematem alfabetycznie, rosnąco po WI),
     a z --kontrola także Ważne rodzaju Kontrola / odbiór i Kolejność prac z innych etapów. Nieaktualne pominięte;
-    Ciekawostki tylko z --ciekawostki (wewnątrz etapu)."""
+    Ciekawostki tylko z --ciekawostki (wewnątrz etapu, na końcu tematu)."""
     etapy = {bez_diakrytykow(e) for e in etapy_zbioru(etap)}
     kolejnosc = {"kluczowe": 0, "ważne": 1, "ciekawostka": 3}
     tematy_wi = {}
     for wi, nazwa in conn.execute("SELECT it.wi, t.nazwa FROM informacje_tematy it JOIN tematy t ON t.id = it.temat_id"):
         tematy_wi.setdefault(wi, []).append(nazwa or "")
-    w_etapie, kluczowe_inne, kontrola_inne = {}, [], []
+    kluczowe, w_etapie, kontrola_inne = [], {}, []
     for wi, ist, st, et, rodzaj in conn.execute(
             "SELECT wi, istotnosc, status, etap, rodzaj FROM informacje ORDER BY wi"):
-        ist_n, rodzaj_n = normalizuj(ist), bez_diakrytykow(rodzaj)
+        ist_n, rodzaj_n, w_zbiorze = normalizuj(ist), bez_diakrytykow(rodzaj), bez_diakrytykow(et) in etapy
         if normalizuj(st) == "nieaktualne" or ist_n not in kolejnosc:
             continue
-        if bez_diakrytykow(et) in etapy:
+        if ist_n == "kluczowe":
+            kluczowe.append((0 if w_zbiorze else 1, wi))
+        elif w_zbiorze:
             if ist_n != "ciekawostka" or a.ciekawostki:
                 temat = min(tematy_wi.get(wi) or ["(bez tematu)"])
                 w_etapie.setdefault(temat, []).append((kolejnosc[ist_n], wi))
-        elif ist_n == "kluczowe":
-            kluczowe_inne.append(wi)
         elif a.kontrola and ist_n == "ważne" and rodzaj_n in ETAP_RODZAJE_KONTROLI:
             kontrola_inne.append(wi)
     sekcje = []
+    if kluczowe:
+        numery = [wi for _, wi in sorted(kluczowe)]
+        sekcje.append((f"## Kluczowe – {' + '.join(etapy_zbioru(etap))} i inne etapy ({len(numery)})",
+                       opisz_informacje(conn, numery), True))
     for temat in sorted(w_etapie, key=bez_diakrytykow):
         numery = [wi for _, wi in sorted(w_etapie[temat])]
-        sekcje.append((f"## {jedna_linia(temat)} ({len(numery)})", opisz_informacje(conn, numery), False))
-    if kluczowe_inne:
-        sekcje.append((f"## Kluczowe z innych etapów ({len(kluczowe_inne)})", opisz_informacje(conn, kluczowe_inne),
-                       True))
+        sekcje.append((f"## {jedna_linia(temat)} – Ważne ({len(numery)})", opisz_informacje(conn, numery), False))
     if a.kontrola:
         sekcje.append((f"## Kontrola / odbiór i Kolejność prac z innych etapów – Ważne ({len(kontrola_inne)})",
                        opisz_informacje(conn, kontrola_inne), True))
@@ -2236,8 +2238,8 @@ def zbuduj_parser() -> argparse.ArgumentParser:
     p.add_argument("--krotko", action="store_true", help="zwarte linie jak w szukaj --krotko")
     p.add_argument("--ciekawostki", action="store_true", help="z --lista: także Istotność „Ciekawostka”")
     p = sub.add_parser("etap", parents=[wspolne],
-                       help=f"cała wiedza etapu (tezy Kluczowe i Ważne etapu i „{ETAP_WSPOLNY}” wg tematów, Kluczowe "
-                            f"z innych etapów, otwarte SP) w częściach po ok. {ETAP_CZESC_ZNAKOW // 1000} tys. znaków")
+                       help=f"cała wiedza etapu (najpierw wszystkie Kluczowe, potem Ważne etapu i „{ETAP_WSPOLNY}” wg tematów, "
+                            f"otwarte SP) w częściach po ok. {ETAP_CZESC_ZNAKOW // 1000} tys. znaków")
     p.add_argument("nazwa", help="nazwa etapu albo jej część (np. „Stan zero”)")
     p.add_argument("--czesc", type=int, help="numer części do pokazania (bez – wszystko naraz)")
     p.add_argument("--kontrola", action="store_true",

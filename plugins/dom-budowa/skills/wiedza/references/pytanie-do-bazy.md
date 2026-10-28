@@ -42,7 +42,9 @@ Wybierz poziom po rodzaju pytania; inwestor może go wymusić słowem w pytaniu 
   o zamknięcie etapu łączą etapy: sam etap niesie 55% trafnych tez, z tym 93%). Etap pytania: nazwany w pytaniu albo bieżący
   z DOM (brak w rozmowie → zapytaj). Każda część to osobne wywołanie `--czesc k` (nagłówek mówi „część k/n – dalej --czesc k+1”);
   czytaj **wszystkie po kolei**, bez pomijania – część nieprzeczytana to tezy niewidziane (wpisz je do zasięgu, pkt 9).
-  Odpowiedź buduj po ostatniej części, nie po każdej. Gdy narzędzie albo okno rozmowy nie udźwignie wszystkich części, napisz
+  Pierwsze 1–2 części to wszystkie Kluczowe (etapu i innych etapów) – te czytaj w całości zawsze; test z telefonu 28.10.2026:
+  czat przeczytał w całości 3 z 16 części, resztę przejrzał – dlatego Kluczowe idą na początek. Odpowiedź buduj po ostatniej
+  części, nie po każdej. Gdy narzędzie albo okno rozmowy nie udźwignie wszystkich części, napisz
   to w zasięgu („przeczytałem części 1–9 z 14”) i dokończ poziomem „dokładnie” na nieprzeczytanych tematach. Pytanie
   o jedno zagadnienie („czy XPS pod płytę”) to nie „cały etap” – tam cały temat wystarcza i jest 4× krótszy.
 - **Sesja na Macu (Claude Code):** `--sens` (ranking po znaczeniu, wymaga Ollamy) pomaga tylko przy małych limitach (limit 25–40:
