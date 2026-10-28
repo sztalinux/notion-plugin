@@ -97,7 +97,8 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
     wstaw w zakładkę tym samym znacznikiem (inaczej zostaną usunięte); nowy blok widoku bazy skonfiguruj po utworzeniu
     (domyślnie pokazuje wszystko) i nie zmieniaj widoków samej bazy źródłowej – ich ID są w mapach.
 11. **Notion niedostępny w tym kanale → Skrzynka, nie odmowa.** Gdy w rozmowie nie ma narzędzi Notion (konektor wyłączony),
-    zapisy idą do dokumentu Claude „📥 Skrzynka” według `wpisy/references/skrzynka.md` (treść dosłownie + gotowe pola);
+    zapisy idą do dokumentu Claude „📥 Skrzynka” według `wpisy/references/skrzynka.md` (treść dosłownie + „Zrobić” słowami,
+    bez pól Notion – strukturę baz zna tylko Mac);
     przebieg godzinowy na Macu przenosi je do Notion. Odczyty: Baza wiedzy z indeksu, Notatnik i zadania z migawki
     (`dom-budowa`, `wiedza/references/indeks.md`, sekcja czatu); czego nie da się odczytać – napisz wprost.
 

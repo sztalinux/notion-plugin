@@ -4,6 +4,16 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.12.1] – 2026-10-28
+
+- `budowa/SKILL.md`, zasada 13: wpis do Skrzynki słowami, bez pól Notion (uwaga inwestora: struktura baz może się zmienić,
+  a bez Notion nie da się jej sprawdzić – pola nadaje Mac).
+
+## ja [1.6.1] – 2026-10-28
+
+- `wpisy/references/skrzynka.md`: pozycja Skrzynki = data, treść dosłownie i „Zrobić” jednym zdaniem (intencja: termin, adresat,
+  etap); bez pól, statusów i ID baz – obszar i pola nadaje Mac procedurą `wpisy`. `ja/SKILL.md`, zasada 11 – to samo.
+
 ## dom-budowa [2.12.0] – 2026-10-28
 
 - Praca bez konektora Notion na claude.ai (blokada organizacji): nowe `tools/migawka.py` – migawka otwartych wpisów Notatnika
