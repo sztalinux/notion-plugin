@@ -4,6 +4,24 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.12.0] – 2026-10-28
+
+- Praca bez konektora Notion na claude.ai (blokada organizacji): nowe `tools/migawka.py` – migawka otwartych wpisów Notatnika
+  budowy i zadań TASKS (`migawka.md`) publikowana do kopii dla czatu obok indeksu (Notion tylko odczyt tokenem integracji;
+  baza nieudostępniona integracji → „niedostępna”). `wiedza/references/indeks.md`: pola dostępu z pliku „🔑 Dostęp asystenta”
+  w wiedzy projektu „Dom”, gdy strona Notion jest nieosiągalna; pobranie `migawka.md`. `pytanie-do-bazy.md`, pkt 5: Notatnik
+  z migawki z datą stanu w zasięgu. `budowa/SKILL.md`, zasada 13: bez Notion – odczyty z indeksu i migawki, zapisy do
+  Skrzynki (plugin `ja`). README: przebiegi na Macu przez launchd i lokalny serwer MCP Notion.
+
+## ja [1.6.0] – 2026-10-28
+
+- Nowa referencja `wpisy/references/skrzynka.md`: dokument Claude „📥 Skrzynka” jako miejsce zapisów z czatu, gdy w rozmowie
+  nie ma narzędzi Notion (format pozycji: data, obszar, treść dosłownie, gotowe pola, procedura; „❓” przy brakach; odpowiedź
+  inwestorowi), i jej opróżnianie na Macu (każda pozycja jak wpis Dziennika, ślad w „Przetworzone” i w linii „🤖”).
+- `ja/SKILL.md`, zasada 11: Notion niedostępny → Skrzynka, nie odmowa; odczyty z indeksu i migawki. `wpisy/SKILL.md`: Skrzynka
+  jako czwarte źródło wpisów. `przeglad-dnia/SKILL.md`: przebiegi także z launchd na Macu (`claude -p`, lokalny MCP Notion);
+  tryb szybki – cztery odczyty (Skrzynka pierwsza), „nic nowego” i odpowiedź z licznikiem Skrzynki.
+
 ## dom-budowa [2.11.0] – 2026-10-28
 
 - `tools/wiedza.py etap "<etap>" [--czesc k] [--kontrola] [--ciekawostki]` – cała wiedza etapu do przeczytania zamiast szukania:

@@ -80,7 +80,9 @@ Zwróci zwykle 5–20 wpisów – przeczytaj wszystkie; więcej niż ok. 25 → 
 zapytaj albo weź bieżący z DOM. Uzupełnij o decyzje Ustalone z tego etapu. Z wyniku:
 - **U nas ustalone:** decyzje i wpisy „Pamiętać” (Status Ustalone) – na początku odpowiedzi; „Do omówienia” to jeszcze nie ustalenie;
 - **Czeka na decyzję:** otwarte Pytania i Decyzje (z „Do kogo”) – na końcu odpowiedzi.
-Brak dostępu do Notion w danym kanale → napisz to w „Czego nie sprawdziłem”.
+Brak narzędzi Notion w kanale → Notatnik i zadania z migawki: pobierz `migawka.md` tą samą drogą co indeks (`indeks.md`,
+sekcja czatu), z sekcji Notatnika weź wpisy Etapu pytania i „Cała budowa” o Typie jak wyżej (filtruj w głowie), w zasięgu
+podaj „Notatnik z kopii, stan <data z pierwszej linii pliku>”; brak migawki → „Czego nie sprawdziłem”.
 
 ## 6. „Nie ma w bazie”
 

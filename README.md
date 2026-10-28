@@ -89,7 +89,8 @@ claude.ai (telefon, czat, Cowork) ◄── pluginy ja + dom-budowa ─┘   (ka
 ## Indeks wiedzy
 
 `tools/wiedza.py` trzyma lokalną kopię czterech baz Bazy wiedzy z Notion w SQLite z wyszukiwaniem pełnotekstowym (tylko do odczytu –
-zapisy idą wyłącznie do Notion). Polecenia: `sync`, `szukaj`, `temat`, `etap`, `duplikaty`, `stan`, `publikuj`. Dane leżą w `.dom/wiedza/` poza repo
+zapisy idą wyłącznie do Notion). Polecenia: `sync`, `szukaj`, `temat`, `etap`, `duplikaty`, `stan`, `publikuj`. `tools/migawka.py`
+publikuje tą samą drogą migawkę otwartych wpisów Notatnika i zadań dla czatu bez Notion. Dane leżą w `.dom/wiedza/` poza repo
 i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600, poza repo), cztery zmienne: `NOTION_TOKEN` (odczyt Notion),
 `GITHUB_REPO` (prywatne repo kopii dla czatu na telefonie), `GITHUB_TOKEN_SYNC` (zapis kopii na Macu), `GITHUB_TOKEN_SEARCH` (odczyt kopii w czacie).
 Trzy kanały użycia i ograniczenia: `plugins/dom-budowa/skills/wiedza/references/indeks.md`.
@@ -112,6 +113,10 @@ ocena ręczna, miesięczne porównanie z Notion; pytania wymyślone: `tools/wied
 5. claude.ai → trzy zaplanowane zadania **poza projektem** (trzecie: raz w tygodniu „Przegląd tygodnia (skill
    przeglad-tygodnia-osobisty z pluginu ja)”): co 1–2 h w ciągu dnia „Dziennik – szybki przebieg (skill
    przeglad-dnia z pluginu ja, tryb szybki)” i raz wieczorem „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)”.
+   Gdy konektor Notion na claude.ai nie działa (blokada organizacji), te same przebiegi uruchamia launchd na Macu przez
+   `claude -p` z lokalnym serwerem MCP Notion (`claude mcp add --transport http --scope user notion https://mcp.notion.com/mcp`;
+   skrypt i pliki launchd poza repo), a zapisy z telefonu idą przez dokument Claude „📥 Skrzynka” (plugin `ja`,
+   `wpisy/references/skrzynka.md`).
 6. claude.ai → projekt „Dom” (tylko dokumenty budowy):
    - **Instructions:** `python3 tools/build.py` i wklej `dist/claude-ai-projekt/instrukcje.md` – dzięki temu każda
      wiadomość w projekcie korzysta z harnessu i Notion bez wpisywania „/” (opis:

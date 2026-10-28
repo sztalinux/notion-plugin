@@ -5,7 +5,9 @@ description: Zaplanowane przebiegi bez inwestora (claude.ai, poza projektem) w d
 
 # Przegląd dnia – tryb szybki i wieczorny
 
-Dwa zaplanowane zadania na claude.ai, oba **poza projektem** (pliki projektu „Dom” nie doklejają się do przebiegu):
+Dwa zaplanowane zadania na claude.ai, oba **poza projektem** (pliki projektu „Dom” nie doklejają się do przebiegu); gdy
+konektor Notion na claude.ai nie działa, te same przebiegi uruchamia launchd na Macu przez `claude -p` z lokalnym serwerem
+MCP Notion (skrypt poza repo) – treść i zasady przebiegu są te same:
 
 | Zadanie | Kiedy | Polecenie | Co robi |
 |---|---|---|---|
@@ -25,15 +27,17 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
 
 ## A. Tryb szybki – ma być tani
 
-1. **Trzy odczyty – zawsze wszystkie trzy, także gdy pierwszy coś dał:** strona Dziennik
+1. **Cztery odczyty – zawsze wszystkie, także gdy pierwszy coś dał:** Skrzynka – dokumenty Claude o tytule „📥 Skrzynka”,
+   sekcja „Nowe” (`wpisy/references/skrzynka.md`; brak narzędzia Claude Docs → pomiń i napisz „Skrzynka – brak odczytu”), strona Dziennik
    (`3f8f5982-09e7-80c8-a154-c59aeb844e8f`), strona „📝 Wpisy” (`3faf5982-09e7-80b2-9b33-c48745d67a4f` – bloki w jej treści
    i lista podstron) i lista stron najwyższego poziomu Private (narzędzie listy stron prywatnych; porównaj ID z listą
    stałych stron w `ja/references/notion-mapa.md`; 🔒 Prywatne nie otwieraj). Otwórz tylko strony spoza listy.
    Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Brak narzędzia do listy stron prywatnych → to źródło pomiń
    i napisz „widget – brak odczytu” w odpowiedzi i w linii „🤖” (`wpisy`, krok 1).
 2. **Nic nowego → koniec.** Brak bloków na pierwszym poziomie Dziennika i w treści „Wpisów”, podstron w „Wpisach” i nowych
-   stron w Private (definicja w `wpisy`) i brak odpowiedzi inwestora (dopisek albo zaznaczony checkbox,
-   `wpisy/references/pytania.md`) pod pytaniami w „❓” → odpowiedz jedną linią „Dziennik: nic nowego (<godzina>; widget: 0)”
+   stron w Private (definicja w `wpisy`), brak pozycji w „Nowe” Skrzynki i brak odpowiedzi inwestora (dopisek albo zaznaczony
+   checkbox, `wpisy/references/pytania.md`) pod pytaniami w „❓” → odpowiedz jedną linią „Dziennik: nic nowego (<godzina>;
+   widget: 0, Skrzynka: 0)”
    i zakończ. **Zero zapisów** – nie dopisuj linii „🤖”, nie zmieniaj strony.
 3. **Inwestor może jeszcze pisać – oceniaj każde źródło osobno** (treść Dziennika, treść „Wpisów”, każda podstrona,
    każda strona z widgetu). Źródło edytowane mniej niż 15 minut temu (czas ostatniej edycji strony), którego najnowszy wpis
@@ -44,8 +48,8 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
 4. **Są wpisy:** procedura `wpisy`, kroki 2–7, bez pytań w rozmowie (wyjątki z zasad wyżej). Linia „🤖” w bloku dnia –
    krótka, z godziną: `🤖 11:00: przetworzono 2 (zadania 1, emocje 1), czeka na Ciebie 1, świeże pominięte 1`. Kolejne
    przebiegi tego dnia dopisują swoje linie pod spodem w tym samym bloku; tytuł bloku pokazuje sumę dnia. W odpowiedzi
-   podaj nowe wpisy per źródło – „Dziennik n · Wpisy n · widget n” (albo „widget – brak odczytu”) – żeby było widać,
-   że przebieg sprawdził wszystkie trzy.
+   podaj nowe wpisy per źródło – „Dziennik n · Wpisy n · widget n · Skrzynka n” (albo „widget – brak odczytu”) – żeby było
+   widać, że przebieg sprawdził wszystkie cztery.
 5. Bez analizy pomysłów, bez „jutra”, bez wpisów w przeglądach – to robi wieczór.
 
 ## B. Tryb wieczorny – podsumowanie i plan

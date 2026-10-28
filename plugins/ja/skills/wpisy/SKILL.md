@@ -106,7 +106,8 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
 
 W ciągu dnia Dziennik przerabia zaplanowany **szybki przebieg** (co 1–2 h), a wieczorem **przegląd dnia** – oba w skillu
 `przeglad-dnia` (tryby A i B), bez pytań w rozmowie, z wyjątkami opisanymi tam. Kilka przebiegów dziennie dopisuje się
-do jednego bloku dnia w „Przetworzone”.
+do jednego bloku dnia w „Przetworzone”. Czwarte źródło wpisów: **Skrzynka** – dokument Claude „📥 Skrzynka” z zapisami
+z czatu bez Notion (`references/skrzynka.md`): te same kroki 3–7, ślad w Skrzynce i w linii „🤖”.
 
 ## Zasady
 

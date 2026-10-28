@@ -50,6 +50,10 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   `duplikaty [--od RRRR-MM-DD]` – kandydaci na duplikaty: pary z list podobnych od progu 0,84 (`--sens`; bez list –
   po słowach, `--slowa` wymusza słowa). Podobieństwo nie odróżnia duplikatu od informacji bliskiej tematem (ok. 1 na 10 par to
   duplikat) – każdą parę oceń sam, zanim zaproponujesz scalenie; `stan` – liczniki, daty i stan list podobnych.
+- `python3 tools/migawka.py` – migawka Notatnika budowy i TASKS (otwarte wpisy) do `.dom/wiedza/migawka.md` i do kopii
+  dla czatu w prywatnym repo (Notion tylko odczyt tokenem integracji; obie bazy muszą być udostępnione integracji, inaczej
+  w pliku stoi „niedostępna”). Uruchamia ją przebieg godzinowy na Macu; ręcznie po zmianach w Notatniku, gdy telefon ma je
+  widzieć od razu.
 - Odciski znaczenia liczy `sync` na Macu na końcu, po publikacji, gdy działa Ollama z modelem bge-m3 (nowe i zmienione
   informacje, potem listy podobnych; z `--cicho` najwyżej 20 s, reszta przy następnym sync; nowe listy trafiają do
   kopii czatu z następną publikacją). Ollama wyłączona → krok pominięty po cichu,
@@ -75,6 +79,8 @@ Po zapisie wiedzy do Notion w sesji interaktywnej uruchom `python3 tools/wiedza.
 
 Tu nie ma `tools/` ani repo. Przeczytaj raz na rozmowę stronę Notion „🔑 Asystent – dostęp” (`3fcf5982-09e7-810e-aaca-f2b582438924`)
 i wstaw jej pola w miejsce `<GITHUB_REPO>` i `<TOKEN>`. Nigdy nie zapisuj tokena w odpowiedzi, notatce ani pliku.
+Brak narzędzi Notion w rozmowie → te same pola z pliku „🔑 Dostęp asystenta” w wiedzy projektu „Dom” (rozmowa w projekcie);
+poza projektem i bez Notion poproś inwestora o rozmowę w projekcie „Dom”.
 
 ```
 test -s /tmp/wiedza.sqlite || curl -sf -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github.raw" -o /tmp/wiedza.sqlite https://api.github.com/repos/<GITHUB_REPO>/contents/wiedza.sqlite
@@ -87,6 +93,9 @@ python3 /tmp/wiedza.py szukaj "przerwa robocza" "przerwa w betonowaniu" "szew ro
 - Pozostałe polecenia (`temat`, `etap`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`
   z sekcją podobnych, `temat --lista`, `etap --czesc k`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`. `--sens`
   tu nie działa (brak Ollamy) – daje zwykły wynik po słowach.
+- `migawka.md` (ta sama droga pobrania: `test -s /tmp/migawka.md || curl … /contents/migawka.md`) – otwarte wpisy Notatnika
+  budowy i zadania TASKS, odświeżane co godzinę przez przebieg na Macu (`tools/migawka.py`). Czytaj, gdy Notion w rozmowie
+  nie działa (`pytanie-do-bazy.md`, pkt 5); data stanu w pierwszej linii pliku idzie do zasięgu odpowiedzi.
 - Katalog `/tmp` bywa pusty w kolejnej wiadomości – `test -s` pobierze pliki ponownie (stronę dostępu masz już przeczytaną,
   nie czytaj jej drugi raz).
 - Brak strony, tokena, sieci albo błąd pobrania → napisz „indeks niedostępny” i czytaj Notion bezpośrednio.

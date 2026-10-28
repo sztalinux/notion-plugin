@@ -175,6 +175,11 @@ własny przegląd, żeby nie zasłaniała spraw osobistych.
       tytuł sekcji „🔴 Do zamknięcia przed <nowy etap>”, w widoku `view://ddbaff9a-2f5b-47a5-bf7b-aa031bf88fc8` nazwa
       i filtr Etap = nowy etap (zostaje „Projekt i formalności”), otwarte sprawy starego etapu przeniesione albo zamknięte.
 
+13. **Notion niedostępny w tym kanale → Skrzynka, nie odmowa.** Bez narzędzi Notion w rozmowie: wiedza z indeksu, Notatnik
+    i zadania z migawki (`wiedza/references/indeks.md`, sekcja czatu; `pytanie-do-bazy.md`, pkt 5), a każdy zapis (notatka,
+    dziennik, zadanie, wiedza) do dokumentu Claude „📥 Skrzynka” z gotowymi polami – plugin `ja`,
+    `wpisy/references/skrzynka.md`; Mac przenosi go do Notion w ciągu godziny. Zdjęcia – `dziennik`.
+
 ## Domknięcie każdej rozmowy
 
 Na koniec pracy, która coś zmieniła, trzy bloki w tej kolejności (ten sam format co w `AGENTS.md` i skillu `ja`):
