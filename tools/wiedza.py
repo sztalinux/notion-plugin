@@ -9,6 +9,7 @@ albo zmienna DOM_HUB; w czacie podaje się --db <katalog>/wiedza.sqlite.
     python3 tools/wiedza.py szukaj "ZAPYTANIE" ["ZAPYTANIE 2" …] [--etap …] [--istotnosc …] [--status …] [--rodzaj …]
                                                [--temat …] [--ciekawostki] [--krotko] [--limit 12] [--sens]
     python3 tools/wiedza.py temat "NAZWA" [--lista] [--krotko] [--ciekawostki]   # stan wiedzy, Kluczowe, otwarte SP
+    python3 tools/wiedza.py etap "NAZWA" [--czesc k] [--kontrola] [--ciekawostki]   # cała wiedza etapu w częściach
     python3 tools/wiedza.py duplikaty [--od RRRR-MM-DD] [--prog 0.84] [--temat NAZWA] [--sens | --slowa]
     python3 tools/wiedza.py stan                          # liczniki, daty synchronizacji i publikacji
     python3 tools/wiedza.py publikuj [--teraz] [--wymus] [--reset]   # kopia indeksu do prywatnego repo GITHUB_REPO
@@ -21,7 +22,7 @@ nieoczekiwanego błędu na stderr zamiast samej nazwy typu i linii.
 
 Zasady:
 - Moduł nigdy nie pisze do Notion: wysyła tylko zapytania o wiersze baz (query) i odczyt schematu bazy.
-- szukaj, temat, duplikaty i stan działają na samym pliku: bez tokena, bez sieci i bez pliku synonimów.
+- szukaj, temat, etap, duplikaty i stan działają na samym pliku: bez tokena, bez sieci i bez pliku synonimów.
 - Odciski znaczenia (tools/wiedza_sens.py, Ollama, tylko Mac): sync na końcu (po publikacji) liczy odciski nowych
   i zmienionych informacji (osobny plik `wektory.sqlite`, nie idzie do czatu) i listy podobnych (tabela `podobne`
   w indeksie – idzie do czatu z następną publikacją); Ollama nie działa → krok pominięty po cichu. Z list korzystają `szukaj --krotko` (sekcja
@@ -34,7 +35,7 @@ Zasady:
   czasu startu (pobór i publikacja razem) i kończy się kodem 0.
 - publikuj wysyła wyłącznie do repo prywatnego (sprawdza to przed wysyłką).
 - Komunikaty zawierają tylko numery WI/ZRD/SP, ID stron, nazwy właściwości, liczby i statusy HTTP – nigdy
-  wartości pól (te drukują wyłącznie wyniki szukaj, temat i duplikaty).
+  wartości pól (te drukują wyłącznie wyniki szukaj, temat, etap i duplikaty).
 - Log zapytań: każde `szukaj` na indeksie z `.dom/wiedza/` dopisuje jeden wiersz JSON do `.dom/wiedza/szukaj.log.jsonl`
   (600; czas UTC, kanał z WIEDZA_KANAL albo „claude-code”/„inny”, zapytanie do 500 znaków, tryb, liczby trafień,
   top-5 WI, ms, filtry – bez treści wierszy). Przy 2 MB zostaje jedna starsza kopia `szukaj.log.1.jsonl`. WIEDZA_LOG=0 wyłącza log;
@@ -328,6 +329,10 @@ PODOBNE_PROG = 0.7
 PODOBNE_Z_TRAFIEN = 5
 PODOBNE_LINII = 8
 SENS_LISTA = 50             # szukaj --sens: tyle najbliższych znaczeniem na zapytanie idzie do łączenia RRF
+# etap: cała wiedza etapu w częściach – narzędzie czatu ucina wynik powyżej ok. 30 tys. znaków (Z5, 26.10.2026)
+ETAP_CZESC_ZNAKOW = 25000
+ETAP_WSPOLNY = "Cała budowa"   # tezy tego etapu wchodzą do każdego etapu
+ETAP_RODZAJE_KONTROLI = ("kontrola / odbior", "kolejnosc prac")   # --kontrola: te rodzaje z innych etapów (bez_diakrytykow)
 
 
 def termin_tokenu(slowo: str, prefiks: bool) -> str:
@@ -1904,6 +1909,150 @@ def cmd_temat(a) -> int:
     return 0
 
 
+def linia_etapu(w: dict, z_etapem: bool) -> str:
+    """Linia `etap`: pełna teza (bez skracania – czat czyta ją zamiast Notion), bez tematów (są w nagłówku sekcji)
+    i bez źródeł; Etap tylko w sekcjach spoza etapu; Status inny niż „Nowe”, „Notatnik” (ustalenie), SP-n i 💬
+    zostają – na nich opierają się reguły procedury `wiedza`."""
+    czesci = [f"WI-{w['wi']}", jedna_linia(w["istotnosc"])] + ([jedna_linia(w["etap"])] if z_etapem else [])
+    if normalizuj(w["status"]) not in ("", "nowe"):
+        czesci.append(jedna_linia(w["status"]))
+    czesci.append(jedna_linia(w["teza"]))
+    if w["notatnik"]:
+        czesci.append("Notatnik")
+    if w["sp"]:
+        czesci.append(", ".join(f"SP-{n}" for n in w["sp"]))
+    if w["komentarz"].strip():
+        czesci.append("💬")
+    return " · ".join(czesci)
+
+
+def dopasuj_etap(conn: sqlite3.Connection, nazwa: str):
+    """Nazwa etapu z indeksu pasująca do `nazwa` (bez wielkości liter i diakrytyków; równa wygrywa z zawierającą);
+    (etap, []) albo (None, lista nazw etapów), gdy pasuje kilka albo żaden."""
+    szukana = bez_diakrytykow(nazwa).strip()
+    etapy = sorted(e for (e,) in conn.execute("SELECT DISTINCT etap FROM informacje") if e)
+    pasujace = [e for e in etapy if szukana and szukana in bez_diakrytykow(e)]
+    dokladne = [e for e in pasujace if bez_diakrytykow(e).strip() == szukana]
+    if len(dokladne) == 1:
+        return dokladne[0], []
+    return (pasujace[0], []) if len(pasujace) == 1 else (None, etapy)
+
+
+def sekcje_etapu(conn: sqlite3.Connection, etap: str, a) -> list:
+    """[(nagłówek sekcji, [opisy informacji], czy linie mają Etap)]: tezy K+W etapu i „Cała budowa” pogrupowane tematami (teza raz, pod
+    pierwszym tematem alfabetycznie; w temacie Kluczowe, potem Ważne, rosnąco po WI), dalej Kluczowe z innych etapów,
+    a z --kontrola także Ważne rodzaju Kontrola / odbiór i Kolejność prac z innych etapów. Nieaktualne pominięte;
+    Ciekawostki tylko z --ciekawostki (wewnątrz etapu)."""
+    etapy = {bez_diakrytykow(e) for e in etapy_zbioru(etap)}
+    kolejnosc = {"kluczowe": 0, "ważne": 1, "ciekawostka": 3}
+    tematy_wi = {}
+    for wi, nazwa in conn.execute("SELECT it.wi, t.nazwa FROM informacje_tematy it JOIN tematy t ON t.id = it.temat_id"):
+        tematy_wi.setdefault(wi, []).append(nazwa or "")
+    w_etapie, kluczowe_inne, kontrola_inne = {}, [], []
+    for wi, ist, st, et, rodzaj in conn.execute(
+            "SELECT wi, istotnosc, status, etap, rodzaj FROM informacje ORDER BY wi"):
+        ist_n, rodzaj_n = normalizuj(ist), bez_diakrytykow(rodzaj)
+        if normalizuj(st) == "nieaktualne" or ist_n not in kolejnosc:
+            continue
+        if bez_diakrytykow(et) in etapy:
+            if ist_n != "ciekawostka" or a.ciekawostki:
+                temat = min(tematy_wi.get(wi) or ["(bez tematu)"])
+                w_etapie.setdefault(temat, []).append((kolejnosc[ist_n], wi))
+        elif ist_n == "kluczowe":
+            kluczowe_inne.append(wi)
+        elif a.kontrola and ist_n == "ważne" and rodzaj_n in ETAP_RODZAJE_KONTROLI:
+            kontrola_inne.append(wi)
+    sekcje = []
+    for temat in sorted(w_etapie, key=bez_diakrytykow):
+        numery = [wi for _, wi in sorted(w_etapie[temat])]
+        sekcje.append((f"## {jedna_linia(temat)} ({len(numery)})", opisz_informacje(conn, numery), False))
+    if kluczowe_inne:
+        sekcje.append((f"## Kluczowe z innych etapów ({len(kluczowe_inne)})", opisz_informacje(conn, kluczowe_inne),
+                       True))
+    if a.kontrola:
+        sekcje.append((f"## Kontrola / odbiór i Kolejność prac z innych etapów – Ważne ({len(kontrola_inne)})",
+                       opisz_informacje(conn, kontrola_inne), True))
+    return sekcje
+
+
+def etapy_zbioru(etap: str) -> list:
+    """Etapy wchodzące do zbioru `etap`: on sam i ETAP_WSPOLNY (raz, gdy to ten sam)."""
+    return [etap] if bez_diakrytykow(etap) == bez_diakrytykow(ETAP_WSPOLNY) else [etap, ETAP_WSPOLNY]
+
+
+def podziel_na_czesci(sekcje: list, sp: list) -> list:
+    """Linie wyniku (nagłówki sekcji, linie tez, na końcu otwarte SP) pocięte na części po najwyżej ETAP_CZESC_ZNAKOW
+    znaków, bez dzielenia linii; część zaczynająca się w środku sekcji dostaje jej nagłówek z „(c.d.)”."""
+    linie = []
+    for naglowek, informacje, z_etapem in sekcje:
+        linie.append((naglowek, naglowek))
+        linie += [(naglowek, linia_etapu(w, z_etapem)) for w in informacje]
+    if sp:
+        naglowek = f"## Otwarte sprzeczności etapu ({len(sp)})"
+        linie.append((naglowek, naglowek))
+        linie += [(naglowek, linia_sp(s, krotko=True)) for s in sp]
+    czesci, biezaca, znakow = [], [], 0
+    for sekcja, linia in linie:
+        if biezaca and znakow + len(linia) + 1 > ETAP_CZESC_ZNAKOW:
+            czesci.append(biezaca)
+            biezaca, znakow = [], 0
+        if not biezaca and linia != sekcja:
+            biezaca.append(sekcja + " (c.d.)")
+            znakow += len(sekcja) + 8
+        biezaca.append(linia)
+        znakow += len(linia) + 1
+    if biezaca:
+        czesci.append(biezaca)
+    return czesci
+
+
+def cmd_etap(a) -> int:
+    if a.czesc is not None and a.czesc < 1:
+        blad("--czesc musi być co najmniej 1")
+        return 1
+    with contextlib.closing(otworz_do_odczytu(a)) as conn:
+        etap, etapy = dopasuj_etap(conn, a.nazwa)
+        if etap is None:
+            if a.json:
+                wypisz_json({"etapy": etapy})
+            else:
+                print(f"# etap „{a.nazwa}”: brak jednoznacznego etapu – dostępne: " + " · ".join(etapy))
+            return 0
+        sekcje = sekcje_etapu(conn, etap, a)
+        numery = [w["wi"] for _, informacje, _ in sekcje for w in informacje]
+        sp = otwarte_sp(conn, {sp for wi, sp in conn.execute(
+            "SELECT x.wi, s.sp FROM informacje_sp x JOIN sprzecznosci s ON s.id = x.sp_id") if wi in set(numery)})
+        stan = meta_bazy(conn).get("zbudowano") or ""
+    czesci = podziel_na_czesci(sekcje, sp)
+    if a.czesc is not None and a.czesc > len(czesci):
+        blad(f"--czesc {a.czesc}: wynik ma {len(czesci)} części")
+        return 1
+    istotnosci = Counter(normalizuj(w["istotnosc"]) for _, informacje, _ in sekcje for w in informacje)
+    liczniki = {"tez": len(numery), "kluczowe": istotnosci["kluczowe"], "wazne": istotnosci["ważne"],
+                "ciekawostki": istotnosci["ciekawostka"], "sekcje": [(n, len(i)) for n, i, _ in sekcje],
+                "znakow": sum(len(l) + 1 for c in czesci for l in c), "czesci": len(czesci)}
+    if a.json:
+        wynik = {"stan": stan, "etap": etap, "etapy": etapy_zbioru(etap), "kontrola": a.kontrola,
+                 "liczniki": liczniki, "czesc": a.czesc, "sp": sp,
+                 "sekcje": [{"naglowek": n, "informacje": i} for n, i, _ in sekcje]}
+        wypisz_json(wynik)
+        return 0
+    naglowek = (f"# indeks: stan {lokalnie(stan)} · etap: {' + '.join(etapy_zbioru(etap))}"
+                + (" + kontrola i kolejność z innych etapów" if a.kontrola else "")
+                + f" · tez: {liczniki['tez']} (Kluczowe {liczniki['kluczowe']}, Ważne {liczniki['wazne']}"
+                + (f", Ciekawostki {liczniki['ciekawostki']}" if a.ciekawostki else "")
+                + f") · znaków: {liczniki['znakow'] // 1000} tys. · części: {len(czesci)}")
+    if a.czesc is None:
+        print(naglowek + " (wszystkie naraz; na czacie --czesc 1 … " + str(len(czesci)) + ")")
+        for czesc in czesci:
+            print("\n".join(czesc))
+    else:
+        print(naglowek + f" · część {a.czesc}/{len(czesci)}"
+              + (" (ostatnia)" if a.czesc == len(czesci) else f" – dalej --czesc {a.czesc + 1}"))
+        print("\n".join(czesci[a.czesc - 1]))
+    return 0
+
+
 def dzien_lokalny(tekst):
     """`dodano` (UTC z API) → data lokalna; bez zamiany para z granicy doby wypadłaby z --od o dzień."""
     return na_czas(tekst).astimezone().date() if tekst else None
@@ -2086,6 +2235,15 @@ def zbuduj_parser() -> argparse.ArgumentParser:
                    help="wszystkie widoczne informacje tematu zamiast samych Kluczowych")
     p.add_argument("--krotko", action="store_true", help="zwarte linie jak w szukaj --krotko")
     p.add_argument("--ciekawostki", action="store_true", help="z --lista: także Istotność „Ciekawostka”")
+    p = sub.add_parser("etap", parents=[wspolne],
+                       help=f"cała wiedza etapu (tezy Kluczowe i Ważne etapu i „{ETAP_WSPOLNY}” wg tematów, Kluczowe "
+                            f"z innych etapów, otwarte SP) w częściach po ok. {ETAP_CZESC_ZNAKOW // 1000} tys. znaków")
+    p.add_argument("nazwa", help="nazwa etapu albo jej część (np. „Stan zero”)")
+    p.add_argument("--czesc", type=int, help="numer części do pokazania (bez – wszystko naraz)")
+    p.add_argument("--kontrola", action="store_true",
+                   help="dołóż Ważne rodzaju Kontrola / odbiór i Kolejność prac z innych etapów (pytania „co sprawdzić "
+                        "przed kolejnym etapem”)")
+    p.add_argument("--ciekawostki", action="store_true", help="także Istotność „Ciekawostka” wewnątrz etapu")
     p = sub.add_parser("duplikaty", parents=[wspolne],
                        help="kandydaci na duplikaty: pary z list podobnych (po znaczeniu), bez list – po słowach")
     p.add_argument("--od", help="RRRR-MM-DD: co najmniej jedna z pary dodana od tej daty (lokalnie)")
@@ -2109,8 +2267,8 @@ def zbuduj_parser() -> argparse.ArgumentParser:
 
 
 # nazwa podkomendy → cmd_*(args) -> kod wyjścia
-POLECENIA = {"sync": cmd_sync, "szukaj": cmd_szukaj, "temat": cmd_temat, "duplikaty": cmd_duplikaty,
-             "stan": cmd_stan, "publikuj": cmd_publikuj}
+POLECENIA = {"sync": cmd_sync, "szukaj": cmd_szukaj, "temat": cmd_temat, "etap": cmd_etap,
+             "duplikaty": cmd_duplikaty, "stan": cmd_stan, "publikuj": cmd_publikuj}
 
 
 def linia_bledu(e: BaseException, plik: str = __file__) -> int:

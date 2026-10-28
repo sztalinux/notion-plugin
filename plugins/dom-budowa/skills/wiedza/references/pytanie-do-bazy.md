@@ -2,7 +2,9 @@
 
 Cel: odpowiedź uwzględnia **całą** istotną wiedzę z bazy (z numerami WI), mówi, co przeczytała, i wprost – czego nie wie
 ani nie sprawdziła. Pomiar (26.10.2026, 15 pytań bez Notion): stara droga (jedno zapytanie) – w odpowiedzi 73% Kluczowych i 42%
-Ważnych tez; ta procedura – w skrócie 89% / 57%, po rozwinięciu 100% / 81% – dlatego głębokość i cały temat są obowiązkowe. Wołają ją: `wiedza` E, router
+Ważnych tez; ta procedura – w skrócie 89% / 57%, po rozwinięciu 100% / 81% – dlatego głębokość i cały temat są obowiązkowe.
+Pomiar poziomu „cały etap” (28.10.2026, 10 pytań łączących, wzorzec 598 tez, model czyta i wskazuje tezy): „dokładnie” widzi
+60% trafnych tez i 56% Kluczowych, „cały etap” 68% / 86% – przy pytaniach o cały etap czyta się więc wszystko. Wołają ją: `wiedza` E, router
 `budowa` (zasada 10) i każda procedura, która pyta bazę (`etap`, `zakupy`, `harmonogram`, `przygotowanie`, `analiza-techniczna`,
 przeglądy). Polecenia i kanały: `indeks.md`.
 
@@ -23,6 +25,7 @@ Wybierz poziom po rodzaju pytania; inwestor może go wymusić słowem w pytaniu 
 | **szybko** | wąski fakt („ile”, „jaka klasa”, „czy wolno”); „na szybko” | `szukaj "A" "B" "C" --krotko --limit 60` | 22 tys. zn. |
 | **normalnie** (domyślny) | „jak”, „na co uważać”, „co sprawdzić”, „co zamówić”, doradca | to samo z `--limit 100` + `temat "<główny temat>" --lista --krotko` | 77 tys. zn. |
 | **dokładnie** | pytanie łączy kilka zagadnień (trafienia w ≥ 2 tematach), odbiór lub krok bez odwrotu, „dokładnie” | `--limit 100` + dwa najczęstsze tematy w całości (drugi też `--lista --krotko`) | 117 tys. zn. |
+| **cały etap** | pytanie o cały etap, nie o zagadnienie: „co sprawdzić przed kolejnym etapem”, „co zamówić na stan zero”, „rozpisz etapy”, „o co zapytać kierownika”, „jakie mostki / błędy do stanu zero”; trafienia `szukaj` w ≥ 3 tematach; „cały etap”, „wszystko” | `etap "<etap>" --czesc 1` … do ostatniej części (bez `szukaj`); pytanie o zamknięcie etapu, odbiory i kolejność → `--kontrola` | 330 tys. zn. w 14 częściach (z `--kontrola` 390 tys. / 16) |
 
 - **A B C** = 2–3 krótkie zapytania z pytania, różnymi słowami (ogólniej, węziej, potocznie i fachowo – „woda przy ławie”,
   „drenaż opaskowy”), 2–4 słowa treściowe każde, bez zdania i spójników; **jedno** wywołanie `szukaj`.
@@ -34,6 +37,14 @@ Wybierz poziom po rodzaju pytania; inwestor może go wymusić słowem w pytaniu 
   (licznik w nagłówku).
 - Pytania **ogólne i łączące** (większość pytań z telefonu) zaczynaj od „normalnie”; „szybko” zostaw faktom, bo na szerokim
   pytaniu widzi mniej niż połowę potrzebnych tez.
+- **Cały etap** = wszystkie tezy Kluczowe i Ważne etapu i „Cała budowa”, pogrupowane tematami, plus komplet Kluczowych z innych
+  etapów i otwarte SP etapu; z `--kontrola` także Ważne rodzaju Kontrola / odbiór i Kolejność prac z innych etapów (pytania
+  o zamknięcie etapu łączą etapy: sam etap niesie 55% trafnych tez, z tym 93%). Etap pytania: nazwany w pytaniu albo bieżący
+  z DOM (brak w rozmowie → zapytaj). Każda część to osobne wywołanie `--czesc k` (nagłówek mówi „część k/n – dalej --czesc k+1”);
+  czytaj **wszystkie po kolei**, bez pomijania – część nieprzeczytana to tezy niewidziane (wpisz je do zasięgu, pkt 9).
+  Odpowiedź buduj po ostatniej części, nie po każdej. Gdy narzędzie albo okno rozmowy nie udźwignie wszystkich części, napisz
+  to w zasięgu („przeczytałem części 1–9 z 14”) i dokończ poziomem „dokładnie” na nieprzeczytanych tematach. Pytanie
+  o jedno zagadnienie („czy XPS pod płytę”) to nie „cały etap” – tam cały temat wystarcza i jest 4× krótszy.
 - **Sesja na Macu (Claude Code):** `--sens` (ranking po znaczeniu, wymaga Ollamy) pomaga tylko przy małych limitach (limit 25–40:
   ok. +8 pkt Kluczowych, limit 60: +2, od 100: nic albo gorzej), a większy limit daje więcej niż `--sens` – procedura go nie
   wymaga; możesz dopisać przy „szybko”, gdy potrzebujesz limitu 40. Na telefonie `--sens` nie istnieje.
@@ -47,7 +58,8 @@ poziomach „normalnie” i „dokładnie” zapisz wynik do pliku i czytaj po 2
 `python3 … szukaj … > /tmp/w1.txt; wc -c /tmp/w1.txt; head -c 20000 /tmp/w1.txt`, dalej `tail -c +20001 /tmp/w1.txt | head -c 20000`,
 `tail -c +40001 …` – aż do końca pliku (rozmiar z `wc -c`). Kilka tematów naraz: polecenia po średniku, drugie i kolejne z `>>`
 do tego samego pliku. Wynik widziany częściowo jest **nieprzeczytany** – nie odpowiadaj z samego początku; czego nie
-przeczytałeś, wpisz do zasięgu (pkt 9). Wynik `szybko` (do ok. 25 tys. znaków) czytaj wprost.
+przeczytałeś, wpisz do zasięgu (pkt 9). Wynik `szybko` (do ok. 25 tys. znaków) czytaj wprost. `etap --czesc k` tnie sam
+(części po ok. 25 tys. znaków, linie całe) – bez pliku i `head`/`tail`.
 
 ## 4. Droga wg rodzaju pytania
 
@@ -95,7 +107,8 @@ Brak wyszukiwarki w danym kanale → napisz to.
 Telefon: dwie warstwy; w obu **każda użyta teza ma numer WI** (jeden punkt może nieść kilka numerów – wszystkie tezy, które
 to samo zagadnienie potwierdzają albo uzupełniają). Nie dopisuj wiedzy z pamięci jako „z bazy”.
 - **Skrót** (pierwsza wiadomość, 5–8 punktów, bez wstępów): linia **Zasięg** (poziom; co przeczytałeś w całości – tematy z liczbą
-  tez z nagłówka `temat`, liczba trafień `szukaj`, Notatnik: etap i liczba wpisów; ile Kluczowych i Ważnych tez było
+  tez z nagłówka `temat`, liczba trafień `szukaj`, przy „cały etap” etap i części „k z n” oraz liczba tez z nagłówka,
+  Notatnik: etap i liczba wpisów; ile Kluczowych i Ważnych tez było
   w przeczytanym i ile z nich zawiera odpowiedź), potem punkty, które razem niosą **wszystkie Kluczowe tezy** (zagadnienie,
   liczby z warunkami, numery WI), osobno „U nas ustalone” i „Otwarte” (SP z numerem, pytania z „Do kogo”). Na końcu:
   „Rozwinąć? (n Ważnych tez w m grupach)”.
@@ -108,5 +121,6 @@ Przy tezie z „Moim komentarzem” podaj go (`wiedza`, H). Szczegóły z Notion
 ## 10. Budżet wywołań
 
 `szybko`: do 2 wywołań poza Notatnikiem (pobranie + `szukaj`; strona dostępu). `normalnie`: 5–8 (strona dostępu, `szukaj` do pliku
-i porcje, `temat` do pliku i porcje, Notatnik). `dokładnie`: do 10. Kilka poleceń łącz w jedno wywołanie (średnikiem). Nie powtarzaj
+i porcje, `temat` do pliku i porcje, Notatnik). `dokładnie`: do 10. `cały etap`: liczba części + 3 (pobranie, Notatnik, zapas) –
+dziś do 20; to jedyny poziom, na którym wolno tyle wywołań. Kilka poleceń łącz w jedno wywołanie (średnikiem). Nie powtarzaj
 `szukaj` na to samo pytanie; nowe sformułowanie – tylko gdy lista tematu i „podobne” nie pokazały sedna.

@@ -41,6 +41,12 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   jest zwykłym `szukaj`.
 - `python3 tools/wiedza.py temat "NAZWA"` – stan wiedzy tematu, Kluczowe i otwarte SP; `--lista` – wszystkie widoczne
   informacje tematu (Kluczowe, Ważne, pozostałe; Ciekawostki z `--ciekawostki`), zwykle z `--krotko`;
+  `python3 tools/wiedza.py etap "Stan zero" --czesc 1` – cała wiedza etapu: tezy Kluczowe i Ważne etapu i „Cała budowa”
+  pogrupowane tematami (linia `WI-n · Istotność · [Status] · pełna teza · [Notatnik] · SP-n · 💬`, bez źródeł), potem
+  Kluczowe z innych etapów (z Etapem w linii) i otwarte SP etapu; `--kontrola` dokłada Ważne rodzaju Kontrola / odbiór
+  i Kolejność prac z innych etapów; `--czesc k` pokazuje k-tą część po ok. 25 tys. znaków (nagłówek: liczba tez, znaków, części,
+  „dalej --czesc k+1”), bez `--czesc` całość naraz (Claude Code, do pliku). Część nazwy etapu wystarcza; niejednoznaczna →
+  lista etapów. Kiedy czytać cały etap zamiast szukać – `pytanie-do-bazy.md`, poziom „cały etap”;
   `duplikaty [--od RRRR-MM-DD]` – kandydaci na duplikaty: pary z list podobnych od progu 0,84 (`--sens`; bez list –
   po słowach, `--slowa` wymusza słowa). Podobieństwo nie odróżnia duplikatu od informacji bliskiej tematem (ok. 1 na 10 par to
   duplikat) – każdą parę oceń sam, zanim zaproponujesz scalenie; `stan` – liczniki, daty i stan list podobnych.
@@ -77,9 +83,9 @@ python3 /tmp/wiedza.py szukaj "przerwa robocza" "przerwa w betonowaniu" "szew ro
 ```
 
 - Jedno wywołanie robi wszystko: pobiera tylko brakujące pliki (`test -s`) i szuka. Jak dobrać zapytania, limit i cały temat –
-  `pytanie-do-bazy.md` (poziomy szybko / normalnie / dokładnie).
-- Pozostałe polecenia (`temat`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`
-  z sekcją podobnych, `temat --lista`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`. `--sens`
+  `pytanie-do-bazy.md` (poziomy szybko / normalnie / dokładnie / cały etap).
+- Pozostałe polecenia (`temat`, `etap`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`
+  z sekcją podobnych, `temat --lista`, `etap --czesc k`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`. `--sens`
   tu nie działa (brak Ollamy) – daje zwykły wynik po słowach.
 - Katalog `/tmp` bywa pusty w kolejnej wiadomości – `test -s` pobierze pliki ponownie (stronę dostępu masz już przeczytaną,
   nie czytaj jej drugi raz).

@@ -110,7 +110,7 @@ podaje ocenę albo uwagę („WI-12 ciekawostka”, „do WI-20: nie zgadzam si�
 ## E. Pytanie do bazy („co wiemy o drenażu?”)
 
 1. Szukaj i odpowiadaj wg `references/pytanie-do-bazy.md`: kilka sformułowań naraz, poziom głębokości (szybko / normalnie /
-   dokładnie), cały główny temat, Notatnik po polach, stała forma odpowiedzi z zasięgiem. Polecenia i kanały:
+   dokładnie / cały etap – `etap --czesc k`), cały główny temat, Notatnik po polach, stała forma odpowiedzi z zasięgiem. Polecenia i kanały:
    `references/indeks.md`. Notion czytaj po szczegóły, przed decyzją i przed zapisem. Stan indeksu starszy niż 24 h – podaj
    jego datę w odpowiedzi. Indeks niedostępny → dotychczasowa droga: znajdź temat(y) w Tematach (nazwa i „W skrócie”);
    pobierz ich Informacje (Status ≠ Nieaktualne) i wpisy Rejestru (Status ≠ Zastąpione) – jednym zapytaniem na bazę.

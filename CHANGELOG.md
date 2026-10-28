@@ -4,6 +4,20 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.11.0] – 2026-10-28
+
+- `tools/wiedza.py etap "<etap>" [--czesc k] [--kontrola] [--ciekawostki]` – cała wiedza etapu do przeczytania zamiast szukania:
+  tezy Kluczowe i Ważne etapu i „Cała budowa” pogrupowane tematami (pełna teza, bez źródeł; Status, Notatnik, SP-n i 💬 zostają),
+  komplet Kluczowych z innych etapów, otwarte SP etapu; `--kontrola` dokłada Ważne rodzaju Kontrola / odbiór i Kolejność prac
+  z innych etapów (pytania o zamknięcie etapu); `--czesc k` tnie wynik na części po ok. 25 tys. znaków (narzędzie czatu ucina
+  dłuższe), nagłówek podaje liczbę tez, znaków i części. Działa też w czacie z kopii indeksu.
+- `wiedza/references/pytanie-do-bazy.md`: czwarty poziom „cały etap” (kiedy: pytanie o cały etap, trafienia w ≥ 3 tematach,
+  „cały etap”; jak: wszystkie części po kolei, zasięg „części k z n”, budżet wywołań do 20, dokończenie „dokładnie”, gdy okno
+  nie udźwignie). Pomiar 28.10.2026 (10 pytań łączących, wzorzec 598 tez, model czyta i wskazuje): „dokładnie” 60% trafnych /
+  56% Kluczowych, „cały etap” 68% / 86%; z `--kontrola` przy pytaniu o zamknięcie etapu 55% → 93% trafnych tez w wejściu. Do sprawdzenia
+  testem z telefonu (okno i czas przy 14–16 częściach). `indeks.md`: opis polecenia w obu kanałach; odesłania w `wiedza` E
+  i `budowa` (zasada 10); README.
+
 ## dom-budowa [2.10.0] – 2026-10-27
 
 - Nowa procedura `wiedza/references/pytanie-do-bazy.md` – jak szukać i odpowiadać na pytanie do bazy (czat na telefonie,
