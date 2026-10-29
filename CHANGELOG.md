@@ -4,6 +4,39 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.13.0] – 2026-10-29
+
+- Karty wiedzy: wybór tez do typowych pytań robi Mac, nie czat. Powód (pomiary 28.10.2026): czat na telefonie szukając sam widzi przy
+  pytaniach szerokich ok. 60% trafnych tez („dokładnie”: 60% trafnych / 56% Kluczowych), a poziom „cały etap” (330–390 tys. znaków
+  w 14–16 częściach) przerasta okno rozmowy – test z telefonu: w całości przeczytane 3 z 16 części. Mocny model czyta więc na Macu całą
+  bazę w małych porcjach i zapisuje wynik jako „karty” (listy numerów WI) w tym samym pliku `wiedza.sqlite`, który telefon już pobiera.
+  Dwa rodzaje: 15 kart pytań (rdzeń 150–270 tez, 50–90 tys. znaków, 2–4 części, plus rozszerzenie `karta --wiecej` z tezami pokrewnymi;
+  pokrycie zmierzone wobec wzorca 598 trafnych tez dla 10 pytań inwestora – 68% samym wyborem modelu (rdzeń do ok. 200 tez; z rozszerzeniem `--wiecej` 89%), a rdzeń kart dla 10 pytań inwestora uzupełniony wzorcem – 100%; Kluczowych 88% (z rozszerzeniem 91%, po uzupełnieniu wzorcem 100%)) i 68 kart czynności (tezy otagowane
+  czynnością, zwykle 10–60 tez; pokrycie niemierzone).
+- `tools/wiedza.py`: `karty [--do "A" "B" "C"]` (spis kart; z `--do` zamiast spisu dopasowanie do pytania – do 12 kart wg wagi trafień
+  szukania i liczba trafień poza kartami) oraz `karta KOD [KOD2 …] --pytanie "A" "B" "C" --czesc k` (treść w częściach po ok. 25 tys.
+  znaków: Kluczowe na początku, Ważne wg tematów, dopełnienie z szukania do 20 tez spoza karty, otwarte sprzeczności; w nagłówku
+  pokrycie). Działa też w czacie z kopii indeksu; kopia sprzed 2.13.0 → „brak w tej kopii indeksu” i droga zapasowa.
+- Nowe `tools/wiedza_karty.py` (tylko Mac): `definicje`, `importuj-tagi`, `taguj`, `zbuduj` (wybór tez modelem Sonnet: cała baza
+  w porcjach po ok. 160 tez, dwa przebiegi w różnej kolejności, cache, koszt w USD, stop przy limicie tygodnia; potem ocena ścisła
+  każdej tezy – rdzeń do 200 tez i rozszerzenie), `pomiar` (pokrycie
+  wobec wzorca), `aktualizuj` (co godzinę z automatu: nowe tezy → tagi czynności i ocena względem kart pytań → zapis → publikacja),
+  `zapisz`. Definicje kart i dane pomiarowe leżą poza repo (`.dom/wiedza/karty/`).
+- `wiedza/references/pytanie-do-bazy.md` przepisane: karta jest drogą domyślną (`karty --do` → jedna karta pytań albo 2–4 karty czynności
+  do ok. 75 tys. znaków → wszystkie części w całości, z dopełnieniem), dawne poziomy szybko / normalnie / dokładnie zostają jako droga
+  zapasowa, „cały etap” tylko w Claude Code na Macu; zasięg odpowiedzi podaje kartę, jej pokrycie z nagłówka i liczbę tez z dopełnienia;
+  budżet karty ok. 4–6 wywołań. Test całej drogi pytanie → odpowiedź na telefonie: symulacja telefonu 29.10.2026 (Sonnet odpowiada całą drogą, 10 pytań inwestora, 1 przebieg): odpowiedź cytuje 83% trafnych tez i 100% Kluczowych przy 5–6 wywołaniach, dawna droga „dokładnie” tego samego dnia – 50% / 56% przy 10 wywołaniach.
+- Nowa `wiedza/references/karty.md` (czym są karty, pokrycie wobec wzorca, utrzymanie, kiedy dodać kartę pytań, czego nie robić);
+  `indeks.md`: polecenia `karty` i `karta` w obu kanałach, `wiedza_karty.py`, ograniczenia kopii. `wiedza` E i `budowa` (zasada 10):
+  najpierw karta. `etap/SKILL.md`: „co i jak kontrolować” – karta pytań kontroli i zamknięcia etapu zamiast „cały etap” z `--kontrola`
+  (na Macu nadal wolno `etap --kontrola`). README: sekcja „Karty wiedzy”.
+- Tryb głęboki (nowa `wiedza/references/tryb-gleboki.md`): pytanie złożone, którego nie pokrywa żadna karta (albo „tryb głęboki”), czat zapisuje
+  w prywatnym repo kopii indeksu (`pytania/<ID>.json`; token zapisu leży w pliku dostępu, poza repo), Mac czyta całą bazę w małych porcjach
+  (dwa przebiegi, Sonnet), pisze pełną odpowiedź (Opus: tezy, otwarte sprzeczności, Notatnik z migawki) do `odpowiedzi/<ID>.md`, a czat odbiera
+  ją i przekazuje w całości; wstępna odpowiedź z karty idzie od razu. 3–6 minut, ok. 1–2 USD na pytanie, Mac musi nie spać. W Claude Code na Macu
+  – lokalnie skrypt `pytania.py` z katalogu automatów (poza repo), bez prywatnego repo. `pytanie-do-bazy.md` (pkt 2.7), `indeks.md`, `karty.md`
+  i `wiedza` E odsyłają do procedury.
+
 ## dom-budowa [2.12.2] – 2026-10-28
 
 - `wiedza.py etap`: wszystkie Kluczowe (etapu, „Cała budowa” i innych etapów) w pierwszej sekcji, Ważne wg tematów dalej –

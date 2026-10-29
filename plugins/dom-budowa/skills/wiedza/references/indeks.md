@@ -3,8 +3,8 @@
 Cel: znaleźć w Bazie wiedzy informacje, tematy i sprzeczności szybko, bez przeszukiwania Notion (jest wolne i limitowane).
 Indeks to lokalna kopia czterech baz (SQLite FTS5), tylko do odczytu. Notion zostaje jedynym źródłem prawdy i jedynym
 miejscem zapisu – nigdy nie zapisuj wiedzy do indeksu. Trzy kanały dostępu mają różne polecenia; wybierz swój.
-Ten plik opisuje polecenia. **Jak szukać i odpowiadać na pytanie** (kilka sformułowań, głębokość, cały temat, Notatnik,
-forma odpowiedzi) – `pytanie-do-bazy.md`.
+Ten plik opisuje polecenia. **Jak szukać i odpowiadać na pytanie** (karta wiedzy, kilka sformułowań, głębokość, cały temat,
+Notatnik, forma odpowiedzi) – `pytanie-do-bazy.md`; czym są karty i jak Mac je utrzymuje – `karty.md`.
 
 ## Claude Code – sesja interaktywna w repo
 
@@ -46,10 +46,33 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   Kluczowe z innych etapów (z Etapem w linii) i otwarte SP etapu; `--kontrola` dokłada Ważne rodzaju Kontrola / odbiór
   i Kolejność prac z innych etapów; `--czesc k` pokazuje k-tą część po ok. 25 tys. znaków (nagłówek: liczba tez, znaków, części,
   „dalej --czesc k+1”), bez `--czesc` całość naraz (Claude Code, do pliku). Część nazwy etapu wystarcza; niejednoznaczna →
-  lista etapów. Kiedy czytać cały etap zamiast szukać – `pytanie-do-bazy.md`, poziom „cały etap”;
+  lista etapów. Poziom „cały etap” (`pytanie-do-bazy.md`, pkt 3) tylko w Claude Code na Macu – na telefonie karta wiedzy (niżej);
   `duplikaty [--od RRRR-MM-DD]` – kandydaci na duplikaty: pary z list podobnych od progu 0,84 (`--sens`; bez list –
   po słowach, `--slowa` wymusza słowa). Podobieństwo nie odróżnia duplikatu od informacji bliskiej tematem (ok. 1 na 10 par to
-  duplikat) – każdą parę oceń sam, zanim zaproponujesz scalenie; `stan` – liczniki, daty i stan list podobnych.
+  duplikat) – każdą parę oceń sam, zanim zaproponujesz scalenie; `stan` – liczniki, daty, stan list podobnych i kart (linia
+  `karty: n (pytania a, czynności b) · zbudowano <data>` albo `karty: brak`).
+- `python3 tools/wiedza.py karty [--rodzaj pytanie|czynnosc] [--etap NAZWA]` – spis kart wiedzy (gotowych wyborów tez do typowych pytań;
+  `karty.md`) pod nagłówkami `## Karty pytań` i `## Karty czynności`, po linii na kartę (pola, nie kolumny):
+  `kod · etap · nazwa · tez N (K n)[ +m ciek.][ +r więcej] · ~N tys. zn. · k cz.[ · pokrycie X% / K Y%] · opis[ · np. „przykładowe pytanie”]` – pokrycie
+  tylko zmierzone, `+r więcej` = tezy rozszerzenia (pokrewne, poza rdzeniem; `karta KOD --wiecej`), przykładowe pytanie tylko karta pytań; `tez 0 (K 0) · ~0 tys. zn. · 0 cz.` = karta jeszcze niezbudowana. `karty --do "A" "B" "C"`
+  zamiast spisu drukuje `## Dopasowanie do pytania (trafień w karcie / N)` (N ≤ 60 pierwszych trafień szukania): do 12 kart, najlepsza pierwsza
+  (wg wagi trafień – wyższe pozycje wyniku ważą więcej – nie zawsze wg liczby), każda jako `trafień n/N · <linia karty jak wyżej>`; potem
+  `trafienia poza wszystkimi kartami: m – WI-…` (do 15 numerów, dalej „… (+k)”) i `## Pozostałe karty` z samymi kodami; gdy żadna karta nie
+  ma trafień: „żadna karta nie ma trafień – użyj szukaj”. Nagłówek (`# indeks: stan … · karty: n (pytania a, czynności b) · zbudowano …`)
+  przypomina, by wybierać karty do ok. 75 tys. znaków razem.
+- `python3 tools/wiedza.py karta KOD [KOD2 …] --pytanie "A" "B" "C" --czesc k` – treść karty w częściach po ok. 25 tys. znaków (kilka kodów =
+  suma bez powtórzeń). Nagłówek: `# indeks: stan … · karta: kod „Nazwa” · tez N (Kluczowe n, Ważne m)[ (+c ciekawostek – --ciekawostki)] · znaków N tys.
+  · części n · <pokrycie>[ · dopełnienie d] · część k/n – dalej --czesc k+1` (ostatnia część: `część n/n (ostatnia)`). `<pokrycie>` to `pokrycie X%
+  trafnych / Y% Kluczowych (wobec wzorca <data> (<ID wzorca>, …)[; z dopełnieniem Z%])` albo `pokrycie: niemierzone` (karta czynności: `… (karta
+  czynności – tagi modelu)`; karta pytań – także po `zbuduj`, dopóki `pomiar --zapisz` nie zapisze pokrycia); kilka kart o różnym pokryciu –
+  `kod: …; kod2: …`. Sekcje: `## Kluczowe (n)` – wszystkie Kluczowe karty, na początku; `## <temat> – Ważne (n)` wg tematów (część zaczynająca się
+  w środku sekcji powtarza jej nagłówek z „(c.d.)”); `## Ciekawostki (n)` – domyślnie na końcu karty (`--bez-ciekawostek` ukrywa); `## Dopełnienie z szukania (n)` – do 20 trafień
+  szukania dla A/B/C spoza karty albo `## Dopełnienie z szukania: brak – szukanie nic nie dodaje do karty`; `## Otwarte sprzeczności (n)`. Karta
+  bez tez: `tez 0 (Kluczowe 0, Ważne 0)` i „karta pusta – użyj szukaj / temat / etap” (z `--pytanie` – sama sekcja dopełnienia). `--wiecej` drukuje rozszerzenie karty
+  zamiast rdzenia (tezy pokrewne; nagłówek rdzenia podaje „rozszerzenie: +n tez pokrewnych (karta KOD --wiecej, …)”) – czytaj po rdzeniu,
+  na „więcej” / „rozwiń”. Nieznany kod:
+  `✗ karta „kod”: nie ma takiej karty – podobne: …` (bez podobnych: „spis kart: karty”), kod wyjścia 1. Kiedy i jak z tego korzystać –
+  `pytanie-do-bazy.md`, pkt 2.
 - `python3 tools/migawka.py` – migawka Notatnika budowy i TASKS (otwarte wpisy) do `.dom/wiedza/migawka.md` i do kopii
   dla czatu w prywatnym repo (Notion tylko odczyt tokenem integracji; obie bazy muszą być udostępnione integracji, inaczej
   w pliku stoi „niedostępna”). Uruchamia ją przebieg godzinowy na Macu; ręcznie po zmianach w Notatniku, gdy telefon ma je
@@ -59,6 +82,10 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   kopii czatu z następną publikacją). Ollama wyłączona → krok pominięty po cichu,
   wszystko inne działa jak dotąd. Pierwsze pełne liczenie (ok. 3 min) albo po zmianie modelu:
   `python3 tools/wiedza_sens.py przelicz`; `python3 tools/wiedza_sens.py stan` – czy Ollama działa i ile odcisków.
+- `python3 tools/wiedza_karty.py <polecenie>` (tylko Mac, Claude Code) buduje, mierzy i utrzymuje karty: `definicje`, `importuj-tagi`,
+  `taguj`, `zbuduj`, `pomiar`, `aktualizuj`, `zapisz`. Karty leżą w tabelach pliku `wiedza.sqlite` i jadą do czatu z publikacją
+  indeksu; definicje i dane pomiarowe są poza repo (`.dom/wiedza/karty/`). `aktualizuj` uruchamia co godzinę automat na Macu.
+  Opis poleceń, pokrycia i dodawania kart – `karty.md`.
 
 Linia wyniku: `WI-n · Istotność · Etap · Status · teza · T: tematy · ZRD-n „tytuł” (Kto: …; typ autora; wiarygodność) · SP-n · link`.
 - Segment `Kto` jest obowiązkowy: bez niego nie zastosujesz reguły „ten sam autor to nie potwierdzenie” (`wiedza`, A.5).
@@ -80,19 +107,28 @@ Po zapisie wiedzy do Notion w sesji interaktywnej uruchom `python3 tools/wiedza.
 Tu nie ma `tools/` ani repo. Przeczytaj raz na rozmowę stronę Notion „🔑 Asystent – dostęp” (`3fcf5982-09e7-810e-aaca-f2b582438924`)
 i wstaw jej pola w miejsce `<GITHUB_REPO>` i `<TOKEN>`. Nigdy nie zapisuj tokena w odpowiedzi, notatce ani pliku.
 Brak narzędzi Notion w rozmowie → te same pola z pliku „🔑 Dostęp asystenta” w wiedzy projektu „Dom” (rozmowa w projekcie);
-poza projektem i bez Notion poproś inwestora o rozmowę w projekcie „Dom”.
+poza projektem i bez Notion poproś inwestora o rozmowę w projekcie „Dom”. Pola trybu głębokiego (`GITHUB_REPO` i token zapisu) są
+w sekcji „Tryb głęboki” tego samego pliku dostępu – protokół: `tryb-gleboki.md`.
 
 ```
 test -s /tmp/wiedza.sqlite || curl -sf -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github.raw" -o /tmp/wiedza.sqlite https://api.github.com/repos/<GITHUB_REPO>/contents/wiedza.sqlite
 test -s /tmp/wiedza.py || curl -sf -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github.raw" -o /tmp/wiedza.py https://api.github.com/repos/<GITHUB_REPO>/contents/wiedza.py
-python3 /tmp/wiedza.py szukaj "przerwa robocza" "przerwa w betonowaniu" "szew roboczy" --krotko --limit 100 --db /tmp/wiedza.sqlite
+python3 /tmp/wiedza.py karty --do "przerwa robocza" "przerwa w betonowaniu" "szew roboczy" --db /tmp/wiedza.sqlite
 ```
 
-- Jedno wywołanie robi wszystko: pobiera tylko brakujące pliki (`test -s`) i szuka. Jak dobrać zapytania, limit i cały temat –
-  `pytanie-do-bazy.md` (poziomy szybko / normalnie / dokładnie / cały etap).
-- Pozostałe polecenia (`temat`, `etap`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`
-  z sekcją podobnych, `temat --lista`, `etap --czesc k`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`. `--sens`
-  tu nie działa (brak Ollamy) – daje zwykły wynik po słowach.
+Potem treść wybranej karty, osobnym wywołaniem na każdą część (`--czesc 1`, `--czesc 2` …; kod z listy kart, `betonowanie-plyty` to przykład),
+każde poprzedzone tymi samymi dwiema liniami `test -s …`:
+
+```
+python3 /tmp/wiedza.py karta betonowanie-plyty --pytanie "przerwa robocza" "przerwa w betonowaniu" "szew roboczy" --czesc 1 --db /tmp/wiedza.sqlite
+```
+
+- Pierwsze wywołanie robi wszystko: pobiera tylko brakujące pliki (`test -s`) i uruchamia `karty --do`. Jak wybrać karty i czytać
+  części – `pytanie-do-bazy.md`, pkt 2. Droga zapasowa (poziomy szybko / normalnie / dokładnie), gdy `karty` zgłosi „brak w tej
+  kopii” albo pytanie jest wąskim faktem: `python3 /tmp/wiedza.py szukaj "A" "B" "C" --krotko --limit 100 --db /tmp/wiedza.sqlite` – pkt 3.
+- Pozostałe polecenia (`temat`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`
+  z sekcją podobnych, `temat --lista`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`. `etap --czesc k` też działa,
+  ale poziom „cały etap” jest tylko dla Maca (`pytanie-do-bazy.md`, pkt 3). `--sens` tu nie działa (brak Ollamy) – daje zwykły wynik po słowach.
 - `migawka.md` (ta sama droga pobrania: `test -s /tmp/migawka.md || curl … /contents/migawka.md`) – otwarte wpisy Notatnika
   budowy i zadania TASKS, odświeżane co godzinę przez przebieg na Macu (`tools/migawka.py`). Czytaj, gdy Notion w rozmowie
   nie działa (`pytanie-do-bazy.md`, pkt 5); data stanu w pierwszej linii pliku idzie do zasięgu odpowiedzi.
@@ -112,6 +148,11 @@ nocna odtwarza tylko pierwsze zapytanie i czyta nagłówek pojedynczego `szukaj`
 
 ## Ograniczenia kopii
 
+- Kopia bez tabel kart (sprzed 2.13.0) albo bez zapisanych kart → `karty` i `karta` drukują „# karty: brak w tej kopii indeksu – użyj szukaj /
+  temat / etap” (kod wyjścia 0; `stan`: „karty: brak”), a stary `wiedza.py` nie zna polecenia (błąd „invalid choice: 'karty'”). To stara kopia,
+  nie błąd rozmowy: przejdź na drogę zapasową (`pytanie-do-bazy.md`, pkt 3); na Macu odświeży ją `python3 tools/wiedza_karty.py zapisz
+  --publikuj` albo najbliższy `aktualizuj`. Karty pokazują stan z ostatniego zapisu (`stan`: „karty: … zbudowano <data>”) – nowsze tezy widać
+  w dopełnieniu z szukania.
 - Wiersze usunięte w Notion znikają z indeksu przy pełnym sync (automatycznie co 7 dni albo `sync --pelny`) – do tego czasu
   sprawdź w Notion informację, na której opierasz decyzję.
 - `stan`: `zbudowano` starsze niż 7 dni albo `ostatni pełny sync` starszy niż 14 dni → uruchom `sync --pelny` ręcznie;

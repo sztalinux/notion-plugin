@@ -1,6 +1,6 @@
 ---
 name: wiedza
-description: Zapis wiedzy do Notion (Baza wiedzy – Tematy, Informacje, Rozmowy i źródła) z transkrypcji filmów YouTube, podcastów, artykułów ekspertów oraz z rozmów z konstruktorem, architektem, wykonawcami; wykrywanie sprzeczności (Rejestr sprzeczności) i ich rozstrzyganie po decyzji inwestora. Używaj, gdy użytkownik wkleja transkrypcję, napisy, link do filmu, notatki z filmu/artykułu, mówi „przerób ten film”, „wrzuć do wiedzy”, „dzwoniłem do konstruktora, powiedział…”, albo odpowiada na sprzeczność („SP-3: …”), albo pyta „co wiemy o…”, „co mówi baza wiedzy o…”, „jakie mamy sprzeczności w temacie…”.
+description: Zapis wiedzy do Notion (Baza wiedzy – Tematy, Informacje, Rozmowy i źródła) z transkrypcji filmów YouTube, podcastów, artykułów ekspertów oraz z rozmów z konstruktorem, architektem, wykonawcami; wykrywanie sprzeczności (Rejestr sprzeczności) i ich rozstrzyganie po decyzji inwestora. Używaj, gdy użytkownik wkleja transkrypcję, napisy, link do filmu, notatki z filmu/artykułu, mówi „przerób ten film”, „wrzuć do wiedzy”, „dzwoniłem do konstruktora, powiedział…”, albo odpowiada na sprzeczność („SP-3: …”), albo pyta „co wiemy o…”, „co mówi baza wiedzy o…”, „jakie mamy sprzeczności w temacie…”, albo prosi „tryb głęboki”, „przeczytaj całą bazę”, „dokładnie wszystko”.
 ---
 
 # Wiedza – filmy, artykuły, rozmowy
@@ -11,7 +11,8 @@ oznaczyć co nowe, co potwierdzone, a co sprzeczne – i niczego spornego nie ro
 Struktura Notion, ID baz, pola i plan zapisu: `references/notion-wiedza.md`.
 Ocena źródła: `references/ocena-zrodla.md`. Sprzeczności (ADR): `references/sprzecznosci.md`.
 Szukanie w bazie (indeks lokalny, trzy kanały dostępu): `references/indeks.md`; pytanie do bazy: `references/pytanie-do-bazy.md`;
-porównanie nowego źródła z bazą: `references/porownanie.md`. Zapisy wsadowe: `budowa`, zasada 6.
+karty wiedzy (gotowy wybór tez do typowych pytań): `references/karty.md`; tryb głęboki (pytanie złożone – Mac czyta całą bazę):
+`references/tryb-gleboki.md`; porównanie nowego źródła z bazą: `references/porownanie.md`. Zapisy wsadowe: `budowa`, zasada 6.
 Porządki (scalanie duplikatów, zły temat, sprzeczności z przeglądu bazy): `references/porzadki.md` – nigdy nie usuwaj stron.
 
 **Każda informacja ma źródło** – relację Źródła (wpis w Rozmowach i źródłach: film, rozmowa, dokument, notatki własne)
@@ -109,8 +110,10 @@ podaje ocenę albo uwagę („WI-12 ciekawostka”, „do WI-20: nie zgadzam si�
 
 ## E. Pytanie do bazy („co wiemy o drenażu?”)
 
-1. Szukaj i odpowiadaj wg `references/pytanie-do-bazy.md`: kilka sformułowań naraz, poziom głębokości (szybko / normalnie /
-   dokładnie / cały etap – `etap --czesc k`), cały główny temat, Notatnik po polach, stała forma odpowiedzi z zasięgiem. Polecenia i kanały:
+1. Najpierw karta wiedzy (`karty --do "A" "B" "C"`, potem `karta KOD … --pytanie …` – gotowy wybór tez z pokryciem w zasięgu), resztę
+   wg `references/pytanie-do-bazy.md`: dopełnienie z szukania, poziomy głębokości jako droga zapasowa („cały etap” tylko na Macu),
+   Notatnik po polach, stała forma odpowiedzi z zasięgiem; pytanie złożone bez pasującej karty albo „tryb głęboki” – Mac czyta całą bazę
+   (`references/tryb-gleboki.md`). Polecenia i kanały:
    `references/indeks.md`. Notion czytaj po szczegóły, przed decyzją i przed zapisem. Stan indeksu starszy niż 24 h – podaj
    jego datę w odpowiedzi. Indeks niedostępny → dotychczasowa droga: znajdź temat(y) w Tematach (nazwa i „W skrócie”);
    pobierz ich Informacje (Status ≠ Nieaktualne) i wpisy Rejestru (Status ≠ Zastąpione) – jednym zapytaniem na bazę.

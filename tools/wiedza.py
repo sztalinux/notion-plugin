@@ -10,6 +10,8 @@ albo zmienna DOM_HUB; w czacie podaje się --db <katalog>/wiedza.sqlite.
                                                [--temat …] [--ciekawostki] [--krotko] [--limit 12] [--sens]
     python3 tools/wiedza.py temat "NAZWA" [--lista] [--krotko] [--ciekawostki]   # stan wiedzy, Kluczowe, otwarte SP
     python3 tools/wiedza.py etap "NAZWA" [--czesc k] [--kontrola] [--ciekawostki]   # cała wiedza etapu w częściach
+    python3 tools/wiedza.py karty [--do "PYTANIE" ["PYTANIE 2" …]] [--etap …] [--rodzaj pytanie|czynnosc]   # spis kart
+    python3 tools/wiedza.py karta KOD [KOD2 …] [--pytanie "A" ["B" …]] [--czesc k] [--ciekawostki]   # karta w częściach
     python3 tools/wiedza.py duplikaty [--od RRRR-MM-DD] [--prog 0.84] [--temat NAZWA] [--sens | --slowa]
     python3 tools/wiedza.py stan                          # liczniki, daty synchronizacji i publikacji
     python3 tools/wiedza.py publikuj [--teraz] [--wymus] [--reset]   # kopia indeksu do prywatnego repo GITHUB_REPO
@@ -22,7 +24,11 @@ nieoczekiwanego błędu na stderr zamiast samej nazwy typu i linii.
 
 Zasady:
 - Moduł nigdy nie pisze do Notion: wysyła tylko zapytania o wiersze baz (query) i odczyt schematu bazy.
-- szukaj, temat, etap, duplikaty i stan działają na samym pliku: bez tokena, bez sieci i bez pliku synonimów.
+- szukaj, temat, etap, karty, karta, duplikaty i stan działają na samym pliku: bez tokena, bez sieci i bez pliku
+  synonimów.
+- Karty wiedzy (tabele `karty`, `karty_wi`): gotowe zbiory tez na typowe pytania, wybrane na Macu modelem czytającym
+  całą bazę (tools/wiedza_karty.py) – `karty --do` wskazuje karty do pytania, `karta` drukuje tezy karty w częściach;
+  kopia indeksu bez kart → `karty` odpowiada „brak” (wtedy szukaj / temat / etap).
 - Odciski znaczenia (tools/wiedza_sens.py, Ollama, tylko Mac): sync na końcu (po publikacji) liczy odciski nowych
   i zmienionych informacji (osobny plik `wektory.sqlite`, nie idzie do czatu) i listy podobnych (tabela `podobne`
   w indeksie – idzie do czatu z następną publikacją); Ollama nie działa → krok pominięty po cichu. Z list korzystają `szukaj --krotko` (sekcja
@@ -35,7 +41,7 @@ Zasady:
   czasu startu (pobór i publikacja razem) i kończy się kodem 0.
 - publikuj wysyła wyłącznie do repo prywatnego (sprawdza to przed wysyłką).
 - Komunikaty zawierają tylko numery WI/ZRD/SP, ID stron, nazwy właściwości, liczby i statusy HTTP – nigdy
-  wartości pól (te drukują wyłącznie wyniki szukaj, temat, etap i duplikaty).
+  wartości pól (te drukują wyłącznie wyniki szukaj, temat, etap, karty, karta i duplikaty).
 - Log zapytań: każde `szukaj` na indeksie z `.dom/wiedza/` dopisuje jeden wiersz JSON do `.dom/wiedza/szukaj.log.jsonl`
   (600; czas UTC, kanał z WIEDZA_KANAL albo „claude-code”/„inny”, zapytanie do 500 znaków, tryb, liczby trafień,
   top-5 WI, ms, filtry – bez treści wierszy). Przy 2 MB zostaje jedna starsza kopia `szukaj.log.1.jsonl`. WIEDZA_LOG=0 wyłącza log;
@@ -333,6 +339,22 @@ SENS_LISTA = 50             # szukaj --sens: tyle najbliższych znaczeniem na za
 ETAP_CZESC_ZNAKOW = 25000
 ETAP_WSPOLNY = "Cała budowa"   # tezy tego etapu wchodzą do każdego etapu
 ETAP_RODZAJE_KONTROLI = ("kontrola / odbior", "kolejnosc prac")   # --kontrola: te rodzaje z innych etapów (bez_diakrytykow)
+# kolejność etapów budowy: spis kart (karty) i porcje tez w tools/wiedza_karty.py; etap spoza listy – na końcu
+ETAPY_KOLEJNOSC = ("Projekt i formalności", "Stan zero", "SSO", "Deweloperski", "Wykończenie", "Teren i ogród",
+                   ETAP_WSPOLNY)
+# karty wiedzy: czat na telefonie czyta w całości ok. 75 tys. znaków – tyle razem kart doradza nagłówek spisu
+KARTY_RAZEM_ZNAKOW = 75000
+KARTY_TOP = 60              # karty --do: tyle pierwszych trafień (RRF zapytań) liczy się do dopasowania kart
+KARTY_DOPASOWANYCH = 12     # karty --do: najwyżej tyle kart w sekcji dopasowania
+KARTY_POZA = 15             # karty --do: najwyżej tyle numerów trafień spoza wszystkich kart
+KARTY_OPIS_ZNAKOW = 200     # spis kart: opis karty skrócony (pełny opis w karta i --json)
+KARTY_PYTANIE_ZNAKOW = 110  # spis kart: przykładowe pytanie skrócone
+DOPELNIENIE_TOP = 40        # karta --pytanie: dopełnienie z tylu pierwszych trafień (RRF zapytań) …
+DOPELNIENIE_LINII = 20      # … najwyżej tyle tez spoza karty
+RODZAJE_KART = ("pytanie", "czynnosc")
+TYTUL_SP_KARTY = "Otwarte sprzeczności"
+ZRODLO_WIECEJ = "wiecej"    # karty_wi.zrodlo rozszerzenia karty (tezy pokrewne poza rdzeniem, `karta --wiecej`)
+BRAK_KART = "# karty: brak w tej kopii indeksu – użyj szukaj / temat / etap"
 
 
 def termin_tokenu(slowo: str, prefiks: bool) -> str:
@@ -539,7 +561,16 @@ SCHEMAT_PODOBNE = """
 CREATE TABLE IF NOT EXISTS podobne (wi INTEGER, wi_podobne INTEGER, podobienstwo REAL,
                           PRIMARY KEY (wi, wi_podobne)) WITHOUT ROWID;
 """
-SCHEMAT += SCHEMAT_PODOBNE
+# Karty wiedzy (tools/wiedza_karty.py: zbiory WI na typowe pytania; zrodlo wpisu – model, tag albo wzorzec) –
+# dopisane do schematu 1 tak samo jak `podobne`. Poza hashem danych – zmianę kart niesie meta.karty_zbudowano.
+SCHEMAT_KARTY = """
+CREATE TABLE IF NOT EXISTS karty (kod TEXT PRIMARY KEY, rodzaj TEXT, nazwa TEXT, etap TEXT, opis TEXT, pytania TEXT,
+                          zbudowano TEXT, pokrycie REAL, pokrycie_k REAL, pokrycie_opis TEXT);
+CREATE TABLE IF NOT EXISTS karty_wi (kod TEXT, wi INTEGER, zrodlo TEXT, PRIMARY KEY (kod, wi)) WITHOUT ROWID;
+"""
+SCHEMAT += SCHEMAT_PODOBNE + SCHEMAT_KARTY
+# tabele dopisywane do indeksu schematu 1 bez przebudowy (otworz_db): ich brak nie kasuje danych
+DOPISYWANE = frozenset({"podobne", "karty", "karty_wi"})
 # treść indeksu do hasha publikacji; sync_stan, meta i FTS (pochodna) poza nim
 TABELE_DANYCH = ("tematy", "zrodla", "sprzecznosci", "informacje",
                  "informacje_tematy", "informacje_zrodla", "informacje_sp", "informacje_notatnik")
@@ -613,7 +644,8 @@ def plik_indeksu(conn: sqlite3.Connection, nazwy: set) -> bool:
 def otworz_db(sciezka: Path, zapis: bool) -> sqlite3.Connection:
     """Odczyt: tylko do odczytu (URI mode=ro), pliku nie tworzy; brak pliku albo inna wersja schematu → BladIndeksu.
     Zapis (sync): tworzy plik (katalog musi istnieć); niepusty plik, który nie jest indeksem (plik_indeksu) →
-    BladIndeksu i plik nietknięty; uszkodzony (quick_check) → sqlite3.DatabaseError; przy innej wersji albo innym
+    BladIndeksu i plik nietknięty; uszkodzony (quick_check) → sqlite3.DatabaseError; indeks bieżącej wersji, któremu
+    brakuje tylko tabel z DOPISYWANE (listy podobnych, karty), dostaje je bez przebudowy; przy innej wersji albo innym
     zestawie tabel – tabele od nowa; indeks sprzed znacznika dostaje ZNACZNIK bez przebudowy.
     timeout=5 to busy_timeout 5000 ms; dziennik DELETE (bez WAL) – czat pobiera jeden plik."""
     sciezka = Path(sciezka)
@@ -631,11 +663,13 @@ def otworz_db(sciezka: Path, zapis: bool) -> sqlite3.Connection:
                 raise sqlite3.DatabaseError("quick_check")
             conn.execute("PRAGMA journal_mode = DELETE")
             wersja = conn.execute("PRAGMA user_version").fetchone()[0]
-            if wersja == SCHEMAT_WERSJA and nazwy == nazwy_schematu() - {"podobne"}:
+            schemat = nazwy_schematu()
+            if wersja == SCHEMAT_WERSJA and nazwy < schemat and schemat - nazwy <= DOPISYWANE:
+                # brakuje tylko tabel dopisywanych – CREATE IF NOT EXISTS bez przebudowy, dane zostają
                 with conn:
-                    conn.executescript(SCHEMAT_PODOBNE)  # dopisanie bez przebudowy (SCHEMAT_PODOBNE)
-                nazwy.add("podobne")
-            if wersja != SCHEMAT_WERSJA or nazwy != nazwy_schematu():
+                    conn.executescript(SCHEMAT_PODOBNE + SCHEMAT_KARTY)
+                nazwy = {n for (n,) in conn.execute(NAZWY_OBIEKTOW)}
+            if wersja != SCHEMAT_WERSJA or nazwy != schemat:
                 if nazwy:
                     powod = (f"w schemacie {wersja}, wymagany {SCHEMAT_WERSJA}" if wersja != SCHEMAT_WERSJA
                              else "z innym zestawem tabel")
@@ -660,14 +694,14 @@ def otworz_db(sciezka: Path, zapis: bool) -> sqlite3.Connection:
 
 
 def hash_danych(conn: sqlite3.Connection) -> str:
-    """SHA-256 treści indeksu (TABELE_DANYCH w kolejności klucza głównego), wersji schematu, meta.synonimy_sha
-    i meta.podobne_policzone (czas ostatniej zmiany list podobnych). Zmiana samego czasu synchronizacji lub
-    publikacji (reszta meta, sync_stan) nie zmienia hasha."""
+    """SHA-256 treści indeksu (TABELE_DANYCH w kolejności klucza głównego), wersji schematu, meta.synonimy_sha,
+    meta.podobne_policzone (czas ostatniej zmiany list podobnych) i meta.karty_zbudowano (czas zapisu kart). Zmiana
+    samego czasu synchronizacji lub publikacji (reszta meta, sync_stan) nie zmienia hasha."""
     h = hashlib.sha256()
     wersja = conn.execute("PRAGMA user_version").fetchone()[0]
     meta = meta_bazy(conn)
-    h.update(json.dumps([wersja, meta.get("synonimy_sha")] + (
-        [meta["podobne_policzone"]] if "podobne_policzone" in meta else [])).encode("utf-8"))
+    h.update(json.dumps([wersja, meta.get("synonimy_sha")] + [
+        meta[k] for k in ("podobne_policzone", "karty_zbudowano") if k in meta]).encode("utf-8"))
     for tabela in TABELE_DANYCH:
         h.update(f"\n#{tabela}".encode("utf-8"))
         # kolumna 1 to klucz główny tabel głównych; w tabelach relacji kluczem jest para (1, 2)
@@ -1072,6 +1106,9 @@ Czat: `<GITHUB_REPO>` i `<TOKEN>` (token tylko do odczytu) wstaw ze strony „�
     python3 /tmp/wiedza.py szukaj "ZAPYTANIE" --db /tmp/wiedza.sqlite [--etap "Stan zero"] [--limit 12]
     python3 /tmp/wiedza.py temat "NAZWA" --db /tmp/wiedza.sqlite
     python3 /tmp/wiedza.py stan --db /tmp/wiedza.sqlite
+
+Karty wiedzy (gotowe zbiory tez na typowe pytania): `karty --do "PYTANIE"` wskazuje pasujące karty, a `karta KOD
+--pytanie "PYTANIE" --czesc 1` czyta kartę w częściach; kopia bez kart odpowiada „brak” – wtedy szukaj / temat / etap.
 """
 
 
@@ -1745,9 +1782,9 @@ def wypisz_wyniki(a, wyniki: list, znaczniki: dict, sprzecznosci: list, pominiet
         print(f"# pominięto: {pominiete} – ciekawostki pokaże --ciekawostki, nieaktualne --status Nieaktualne")
 
 
-def polacz_rrf(listy: dict) -> list:
-    """{numer zapytania: [WI w kolejności]} → [(WI, [numery zapytań, które go znalazły])] wg sumy 1 / (RRF_K +
-    pozycja); remis – lepsza najwyższa pozycja, potem mniejszy numer WI."""
+def punkty_rrf(listy: dict) -> dict:
+    """{numer zapytania: [WI w kolejności]} → {WI: [suma 1 / (RRF_K + pozycja), najwyższa pozycja,
+    [numery zapytań]]}."""
     punkty = {}
     for nr, lista in listy.items():
         for poz, wi in enumerate(lista, 1):
@@ -1755,6 +1792,13 @@ def polacz_rrf(listy: dict) -> list:
             p[0] += 1 / (RRF_K + poz)
             p[1] = min(p[1], poz)
             p[2].append(nr)
+    return punkty
+
+
+def polacz_rrf(listy: dict) -> list:
+    """{numer zapytania: [WI w kolejności]} → [(WI, [numery zapytań, które go znalazły])] wg sumy 1 / (RRF_K +
+    pozycja) (punkty_rrf); remis – lepsza najwyższa pozycja, potem mniejszy numer WI."""
+    punkty = punkty_rrf(listy)
     return [(wi, punkty[wi][2]) for wi in sorted(punkty, key=lambda w: (-punkty[w][0], punkty[w][1], w))]
 
 
@@ -1982,15 +2026,16 @@ def etapy_zbioru(etap: str) -> list:
     return [etap] if bez_diakrytykow(etap) == bez_diakrytykow(ETAP_WSPOLNY) else [etap, ETAP_WSPOLNY]
 
 
-def podziel_na_czesci(sekcje: list, sp: list) -> list:
-    """Linie wyniku (nagłówki sekcji, linie tez, na końcu otwarte SP) pocięte na części po najwyżej ETAP_CZESC_ZNAKOW
-    znaków, bez dzielenia linii; część zaczynająca się w środku sekcji dostaje jej nagłówek z „(c.d.)”."""
+def podziel_na_czesci(sekcje: list, sp: list, tytul_sp: str = "Otwarte sprzeczności etapu") -> list:
+    """Linie wyniku (nagłówki sekcji, linie tez, na końcu otwarte SP pod nagłówkiem `tytul_sp`) pocięte na części po
+    najwyżej ETAP_CZESC_ZNAKOW znaków, bez dzielenia linii; część zaczynająca się w środku sekcji dostaje jej nagłówek
+    z „(c.d.)”."""
     linie = []
     for naglowek, informacje, z_etapem in sekcje:
         linie.append((naglowek, naglowek))
         linie += [(naglowek, linia_etapu(w, z_etapem)) for w in informacje]
     if sp:
-        naglowek = f"## Otwarte sprzeczności etapu ({len(sp)})"
+        naglowek = f"## {tytul_sp} ({len(sp)})"
         linie.append((naglowek, naglowek))
         linie += [(naglowek, linia_sp(s, krotko=True)) for s in sp]
     czesci, biezaca, znakow = [], [], 0
@@ -2046,6 +2091,302 @@ def cmd_etap(a) -> int:
                 + f") · znaków: {liczniki['znakow'] // 1000} tys. · części: {len(czesci)}")
     if a.czesc is None:
         print(naglowek + " (wszystkie naraz; na czacie --czesc 1 … " + str(len(czesci)) + ")")
+        for czesc in czesci:
+            print("\n".join(czesc))
+    else:
+        print(naglowek + f" · część {a.czesc}/{len(czesci)}"
+              + (" (ostatnia)" if a.czesc == len(czesci) else f" – dalej --czesc {a.czesc + 1}"))
+        print("\n".join(czesci[a.czesc - 1]))
+    return 0
+
+
+def kolejnosc_etapu(etap) -> int:
+    """Pozycja etapu w ETAPY_KOLEJNOSC (bez wielkości liter i diakrytyków); etap spoza listy – za wszystkimi."""
+    znane = [bez_diakrytykow(e) for e in ETAPY_KOLEJNOSC]
+    e = bez_diakrytykow(etap)
+    return znane.index(e) if e in znane else len(znane)
+
+
+def karty_w_indeksie(conn: sqlite3.Connection) -> bool:
+    """Indeks ma tabele kart i co najmniej jedną kartę; kopia sprzed kart (albo bez zapisanych kart) – False."""
+    if conn.execute("SELECT COUNT(*) FROM sqlite_master WHERE name IN ('karty', 'karty_wi')").fetchone()[0] != 2:
+        return False
+    return conn.execute("SELECT COUNT(*) FROM karty").fetchone()[0] > 0
+
+
+def liczniki_kart(conn: sqlite3.Connection, meta: dict) -> dict:
+    """{"kart", "pytania", "czynnosci", "zbudowano"} – zero kart, gdy indeks nie ma tabel kart."""
+    rodzaje = Counter()
+    if conn.execute("SELECT 1 FROM sqlite_master WHERE name = 'karty'").fetchone():
+        rodzaje = Counter(r for (r,) in conn.execute("SELECT rodzaj FROM karty"))
+    return {"kart": sum(rodzaje.values()), "pytania": rodzaje["pytanie"], "czynnosci": rodzaje["czynnosc"],
+            "zbudowano": meta.get("karty_zbudowano")}
+
+
+def wczytaj_karty(conn: sqlite3.Connection) -> dict:
+    """{kod: karta}: pola tabeli `karty` (pytania jako lista) i `wi` – zbiór WI karty, które są w indeksie i nie mają
+    Statusu „Nieaktualne” (wpis do usuniętej informacji wypada)."""
+    karty = {}
+    for kod, rodzaj, nazwa, etap, opis, pytania, zbudowano, pokrycie_, pokrycie_k, pokrycie_opis in conn.execute(
+            "SELECT kod, rodzaj, nazwa, etap, opis, pytania, zbudowano, pokrycie, pokrycie_k, pokrycie_opis "
+            "FROM karty"):
+        try:
+            lista = json.loads(pytania or "[]")
+        except ValueError:
+            lista = []
+        karty[kod] = {"kod": kod, "rodzaj": rodzaj or "", "nazwa": nazwa or "", "etap": etap or "", "opis": opis or "",
+                      "pytania": [p for p in lista if isinstance(p, str)] if isinstance(lista, list) else [],
+                      "zbudowano": zbudowano or "", "pokrycie": pokrycie_, "pokrycie_k": pokrycie_k,
+                      "pokrycie_opis": pokrycie_opis or "", "wi": set(), "wiecej": set()}
+    # zrodlo "wiecej" = rozszerzenie karty (tezy pokrewne poza rdzeniem; `karta --wiecej`), reszta = rdzeń karty
+    for kod, wi, zrodlo, status in conn.execute("SELECT k.kod, k.wi, k.zrodlo, i.status FROM karty_wi k "
+                                                "JOIN informacje i ON i.wi = k.wi"):
+        if kod in karty and normalizuj(status) != "nieaktualne":
+            karty[kod]["wiecej" if zrodlo == ZRODLO_WIECEJ else "wi"].add(wi)
+    return karty
+
+
+def kolejnosc_kart(karty) -> list:
+    """Karty wg ETAPY_KOLEJNOSC, potem nazwy (bez diakrytyków), potem kodu."""
+    return sorted(karty, key=lambda k: (kolejnosc_etapu(k["etap"]), bez_diakrytykow(k["nazwa"]), k["kod"]))
+
+
+def sekcje_karty(opisy: list, etap: str, ciekawostki: bool) -> list:
+    """[(nagłówek sekcji, [opisy informacji], True)] dla tez karty (opisy z opisz_informacje, bez Nieaktualnych):
+    najpierw wszystkie Kluczowe – z etapu karty i „Cała budowa”, potem z innych etapów (czat czyta najpierw początek),
+    potem pozostałe bez Ciekawostek pogrupowane pierwszym tematem alfabetycznie (teza raz; Istotność spoza listy –
+    razem z Ważnymi), na końcu Ciekawostki (tylko `ciekawostki`). W grupie rosnąco po WI; linie z Etapem, bo karta
+    łączy etapy."""
+    etapy = {bez_diakrytykow(e) for e in etapy_zbioru(etap)}
+    kluczowe, wazne, ciekaw = [], {}, []
+    for w in sorted(opisy, key=lambda o: o["wi"]):
+        ist = normalizuj(w["istotnosc"])
+        if ist == "kluczowe":
+            kluczowe.append((0 if bez_diakrytykow(w["etap"]) in etapy else 1, w["wi"], w))
+        elif ist == "ciekawostka":
+            ciekaw.append(w)
+        else:
+            wazne.setdefault(w["tematy"][0] if w["tematy"] else "(bez tematu)", []).append(w)
+    sekcje = []
+    if kluczowe:
+        sekcje.append((f"## Kluczowe ({len(kluczowe)})", [w for *_, w in sorted(kluczowe, key=lambda x: x[:2])], True))
+    for temat in sorted(wazne, key=bez_diakrytykow):
+        sekcje.append((f"## {jedna_linia(temat)} – Ważne ({len(wazne[temat])})", wazne[temat], True))
+    if ciekawostki and ciekaw:
+        sekcje.append((f"## Ciekawostki ({len(ciekaw)})", ciekaw, True))
+    return sekcje
+
+
+def sp_sekcji(conn: sqlite3.Connection, sekcje: list) -> list:
+    """Otwarte SP tez pokazanych w sekcjach (pole `sp` opisów informacji)."""
+    return otwarte_sp(conn, {n for _, informacje, _ in sekcje for w in informacje for n in w["sp"]})
+
+
+def rozmiar_karty(conn: sqlite3.Connection, opisy: list, etap: str) -> dict:
+    """Liczniki i rozmiar karty tak, jak ją pokaże `karta` bez opcji (te same sekcje i podział na części): tez (bez
+    Ciekawostek), kluczowe, wazne (z Istotnością spoza listy), ciekawostki (ukryte), znakow, czesci."""
+    sekcje = sekcje_karty(opisy, etap, False)
+    czesci = podziel_na_czesci(sekcje, sp_sekcji(conn, sekcje), TYTUL_SP_KARTY)
+    ist = Counter(normalizuj(w["istotnosc"]) for w in opisy)
+    tez = len(opisy) - ist["ciekawostka"]
+    return {"tez": tez, "kluczowe": ist["kluczowe"], "wazne": tez - ist["kluczowe"], "ciekawostki": ist["ciekawostka"],
+            "znakow": sum(len(linia) + 1 for c in czesci for linia in c), "czesci": len(czesci)}
+
+
+def trafienia_rrf(conn: sqlite3.Connection, zapytania: list, limit: int) -> tuple:
+    """(pierwsze `limit` WI z polacz_rrf wyników wyszukaj_poziomy dla każdego zapytania – jak szukaj z kilkoma
+    zapytaniami, bez filtrów, bez Nieaktualnych i Ciekawostek; {WI: punkty RRF}). Zapytanie bez słów pominięte."""
+    a = argparse.Namespace(etap=None, istotnosc=None, status=None, rodzaj=None, temat=None, ciekawostki=False,
+                           limit=limit, krotko=False, sens=False)
+    listy = {nr: wyszukaj_poziomy(conn, q, a)[0] for nr, q in enumerate(zapytania, 1)
+             if zbuduj_zapytanie_fts(q, "AND") is not None}
+    punkty = punkty_rrf(listy)
+    return [wi for wi, _ in polacz_rrf(listy)][:limit], {wi: p[0] for wi, p in punkty.items()}
+
+
+def dopelnienie_karty(conn: sqlite3.Connection, zapytania: list, karta: set) -> list:
+    """Dopełnienie karty z szukania: z pierwszych DOPELNIENIE_TOP trafień (trafienia_rrf) te spoza karty, najwyżej
+    DOPELNIENIE_LINII – ta sama lista w `karta --pytanie` i w pomiarze kart (tools/wiedza_karty.py pomiar)."""
+    top, _ = trafienia_rrf(conn, zapytania, DOPELNIENIE_TOP)
+    return [wi for wi in top if wi not in karta][:DOPELNIENIE_LINII]
+
+
+def procent(x) -> str:
+    return "–" if x is None else f"{round(100 * x)}%"
+
+
+def linia_karty(k: dict, r: dict) -> str:
+    """Linia spisu `karty`: kod, etap, nazwa, liczniki i rozmiar (rozmiar_karty), pokrycie (gdy zmierzone), opis;
+    karta pytań – także pierwsze przykładowe pytanie."""
+    tys = max(1, round(r["znakow"] / 1000)) if r["znakow"] else 0
+    czesci = [k["kod"], jedna_linia(k["etap"]), jedna_linia(k["nazwa"]),
+              f"tez {r['tez']} (K {r['kluczowe']})" + (f" +{r['ciekawostki']} ciek." if r["ciekawostki"] else "")
+              + (f" +{len(k['wiecej'])} więcej" if k.get("wiecej") else ""),
+              f"~{tys} tys. zn.", f"{r['czesci']} cz."]
+    if k["pokrycie"] is not None:
+        czesci.append(f"pokrycie {procent(k['pokrycie'])} / K {procent(k['pokrycie_k'])}")
+    czesci.append(skroc(jedna_linia(k["opis"]), KARTY_OPIS_ZNAKOW))
+    if k["rodzaj"] == "pytanie" and k["pytania"]:
+        czesci.append(f"np. „{skroc(jedna_linia(k['pytania'][0]), KARTY_PYTANIE_ZNAKOW)}”")
+    return " · ".join(czesci)
+
+
+def opis_pokrycia(k: dict) -> str:
+    """Pokrycie karty wobec wzorca do nagłówka `karta` (zapisuje je tools/wiedza_karty.py pomiar --zapisz)."""
+    if k["pokrycie"] is None:
+        return "pokrycie: niemierzone" + (" (karta czynności – tagi modelu)" if k["rodzaj"] == "czynnosc" else "")
+    return (f"pokrycie {procent(k['pokrycie'])} trafnych / {procent(k['pokrycie_k'])} Kluczowych"
+            + (f" ({jedna_linia(k['pokrycie_opis'])})" if k["pokrycie_opis"] else ""))
+
+
+def karta_json(k: dict, rozmiar: dict = None) -> dict:
+    wynik = dict(k, wi=sorted(k["wi"]), wiecej=sorted(k.get("wiecej") or ()))
+    if rozmiar is not None:
+        wynik["rozmiar"] = rozmiar
+    return wynik
+
+
+def pasuje_karta(k: dict, a) -> bool:
+    """Filtr spisu: --rodzaj równy; --etap jako część nazwy etapu (bez wielkości liter i diakrytyków) – karty
+    „Cała budowa” pasują do każdego etapu."""
+    if a.rodzaj and k["rodzaj"] != a.rodzaj:
+        return False
+    if a.etap:
+        etap = bez_diakrytykow(k["etap"])
+        return bez_diakrytykow(a.etap).strip() in etap or etap == bez_diakrytykow(ETAP_WSPOLNY)
+    return True
+
+
+def cmd_karty(a) -> int:
+    if a.do is not None and all(zbuduj_zapytanie_fts(q, "AND") is None for q in a.do):
+        blad("--do: puste zapytanie – podaj słowa pytania")
+        return 1
+    with contextlib.closing(otworz_do_odczytu(a)) as conn:
+        if not karty_w_indeksie(conn):
+            if a.json:
+                wypisz_json({"karty": [], "brak": True})
+            else:
+                print(BRAK_KART)
+            return 0
+        meta = meta_bazy(conn)
+        liczniki = liczniki_kart(conn, meta)
+        wybrane = [k for k in kolejnosc_kart(wczytaj_karty(conn).values()) if pasuje_karta(k, a)]
+        opisy = {w["wi"]: w for w in opisz_informacje(conn, sorted({wi for k in wybrane for wi in k["wi"]}))}
+        rozmiary = {k["kod"]: rozmiar_karty(conn, [opisy[wi] for wi in sorted(k["wi"])], k["etap"]) for k in wybrane}
+        top, punkty = trafienia_rrf(conn, a.do, KARTY_TOP) if a.do else ([], {})
+    dopasowanie = None
+    if a.do:
+        w_top = set(top)
+        trafione = [(sum(punkty[wi] for wi in k["wi"] & w_top), len(k["wi"] & w_top), k) for k in wybrane]
+        najlepsze = [t for t in sorted(trafione, key=lambda t: (-t[0], -t[1])) if t[1]][:KARTY_DOPASOWANYCH]
+        w_kartach = set().union(*(k["wi"] for k in wybrane))
+        kody_najlepszych = {k["kod"] for _, _, k in najlepsze}
+        dopasowanie = {"zapytania": a.do, "top": len(top),
+                       "karty": [{"kod": k["kod"], "trafien": n, "waga": round(waga, 4)} for waga, n, k in najlepsze],
+                       "poza": [wi for wi in top if wi not in w_kartach],
+                       "pozostale": [k["kod"] for k in wybrane if k["kod"] not in kody_najlepszych]}
+    if a.json:
+        wypisz_json({"stan": meta.get("zbudowano") or "", "liczniki": liczniki,
+                     "karty": [karta_json(k, rozmiary[k["kod"]]) for k in wybrane], "dopasowanie": dopasowanie})
+        return 0
+    naglowek = (f"# indeks: stan {lokalnie(meta.get('zbudowano'))} · karty: {liczniki['kart']} (pytania "
+                f"{liczniki['pytania']}, czynności {liczniki['czynnosci']}) · zbudowano {lokalnie(liczniki['zbudowano'])}"
+                f" · wybieraj karty do ok. {KARTY_RAZEM_ZNAKOW // 1000} tys. znaków razem; czytaj: karta KOD [KOD2] "
+                '--pytanie "A" "B" --czesc 1')
+    filtry = [f"{n}: {v}" for n, v in (("etap", a.etap), ("rodzaj", a.rodzaj)) if v]
+    print(naglowek + (" · filtr: " + ", ".join(filtry) if filtry else ""))
+    if dopasowanie is None:
+        for rodzaj, tytul in (("pytanie", "## Karty pytań"), ("czynnosc", "## Karty czynności")):
+            karty = [k for k in wybrane if k["rodzaj"] == rodzaj]
+            if karty:
+                print(tytul)
+                for k in karty:
+                    print(linia_karty(k, rozmiary[k["kod"]]))
+        return 0
+    print(f"## Dopasowanie do pytania (trafień w karcie / {len(top)})")
+    for _, n, k in najlepsze:
+        print(f"trafień {n}/{len(top)} · " + linia_karty(k, rozmiary[k["kod"]]))
+    if not najlepsze:
+        print("żadna karta nie ma trafień – użyj szukaj")
+    poza = dopasowanie["poza"]
+    print(f"trafienia poza wszystkimi kartami: {len(poza)}"
+          + (" – " + ", ".join(f"WI-{wi}" for wi in poza[:KARTY_POZA]) if poza else "")
+          + (f" … (+{len(poza) - KARTY_POZA})" if len(poza) > KARTY_POZA else ""))
+    if dopasowanie["pozostale"]:
+        print("## Pozostałe karty")
+        print(" · ".join(dopasowanie["pozostale"]))
+    return 0
+
+
+def cmd_karta(a) -> int:
+    if a.czesc is not None and a.czesc < 1:
+        blad("--czesc musi być co najmniej 1")
+        return 1
+    if a.pytanie is not None and all(zbuduj_zapytanie_fts(q, "AND") is None for q in a.pytanie):
+        blad("--pytanie: puste zapytanie – podaj słowa do wyszukania")
+        return 1
+    with contextlib.closing(otworz_do_odczytu(a)) as conn:
+        if not karty_w_indeksie(conn):
+            if a.json:
+                wypisz_json({"karty": [], "brak": True})
+            else:
+                print(BRAK_KART)
+            return 0
+        karty = wczytaj_karty(conn)
+        kody = list(dict.fromkeys(a.kod))
+        nieznane = [k for k in kody if k not in karty]
+        if nieznane:
+            for kod in nieznane:
+                podobne = difflib.get_close_matches(kod, sorted(karty), n=5, cutoff=0.4)
+                blad(f"karta „{kod}”: nie ma takiej karty – "
+                     + ("podobne: " + " · ".join(podobne) if podobne else "spis kart: karty"))
+            return 1
+        warstwa = "wiecej" if a.wiecej else "wi"
+        numery = sorted(set().union(*(karty[k][warstwa] for k in kody)))
+        rozszerzenie = sum(len(karty[k]["wiecej"]) for k in kody)
+        opisy = opisz_informacje(conn, numery)
+        # Ciekawostki karty domyślnie widoczne (sekcja na końcu): karta jest już wyborem, a wzorzec liczy je jako trafne
+        pokaz_ciekawostki = not a.bez_ciekawostek
+        sekcje = sekcje_karty(opisy, karty[kody[0]]["etap"], pokaz_ciekawostki)
+        dopelnienie = None
+        if a.pytanie:
+            dopelnienie = dopelnienie_karty(conn, a.pytanie, set(numery))
+            sekcje.append((f"## Dopełnienie z szukania ({len(dopelnienie)})", opisz_informacje(conn, dopelnienie), True)
+                          if dopelnienie else
+                          ("## Dopełnienie z szukania: brak – szukanie nic nie dodaje do karty", [], True))
+        sp = sp_sekcji(conn, sekcje)
+        stan = meta_bazy(conn).get("zbudowano") or ""
+    czesci = podziel_na_czesci(sekcje, sp, TYTUL_SP_KARTY)
+    if a.czesc is not None and czesci and a.czesc > len(czesci):
+        blad(f"--czesc {a.czesc}: wynik ma {len(czesci)} części")
+        return 1
+    ist = Counter(normalizuj(w["istotnosc"]) for w in opisy)
+    ciekaw = ist["ciekawostka"]
+    liczniki = {"tez": len(opisy) - (0 if pokaz_ciekawostki else ciekaw), "kluczowe": ist["kluczowe"],
+                "wazne": len(opisy) - ist["kluczowe"] - ciekaw, "ciekawostki": ciekaw,
+                "dopelnienie": None if dopelnienie is None else len(dopelnienie),
+                "znakow": sum(len(linia) + 1 for c in czesci for linia in c), "czesci": len(czesci)}
+    if a.json:
+        wypisz_json({"stan": stan, "karty": [karta_json(karty[k]) for k in kody], "liczniki": liczniki,
+                     "czesc": a.czesc, "sp": sp, "dopelnienie": dopelnienie, "wiecej": a.wiecej,
+                     "sekcje": [{"naglowek": n, "informacje": i} for n, i, _ in sekcje]})
+        return 0
+    pokrycia = [opis_pokrycia(karty[k]) for k in kody]
+    pokrycia = pokrycia[0] if len(set(pokrycia)) == 1 else "; ".join(f"{k}: {p}" for k, p in zip(kody, pokrycia))
+    naglowek = (f"# indeks: stan {lokalnie(stan)} · karta: "
+                + " + ".join(f"{k} „{jedna_linia(karty[k]['nazwa'])}”" for k in kody)
+                + (" (rozszerzenie – tezy pokrewne poza rdzeniem)" if a.wiecej else "")
+                + f" · tez {liczniki['tez']} (Kluczowe {liczniki['kluczowe']}, Ważne {liczniki['wazne']}"
+                + (f", Ciekawostki {ciekaw}" if pokaz_ciekawostki else "") + ")"
+                + (f" (+{ciekaw} ciekawostek ukrytych – bez --bez-ciekawostek)" if ciekaw and not pokaz_ciekawostki else "")
+                + f" · znaków {liczniki['znakow'] // 1000} tys. · części {len(czesci)} · {pokrycia}"
+                + (f" · dopełnienie {len(dopelnienie)}" if dopelnienie is not None else "")
+                + (f" · rozszerzenie: +{rozszerzenie} tez pokrewnych (karta KOD --wiecej, po przeczytaniu rdzenia)"
+                   if rozszerzenie and not a.wiecej else ""))
+    if not czesci:
+        print(naglowek + (" · rozszerzenie puste" if a.wiecej else " · karta pusta – użyj szukaj / temat / etap"))
+    elif a.czesc is None:
+        print(naglowek + f" (wszystkie naraz; na czacie --czesc 1 … {len(czesci)})")
         for czesc in czesci:
             print("\n".join(czesc))
     else:
@@ -2170,12 +2511,13 @@ def cmd_stan(a) -> int:
         schemat = conn.execute("PRAGMA user_version").fetchone()[0]
         podobne = {"wierszy": podobne_w_indeksie(conn), "policzone": meta.get("podobne_policzone"),
                    "model": meta.get("podobne_model"), "bez_listy": meta.get("podobne_brakuje")}
+        karty = liczniki_kart(conn, meta)
     dane = {"liczniki": liczniki, "sync_stan": sync, "zbudowano": meta.get("zbudowano"),
             "ostatni_pelny": meta.get("ostatni_pelny"), "opublikowano_kiedy": meta.get("opublikowano_kiedy"),
             "publikacje_liczba": int(meta.get("publikacje_liczba") or 0),
             "historia_mb": round(float(meta.get("historia_mb") or 0), 1), "kopia_aktualna": aktualna,
             "rozmiar_mb": round(sciezka.stat().st_size / MB, 2), "sqlite": sqlite3.sqlite_version,
-            "fts5": fts5, "schemat": schemat, "podobne": podobne}
+            "fts5": fts5, "schemat": schemat, "podobne": podobne, "karty": karty}
     if a.json:
         wypisz_json(dane)
         return 0
@@ -2195,6 +2537,11 @@ def cmd_stan(a) -> int:
     else:
         print(f"listy podobnych: {podobne['wierszy']} wierszy · policzone {lokalnie(podobne['policzone'])} · model "
               f"{podobne['model'] or '–'} · informacji bez listy {podobne['bez_listy'] or '–'}")
+    if karty["kart"]:
+        print(f"karty: {karty['kart']} (pytania {karty['pytania']}, czynności {karty['czynnosci']}) · zbudowano "
+              f"{lokalnie(karty['zbudowano'])}")
+    else:
+        print("karty: brak")
     if dane["historia_mb"] > LIMIT_HISTORII_MB:
         ostrzez(f"historia prywatnego repo ponad {LIMIT_HISTORII_MB} MB – uruchom publikuj --reset "
                 "(jeden commit z bieżącymi plikami zamiast całej historii)")
@@ -2246,6 +2593,28 @@ def zbuduj_parser() -> argparse.ArgumentParser:
                    help="dołóż Ważne rodzaju Kontrola / odbiór i Kolejność prac z innych etapów (pytania „co sprawdzić "
                         "przed kolejnym etapem”)")
     p.add_argument("--ciekawostki", action="store_true", help="także Istotność „Ciekawostka” wewnątrz etapu")
+    p = sub.add_parser("karty", parents=[wspolne],
+                       help="spis kart wiedzy (gotowe zbiory tez na typowe pytania, wybrane modelem z całej bazy) "
+                            "i dopasowanie kart do pytania")
+    p.add_argument("--do", nargs="+", metavar="PYTANIE",
+                   help=f"pytanie (kilka – w osobnych cudzysłowach): najwyżej {KARTY_DOPASOWANYCH} kart z największą "
+                        f"wagą trafień wśród {KARTY_TOP} pierwszych wyników szukania i numery trafień spoza kart")
+    p.add_argument("--etap", help=f"tylko karty etapu (część nazwy; karty „{ETAP_WSPOLNY}” zawsze)")
+    p.add_argument("--rodzaj", choices=RODZAJE_KART, help="tylko karty pytań albo czynności")
+    p = sub.add_parser("karta", parents=[wspolne],
+                       help="wszystkie tezy karty (najpierw Kluczowe, potem Ważne wg tematów, otwarte SP) w częściach "
+                            f"po ok. {ETAP_CZESC_ZNAKOW // 1000} tys. znaków")
+    p.add_argument("kod", nargs="+", help="kod karty ze spisu `karty` (kilka – suma tez bez powtórzeń)")
+    p.add_argument("--czesc", type=int, help="numer części do pokazania (bez – wszystko naraz)")
+    p.add_argument("--pytanie", nargs="+", metavar="ZAPYTANIE",
+                   help=f"dopełnienie z szukania: najwyżej {DOPELNIENIE_LINII} tez spoza karty z {DOPELNIENIE_TOP} "
+                        "pierwszych wyników tych zapytań (brak = szukanie nic nie dodaje do karty)")
+    p.add_argument("--ciekawostki", action="store_true", help=argparse.SUPPRESS)   # dziś domyślne; zostaje dla zgodności
+    p.add_argument("--bez-ciekawostek", action="store_true",
+                   help="ukryj Istotność „Ciekawostka” (domyślnie karta pokazuje je w sekcji na końcu – są jej częścią)")
+    p.add_argument("--wiecej", action="store_true",
+                   help="rozszerzenie karty zamiast rdzenia: tezy pokrewne (ocena 1 modelu) – czytaj po rdzeniu, gdy "
+                        "inwestor chce „więcej” albo pytanie wykracza poza rdzeń")
     p = sub.add_parser("duplikaty", parents=[wspolne],
                        help="kandydaci na duplikaty: pary z list podobnych (po znaczeniu), bez list – po słowach")
     p.add_argument("--od", help="RRRR-MM-DD: co najmniej jedna z pary dodana od tej daty (lokalnie)")
@@ -2269,8 +2638,8 @@ def zbuduj_parser() -> argparse.ArgumentParser:
 
 
 # nazwa podkomendy → cmd_*(args) -> kod wyjścia
-POLECENIA = {"sync": cmd_sync, "szukaj": cmd_szukaj, "temat": cmd_temat, "etap": cmd_etap,
-             "duplikaty": cmd_duplikaty, "stan": cmd_stan, "publikuj": cmd_publikuj}
+POLECENIA = {"sync": cmd_sync, "szukaj": cmd_szukaj, "temat": cmd_temat, "etap": cmd_etap, "karty": cmd_karty,
+             "karta": cmd_karta, "duplikaty": cmd_duplikaty, "stan": cmd_stan, "publikuj": cmd_publikuj}
 
 
 def linia_bledu(e: BaseException, plik: str = __file__) -> int:

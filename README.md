@@ -89,7 +89,7 @@ claude.ai (telefon, czat, Cowork) ◄── pluginy ja + dom-budowa ─┘   (ka
 ## Indeks wiedzy
 
 `tools/wiedza.py` trzyma lokalną kopię czterech baz Bazy wiedzy z Notion w SQLite z wyszukiwaniem pełnotekstowym (tylko do odczytu –
-zapisy idą wyłącznie do Notion). Polecenia: `sync`, `szukaj`, `temat`, `etap`, `duplikaty`, `stan`, `publikuj`. `tools/migawka.py`
+zapisy idą wyłącznie do Notion). Polecenia: `sync`, `szukaj`, `temat`, `etap`, `karty`, `karta`, `duplikaty`, `stan`, `publikuj`. `tools/migawka.py`
 publikuje tą samą drogą migawkę otwartych wpisów Notatnika i zadań dla czatu bez Notion. Dane leżą w `.dom/wiedza/` poza repo
 i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600, poza repo), cztery zmienne: `NOTION_TOKEN` (odczyt Notion),
 `GITHUB_REPO` (prywatne repo kopii dla czatu na telefonie), `GITHUB_TOKEN_SYNC` (zapis kopii na Macu), `GITHUB_TOKEN_SEARCH` (odczyt kopii w czacie).
@@ -98,6 +98,28 @@ Trzy kanały użycia i ograniczenia: `plugins/dom-budowa/skills/wiedza/reference
 ocena ręczna, miesięczne porównanie z Notion; pytania wymyślone: `tools/wiedza_jakosc_pytania.json`) – dane w `.dom/wiedza/`; opis: `plugins/dom-budowa/skills/wiedza/references/indeks-jakosc.md`.
 `tools/wiedza_sedzia.py` (polecenie `wiedza_jakosc.py sedzia`, na sucho bez `--wyslij`) – sędzia LLM trafności wyników przez `claude -p` (kanarek izolacji; bez filtra danych osobowych – zasada 6); opis: `plugins/dom-budowa/skills/wiedza/references/indeks-sedzia.md`.
 `tools/wiedza_porownanie.py` (polecenie `wiedza_jakosc.py pokaz`) – lokalny plik HTML do ręcznego porównania wyników indeksu i Notion (API, tylko odczyt) z ocenami sędziego; wyjście: same liczby i ścieżka pliku.
+
+### Karty wiedzy
+
+Czat na telefonie nie szuka tez sam, tylko czyta **karty** – gotowe wybory tez do typowych pytań. Wybór robi Mac, offline, mocnym modelem
+czytającym całą bazę w małych porcjach; wynik leży w tym samym pliku `wiedza.sqlite`, który telefon już pobiera. Po co: sam czat widzi
+przy pytaniach szerokich ok. 60% trafnych tez, a poziom „cały etap” (330–390 tys. znaków) przerasta okno rozmowy (test 28.10.2026: w całości
+czyta 3 z 16 części). Dwa rodzaje: ok. 15 kart pytań (100–200 tez, pokrycie zmierzone wobec wzorca i pokazane w nagłówku karty) oraz
+68 kart czynności (małe, tezy otagowane czynnością, pokrycie niemierzone).
+- Czat i Claude Code: `python3 tools/wiedza.py karty [--do "A" "B" "C"]` (spis kart; z `--do` dopasowanie do pytania) i
+  `karta KOD … --pytanie "A" "B" "C" --czesc k` (treść w częściach, z dopełnieniem z szukania).
+- Tylko Mac: `python3 tools/wiedza_karty.py` – `definicje`, `importuj-tagi`, `taguj`, `zbuduj`, `pomiar`, `aktualizuj`, `zapisz`.
+- Dane (definicje kart, pomiar) leżą w `.dom/wiedza/karty/` poza repo; w repo jest tylko kod i procedura.
+- Automat na Macu co godzinę (`aktualizuj`): nowe tezy trafiają do kart, a kopia dla czatu jedzie z publikacją.
+
+Opis: `plugins/dom-budowa/skills/wiedza/references/karty.md`; jak czat korzysta z kart – `pytanie-do-bazy.md` w tym samym katalogu.
+
+### Tryb głęboki
+
+Pytanie złożone, którego nie pokrywa żadna karta (albo prośba „tryb głęboki”): czat zostawia je w prywatnym repo kopii indeksu, a Mac czyta
+całą bazę w małych porcjach (Sonnet, dwa przebiegi), pisze pełną odpowiedź (Opus: tezy, otwarte sprzeczności, Notatnik z migawki) i odkłada
+ją do repo; czat ją pobiera i przekazuje (3–6 minut, ok. 1–2 USD na pytanie, Mac musi nie spać). Token zapisu pytania leży w pliku dostępu,
+poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu automatów (README automatów). Opis: `plugins/dom-budowa/skills/wiedza/references/tryb-gleboki.md`.
 
 ## Start
 
