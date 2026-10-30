@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.13.2] – 2026-10-30
+
+- Pytanie do bazy: przy zbliżonej liczbie trafień wybieraj kartę bieżącego etapu (strona DOM) przed kartami „Cała budowa” i SSO –
+  w okresie stanu zero odpowiedzi mają być skupione na tym etapie.
+
 ## dom-budowa [2.13.1] – 2026-10-30
 
 - Karty wiedzy: karta „Kontrola robót i zamknięcie stanu zero” (4–5 części, ponad limit telefonu) podzielona na trzy:

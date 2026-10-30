@@ -25,7 +25,8 @@ brakujące pliki, a `/tmp` bywa pusty); strony dostępu nie czytaj drugi raz. Cl
    trafień szukania): do 12 kart, najlepsza pierwsza (wg wagi trafień – wyższe pozycje szukania ważą więcej – nie zawsze wg liczby), linie
    `trafień n/N · <linia karty>` (pola – `indeks.md`); potem `trafienia poza wszystkimi kartami: m` i `## Pozostałe karty` (same kody).
 3. **Wybierz karty:** (a) jedną **kartę pytań** (jej linia ma `np. „…”` – przykładowe pytanie; karta czynności go nie ma), gdy pytanie należy
-   do jej rodziny (nazwa, opis i przykładowe pytanie pasują) – zwykle najwyższą na liście; (b) gdy żadna karta pytań nie pasuje – **2–4 karty
+   do jej rodziny (nazwa, opis i przykładowe pytanie pasują) – zwykle najwyższą na liście, a przy zbliżonej liczbie trafień tę z **bieżącego etapu** budowy (strona DOM; w okresie stanu zero
+   karty stanu zero przed kartami „Cała budowa” i SSO); (b) gdy żadna karta pytań nie pasuje – **2–4 karty
    czynności** najwyżej na liście (małe, do pytań wąskich i nietypowych); (c) łącznie do ok. 75 tys. znaków – więcej niż 3 części to za dużo,
    zawęź: tyle czat na telefonie czyta w całości, resztę tylko przegląda. „Trafienia poza wszystkimi kartami” m > 15 (linia kończy się
    „… (+k)”) → pytanie wykracza poza karty: użyj trybu głębokiego (pkt 2.7), a gdy jest niedostępny – dołóż poziom „normalnie” z pkt 3.
