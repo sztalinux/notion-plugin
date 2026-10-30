@@ -4,6 +4,12 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.6.2] – 2026-10-30
+
+- Wpisy: słowa względne bez daty („dziś”, „jutro”, „w piątek”) liczone od daty przetwarzania, bez pytania i bez „❓” – przebiegi idą
+  co godzinę, więc wpis jest z tego samego dnia; ślad dostaje „(termin od daty przetworzenia)”. Wyjątek: pierwszy przebieg dnia po
+  wpisach z poprzedniego wieczoru. Powód: przebieg 30.10 odłożył trzy „jutro” do „❓” zamiast założyć zadania.
+
 ## dom-budowa [2.13.0] – 2026-10-29
 
 - Karty wiedzy: wybór tez do typowych pytań robi Mac, nie czat. Powód (pomiary 28.10.2026): czat na telefonie szukając sam widzi przy

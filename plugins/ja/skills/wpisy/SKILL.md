@@ -61,11 +61,13 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
      budowa + emocja) – rozłóż na części. Przy remisie wygrywa niższa „Kolejność”.
    - **Czy jest jednoznaczny** – da się go zapisać jako samodzielne zdanie: co, kogo/czego dotyczy, kiedy. Pojedyncze słowa,
      skróty, zaimki bez kontekstu, „asdf” – **niejednoznaczne**.
-   - **Data zdarzenia** – wzmianka daty we wpisie (`@today`) albo data tekstem; słowa względne licz od niej. Notion nie zapisuje,
-     kiedy dopisano pojedynczy punkt, więc data przetwarzania to nie data wpisu. Podstrona lub strona z widgetu bez daty
-     w treści → data jej ostatniej edycji (z odczytu strony), z dopiskiem w śladzie. Słowo względne bez daty przy terminie lub
-     zdarzeniu z budowy → zapytaj („czy »wczoraj« to 11.10?”); przy emocji bez daty – data przetwarzania z dopiskiem
-     „(data przetworzenia)”.
+   - **Data zdarzenia** – wzmianka daty we wpisie (`@today`) albo data tekstem; słowa względne licz od niej. Bez daty we wpisie
+     słowa względne („dziś”, „jutro”, „w piątek”, „za tydzień”) licz **od daty przetwarzania** – przebiegi idą co godzinę, więc wpis
+     jest z tego samego dnia; **nie pytaj** o to i nie odkładaj wpisu do „❓” z tego powodu. Zapisz termin, a w śladzie dopisz
+     „(termin od daty przetworzenia)”. Wyjątek: pierwszy przebieg dnia (do 9:00) po wpisach, które mogły powstać poprzedniego
+     wieczoru – gdy blok dnia w Dzienniku albo data ostatniej edycji strony wskazuje wczoraj, licz od wczoraj i dopisz to w śladzie.
+     Podstrona lub strona z widgetu bez daty w treści → data jej ostatniej edycji (z odczytu strony), z dopiskiem w śladzie.
+     Przy emocji bez daty – data przetwarzania z dopiskiem „(data przetworzenia)”.
 4. **Niejednoznaczny albo bez obszaru → nie przetwarzaj.** Przenieś do „❓” i dopisz pod nim pytania w formacie z
    `references/pytania.md` (osobny checkbox na pytanie z propozycją – „Zadanie prywatne na ten tydzień”, kontekst w „Szczegółach”). Podstrona lub strona z widgetu zostaje na miejscu –
    w „❓” idzie punkt z jej wzmianką i pytaniem; strona wymieniona w „❓” nie jest nowym wpisem, dopóki inwestor nie odpowie

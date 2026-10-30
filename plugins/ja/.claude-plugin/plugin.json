@@ -1,6 +1,6 @@
 {
   "name": "ja",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Osobisty asystent w Notion: jeden Dziennik na wszystko (emocje, praca, dziecko, zadania, suplementy, budowa), rozkładanie wpisów według bazy Obszary, zadania ze zmianą statusu, wieczorny przegląd dnia oraz rozwój harnessu (skrzynka zmian, pomysły). Budowę obsługuje plugin dom-budowa.",
   "author": {
     "name": "sztalinux"
