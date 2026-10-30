@@ -90,7 +90,8 @@ def markdown(dane: dict, kiedy: str) -> str:
     return "\n".join(tekst)
 
 
-def opublikuj(tresc: bytes, sekrety: dict, cicho: bool) -> bool:
+def opublikuj(tresc: bytes, sekrety: dict, cicho: bool, tresc_json: bytes = None) -> bool:
+    """Publikuje migawkę .md (czat) i – gdy podano – migawka.json (tryb głęboki w GitHub Actions czyta Notatnik z niej)."""
     token, repo = sekrety.get("GITHUB_TOKEN_SYNC"), sekrety.get("GITHUB_REPO")
     if not token or not repo:
         W.ostrzez("brak GITHUB_TOKEN_SYNC albo GITHUB_REPO – publikacja pominięta")
@@ -102,16 +103,21 @@ def opublikuj(tresc: bytes, sekrety: dict, cicho: bool) -> bool:
         if W.galaz_prywatnego_repo(repo, naglowki, None) is None:
             W.blad("GITHUB_REPO nie jest repo prywatnym – publikacja wstrzymana")
             return False
-        sha_lokalny = W.git_blob_sha(tresc)
-        sha_zdalny = W.sha_na_githubie(repo, naglowki, PLIK, None)
-        if sha_zdalny == sha_lokalny:
-            if not cicho:
-                print("[migawka] publikacja: bez zmian")
-            return True
-        ok = W.wyslij_plik(repo, naglowki, PLIK, base64.b64encode(tresc).decode("ascii"), sha_lokalny, sha_zdalny,
-                           f"migawka {W.lokalnie(W.teraz_iso())}", None)
-        if ok and not cicho:
-            print(f"[migawka] publikacja: wysłano {PLIK} {W.rozmiar_opis(len(tresc))}")
+        ok, wyslane = True, []
+        for nazwa, dane in ((PLIK, tresc), (PLIK_JSON, tresc_json)):
+            if dane is None:
+                continue
+            sha_lokalny = W.git_blob_sha(dane)
+            sha_zdalny = W.sha_na_githubie(repo, naglowki, nazwa, None)
+            if sha_zdalny == sha_lokalny:
+                continue
+            if W.wyslij_plik(repo, naglowki, nazwa, base64.b64encode(dane).decode("ascii"), sha_lokalny, sha_zdalny,
+                             f"migawka {W.lokalnie(W.teraz_iso())}", None):
+                wyslane.append(f"{nazwa} {W.rozmiar_opis(len(dane))}")
+            else:
+                ok = False
+        if not cicho:
+            print("[migawka] publikacja: " + (", ".join("wysłano " + w for w in wyslane) if wyslane else "bez zmian"))
         return ok
     except (W.BladHttp, W.BladSieci) as e:
         W.blad(f"GitHub: {W.tekst_bledu(e, sekrety, ukryj)}")
@@ -152,9 +158,10 @@ def main(argv=None) -> int:
     plik.write_bytes(tresc)
     plik.chmod(0o600)
     plik_json = W.KATALOG / PLIK_JSON
-    plik_json.write_text(json.dumps({"stan": kiedy, "liczniki": liczniki, "bazy": dane}, ensure_ascii=False), encoding="utf-8")
+    tresc_json = json.dumps({"stan": kiedy, "liczniki": liczniki, "bazy": dane}, ensure_ascii=False).encode("utf-8")
+    plik_json.write_bytes(tresc_json)
     plik_json.chmod(0o600)
-    ok = True if a.bez_publikacji else opublikuj(tresc, sekrety, a.cicho)
+    ok = True if a.bez_publikacji else opublikuj(tresc, sekrety, a.cicho, tresc_json)
     if a.json:
         W.wypisz_json({"stan": kiedy, "liczniki": liczniki, "znakow": len(tresc), "opublikowano": ok and not a.bez_publikacji})
     elif not a.cicho:
