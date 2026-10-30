@@ -21,7 +21,8 @@ reszta niżej. Inwestor jest programistą, nie budowlańcem – pojęcia, które
    - Notion → DOM: sekcja „🔴 Do zamknięcia przed …” – blokady bieżącego etapu (widok Notatnika
      `view://ddbaff9a-2f5b-47a5-bf7b-aa031bf88fc8`);
    - Notatnik budowy: otwarte Pytania, Ryzyka, Decyzje dla tej osoby (pole „Do kogo”) i tego etapu, „Pamiętać” etapu;
-   - Rejestr sprzeczności: otwarte w tym temacie; Baza wiedzy: tematy, których dotyczy rozmowa;
+   - Rejestr sprzeczności: otwarte w tym temacie; Baza wiedzy: tematy rozmowy drogą z `wiedza/references/pytanie-do-bazy.md`
+     (karta pytań albo 2–4 karty czynności z `karty --do`);
    - wybór wykonawcy: baza „Porównanie wykonawców” i strona „Wybór wykonawcy” (knock-out, Runda 1);
    - ściąga projektu, przewodnik po dokumentach (strona Notion) – po konkretny dokument sięgnij albo poproś
      (procedura `dokumenty`, „Prośba o dokument”); ostatnie wpisy Dziennika budowy, jeśli budowa trwa.

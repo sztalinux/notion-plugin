@@ -17,7 +17,8 @@ Wyprzedzenia zamówień: `references/wyprzedzenia.md`. Układ Excela: `koszty/re
    kto wykonuje (Sam/Ekipa), cennik. Dla pozycji „Ekipa” sprawdź w ofercie „Wybranej”, czy materiał jest w cenie –
    kupujesz tylko to, co nie jest. Brak pliku → poproś o niego i wypisz, co policzysz po otrzymaniu (pozycje etapu,
    ilości, zapas, terminy zamówień).
-2. Uzupełnij o **drobnicę**, której kosztorys zwykle nie ma: z checklist etapu (`etap`), Bazy wiedzy (Rodzaj „Materiał / produkt”)
+2. Uzupełnij o **drobnicę**, której kosztorys zwykle nie ma: z checklist etapu (`etap`), Bazy wiedzy (Rodzaj „Materiał / produkt” – w indeksie
+   `szukaj … --rodzaj "Materiał / produkt" --etap …`, `wiedza/references/indeks.md`)
    i praktyki `[opinia]` – np. kotwy, dystanse, folia, taśmy, kleje, siatki, zaprawa do pierwszej warstwy, impregnat,
    paliwo do agregatu. Oznacz, co jest szacunkiem.
 3. Policz **ilość do zamówienia** = ilość z kosztorysu (albo z `analiza-techniczna`, jeśli trzeba przeliczyć

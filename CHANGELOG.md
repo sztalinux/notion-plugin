@@ -4,6 +4,13 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.14.1] – 2026-10-30
+
+- Spójność z jedną drogą szukania (`budowa`, zasada 10; przegląd Z10): `etap` A.8, `przygotowanie` krok 3 i `analiza-techniczna`
+  krok 1 sięgają do Bazy wiedzy przez `pytanie-do-bazy.md` (karty) zamiast „z Informacji” / „tematy” – działa też na telefonie
+  bez Notion; `zakupy` krok 2 – drobnica z indeksu (`szukaj --rodzaj "Materiał / produkt" --etap`). `budowa`, „Luźny wpis z Dziennika”,
+  krok 3: duplikat wg procedury docelowej (Notatnik – filtr Etap + Branża jak w `notatka`), zamiast sprzecznego „2–3 słowa”.
+
 ## dom-budowa [2.14.0] – 2026-10-30
 
 - HZ-12: odpowiedź merytoryczna o budowie (wiedza, analiza techniczna, doradca, przygotowanie, etap, zakupy; każdy kanał) kończy się

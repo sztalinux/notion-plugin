@@ -42,7 +42,8 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
    (tytuł i widok `view://ddbaff9a-2f5b-47a5-bf7b-aa031bf88fc8`: nazwa i filtr Etap = nowy etap, „Projekt i formalności”
    zostaje). Zakładki etapów w bloku
    „🗂 Wiedza wg etapu” i widoki etapów checklisty są stałe – nie zmieniaj ich.
-8. **Wiedza na ten etap:** z Informacji (Etap = ten etap, Kluczowe i Ważne, Status ≠ Nieaktualne) wybierz to, co zmienia
+8. **Wiedza na ten etap:** z Bazy wiedzy drogą z `wiedza/references/pytanie-do-bazy.md` (karty pytań i czynności etapu
+   z `karty --do`; na Macu także `wiedza.py etap`) – Kluczowe i Ważne, bez Nieaktualnych – wybierz to, co zmienia
    plan, bramki albo zamówienia, i wpleć w punkty 2–6 z WI-x – nie jako osobną listę do czytania.
 
 ## B. Bramka („jutro betonowanie płyty”, „w czwartek zasypka”, „co sprawdzić zanim…”)

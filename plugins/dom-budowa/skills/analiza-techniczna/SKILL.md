@@ -13,7 +13,7 @@ z listą rzeczy do wyjaśnienia z projektantem. Asystent nie zastępuje konstruk
 1. **Ustal źródła:** który dokument, która wersja/data, które arkusze. Najpierw sprawdź, czy
    istnieje już analiza tego zakresu (Notion, dokumenty projektu – np. „Analiza konstrukcji – stan zero”)
    i buduj na niej, zamiast zaczynać od zera. Przy pytaniach o technologię sprawdź też Bazę wiedzy
-   (Tematy, Informacje) i Rejestr sprzeczności – rozstrzygnięcia inwestora mają pierwszeństwo przed opinią ogólną.
+   (drogą z `wiedza/references/pytanie-do-bazy.md` – najpierw karta) i Rejestr sprzeczności – rozstrzygnięcia inwestora mają pierwszeństwo przed opinią ogólną.
 2. **Czytaj dokument, nie pamięć:** cytuj arkusz i element (np. „KT.01, ściana oś B”, „opis 1.5”).
    Rozbieżność opisu z rysunkiem → wskaż obie wartości, nie wybieraj po cichu.
 3. **Oznacz każdy wniosek:** `[projekt]` / `[szacunek]` (z założeniami i dokładnością, np. ±10–15%) /

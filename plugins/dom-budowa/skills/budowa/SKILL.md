@@ -59,7 +59,8 @@ tutaj (mechanika strony – strefy, „❓”, „Przetworzone” – jest w `wp
 2. **Jednoznaczny i ze źródłem:** da się zapisać jako samodzielne zdanie (co, czego dotyczy, liczba, kiedy); dla wiedzy
    i ustaleń znane jest źródło (kto powiedział / skąd; własne przemyślenie = „własne”). Nie → wraca do `wpisy` jako „❓”
    z 1–3 pytaniami i propozycją interpretacji.
-3. **Duplikat:** szukaj w docelowej bazie (Notatnik, Informacje, TASKS) 2–3 słów kluczowych – jest → uzupełnij.
+3. **Duplikat:** sprawdź tak, jak każe procedura docelowa (Notatnik – wpisy z tym samym Etapem i Branżą, `notatka` krok 2;
+   Informacje – `wiedza` A.5; TASKS – wyszukiwarka 1–2 słowa) – jest → uzupełnij.
 4. **Przekaż** (kilka klas w jednym wpisie → kilka procedur):
    | Klasa | Procedura | Uwaga |
    |---|---|---|
