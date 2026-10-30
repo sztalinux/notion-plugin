@@ -54,6 +54,7 @@ POLA_ZABLOKOWANE = {
 # biała lista zmiennych środowiska procesu modelu: bez CLAUDECODE/CLAUDE_CODE_* sesji nadrzędnej, telemetrii
 # (OTEL_*, ARIZE_*, PHOENIX_*) i sekretów – treść zapytania nie może trafić do śladów ani innych usług
 SRODOWISKO = ("HOME", "USER", "LOGNAME", "PATH", "LANG", "LC_ALL", "LC_CTYPE", "TMPDIR", "SHELL", "CLAUDE_CONFIG_DIR",
+              "CLAUDE_CODE_OAUTH_TOKEN",   # runner (GitHub Actions): logowanie subskrypcją bez pliku konfiguracji
               "HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy", "NO_PROXY", "no_proxy", "ALL_PROXY",
               "all_proxy", "NODE_EXTRA_CA_CERTS")
 LIMIT_RE = re.compile(r"usage limit|rate.?limit|limit reached|hit your limit|resets? (at )?\d|overloaded|529|quota",
