@@ -12,6 +12,7 @@ albo zmienna DOM_HUB; w czacie podaje się --db <katalog>/wiedza.sqlite.
     python3 tools/wiedza.py etap "NAZWA" [--czesc k] [--kontrola] [--ciekawostki]   # cała wiedza etapu w częściach
     python3 tools/wiedza.py karty [--do "PYTANIE" ["PYTANIE 2" …]] [--etap …] [--rodzaj pytanie|czynnosc]   # spis kart
     python3 tools/wiedza.py karta KOD [KOD2 …] [--pytanie "A" ["B" …]] [--czesc k] [--ciekawostki]   # karta w częściach
+    python3 tools/wiedza.py zrodla WI-n [WI-m …] | --temat "NAZWA"   # źródła tez wg typu autora („Na czym się opieram”)
     python3 tools/wiedza.py duplikaty [--od RRRR-MM-DD] [--prog 0.84] [--temat NAZWA] [--sens | --slowa]
     python3 tools/wiedza.py stan                          # liczniki, daty synchronizacji i publikacji
     python3 tools/wiedza.py publikuj [--teraz] [--wymus] [--reset]   # kopia indeksu do prywatnego repo GITHUB_REPO
@@ -24,7 +25,7 @@ nieoczekiwanego błędu na stderr zamiast samej nazwy typu i linii.
 
 Zasady:
 - Moduł nigdy nie pisze do Notion: wysyła tylko zapytania o wiersze baz (query) i odczyt schematu bazy.
-- szukaj, temat, etap, karty, karta, duplikaty i stan działają na samym pliku: bez tokena, bez sieci i bez pliku
+- szukaj, temat, etap, karty, karta, zrodla, duplikaty i stan działają na samym pliku: bez tokena, bez sieci i bez pliku
   synonimów.
 - Karty wiedzy (tabele `karty`, `karty_wi`): gotowe zbiory tez na typowe pytania, wybrane na Macu modelem czytającym
   całą bazę (tools/wiedza_karty.py) – `karty --do` wskazuje karty do pytania, `karta` drukuje tezy karty w częściach;
@@ -41,7 +42,7 @@ Zasady:
   czasu startu (pobór i publikacja razem) i kończy się kodem 0.
 - publikuj wysyła wyłącznie do repo prywatnego (sprawdza to przed wysyłką).
 - Komunikaty zawierają tylko numery WI/ZRD/SP, ID stron, nazwy właściwości, liczby i statusy HTTP – nigdy
-  wartości pól (te drukują wyłącznie wyniki szukaj, temat, etap, karty, karta i duplikaty).
+  wartości pól (te drukują wyłącznie wyniki szukaj, temat, etap, karty, karta, zrodla i duplikaty).
 - Log zapytań: każde `szukaj` na indeksie z `.dom/wiedza/` dopisuje jeden wiersz JSON do `.dom/wiedza/szukaj.log.jsonl`
   (600; czas UTC, kanał z WIEDZA_KANAL albo „claude-code”/„inny”, zapytanie do 500 znaków, tryb, liczby trafień,
   top-5 WI, ms, filtry – bez treści wierszy). Przy 2 MB zostaje jedna starsza kopia `szukaj.log.1.jsonl`. WIEDZA_LOG=0 wyłącza log;
@@ -351,6 +352,7 @@ KARTY_OPIS_ZNAKOW = 200     # spis kart: opis karty skrócony (pełny opis w kar
 KARTY_PYTANIE_ZNAKOW = 110  # spis kart: przykładowe pytanie skrócone
 DOPELNIENIE_TOP = 40        # karta --pytanie: dopełnienie z tylu pierwszych trafień (RRF zapytań) …
 DOPELNIENIE_LINII = 20      # … najwyżej tyle tez spoza karty
+ZRODLA_TEZ = 8              # zrodla: przy źródle najwyżej tyle numerów tez, reszta „+n”
 RODZAJE_KART = ("pytanie", "czynnosc")
 TYTUL_SP_KARTY = "Otwarte sprzeczności"
 ZRODLO_WIECEJ = "wiecej"    # karty_wi.zrodlo rozszerzenia karty (tezy pokrewne poza rdzeniem, `karta --wiecej`)
@@ -1881,28 +1883,37 @@ def szukaj_wiele(a, start: float) -> int:
     return 0
 
 
+def tematy_pasujace(conn: sqlite3.Connection, szukana: str) -> list:
+    """Wiersze (id, nazwa, stan_wiedzy, etap, w_skrocie, notion_url) tematów, których nazwa zawiera `szukana`
+    (bez diakrytyków); nazwa równa zapytaniu wygrywa z dłuższymi, które ją zawierają („Drenaż” obok „Drenaż opaskowy”)."""
+    pasujace = [t for t in conn.execute(
+        "SELECT id, nazwa, stan_wiedzy, etap, w_skrocie, notion_url FROM tematy ORDER BY nazwa")
+                if szukana in bez_diakrytykow(t[1])]
+    dokladne = [t for t in pasujace if bez_diakrytykow(t[1]).strip() == szukana]
+    return dokladne if len(dokladne) == 1 else pasujace
+
+
+def wypisz_kandydatow_tematu(a, nazwa: str, pasujace: list):
+    """Zero albo kilka tematów pasujących do `nazwa` – lista do doprecyzowania zamiast wyniku."""
+    kandydaci = [{"nazwa": t[1] or "", "notion_url": t[5] or ""} for t in pasujace]
+    if a.json:
+        wypisz_json({"kandydaci": kandydaci})
+        return
+    print(f"# temat „{nazwa}”: " + (f"{len(kandydaci)} pasujących – podaj dokładniejszą nazwę"
+                                    if kandydaci else "brak pasującego tematu"))
+    for k in kandydaci:
+        print(f"{jedna_linia(k['nazwa'])} · {k['notion_url'] or '–'}")
+
+
 def cmd_temat(a) -> int:
     szukana = bez_diakrytykow(a.nazwa).strip()
     if not szukana:
         blad("pusta nazwa tematu")
         return 1
     with contextlib.closing(otworz_do_odczytu(a)) as conn:
-        pasujace = [t for t in conn.execute(
-            "SELECT id, nazwa, stan_wiedzy, etap, w_skrocie, notion_url FROM tematy ORDER BY nazwa")
-                    if szukana in bez_diakrytykow(t[1])]
-        # nazwa równa zapytaniu wygrywa z dłuższymi, które ją zawierają („Drenaż” obok „Drenaż opaskowy”)
-        dokladne = [t for t in pasujace if bez_diakrytykow(t[1]).strip() == szukana]
-        if len(dokladne) == 1:
-            pasujace = dokladne
+        pasujace = tematy_pasujace(conn, szukana)
         if len(pasujace) != 1:
-            kandydaci = [{"nazwa": t[1] or "", "notion_url": t[5] or ""} for t in pasujace]
-            if a.json:
-                wypisz_json({"kandydaci": kandydaci})
-            else:
-                print(f"# temat „{a.nazwa}”: " + (f"{len(kandydaci)} pasujących – podaj dokładniejszą nazwę"
-                                                  if kandydaci else "brak pasującego tematu"))
-                for k in kandydaci:
-                    print(f"{jedna_linia(k['nazwa'])} · {k['notion_url'] or '–'}")
+            wypisz_kandydatow_tematu(a, a.nazwa, pasujace)
             return 0
         id_, nazwa, stan_wiedzy, etap, w_skrocie, url = (x or "" for x in pasujace[0])
         aktualne = [(wi, normalizuj(ist), normalizuj(st)) for wi, ist, st in conn.execute(
@@ -1950,6 +1961,77 @@ def cmd_temat(a) -> int:
     print("## Otwarte sprzeczności tematu")
     for s in sp:
         print(linia_sp(s, a.krotko))
+    return 0
+
+
+# grupy `zrodla` w kolejności wydruku: nasze rozmowy i notatki osobno (forma albo typ autora), potem typy autora
+ZRODLA_NASZE_FORMY = ("telefon", "spotkanie", "notatki własne")
+ZRODLA_NASZE_TYPY = ("nasz projektant / wykonawca", "inwestor (własna budowa)")
+ZRODLA_GRUPY = ("Nasze rozmowy i notatki", "Kierownik / inspektor", "Twórca / popularyzator", "Niezależny wykonawca",
+                "Producent", "Inny", "Bez typu autora")
+
+
+def grupa_zrodla(forma: str, typ_autora: str) -> str:
+    if normalizuj(forma) in ZRODLA_NASZE_FORMY or normalizuj(typ_autora) in ZRODLA_NASZE_TYPY:
+        return ZRODLA_GRUPY[0]
+    typ = normalizuj(typ_autora)
+    return next((g for g in ZRODLA_GRUPY[1:-1] if normalizuj(g) == typ), "Inny" if typ else ZRODLA_GRUPY[-1])
+
+
+def cmd_zrodla(a) -> int:
+    """Źródła podanych tez (albo wszystkich widocznych tez tematu) pogrupowane wg typu autora – do sekcji
+    „📚 Na czym się opieram” i do „materiałów do tematu”; w grupie najpierw źródła wielu tez, potem wyższa wiarygodność."""
+    if bool(a.wi) == bool(a.temat):
+        blad("podaj numery WI albo --temat (jedno z dwóch)")
+        return 1
+    with contextlib.closing(otworz_do_odczytu(a)) as conn:
+        naglowek = ""
+        if a.temat:
+            pasujace = tematy_pasujace(conn, bez_diakrytykow(a.temat).strip())
+            if len(pasujace) != 1:
+                wypisz_kandydatow_tematu(a, a.temat, pasujace)
+                return 0
+            naglowek = f"temat: {jedna_linia(pasujace[0][1] or '')} · "
+            numery = [wi for wi, st in conn.execute(
+                "SELECT i.wi, i.status FROM informacje i JOIN informacje_tematy it ON it.wi = i.wi "
+                "WHERE it.temat_id = ? ORDER BY i.wi", (pasujace[0][0],)) if normalizuj(st) != "nieaktualne"]
+        else:
+            numery = list(dict.fromkeys(int(n) for x in a.wi for n in re.findall(r"\d+", x)))
+        znane = {wi for (wi,) in conn.execute("SELECT wi FROM informacje")}
+        brak = [n for n in numery if n not in znane]
+        numery = [n for n in numery if n in znane]
+        tezy_zrodla, szukane = {}, set(numery)
+        for wi, zrd_id in conn.execute("SELECT wi, zrd_id FROM informacje_zrodla ORDER BY wi"):
+            if wi in szukane:
+                tezy_zrodla.setdefault(zrd_id, []).append(wi)
+        zrodla = []
+        for id_, zrd, tytul, data, forma, kto, link, typ, wiar in conn.execute(
+                "SELECT id, zrd, tytul, data, forma, kto, link, typ_autora, wiarygodnosc FROM zrodla ORDER BY zrd"):
+            if id_ in tezy_zrodla:
+                zrodla.append({"zrd": zrd, "tytul": tytul or "", "data": data or "", "forma": forma or "",
+                               "kto": kto or "", "link": link or "", "typ_autora": typ or "",
+                               "wiarygodnosc": wiar or "", "wi": tezy_zrodla[id_],
+                               "grupa": grupa_zrodla(forma or "", typ or "")})
+        bez_zrodla = sorted(set(numery) - {wi for z in zrodla for wi in z["wi"]})
+        stan = meta_bazy(conn).get("zbudowano") or ""
+    zrodla.sort(key=lambda z: (ZRODLA_GRUPY.index(z["grupa"]), -len(z["wi"]),
+                               -(int(z["wiarygodnosc"][0]) if z["wiarygodnosc"][:1].isdigit() else 0), z["zrd"]))
+    if a.json:
+        wypisz_json({"stan": stan, "tez": len(numery), "zrodla": zrodla, "bez_zrodla": bez_zrodla, "brak_w_indeksie": brak})
+        return 0
+    print(f"# indeks: stan {lokalnie(stan)} · {naglowek}tez {len(numery)} → źródeł {len(zrodla)}"
+          + (f" · bez źródła: {', '.join(f'WI-{n}' for n in bez_zrodla)}" if bez_zrodla else "")
+          + (f" · brak w indeksie: {', '.join(f'WI-{n}' for n in brak)}" if brak else ""))
+    grupa = None
+    for z in zrodla:
+        if z["grupa"] != grupa:
+            grupa = z["grupa"]
+            print(f"## {grupa} ({sum(1 for x in zrodla if x['grupa'] == grupa)})")
+        tezy = ", ".join(f"WI-{n}" for n in z["wi"][:ZRODLA_TEZ]) + (
+            f" +{len(z['wi']) - ZRODLA_TEZ}" if len(z["wi"]) > ZRODLA_TEZ else "")
+        print(" · ".join([f"ZRD-{z['zrd']} „{skroc(z['tytul'], 70)}”", f"Kto: {jedna_linia(z['kto']) or '–'}",
+                          jedna_linia(z["typ_autora"]) or "–", jedna_linia(z["wiarygodnosc"]) or "–",
+                          jedna_linia(z["forma"]) or "–", z["data"] or "–", z["link"] or "–", f"tezy: {tezy}"]))
     return 0
 
 
@@ -2615,6 +2697,11 @@ def zbuduj_parser() -> argparse.ArgumentParser:
     p.add_argument("--wiecej", action="store_true",
                    help="rozszerzenie karty zamiast rdzenia: tezy pokrewne (ocena 1 modelu) – czytaj po rdzeniu, gdy "
                         "inwestor chce „więcej” albo pytanie wykracza poza rdzeń")
+    p = sub.add_parser("zrodla", parents=[wspolne],
+                       help="źródła podanych tez albo całego tematu pogrupowane wg typu autora (nasze rozmowy osobno) – "
+                            "do sekcji „Na czym się opieram” i listy materiałów")
+    p.add_argument("wi", nargs="*", metavar="WI", help="numery tez: WI-12 34 „WI-5, WI-6” (bez – trzeba --temat)")
+    p.add_argument("--temat", help="zamiast numerów: wszystkie widoczne tezy tematu (część nazwy) – „materiały do tematu”")
     p = sub.add_parser("duplikaty", parents=[wspolne],
                        help="kandydaci na duplikaty: pary z list podobnych (po znaczeniu), bez list – po słowach")
     p.add_argument("--od", help="RRRR-MM-DD: co najmniej jedna z pary dodana od tej daty (lokalnie)")
@@ -2639,7 +2726,7 @@ def zbuduj_parser() -> argparse.ArgumentParser:
 
 # nazwa podkomendy → cmd_*(args) -> kod wyjścia
 POLECENIA = {"sync": cmd_sync, "szukaj": cmd_szukaj, "temat": cmd_temat, "etap": cmd_etap, "karty": cmd_karty,
-             "karta": cmd_karta, "duplikaty": cmd_duplikaty, "stan": cmd_stan, "publikuj": cmd_publikuj}
+             "karta": cmd_karta, "zrodla": cmd_zrodla, "duplikaty": cmd_duplikaty, "stan": cmd_stan, "publikuj": cmd_publikuj}
 
 
 def linia_bledu(e: BaseException, plik: str = __file__) -> int:

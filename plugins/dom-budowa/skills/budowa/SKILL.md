@@ -179,6 +179,10 @@ własny przegląd, żeby nie zasłaniała spraw osobistych.
     i zadania z migawki (`wiedza/references/indeks.md`, sekcja czatu; `pytanie-do-bazy.md`, pkt 5), a każdy zapis (notatka,
     dziennik, zadanie, wiedza) do dokumentu Claude „📥 Skrzynka” słowami, bez pól Notion – plugin `ja`,
     `wpisy/references/skrzynka.md`; Mac przenosi go do Notion w ciągu godziny. Zdjęcia – `dziennik`.
+14. **„📚 Na czym się opieram” na końcu każdej odpowiedzi merytorycznej o budowie** (wiedza, analiza techniczna, doradca,
+    przygotowanie, etap, zakupy; każdy kanał, także telefon) – przed blokami domknięcia, do ok. 8–10 linii: tezy WI, źródła ZRD,
+    dokumenty projektu, Notatnik i SP, `[opinia]` / `[internet]`. „Materiały do tematu” – pełna lista źródeł. Format i polecenie
+    `zrodla`: `references/na-czym-sie-opieram.md`.
 
 ## Domknięcie każdej rozmowy
 

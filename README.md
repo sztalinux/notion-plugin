@@ -107,7 +107,8 @@ przy pytaniach szerokich ok. 60% trafnych tez, a poziom „cały etap” (330–
 czyta 3 z 16 części). Dwa rodzaje: ok. 15 kart pytań (100–200 tez, pokrycie zmierzone wobec wzorca i pokazane w nagłówku karty) oraz
 68 kart czynności (małe, tezy otagowane czynnością, pokrycie niemierzone).
 - Czat i Claude Code: `python3 tools/wiedza.py karty [--do "A" "B" "C"]` (spis kart; z `--do` dopasowanie do pytania) i
-  `karta KOD … --pytanie "A" "B" "C" --czesc k` (treść w częściach, z dopełnieniem z szukania).
+  `karta KOD … --pytanie "A" "B" "C" --czesc k` (treść w częściach, z dopełnieniem z szukania). Karta drukuje tezy bez źródeł –
+  `zrodla WI-… ` (albo `zrodla --temat "…"`) podaje źródła pogrupowane wg typu autora do sekcji „📚 Na czym się opieram”.
 - Tylko Mac: `python3 tools/wiedza_karty.py` – `definicje`, `importuj-tagi`, `taguj`, `zbuduj`, `pomiar`, `aktualizuj`, `zapisz`.
 - Dane (definicje kart, pomiar) leżą w `.dom/wiedza/karty/` poza repo; w repo jest tylko kod i procedura.
 - Automat na Macu co godzinę (`aktualizuj`): nowe tezy trafiają do kart, a kopia dla czatu jedzie z publikacją.

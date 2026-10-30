@@ -4,6 +4,15 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.14.0] – 2026-10-30
+
+- HZ-12: odpowiedź merytoryczna o budowie (wiedza, analiza techniczna, doradca, przygotowanie, etap, zakupy; każdy kanał) kończy się
+  przed blokami domknięcia sekcją „📚 Na czym się opieram” (do ok. 8–10 linii: tezy WI, źródła ZRD z typem autora i wiarygodnością,
+  dokumenty projektu, Notatnik i SP, `[opinia]` / `[internet]`); „materiały do tematu” – pełna lista źródeł pogrupowana wg typu autora.
+  `budowa/SKILL.md`, zasada 14, nowa `budowa/references/na-czym-sie-opieram.md`; `pytanie-do-bazy.md` (pkt 9 i budżet).
+- `tools/wiedza.py zrodla WI-… | --temat "…"` – źródła tez (albo całego tematu) pogrupowane: nasze rozmowy i notatki osobno, potem
+  wg typu autora; działa w czacie z kopii indeksu (karta drukuje tezy bez źródeł, więc telefon nie miał ich skąd wziąć). `indeks.md`, README.
+
 ## dom-budowa [2.13.2] – 2026-10-30
 
 - Pytanie do bazy: przy zbliżonej liczbie trafień wybieraj kartę bieżącego etapu (strona DOM) przed kartami „Cała budowa” i SSO –

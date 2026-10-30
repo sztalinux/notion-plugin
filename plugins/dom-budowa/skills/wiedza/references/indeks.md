@@ -73,6 +73,12 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   na „więcej” / „rozwiń”. Nieznany kod:
   `✗ karta „kod”: nie ma takiej karty – podobne: …` (bez podobnych: „spis kart: karty”), kod wyjścia 1. Kiedy i jak z tego korzystać –
   `pytanie-do-bazy.md`, pkt 2.
+- `python3 tools/wiedza.py zrodla WI-12 WI-34 …` albo `zrodla --temat "NAZWA"` – źródła podanych tez (albo wszystkich widocznych
+  tez tematu) pogrupowane: „Nasze rozmowy i notatki” (forma Telefon / Spotkanie / Notatki własne albo typ autora „Nasz projektant /
+  wykonawca”) osobno, potem wg typu autora (Kierownik / inspektor, Twórca / popularyzator, Niezależny wykonawca, Producent, Inny).
+  Linia: `ZRD-n „tytuł” · Kto · typ autora · wiarygodność · forma · data · link · tezy: WI-…`; w grupie najpierw źródła wielu tez.
+  Nagłówek: liczba tez i źródeł, tezy bez źródła, numery spoza indeksu. Do sekcji „📚 Na czym się opieram” i listy materiałów
+  (`budowa/references/na-czym-sie-opieram.md`) – karta drukuje tezy bez źródeł.
 - `python3 tools/migawka.py` – migawka Notatnika budowy i TASKS (otwarte wpisy) do `.dom/wiedza/migawka.md` i do kopii
   dla czatu w prywatnym repo (Notion tylko odczyt tokenem integracji; obie bazy muszą być udostępnione integracji, inaczej
   w pliku stoi „niedostępna”). Uruchamia ją przebieg godzinowy na Macu; ręcznie po zmianach w Notatniku, gdy telefon ma je
@@ -126,7 +132,7 @@ python3 /tmp/wiedza.py karta betonowanie-plyty --pytanie "przerwa robocza" "prze
 - Pierwsze wywołanie robi wszystko: pobiera tylko brakujące pliki (`test -s`) i uruchamia `karty --do`. Jak wybrać karty i czytać
   części – `pytanie-do-bazy.md`, pkt 2. Droga zapasowa (poziomy szybko / normalnie / dokładnie), gdy `karty` zgłosi „brak w tej
   kopii” albo pytanie jest wąskim faktem: `python3 /tmp/wiedza.py szukaj "A" "B" "C" --krotko --limit 100 --db /tmp/wiedza.sqlite` – pkt 3.
-- Pozostałe polecenia (`temat`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`
+- Pozostałe polecenia (`temat`, `zrodla`, `duplikaty`, `stan`) i flagi (kilka sformułowań w jednym `szukaj`, `--krotko`
   z sekcją podobnych, `temat --lista`) mają ten sam kształt co w Claude Code, z `--db /tmp/wiedza.sqlite`. `etap --czesc k` też działa,
   ale poziom „cały etap” jest tylko dla Maca (`pytanie-do-bazy.md`, pkt 3). `--sens` tu nie działa (brak Ollamy) – daje zwykły wynik po słowach.
 - `migawka.md` (ta sama droga pobrania: `test -s /tmp/migawka.md || curl … /contents/migawka.md`) – otwarte wpisy Notatnika

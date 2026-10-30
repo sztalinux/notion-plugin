@@ -136,10 +136,12 @@ to samo zagadnienie potwierdzają albo uzupełniają). Nie dopisuj wiedzy z pami
   źródeł; ciekawostki jako licznik) → **Otwarte** → **Czego baza nie ma** → **Z internetu** `[internet]` → **Moja opinia**
   `[opinia]` → **Czego nie sprawdziłem** (kosztorys, projekt, Notion…) i proponowane zapisy (za zgodą).
 Przy tezie z „Moim komentarzem” podaj go (`wiedza`, H). Szczegóły z Notion tylko dla WI, na których opierasz decyzję.
+Obie warstwy kończ sekcją „📚 Na czym się opieram” (`budowa`, zasada 14): Zasięg mówi, ile przeczytałeś, ta sekcja – na czym
+oparłeś odpowiedź; źródła tez z karty pobierz jednym `zrodla WI-… ` (karta drukuje tezy bez źródeł).
 
 ## 10. Budżet wywołań
 
-Karta: strona dostępu + `karty --do` (z pobraniem kopii) + części (zwykle 1–3) + Notatnik = ok. 4–6 wywołań, mniej niż dawne
+Karta: strona dostępu + `karty --do` (z pobraniem kopii) + części (zwykle 1–3) + Notatnik + `zrodla` = ok. 5–7 wywołań, mniej niż dawne
 „normalnie”. Droga zapasowa: `szybko` do 2 wywołań poza Notatnikiem (pobranie + `szukaj`; strona dostępu), `normalnie` 5–8 (strona
 dostępu, `szukaj` do pliku i porcje, `temat` do pliku i porcje, Notatnik), `dokładnie` do 10, `cały etap` (tylko Mac) liczba części
 + 3 (pobranie, Notatnik, zapas) – dziś do 20. Kilka poleceń łącz w jedno wywołanie (średnikiem). Nie powtarzaj `karty --do` ani
