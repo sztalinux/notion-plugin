@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.13.1] – 2026-10-30
+
+- Karty wiedzy: karta „Kontrola robót i zamknięcie stanu zero” (4–5 części, ponad limit telefonu) podzielona na trzy:
+  `stan-zero-kontrola-zakrycie` (przed betonowaniem i zakryciem), `stan-zero-kontrola-zasypka` (izolacje, drenaż, zasypka)
+  i `stan-zero-zamkniecie` (odbiór etapu, pokrycie wzorca INW-05 100%); każda mieści się w 3 częściach. Odwołania w `etap`
+  i `wiedza/references/karty.md` zaktualizowane. Tezy bazy skrócone (1 055 z 2 199; średnio 304 → 243 znaki), uzasadnienia
+  przeniesione do „Szczegóły” – telefon czyta rzetelnie ok. 308 tez zamiast 246.
+
 ## ja [1.6.2] – 2026-10-30
 
 - Wpisy: słowa względne bez daty („dziś”, „jutro”, „w piątek”) liczone od daty przetwarzania, bez pytania i bez „❓” – przebiegi idą

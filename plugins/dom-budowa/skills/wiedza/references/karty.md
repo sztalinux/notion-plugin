@@ -17,7 +17,7 @@ Jak czat korzysta z kart: `pytanie-do-bazy.md`, pkt 2; polecenia `karty` i `kart
   czynnością przez model na Macu, zwykle 10–60 tez, karta mała. **Pokrycie niemierzone** („tagi modelu”). Służy pytaniom wąskim
   i nietypowym – czat bierze 2–4 karty naraz.
 
-Karty mają kody ASCII (np. `stan-zero-kontrola`, `betonowanie-plyty`). Aktualną listę daje wyłącznie `karty` – definicje się zmieniają,
+Karty mają kody ASCII (np. `stan-zero-zamkniecie`, `betonowanie-plyty`). Aktualną listę daje wyłącznie `karty` – definicje się zmieniają,
 więc nie przepisuj jej do procedur ani do rozmów.
 
 ## Gdzie leżą dane
