@@ -52,7 +52,10 @@ kopiuj do odpowiedzi.
 4. **Testy.** W `<repo pulpitu>`: `npm run check` (build + testy). Czerwono → **nie publikuj**, zgłoś, co padło (🛑),
    zdejmij blokadę, w `meta/prosba` ustaw „błąd” z krótkim powodem.
 5. **Publikacja.** Opublikuj `dist/pulpit.html` narzędziem Artifact pod stałym adresem pulpitu (`url` z `adresy.md`; nigdy
-   nowy adres). Potem w bazie strony: `meta/sync` (czas, wersja strony, liczby) i `meta/prosba` → „wykonana” (kto, kiedy).
+   nowy adres) **razem z plikami obok strony**: `files` = {`styl.css`: `dist/styl.css`, `skrypt.js`: `dist/skrypt.js`}
+   (od pulpitu 0.5.1 strona jest cienka, a CSS, JS i dane leżą w tych dwóch plikach – strona bez nowych plików pokazałaby stare
+   dane). Narzędzie wymaga wcześniejszego odczytu strony z nowej sesji: wystarczy odczyt `index.html` (ok. 18 KB), nie czytaj
+   `skrypt.js`. Potem w bazie strony: `meta/sync` (czas, wersja strony, liczby) i `meta/prosba` → „wykonana” (kto, kiedy).
    Dopisz linię do `.dom/pulpit/sync-log.jsonl` (wyzwalacz, liczby, konflikty, wersja strony – `references/obieg.md`).
    Zdejmij blokadę (`rmdir .dom/pulpit/sync.lock`).
 6. **Podsumowanie** w blokach jak w innych procedurach (format: `budowa`, „Domknięcie każdej rozmowy”):

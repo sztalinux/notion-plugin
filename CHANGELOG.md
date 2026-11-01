@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.15.1] – 2026-11-01
+
+- `pulpit`, krok 5 i `references/obieg.md`: publikacja strony razem z plikami obok (`styl.css`, `skrypt.js` jako `files`) – pulpit od
+  0.5.1 ma cienką stronę, żeby odczyt i publikacja z nowej sesji nie kosztowały ok. 120 tys. tokenów.
+
 ## dom-budowa [2.15.0] – 2026-11-01
 
 - Nowa procedura `pulpit` (obieg pulpitu budowy, zadanie 2.2): odczyt bazy strony do `stan.json`, push do Notion z suchym biegiem i obsługą

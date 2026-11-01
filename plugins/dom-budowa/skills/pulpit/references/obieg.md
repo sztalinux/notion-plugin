@@ -74,7 +74,7 @@ uzupełniaj ich w `dane.json` ręcznie (plik jest generowany). `--sprawdz` walid
 
 ## Publikacja i log (krok 5)
 
-- Publikuj `dist/pulpit.html`; adres pulpitu bierz z `.dom/pulpit/adresy.md`. Odpowiedź publikacji (wersja) wpisz do `meta/sync`.
+- Publikuj `dist/pulpit.html` z `files` {`styl.css`, `skrypt.js`} z `dist/` (zawsze trzy pliki razem); adres pulpitu bierz z `.dom/pulpit/adresy.md`. Odpowiedź publikacji (wersja) wpisz do `meta/sync`.
 - `meta/sync`: `{czas, wersja_strony, wyzwalacz, liczby}`. `meta/prosba`: stan `wykonana`, `kiedy_wykonano`, `kto`.
 - Linia w `.dom/pulpit/sync-log.jsonl` (jedna linia JSON, dopisywana; push dopisuje własną linię sam, więc ta jest linią
   całego obiegu): `{"czas", "skrypt": "pulpit", "tryb": "pelny|podglad", "wyzwalacz": "recznie|przycisk", "zapisano",
