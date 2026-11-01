@@ -82,9 +82,18 @@ claude.ai (telefon, czat, Cowork) ◄── pluginy ja + dom-budowa ─┘   (ka
 | `etap` | „zaczynamy etap”, „jutro betonowanie”, odbiór, usterki | plan etapu, bramki „bez odwrotu”, protokół odbioru |
 | `dziennik` | „dziś na budowie…”, zdjęcia, godziny własne, roboty dodatkowe | Dziennik budowy w Notion, przekazanie kosztów/zadań |
 | `harmonogram` | „ekipa wchodzi…”, „przesuwamy…”, „czekam na…”, „co mnie czeka” | harmonogram w Notion (oś czasu), terminy pochodne (zamówienia, bramki, ludzie), przesunięcia |
+| `pulpit` | „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło” (tylko Claude Code) | obieg pulpitu budowy: zaznaczenia ze strony → Notion (statusy, decyzje), świeże dane z Notion, testy, publikacja pod stałym adresem |
 | `zakupy` | „co kupić na…”, „kiedy zamawiać”, oferta hurtowni, dostawa | lista z kosztorysu, wyprzedzenia, porównanie dostawców |
 | `przygotowanie` | „jutro spotkanie z…”, „o co zapytać”, „kogo wybrać z kilku” | karta przygotowania: pytania, czerwone flagi, macierz decyzji, zapis po spotkaniu |
 | `przeglad-tygodnia` | poniedziałek / „co nowego” | decyzje, nowa wiedza, terminy, budowa, zamówienia, porządki |
+
+## Pulpit budowy
+
+Pulpit budowy to strona (artefakt claude.ai) z decyzjami, rozbieżnościami, krokami etapu, checklistą i zadaniami. Jego kod i testy są w osobnym,
+**prywatnym** repozytorium; tu jest tylko procedura `pulpit` (`plugins/dom-budowa/skills/pulpit/`) i pola Notion, na których pulpit stoi
+(`notion-mapa.md`: NT, Pulpit, Dotyczy etapu, Krok). Procedura przenosi zaznaczenia ze strony do Notion, ściąga świeże dane, uruchamia testy
+i publikuje stronę pod stałym adresem – wyłącznie na polecenie i tylko w sesji interaktywnej Claude Code (narzędzia artefaktów nie działają w trybie `claude -p`).
+Adresy artefaktów i dane robocze leżą w folderze budowy poza repo.
 
 ## Indeks wiedzy
 

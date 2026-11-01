@@ -24,6 +24,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 | Start etapu, „co sprawdzić przed betonowaniem”, odbiór, usterki | `plugins/dom-budowa/skills/etap/SKILL.md` |
 | Relacja z dnia na budowie, zdjęcia, godziny własne, roboty dodatkowe | `plugins/dom-budowa/skills/dziennik/SKILL.md` |
 | Harmonogram, terminy, przesunięcia, „czekam na”, „co mnie czeka” | `plugins/dom-budowa/skills/harmonogram/SKILL.md` |
+| Pulpit budowy: „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło”, decyzje z pulpitu do Notion | `plugins/dom-budowa/skills/pulpit/SKILL.md` |
 | Lista zakupów na etap, oferty hurtowni, kiedy zamawiać, dostawa | `plugins/dom-budowa/skills/zakupy/SKILL.md` |
 | Luźne wpisy ze strony „📓 Dziennik”: „przerób dziennik”, kilka notatek naraz | `plugins/ja/skills/wpisy/SKILL.md` |
 | Emocja, dzień w pracy, podsumowanie emocji | `plugins/ja/skills/emocje/SKILL.md` |

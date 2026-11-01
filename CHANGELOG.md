@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.15.0] – 2026-11-01
+
+- Nowa procedura `pulpit` (obieg pulpitu budowy, zadanie 2.2): odczyt bazy strony do `stan.json`, push do Notion z suchym biegiem i obsługą
+  konfliktów, pull świeżych danych, testy, publikacja pod stałym adresem, `meta/sync` i zamknięcie prośby, log, podsumowanie w blokach
+  ✅ ⏳ 🛑. Tryb „pokaż, co by się zmieniło” bez zapisu. Tylko sesja interaktywna Claude Code. Szczegóły: `pulpit/references/obieg.md`.
+- Mapa Notion: Notatnik – pola NT, Pulpit, Dotyczy etapu, Krok (relacja → Harmonogram); Checklista budowy – pole Krok; Harmonogram –
+  relacje zwrotne Notatnik i Checklista. Wiersz `pulpit` w mapie procedur (`budowa`), `AGENTS.md` i README.
+
 ## dom-budowa [2.14.1] – 2026-10-30
 
 - Spójność z jedną drogą szukania (`budowa`, zasada 10; przegląd Z10): `etap` A.8, `przygotowanie` krok 3 i `analiza-techniczna`

@@ -44,6 +44,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | relacjonuje dzień na budowie, wysyła zdjęcia, podaje swoje godziny, „ekipa chce dopłatę za…” | `dziennik` |
 | „co kupić na…”, „ile zamówić”, „kiedy zamawiać okna”, oferta hurtowni, „przyjechała dostawa” | `zakupy` |
 | „ekipa wchodzi…”, „przesuwamy…”, „ułóż harmonogram”, „do piątku mam…”, „czekam na…”, „co mnie czeka” | `harmonogram` |
+| „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło”, „przenieś decyzje z pulpitu”, „opublikuj pulpit”, polecenie z przycisku „Odśwież” na stronie pulpitu | `pulpit` (tylko sesja interaktywna Claude Code: przenosi zaznaczenia ze strony pulpitu do Notion, ściąga świeże dane, testuje i publikuje stronę) |
 | poprawia sposób pracy asystenta, chce nową procedurę, „mam pomysł na…” (setup, automatyzacja), „zrób POM-n” | `rozwoj-harnessu` (plugin `ja`) |
 | sprawy pozabudowlane: emocje, zadania prywatne, dziecko, suplementy, „przerób dziennik” | `ja` (plugin `ja`) |
 
