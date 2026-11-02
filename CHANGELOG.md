@@ -4,6 +4,13 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.16.1] – 2026-11-02
+
+- `budowa`, „Luźny wpis z Dziennika”: klasa „zakup” (kupić / zamówić / kupiłem X na budowę lub działkę) → `zakupy`, sekcja 0,
+  zamiast `notatka` / TASKS.
+- `przeglad-tygodnia` 5b: po terminie tylko pozycje przed zamówieniem (bez Zamówione / Potwierdzone / Dostarczone) – drobnica
+  przechodzi z „Do kupienia” od razu w „Dostarczone”.
+
 ## dom-budowa [2.16.0] – 2026-11-02
 
 - Baza „Zamówienia i dostawy” → **🧱 Zakupy budowy** (ten sam `collection://`): wszystko, co idzie na działkę albo do budynku

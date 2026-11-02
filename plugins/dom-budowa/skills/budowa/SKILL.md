@@ -56,7 +56,7 @@ Inwestor wpisuje wszystko na stronę „📓 Dziennik”; skill `wpisy` (plugin 
 tutaj (mechanika strony – strefy, „❓”, „Przetworzone” – jest w `wpisy`). Dla każdego wpisu o budowie:
 
 1. **Klasa:** ustalenie/decyzja, pytanie do kogoś, ryzyko, zadanie z terminem, relacja z dnia na budowie, wiedza ogólna
-   (usłyszał, przeczytał, obejrzał), wydatek/koszt, oferta, dokument do posortowania, pomysł/do doczytania.
+   (usłyszał, przeczytał, obejrzał), zakup, wydatek/koszt, oferta, dokument do posortowania, pomysł/do doczytania.
 2. **Jednoznaczny i ze źródłem:** da się zapisać jako samodzielne zdanie (co, czego dotyczy, liczba, kiedy); dla wiedzy
    i ustaleń znane jest źródło (kto powiedział / skąd; własne przemyślenie = „własne”). Nie → wraca do `wpisy` jako „❓”
    z 1–3 pytaniami i propozycją interpretacji.
@@ -68,6 +68,7 @@ tutaj (mechanika strony – strefy, „❓”, „Przetworzone” – jest w `wp
    | ustalenie, decyzja, pytanie, ryzyko, pomysł, doczytać | `notatka` | ustalenie z wiedzą techniczną → także `wiedza`, sekcja F |
    | zadanie z terminem, „do piątku dam znać…” | `harmonogram` (D) → TASKS, Kto = Ja, Obszar = Dom | |
    | ktoś ma coś zrobić / przyjść / dostarczyć w dniu X | `harmonogram` (D) → TASKS WAITING; krok budowy → Harmonogram | |
+   | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia) | `zakupy` (0) | 🧱 Zakupy budowy, bez zadania w TASKS |
    | relacja z budowy, dostawa, usterka, godziny własne | `dziennik` | |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
    | wydatek, faktura, koszt | `koszty` | wiersz do Excela – wpis zostaje w „❓”, dopóki inwestor go nie wpisze |
