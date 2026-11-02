@@ -4,6 +4,22 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.16.0] – 2026-11-02
+
+- Baza „Zamówienia i dostawy” → **🧱 Zakupy budowy** (ten sam `collection://`): wszystko, co idzie na działkę albo do budynku
+  (materiał, drobnica, narzędzia i sprzęt, wynajem, transport) – nawet drobiazg z marketu. Nowe pola: Rodzaj, Specyfikacja,
+  Sposób zakupu, Link, Dokumenty dostawy; nowy Status „Do kupienia” (drobnica bez etapu zapytania).
+- `zakupy`: granica z 🛒 Zakupy, nowa sekcja 0 (pojedyncza rzecz „kupić X na budowę”, „kupiłem” → Dostarczone + `koszty`),
+  bez zadań „zamówić X do” w TASKS (termin w „Zamówić do”, przypomina wieczorny przegląd budowy); braki z dostawy → nowy wiersz.
+- Nowa nazwa bazy w `budowa` (router, „Wieczorem”), `harmonogram`, `przeglad-tygodnia`, `zrodla.md`, mapie Notion
+  (nowy widok „🧱 Do kupienia na budowę” w zakładce 🛒 Zakupy na ✅ Zadania).
+
+## ja [1.7.0] – 2026-11-02
+
+- 🛒 Zakupy tylko prywatne: Obszar bez opcji „Dom” (Prywatne / Dziecko / Praca); rzeczy na budowę i działkę → `zakupy`
+  z `dom-budowa` (`zadania`, router `ja`, mapa Notion, wiersze „Zakup” i „Budowa” w bazie Obszary).
+- `zadania`: „kupiłem X” na budowę przekazuje do `zakupy`; „co kupić w markecie” pokazuje też blok „🧱 Do kupienia na budowę”.
+
 ## ja [1.6.3] – 2026-11-02
 
 - Instrukcje projektu „Dom” (`rozwoj-harnessu/references/claude-ai-projekt.md`): nowy pkt 4 – bez narzędzi Notion w rozmowie

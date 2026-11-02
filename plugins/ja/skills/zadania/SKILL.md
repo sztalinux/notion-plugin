@@ -8,7 +8,8 @@ description: Zadania inwestora poza budową (prywatne, dziecko, praca) we wspól
 Jedna baza **TASKS** (`collection://2a9f5982-09e7-81be-91e8-000b0e10a05e`) dla domu i spraw prywatnych; obszar rozróżnia
 pole **Obszar** (Dom / Prywatne / Dziecko / Praca; puste = Dom – stare wiersze). Zadania budowy i domu (Obszar = Dom)
 tworzą procedury `notatka` i `harmonogram` z pluginu `dom-budowa` – tu ich nie dubluj; zmianę statusu („zrobiłem”) obsługujesz
-dla wszystkich obszarów. Rzeczy do kupienia (poza suplementami – `suple` – i materiałami budowy – `zakupy` z `dom-budowa`)
+dla wszystkich obszarów. Rzeczy do kupienia (poza suplementami – `suple` – i wszystkim, co idzie na działkę albo do budynku: materiał, drobnica,
+narzędzia, wynajem, nawet drobiazg z marketu budowlanego – `zakupy` z `dom-budowa`, baza 🧱 Zakupy budowy)
 idą do osobnej bazy **🛒 Zakupy** (sekcja „Zakupy” niżej), nie do TASKS.
 
 ## A. Nowe zadanie
@@ -43,13 +44,15 @@ Baza `collection://3747d532-a49b-44a4-b36f-b3196f917243` na stronie ✅ Zadania.
 Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – lista zakupów nie ma zaśmiecać TASKS.
 1. Sprawdź duplikat (wyszukiwarka z parametrem bazy, 1–2 słowa, wśród „Do kupienia” i „Zamówione”); jest → uzupełnij.
 2. Pola: Rzecz (krótko), Status (Do kupienia / Zamówione / Kupione / Odpuszczone), Gdzie (link we wpisie = Internet; inaczej
-   Sklep albo Obojętnie), Sklep / serwis (gdy wynika z wpisu), Ilość, Termin (tylko gdy wpis go ma), Obszar, Link, Cena, Uwagi
+   Sklep albo Obojętnie), Sklep / serwis (gdy wynika z wpisu), Ilość, Termin (tylko gdy wpis go ma), Obszar (Prywatne /
+   Dziecko / Praca; rzeczy do obecnego mieszkania – Prywatne), Link, Cena, Uwagi
    (jedno zdanie: po co, wariant, rozmiar; reszta w treści strony).
 3. **Zadanie w TASKS dołóż tylko** przy terminie, „na już”, „pilnie”, „szybko” albo gdy skończyło się coś codziennego:
    Name „Kupić X”, Kategoria Zakup, Obszar jak w zakupie, relacja Zadanie w Zakupach.
-4. „Kupiłem X” → Zakupy: Status Kupione + Kupione dnia; powiązane zadanie DONE (sekcja B). „Zamówiłem X” → Zamówione.
+4. „Kupiłem X” → Zakupy: Status Kupione + Kupione dnia (rzecz na budowę lub działkę → `zakupy` z `dom-budowa`, sekcja 0); powiązane zadanie DONE (sekcja B). „Zamówiłem X” → Zamówione.
    „Odpuszczam X” → Odpuszczone (powiązane zadanie ARCHIVED).
-5. Odczyt „co kupić”: widok „🛒 Do kupienia” (grupy wg Gdzie), „📦 Zamówione – czekam”, „✅ Kupione” (ID w `ja/references/notion-mapa.md`).
+5. Odczyt „co kupić”: widok „🛒 Do kupienia” (grupy wg Gdzie), „📦 Zamówione – czekam”, „✅ Kupione” (ID w `ja/references/notion-mapa.md`);
+   „co kupić w markecie” – dołóż widok „🧱 Do kupienia na budowę” (drugi blok w zakładce 🛒 Zakupy, ID w mapie).
    Zakup z Termin lub pilny wymień osobno na górze.
 
 ## B. Status istniejącego zadania

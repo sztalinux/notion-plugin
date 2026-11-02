@@ -1,6 +1,6 @@
 ---
 name: zakupy
-description: Zakupy materiałów i sprzętu na etap (głównie prace własne): lista z kosztorysu z ilościami i zapasem, zapytania do hurtowni, porównanie ofert dostawców, terminy zamówień z wyprzedzeniem, dostawy i stan materiału na budowie. Używaj, gdy użytkownik pyta „co muszę kupić na…”, „ile zamówić”, „zrób listę zakupów”, „porównaj oferty hurtowni”, „kiedy zamawiać okna / stal / dachówkę”, „co zamówić już teraz”, wkleja ofertę składu budowlanego, albo mówi „przyjechała dostawa”.
+description: Zakupy na budowę – wszystko, co idzie na działkę albo do budynku (materiał, drobnica, narzędzia, wynajem) w bazie 🧱 Zakupy budowy: pojedyncza rzecz „kupić X na budowę”, lista z kosztorysu z ilościami i zapasem, zapytania do hurtowni, porównanie ofert dostawców, terminy zamówień z wyprzedzeniem, dostawy i stan materiału na budowie. Używaj, gdy użytkownik pyta „co muszę kupić na…”, „ile zamówić”, „zrób listę zakupów”, „porównaj oferty hurtowni”, „kiedy zamawiać okna / stal / dachówkę”, „co zamówić już teraz”, wkleja ofertę składu budowlanego, mówi „kupić taśmę / geowłókninę na budowę”, „kupiłem X na działkę” albo „przyjechała dostawa”.
 ---
 
 # Zakupy – materiały i sprzęt
@@ -10,6 +10,22 @@ z ilościami, zapasem, terminem zamówienia i najlepszą ofertą – bez przesto
 dodatkowych kursów do składu. Liczby wchodzą do Excela (`koszty`), nie do Notion.
 
 Wyprzedzenia zamówień: `references/wyprzedzenia.md`. Układ Excela: `koszty/references/arkusze.md`.
+
+**Granica z 🛒 Zakupy (plugin `ja`):** wszystko, co idzie na działkę albo do budynku – materiał, drobnica (taśma, kotwy,
+folia), narzędzia i sprzęt, wynajem, transport – nawet jedna rolka z marketu → baza **🧱 Zakupy budowy**
+(`collection://a9854c6c-43ec-4bc1-8ef0-273fb02261c7`). Mieszkanie, dziecko, praca, sprawy osobiste → 🛒 Zakupy (`zadania`).
+Zakupów budowy nie dubluj zadaniem w TASKS – termin trzyma pole „Zamówić do”, a przypomina wieczorny przegląd budowy
+(`budowa`, „Wieczorem”).
+
+## 0. Pojedyncza rzecz („kupić X na budowę”, wpis z Dziennika)
+
+1. Sprawdź duplikat (wyszukiwarka z parametrem bazy, 1–2 słowa, wśród niedostarczonych); jest → uzupełnij.
+2. Nowy wiersz jednym wywołaniem: Pozycja (krótko), Status **Do kupienia** (drobnica, rzecz z marketu lub internetu – bez
+   etapu zapytania) albo **Do zapytania** (materiał z hurtowni, betoniarni – sekcja B), Rodzaj, Sposób zakupu, Ilość
+   (z jednostką), Specyfikacja (parametr z projektu, gdy dotyczy konstrukcji, izolacji, betonu), Link, Etap, Kto zamawia
+   = Ja, Zamówić do – tylko gdy wpis ma termin albo wynika z kroku Harmonogramu (wtedy relacja Krok). Kwoty – nie tutaj.
+3. „Kupiłem X na budowę” → Status **Dostarczone**, Dostawa = data; wydatek → `koszty` (gotowy wiersz do Excela);
+   materiał z WZ / deklaracją właściwości → sekcja C.1. „Zamówiłem” → Zamówione.
 
 ## A. Lista zakupów na etap („co kupić na ściany parteru”)
 
@@ -29,11 +45,11 @@ Wyprzedzenia zamówień: `references/wyprzedzenia.md`. Układ Excela: `koszty/re
 5. **Logistyka:** transport (HDS, wymiary palet, dojazd), gdzie składować (pod dachem / na paletach / zabezpieczenie
    przed deszczem i kradzieżą), co kupić w dwóch dostawach.
 6. Wynik: tabela (pozycja | ilość + jednostka handlowa | zapas | kiedy na budowie | zamówić do | skąd / cena orientacyjna
-   netto i brutto | uwagi) + zadania „zamówić X do <data>” → TASKS (`notatka`).
+   netto i brutto | uwagi). Zadań „zamówić X do <data>” w TASKS nie zakładaj – terminy są w bazie.
 
-**Zapis listy:** pozycje do zamówienia → baza Notion **Zamówienia i dostawy** (`collection://a9854c6c-43ec-4bc1-8ef0-273fb02261c7`):
-Pozycja, Ilość, Etap, Krok (relacja do Harmonogramu), Zamówić do, Kto zamawia, Status „Do zapytania” – jednym wywołaniem;
-kwoty tylko w Excelu. Terminy „Zamówić do” liczy procedura `harmonogram` (sekcja B), gdy krok ma datę.
+**Zapis listy:** pozycje do zamówienia → **🧱 Zakupy budowy**: Pozycja, Ilość, Rodzaj, Specyfikacja, Sposób zakupu,
+Etap, Krok (relacja do Harmonogramu), Zamówić do, Kto zamawia, Status „Do zapytania” (drobnica – „Do kupienia”) – jednym
+wywołaniem; kwoty tylko w Excelu. Terminy „Zamówić do” liczy procedura `harmonogram` (sekcja B), gdy krok ma datę.
 
 ## B. Zapytanie i porównanie ofert dostawców
 
@@ -50,11 +66,13 @@ kwoty tylko w Excelu. Terminy „Zamówić do” liczy procedura `harmonogram` (
 
 ## C. Dostawa („przyjechało”, „brakuje”)
 
-Aktualizuj wiersz w Zamówieniach: Status (Zamówione → Potwierdzone → Dostarczone / Problem), Dostawa, Rozładunek.
+Aktualizuj wiersz w Zakupach budowy: Status (Zamówione → Potwierdzone → Dostarczone / Problem), Dostawa, Rozładunek.
 
-1. Sprawdź z zamówieniem: ilość, asortyment, uszkodzenia, dokumenty (WZ, deklaracja właściwości) → folder budowy (`dokumenty`).
+1. Sprawdź z zamówieniem: ilość, asortyment, uszkodzenia, dokumenty (WZ, deklaracja właściwości) → folder budowy (`dokumenty`);
+   są w folderze → zaznacz „Dokumenty dostawy”.
 2. Wydatek → `koszty` (Zrealizowane, nr FV); wpis w `dziennik` (dostawy).
-3. Braki / nadwyżki: co dokupić (z terminem) albo co zwrócić – zadanie w TASKS.
+3. Braki / nadwyżki: co dokupić → nowy wiersz w Zakupach budowy (z „Zamówić do”); co zwrócić → Uwagi
+   w wierszu dostawy.
 
 ## Zasady
 

@@ -11,7 +11,7 @@ Zasada podziału: **harness = JAK pracujemy** (procedury, formaty, zasady) – t
 | Procedury, zasady, szablony | publiczne repo GitHub `sztalinux/notion-plugin` → pluginy `dom-budowa` i `ja` na koncie Claude (aktualizacja: ręczne odświeżenie lub synchronizacja – plugin `ja`, `rozwoj-harnessu/references/claude-ai-projekt.md`) | Claude Code (`rozwoj-harnessu`, sekcja B) |
 | Zgłoszone zmiany harnessu (obowiązują od razu) | Notion → 🤖 Asystent AI (najwyższy poziom) → Zmiany do harnessu | dowolny asystent (`rozwoj-harnessu`, sekcja A) |
 | Pomysły na rozwój (do analizy; wdrożenie tylko na polecenie) | Notion → 🤖 Asystent AI → 💡 Pomysły na rozwój | inwestor wpisuje, asystent analizuje (`rozwoj-harnessu`, sekcja C) |
-| Terminy: harmonogram, zadania, czekam na, zamówienia | Notion → Harmonogram, TASKS, Zamówienia i dostawy (daty); kwoty i płatności – Excel (arkusz Płatności) | agent (`harmonogram`, `zakupy`), inwestor |
+| Terminy: harmonogram, zadania, czekam na, zamówienia | Notion → Harmonogram, TASKS, 🧱 Zakupy budowy (daty); kwoty i płatności – Excel (arkusz Płatności) | agent (`harmonogram`, `zakupy`), inwestor |
 | Umowy, odbiory, gwarancje | Notion → Umowy i gwarancje; skany – folder budowy | agent (`oferta`, `etap`), inwestor |
 | Luźne wpisy inwestora do rozłożenia (wszystkie obszary, także budowa) | Notion → „📓 Dziennik” (wolny tekst; podział na obszary w bazie „🧭 Obszary Dziennika”) | inwestor wpisuje, agent przetwarza (`wpisy`, plugin `ja`; sprawy budowy – `budowa`, „Luźny wpis z Dziennika”) |
 | Liczby: kosztorys, wydatki, oferty, wykonawcy (z kontaktami) | Excel „Kosztorys_stan_zero.xlsx” – prowadzi inwestor | Inwestor; agent tylko na prośbę (`koszty`): w Claude Code plik z folderu budowy, na claude.ai plik załączony w rozmowie (w wiedzy projektu go nie ma) |
@@ -51,7 +51,7 @@ Pełna mapa z perspektywy „czego szukasz” (widoki, pola, słowniki): `notion
 | Dziennik budowy (data source) | `collection://cc113d57-3eaa-4f52-80f6-e4b39a4b4c92` |
 | Przewodnik po dokumentach i Notion (strona, generowana) | `3f6f5982-09e7-81f5-bade-ec877d8d936a` |
 | Harmonogram (data source) | `collection://d7a479ab-1e23-453f-8f59-55f4097f7d04` |
-| Zamówienia i dostawy (data source) | `collection://a9854c6c-43ec-4bc1-8ef0-273fb02261c7` |
+| 🧱 Zakupy budowy (data source) | `collection://a9854c6c-43ec-4bc1-8ef0-273fb02261c7` |
 | Umowy i gwarancje (data source) | `collection://60c06f30-7867-435d-8f2e-1e025a3daa5c` |
 
 Schematy baz budowy (pola i dozwolone wartości): `skills/notatka/references/notion-schematy.md`.

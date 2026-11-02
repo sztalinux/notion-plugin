@@ -42,7 +42,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | dostał nowe pliki od projektanta/wykonawcy, pyta o dokument, „co wgrać do claude.ai”, „wgrałem” | `dokumenty` |
 | „zaczynamy etap”, „jutro betonowanie – co sprawdzić”, „ekipa skończyła”, odbiór, usterki | `etap` |
 | relacjonuje dzień na budowie, wysyła zdjęcia, podaje swoje godziny, „ekipa chce dopłatę za…” | `dziennik` |
-| „co kupić na…”, „ile zamówić”, „kiedy zamawiać okna”, oferta hurtowni, „przyjechała dostawa” | `zakupy` |
+| „co kupić na…”, „kupić X na budowę / działkę”, „ile zamówić”, „kiedy zamawiać okna”, oferta hurtowni, „przyjechała dostawa” | `zakupy` |
 | „ekipa wchodzi…”, „przesuwamy…”, „ułóż harmonogram”, „do piątku mam…”, „czekam na…”, „co mnie czeka” | `harmonogram` |
 | „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło”, „przenieś decyzje z pulpitu”, „opublikuj pulpit”, polecenie z przycisku „Odśwież” na stronie pulpitu | `pulpit` (tylko sesja interaktywna Claude Code: przenosi zaznaczenia ze strony pulpitu do Notion, ściąga świeże dane, testuje i publikuje stronę) |
 | poprawia sposób pracy asystenta, chce nową procedurę, „mam pomysł na…” (setup, automatyzacja), „zrób POM-n” | `rozwoj-harnessu` (plugin `ja`) |
@@ -82,7 +82,7 @@ własny przegląd, żeby nie zasłaniała spraw osobistych.
 1. **Dziś** (odczyt): wpisy o budowie przetworzone dziś (blok dnia w „Przetworzone” w Dzienniku), Dziennik budowy z dzisiejszą
    datą, Notatnik i TASKS (Obszar Dom/puste) zamknięte lub dodane dziś, nowe decyzje czekające na inwestora (❓ o budowie, SP).
 2. **Jutro** (odczyt): kroki Harmonogramu startujące jutro (krok „bez odwrotu” → czy jest zadanie bramki, procedura `etap`),
-   dostawy jutro, Zamówienia z „Zamówić do” = jutro lub po terminie, TASKS Dom z When = jutro, „czekam na” (WAITING) z terminem
+   dostawy jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone), TASKS Dom z When = jutro, „czekam na” (WAITING) z terminem
    jutro albo po terminie.
 3. **Wpis w „📆 Przeglądy dzienne – budowa”** (`3f8f5982-09e7-815e-8b03-eacaa74db190`, strona na DOM) – tylko gdy dziś albo
    jutro coś jest: zwijany nagłówek „Przegląd dnia budowy – <dzień tygodnia> <data>” na górze strony (najnowszy pierwszy),

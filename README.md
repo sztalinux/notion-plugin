@@ -83,7 +83,7 @@ claude.ai (telefon, czat, Cowork) ◄── pluginy ja + dom-budowa ─┘   (ka
 | `dziennik` | „dziś na budowie…”, zdjęcia, godziny własne, roboty dodatkowe | Dziennik budowy w Notion, przekazanie kosztów/zadań |
 | `harmonogram` | „ekipa wchodzi…”, „przesuwamy…”, „czekam na…”, „co mnie czeka” | harmonogram w Notion (oś czasu), terminy pochodne (zamówienia, bramki, ludzie), przesunięcia |
 | `pulpit` | „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło” (tylko Claude Code) | obieg pulpitu budowy: zaznaczenia ze strony → Notion (statusy, decyzje), świeże dane z Notion, testy, publikacja pod stałym adresem |
-| `zakupy` | „co kupić na…”, „kiedy zamawiać”, oferta hurtowni, dostawa | lista z kosztorysu, wyprzedzenia, porównanie dostawców |
+| `zakupy` | „kupić X na budowę”, „co kupić na…”, „kiedy zamawiać”, oferta hurtowni, dostawa | wszystko na działkę i do budynku w 🧱 Zakupy budowy, lista z kosztorysu, wyprzedzenia, porównanie dostawców |
 | `przygotowanie` | „jutro spotkanie z…”, „o co zapytać”, „kogo wybrać z kilku” | karta przygotowania: pytania, czerwone flagi, macierz decyzji, zapis po spotkaniu |
 | `przeglad-tygodnia` | poniedziałek / „co nowego” | decyzje, nowa wiedza, terminy, budowa, zamówienia, porządki |
 

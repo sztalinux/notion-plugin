@@ -39,7 +39,7 @@ Podział wpisów na obszary **nie jest w harnessie** – jest w bazie Notion „
 | „przerób dziennik”, „co mam w dzienniku”, wkleja kilka luźnych notatek naraz, „odpowiedziałem w dzienniku” | `wpisy` |
 | opisuje emocję („czułem złość na 7…”), dzień w pracy, prosi o podsumowanie emocji | `emocje` |
 | „muszę…”, „przypomnij mi…”, „zrobiłem X”, „czekam na…”, „co mam jutro / w tym tygodniu” (sprawy pozabudowlane) | `zadania` |
-| „kupić X”, link do produktu, „kupiłem X”, „co kupić” (nie suplementy, nie materiały budowy) | `zadania` (sekcja „Zakupy”) |
+| „kupić X”, link do produktu, „kupiłem X”, „co kupić” (nie suplementy; nie rzeczy na budowę ani działkę – te `zakupy` z `dom-budowa`) | `zadania` (sekcja „Zakupy”) |
 | mówi o dziecku: obserwacja, „porozmawiać z nią o…”, prezent, zabawa, zalecenie specjalisty | `dziecko` |
 | „kończy się X”, „kupiłem X”, „zaczynam / przerwa od” (suplement) | `suple` |
 | „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` |
