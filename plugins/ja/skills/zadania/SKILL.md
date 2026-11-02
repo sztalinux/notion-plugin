@@ -52,7 +52,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 4. „Kupiłem X” → Zakupy: Status Kupione + Kupione dnia (rzecz na budowę lub działkę → `zakupy` z `dom-budowa`, sekcja 0); powiązane zadanie DONE (sekcja B). „Zamówiłem X” → Zamówione.
    „Odpuszczam X” → Odpuszczone (powiązane zadanie ARCHIVED).
 5. Odczyt „co kupić”: widok „🛒 Do kupienia” (grupy wg Gdzie), „📦 Zamówione – czekam”, „✅ Kupione” (ID w `ja/references/notion-mapa.md`);
-   „co kupić w markecie” – dołóż widok „🧱 Do kupienia na budowę” (drugi blok w zakładce 🛒 Zakupy, ID w mapie).
+   „co kupić w markecie” – dołóż widok „🧱 Do kupienia na budowę” (podzakładka 🧱 Budowa w zakładce 🛒 Zakupy, ID w mapie).
    Zakup z Termin lub pilny wymień osobno na górze.
 
 ## B. Status istniejącego zadania

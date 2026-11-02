@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.16.2] – 2026-11-02
+
+- Mapa Notion: widok „🧱 Do kupienia na budowę” jest w podzakładce 🧱 Budowa zakładki 🛒 Zakupy na ✅ Zadania.
+
+## ja [1.7.1] – 2026-11-02
+
+- Zakładka 🛒 Zakupy na ✅ Zadania ma podzakładki 🏠 Prywatne i 🧱 Budowa (mapa Notion, `zadania`).
+
 ## dom-budowa [2.16.1] – 2026-11-02
 
 - `budowa`, „Luźny wpis z Dziennika”: klasa „zakup” (kupić / zamówić / kupiłem X na budowę lub działkę) → `zakupy`, sekcja 0,
