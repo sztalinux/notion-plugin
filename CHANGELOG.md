@@ -4,6 +4,12 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.6.3] – 2026-11-02
+
+- Instrukcje projektu „Dom” (`rozwoj-harnessu/references/claude-ai-projekt.md`): nowy pkt 4 – bez narzędzi Notion w rozmowie
+  odczyty z indeksu i migawki, zapisy do „📥 Skrzynki”, bez odmowy (jak `budowa` zasada 13 i `ja` zasada 11); dawny pkt 4 → 5.
+  **Tekst instrukcji się zmienił – wklej na nowo** `dist/claude-ai-projekt/instrukcje.md` w projekcie „Dom” na claude.ai.
+
 ## dom-budowa [2.15.1] – 2026-11-01
 
 - `pulpit`, krok 5 i `references/obieg.md`: publikacja strony razem z plikami obok (`styl.css`, `skrypt.js` jako `files`) – pulpit od
