@@ -77,9 +77,11 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    - strona z widgetu, pozycja Skrzynki – we „Wpisach” akapit ze wzmianką strony (Skrzynka: treść dosłownie) i okienkiem
      pod nim; strona zostaje na miejscu i nie jest nowym wpisem, dopóki inwestor nie odpowie w okienku albo nie zmieni
      strony po dacie pytania.
-   Wpis z odpowiedzią – połącz z nią i oceń ponownie.
+   Wpis z odpowiedzią – połącz z nią i oceń ponownie. **Wpis jasny tylko w części** (np. zadanie zapisane, kwota albo
+   miejsce niejasne) → zapisz jasną część, jej ślad daj do „Przetworzone” z dopiskiem „(reszta – pytanie we Wpisach)”,
+   a wpis zostaw we „Wpisach” z okienkiem o brakującą część; zamknij go (krok 6) dopiero po odpowiedzi.
    Odpowiedź opisuje rodzaj wpisu, którego nie ma w Obszarach → przetwórz go i **zaproponuj nowy wiersz Obszarów**
-   w okienku pod tym wpisem („Dodać obszar »…« z rozpoznawaniem »…«, zapis do …?”; wpis zostaje we „Wpisach” do odpowiedzi); po zgodzie dodaj go (bez zmiany harnessu). Gdy nowy obszar wymaga
+   w okienku pod tym wpisem („Dodać obszar »…« z rozpoznawaniem »…«, zapis do …?”; jak wpis jasny w części – wyżej); po zgodzie dodaj go (bez zmiany harnessu). Gdy nowy obszar wymaga
    własnej logiki, której nie da się opisać w polu „Jak zapisać” – zaproponuj pomysł (`rozwoj-harnessu`, C).
 5. **Jednoznaczny → wykonaj obszar:**
    - Procedura = nazwa skilla (`budowa`, `emocje`, `zadania`, `dziecko`, `suple`, `rozwoj-harnessu`) → wczytaj ten skill

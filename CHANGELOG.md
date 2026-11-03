@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.8.1] – 2026-11-03
+
+- `wpisy`, krok 4: wpis jasny tylko w części – jasna część zapisana (ślad w „Przetworzone”), wpis zostaje we „Wpisach”
+  z okienkiem o brakującą część i zamyka się po odpowiedzi.
+
 ## ja [1.8.0] – 2026-11-03
 
 - Pytania o niejasne wpisy trafiają pod wpis w „📝 Wpisy” (nie do „❓” w Dzienniku): krótkie okienko ❓ z jednym pytaniem
