@@ -11,7 +11,7 @@ Pulpit **DOM** `24af5982-09e7-806b-821a-e157ff33be42` – u góry odnośnik do D
 
 ```
 DOM
-├─ ✍️ Wpisy → 📓 Dziennik (osobna strona, plugin `ja`) – luźne wpisy i „❓” pytania asystenta są tam, nie na DOM
+├─ ✍️ Wpisy → 📓 Dziennik (osobna strona, plugin `ja`) – luźne wpisy i pytania asystenta (okienka ❓ pod wpisami w „📝 Wpisy”) są tam, nie na DOM
 ├─ ✅ Zadania budowy (toggle) → widok TASKS „🏗 Zadania budowy – otwarte” (`view://3612dacf-51d8-4b08-a006-7623f74f0c3e`,
 │     Obszar Dom/puste, bez DONE/ARCHIVED); sama baza TASKS leży na stronie
 │     ✅ Zadania (plugin `ja`), wspólna ze sprawami osobistymi
@@ -37,7 +37,7 @@ pod nią 🔑 Asystent – dostęp (dostęp do kopii indeksu wiedzy dla czatu).
 
 | Czego szukasz | Gdzie (strona / baza → widok/sekcja) | ID | Najważniejsze pola |
 |---|---|---|---|
-| Luźne wpisy do przetworzenia; pytania asystenta do inwestora | 📓 Dziennik (plugin `ja`): nowe wpisy = bloki 1. poziomu, bloki w treści i podstrony „📝 Wpisy” oraz strony z widgetu na najwyższym poziomie Private (definicja w `wpisy`); „❓ Czeka na Twoją odpowiedź”; „Przetworzone” = ślad, zwijany blok na dzień | `3f8f5982-09e7-80c8-a154-c59aeb844e8f` | – (wolny tekst) |
+| Luźne wpisy do przetworzenia; pytania asystenta do inwestora | 📓 Dziennik (plugin `ja`): nowe wpisy = bloki 1. poziomu, bloki w treści i podstrony „📝 Wpisy” oraz strony z widgetu na najwyższym poziomie Private (definicja w `wpisy`); niejasne czekają we „Wpisach” z okienkiem ❓ pod wpisem, pytania spoza wpisów w „❓ Czeka na Twoją odpowiedź”; „Przetworzone” = ślad, zwijany blok na dzień | `3f8f5982-09e7-80c8-a154-c59aeb844e8f` | – (wolny tekst) |
 | Parametry projektu | DOM → „🤖 Dla asystenta” → „📐 Dane projektu (ściąga)” | `24af5982-09e7-806b-821a-e157ff33be42` | – |
 | Jakie mamy dokumenty, co w którym jest, gdzie leżą | 📑 Przewodnik po dokumentach i Notion (generowany – nie edytuj) | `3f6f5982-09e7-81f5-bade-ec877d8d936a` | – |
 | Co blokuje bieżący etap | DOM → zakładka 🏗 Etap → „🔴 Do zamknięcia przed …” (nagłówek rozwijany z widokiem Notatnika „🔴 Blokady – <etap>”); szerzej: Notatnik → widok „🔴 Krytyczne i otwarte” | `view://ddbaff9a-2f5b-47a5-bf7b-aa031bf88fc8`; `view://3f3f5982-09e7-8125-a50b-000ce287ad48` | Blokady: Priorytet Krytyczne, Status Otwarte/Do omówienia, Etap = bieżący lub „Projekt i formalności”. Szerszy: Krytyczne/Ważne |

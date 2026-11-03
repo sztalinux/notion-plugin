@@ -71,8 +71,8 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
    „→ już zamknięte (ręcznie)” z odnośnikiem.
 2. Jedno trafienie → zmień status; w treści strony dopisz linię „<data>: <co się stało> (z Dziennika)”. Zadanie budowy
    (Obszar Dom/puste) z powiązanym krokiem Harmonogramu → status kroku zostaw procedurze `harmonogram` (przekaż jej sprawę).
-3. Brak trafienia także wśród świeżo zamkniętych → Dziennik „❓”: „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
-4. Kilka trafień → „❓” z listą (nazwa, termin) do wyboru.
+3. Brak trafienia także wśród świeżo zamkniętych → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4): „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
+4. Kilka trafień → pytanie pod wpisem z nazwami do wyboru (max 3, z terminem).
 
 ## C. Odczyt
 

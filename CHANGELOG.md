@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.8.0] – 2026-11-03
+
+- Pytania o niejasne wpisy trafiają pod wpis w „📝 Wpisy” (nie do „❓” w Dzienniku): krótkie okienko ❓ z jednym pytaniem
+  i propozycją, linia ✍️ na odpowiedź; przerabia ją następny przebieg godzinowy (`wpisy`, `pytania.md` A). Niejasny blok
+  z Dziennika, strona z widgetu i pozycja Skrzynki dostają okienko we „Wpisach”. „❓” w Dzienniku zostaje dla pytań spoza
+  wpisów (RES-n, luki w zadaniach); szybki przebieg nie liczy czekających wpisów jako nowych (`przeglad-dnia` A.2).
+  Odwołania w `ja`, `emocje`, `zadania`, `suple`, `przeglad-tygodnia-osobisty`, mapie Notion i README.
+
+## dom-budowa [2.16.3] – 2026-11-03
+
+- Wpisy o budowie z pytaniem czekają pod wpisem w „📝 Wpisy” (`budowa`, „Luźny wpis z Dziennika”; `przeglad-tygodnia` 9; mapa Notion).
+
 ## dom-budowa [2.16.2] – 2026-11-02
 
 - Mapa Notion: widok „🧱 Do kupienia na budowę” jest w podzakładce 🧱 Budowa zakładki 🛒 Zakupy na ✅ Zadania.

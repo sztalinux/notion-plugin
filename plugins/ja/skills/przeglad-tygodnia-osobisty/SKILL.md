@@ -39,7 +39,7 @@ przeglad-tygodnia-osobisty z pluginu ja)”. Ręcznie: „przegląd tygodnia”.
    - strona „💍 Wesele”: nowe punkty i zadania „Wesele:” z terminem w 30 dni;
    - Suple: Buy = tak (licznik, nazwy);
    - Zakupy: 🛒 Zakupy „Do kupienia” (licznik, najstarsze) i z Terminem w 7 dni (wymień).
-3. **Dziennik i harness** (odczyt): wpisy w „❓” starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
+3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i pozycje „❓” Dziennika starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
    tylko licznikiem, są w przeglądzie budowy); skrzynka „Zmiany do harnessu” – wpisy do wdrożenia starsze niż 7 dni
    (przypomnienie: uruchom Claude Code); „Pomysły na rozwój” – nowe bez analizy i „Pytania do mnie”.
 4. **Wpis w „📅 Przeglądy tygodniowe”** na górze strony, zwijany nagłówek „Tydzień <RRRR-Www> (<data od–do>)”:
@@ -49,7 +49,7 @@ przeglad-tygodnia-osobisty z pluginu ja)”. Ręcznie: „przegląd tygodnia”.
    **Najbliższy tydzień:** zadania z terminem wg dni, wesele (30 dni), „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Emocje i praca (liczby):** n wpisów emocji, najczęściej: …, śr. intensywność x; praca: n dni, śr. ocena y; wzorzec: …
    **Dziecko:** n nowych tematów do przegadania, n pomysłów na prezent
-   **Czeka na Ciebie:** n pytań w ❓ (najstarsze: …), HZ-x do wdrożenia, POM-x z pytaniami
+   **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia, POM-x z pytaniami
    **🏗 Budowa:** <linia skrótu> → <wzmianka przeglądu budowy z tego tygodnia>
    **Porządki (n):** propozycje z sekcji D – do zatwierdzenia jednym „tak”
    ```
@@ -62,7 +62,7 @@ Bez pytania (także w zaplanowanym przebiegu – to tylko ślad, linki są w doc
 - bloki dni w „Przetworzone” w Dzienniku starsze niż 14 dni → usuń z Dziennika (jedna edycja strony);
 - podstrony w „🗃 Przetworzone podstrony” zostają – nie ruszaj.
 Do zatwierdzenia (propozycja w przeglądzie):
-- wpisy w „❓” bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
+- wpisy z okienkiem ❓ i pozycje „❓” bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
 - TASKS prywatne po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze).

@@ -42,8 +42,8 @@ Pobierz w jak najmniejszej liczbie zapytań:
    (`przeglad-tygodnia-osobisty`, plugin `ja`).
 8. **Dziennik budowy** (ID: `dziennik/references/notion-dziennik.md`): wpisy z 7 dni – dni pracy ekipy
    i własne, otwarte problemy, kroki zakryte bez zdjęć („Przed zakryciem OK” odznaczone).
-9. **Dziennik – sprawy budowy:** wpisy o budowie w „❓ Czeka na Twoją odpowiedź” na stronie „📓 Dziennik”
-   (`3f8f5982-09e7-80c8-a154-c59aeb844e8f`) bez odpowiedzi – wymień wpis i pytanie. Pozostałe wpisy, porządki w Dzienniku
+9. **Dziennik – sprawy budowy:** wpisy o budowie z okienkiem ❓ bez odpowiedzi na stronie „📝 Wpisy”
+   (`3faf5982-09e7-80b2-9b33-c48745d67a4f`, pod „📓 Dziennikiem”) – wymień wpis i pytanie. Pozostałe wpisy, porządki w Dzienniku
    i jego „Przetworzone” – przegląd osobisty (`przeglad-tygodnia-osobisty`, plugin `ja`).
 10. **Spójność** (inwestor edytuje Notion ręcznie – wychwyć rozjazdy, nie naprawiaj bez zgody):
     - Notatnik „Ustalone”/„Zrobione” z wiedzą techniczną bez relacji „Wiedza” → kandydaci do `wiedza`, sekcja F;

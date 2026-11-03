@@ -22,7 +22,7 @@ może się zmienić, a bez Notion nie da się jej sprawdzić; telefon pisze, co 
 - **Treść** dosłownie, jak w Dzienniku – nie streszczaj. **Zrobić** = intencja słowami, z tym, co inwestor powiedział albo co
   wynika z rozmowy (termin jako data, kogo dotyczy, którego etapu). Nie wpisuj nazw pól, statusów ani ID baz.
 - Brak danych (data, czego dotyczy, kto) → nie zgaduj: dopisz w tej samej linii `❓ <pytanie z propozycją>`; Mac przeniesie je
-  do „❓” w Dzienniku (`wpisy`, krok 4). Czego inwestor nie dopowiedział w rozmowie, nie dopowiadaj za niego.
+  do okienka pod wpisem w „📝 Wpisy” (`wpisy`, krok 4). Czego inwestor nie dopowiedział w rozmowie, nie dopowiadaj za niego.
 - Zdjęcia do Skrzynki nie wchodzą – powiedz inwestorowi, że zdjęcie dodaje w Notion albo na Dysku (`dziennik`, plugin dom-budowa).
 - Odpowiedź inwestorowi: „Zapisane do Skrzynki (n); w Notion po najbliższym przebiegu, do godziny”. Nie pisz „zapisano w Notion”.
 
@@ -33,5 +33,5 @@ może się zmienić, a bez Notion nie da się jej sprawdzić; telefon pisze, co 
 2. Każdą pozycję przetwórz jak wpis Dziennika (`wpisy`, kroki 3–7): obszar według bazy Obszarów, pola według skilla
    docelowego, „Zrobić” z linii to intencja inwestora (termin, adresat, etap) – nadrzędna wobec domysłów, nie wobec schematu bazy.
 3. Po zapisie przenieś linię do „## Przetworzone” jako `- [x] ~~…~~ → <gdzie>: <link>` (jedna edycja dokumentu na przebieg);
-   niejasna → „❓” w Dzienniku jak w `wpisy` krok 4, w Skrzynce `→ ❓ Dziennik`. Nie usuwaj pozycji.
+   niejasna → okienko ❓ we „Wpisach” jak w `wpisy` krok 4, w Skrzynce `→ ❓ Wpisy`. Nie usuwaj pozycji.
 4. Ślad: w linii „🤖” i w odpowiedzi „Skrzynka n”. „Przetworzone” czyści przegląd tygodnia (pozycje starsze niż 14 dni).

@@ -18,9 +18,10 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
 
 ## Zasady trybu bez inwestora (oba tryby)
 
-- Nie ma kogo zapytać: niejasne → pytanie w Notion (Dziennik „❓”, strona pomysłu), nie tylko w odpowiedzi.
+- Nie ma kogo zapytać: niejasne → pytanie w Notion (okienko pod wpisem w „📝 Wpisy”; sprawy spoza wpisów – Dziennik „❓”,
+  strona pomysłu), nie tylko w odpowiedzi.
 - Nie zapisuj decyzji inwestora, rozstrzygnięć sprzeczności (SP), zmian w Excelu ani zmian terminów kroków Harmonogramu
-  budowy – zostaw w „❓” z pytaniem i propozycją. Nowy obszar Dziennika tylko proponuj w „❓”, nie dodawaj sam.
+  budowy – zostaw wpis z pytaniem i propozycją (`wpisy`, krok 4). Nowy obszar Dziennika tylko proponuj, nie dodawaj sam.
 - Bez planu do akceptacji; zapisy wsadowo (`ja`, zasada 2); odczyt baz przez zapisane widoki i wyszukiwarkę (`ja`, zasada 3), nie SQL.
 - Błąd zapisu (brak uprawnień, limit) → nie ponawiaj w kółko; odnotuj „nie zapisano: …” i zakończ.
 - W odpowiedzi (log zadania) bez treści emocji i notatek o dziecku – liczby i linki.
@@ -34,9 +35,10 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
    stałych stron w `ja/references/notion-mapa.md`; 🔒 Prywatne nie otwieraj). Otwórz tylko strony spoza listy.
    Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Brak narzędzia do listy stron prywatnych → to źródło pomiń
    i napisz „widget – brak odczytu” w odpowiedzi i w linii „🤖” (`wpisy`, krok 1).
-2. **Nic nowego → koniec.** Brak bloków na pierwszym poziomie Dziennika i w treści „Wpisów”, podstron w „Wpisach” i nowych
-   stron w Private (definicja w `wpisy`), brak pozycji w „Nowe” Skrzynki i brak odpowiedzi inwestora (dopisek albo zaznaczony
-   checkbox, `wpisy/references/pytania.md`) pod pytaniami w „❓” → odpowiedz jedną linią „Dziennik: nic nowego (<godzina>;
+2. **Nic nowego → koniec.** Brak bloków na pierwszym poziomie Dziennika i w treści „Wpisów” (wpis z okienkiem ❓ bez
+   odpowiedzi się nie liczy), podstron w „Wpisach” i nowych stron w Private (definicja w `wpisy`), brak pozycji w „Nowe”
+   Skrzynki i brak odpowiedzi inwestora (tekst w okienku ❓ we „Wpisach”; w Dzienniku „❓” – dopisek albo zaznaczony
+   checkbox; `wpisy/references/pytania.md`) → odpowiedz jedną linią „Dziennik: nic nowego (<godzina>;
    widget: 0, Skrzynka: 0)”
    i zakończ. **Zero zapisów** – nie dopisuj linii „🤖”, nie zmieniaj strony.
 3. **Inwestor może jeszcze pisać – oceniaj każde źródło osobno** (treść Dziennika, treść „Wpisów”, każda podstrona,
@@ -68,7 +70,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze). Weź z niego link do wpisu i 1 linię skrótu.
 4. **Dziś – sprawy osobiste** (tylko odczyt): blok dzisiejszego dnia w „Przetworzone” (wpisy obszarów innych niż Budowa,
    liczby per obszar), dzień pracy z Dziennika produktywności, liczba wpisów emocji z dziś (bez treści), nowe punkty na stronie
-   dziecka, wpisy w „❓”. Zadania zmienione dziś – krok 5.
+   dziecka, wpisy z okienkiem ❓ we „Wpisach” i pozycje „❓” Dziennika. Zadania zmienione dziś – krok 5.
 5. **Zadania – zmiany dnia i luki w kolumnach** (wszystkie obszary; inwestor zmienia statusy i kończy zadania sam w Notion,
    więc nie ma ich we wpisach). Odczyt: widok TASKS „🤖 Zmiany – od wczoraj (przegląd dnia)” (tryb view, ID w
    `ja/references/notion-mapa.md`; `has_more` → następna strona). Widok daje dwa dni, bo „dziś” w filtrze Notion zależy od
@@ -112,7 +114,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **Dziś:** 3–6 punktów – prywatne / dziecko / praca (bez treści emocji – tylko „emocje: n wpisów”)
    **Zadania (wszystkie obszary):** zamknięte n (nazwy) · w toku / czeka n · dodane lub zmienione n · z Dziennika n ·
    uzupełniono n wierszy (pola)   ← brak zmian → „bez zmian”
-   **Czeka na Ciebie:** n pytań w ❓ (rozwiń w Dzienniku)
+   **Czeka na Ciebie:** n pytań pod wpisami (<wzmianka „📝 Wpisy”>) · n w ❓ Dziennika
    **Jutro – plan:** zadania z terminem wg priorytetu, po terminie na górze, „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Research:** n gotowych, m czeka na Ciebie – wzmianki stron RES-n (brak researchu → pomiń linię)
    **🏗 Budowa:** <1 linia skrótu> → <wzmianka wpisu z przeglądu budowy z tego dnia>   (brak dnia budowy → „bez zmian”)

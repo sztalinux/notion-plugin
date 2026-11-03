@@ -59,14 +59,14 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
 3. **Odczyt baz:** zapytania w trybach rows i SQL mają wspólny limit w planie Notion (bywa wyczerpany); tryb **view**
    (zapisany widok) limitu nie ma. Kolejność: widok (brak pasującego → utwórz go z filtrem) → wyszukiwarka z parametrem bazy
    (duplikaty, pojedyncze wiersze) → rows → SQL. Błąd „usage limit” → bez ponawiania, przejdź na widok/wyszukiwarkę.
-4. **Nie zgaduj:** niejasny wpis, brak daty przy terminie, nie wiadomo czego dotyczy → pytanie (w Dzienniku „❓”, w rozmowie
-   wprost). Słowa względne („wczoraj”, „w piątek”) licz od daty we wpisie, nie od daty przetwarzania. Każde pytanie do
-   inwestora zapisane w Notion (Dziennik, strony RES-n, pomysłów) ma format z `wpisy/references/pytania.md`: osobny checkbox
-   na pytanie, kontekst w zwiniętych „Szczegółach”.
+4. **Nie zgaduj:** niejasny wpis, brak daty przy terminie, nie wiadomo czego dotyczy → pytanie (okienko pod wpisem w „📝 Wpisy”,
+   w rozmowie wprost). Słowa względne („wczoraj”, „w piątek”) licz od daty we wpisie, nie od daty przetwarzania. Każde pytanie
+   do inwestora zapisane w Notion ma format z `wpisy/references/pytania.md`: o wpis – krótkie okienko ❓ z linią `✍️` pod
+   wpisem (A); poza wpisami (Dziennik „❓”, strony RES-n, pomysłów) – checkbox na pytanie, kontekst w „Szczegółach” (B).
 5. **Prywatność:** strona **„🔒 Prywatne”** (`3faf5982-09e7-816b-92ab-d8b79c61ad92`) i wszystko pod nią jest poza zasięgiem
    asystenta – nie czytaj, nie przeszukuj (wyniki wyszukiwania z niej pomijaj), nie cytuj, nie przenoś tam i stamtąd niczego
    bez wyraźnego polecenia. Lista stron najwyższego poziomu Private (odczyt wpisów z widgetu) pokazuje też tę stronę –
-   pomiń ją, nie otwieraj. Wpis intymny lub bardzo osobisty z Dziennika nie trafia nigdzie – zostaje w „❓” z pytaniem, czy
+   pomiń ją, nie otwieraj. Wpis intymny lub bardzo osobisty z Dziennika nie trafia nigdzie – zostaje we „Wpisach” z pytaniem, czy
    inwestor przeniesie go sam do „🔒 Prywatne”. Haseł nie przepisuj nigdy (przechodziłyby przez rozmowę z AI) – całe strony
    wolno przenosić. Treść emocji, notatki o dziecku i zdrowiu zostają w Notion; w odpowiedziach nie cytuj ich ponad potrzebę.
    Repo harnessu jest publiczne – zero imion, treści wpisów i danych w plikach procedur, przykłady zmyślone.
@@ -88,7 +88,7 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
    zdarzenia, które trzeba omówić, zanim się rozmyje (nie ogólny temat wychowawczy, relacyjny ani praca nad sobą), załóż
    dodatkowo zadanie w TASKS (`zadania`): „Porozmawiać z <dzieckiem / partnerką> o <temat>”, Obszar Dziecko albo Prywatne,
    When = data wpisu + 3 dni, w treści odnośnik do strony osoby – inaczej rozmowa na świeżo przepada. Temat ogólny → tylko
-   strona. Nie da się ocenić, czy to świeże zdarzenie → pytanie (w Dzienniku „❓”).
+   strona. Nie da się ocenić, czy to świeże zdarzenie → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4).
 10. **Zakładki zamiast długich stron.** Budując lub porządkując stronę w Notion, używaj zakładek (blok z zakładkami, jak na DOM,
     DASHBOARD i ✅ Zadania), gdy treść dzieli się na równoległe części: obszary, etapy, rodzaje list. Najpierw zakładka
     przekrojowa (np. dziś i tydzień dla wszystkich obszarów), potem zakładka na obszar. Jedna baza z kilkoma widokami to
@@ -105,7 +105,7 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
 ## Domknięcie rozmowy
 
 Na koniec pracy, która coś zmieniła, trzy bloki w tej kolejności: **🛑 Potrzebuję Twojej odpowiedzi** (na samej górze, tylko
-gdy coś stoi: czego dotyczy + jedno pytanie z propozycją domyślną; pytania zapisane w „❓” wymień jedną linią) ·
+gdy coś stoi: czego dotyczy + jedno pytanie z propozycją domyślną; pytania zapisane w Notion – pod wpisami, w „❓” – wymień jedną linią) ·
 **✅ Zrobione** (co i gdzie, link) · **⏳ Niezrobione** (co pominięto lub odłożono i dlaczego). Brak 🛑 oznacza, że nic nie
 wisi na inwestorze – nie dopisuj ostrzeżeń „na wszelki wypadek”. Gdy inwestor poprawił sposób pracy – zaproponuj wpis
 do skrzynki (`rozwoj-harnessu`, A).

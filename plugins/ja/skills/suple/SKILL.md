@@ -23,7 +23,7 @@ When, Last break, Type, ceny i dawki (formuły – nie ruszaj).
    | „odstawiam X na dobre” | Status = SUSPENDED |
 3. Brak wiersza przy „zaczynam”, „kończy się”, „chcę spróbować” → nowy wiersz: Name, Status = TO START (przy „zaczynam”
    → TAKING), Who = opcja inwestora (albo osoba, o której mowa), Buy = tak, reszta pusta.
-4. Dwa pasujące wiersze albo nie wiadomo, o czyj suplement chodzi (Who ma dwie osoby, a wpis mówi o jednej) → Dziennik „❓”.
+4. Dwa pasujące wiersze albo nie wiadomo, o czyj suplement chodzi (Who ma dwie osoby, a wpis mówi o jednej) → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4).
 5. Nie zmieniaj dawek, cen, linków ani pól, o których wpis nie mówi.
 
 ## Odczyt

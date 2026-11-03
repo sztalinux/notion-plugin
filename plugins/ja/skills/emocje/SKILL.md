@@ -25,7 +25,7 @@ Bazy (ID i pola: `ja/references/notion-mapa.md`): **Wpisy emocji**, **Dni (dzien
    | Myśl, Potrzeba, Reakcja, Emocja wtórna, Czynniki podatności | gdy wynikają wprost z wpisu |
 3. Pełny tekst wpisu przepisz do treści strony (bez zmian) – pola to skrót.
 4. **Nie dopytuj o brakujące pola** i nie interpretuj („pewnie czułeś też…”). Brak nazwy emocji przy opisie samego
-   zdarzenia → w Dzienniku „❓” z propozycją nazwy („Czy to była złość?”).
+   zdarzenia → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4) z propozycją nazwy („Czy to była złość?”).
 5. Przed zapisem sprawdź duplikat: ten sam dzień i ta sama nazwa emocji z podobnym triggerem → uzupełnij istniejący wiersz.
 6. Wpis łączy emocję z rzeczą do zrobienia albo sprawą budowy → zapisz emocję tu, resztę przekaż (`zadania`, `budowa`).
 
