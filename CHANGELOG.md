@@ -4,6 +4,16 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.16.6] – 2026-11-05
+
+- `tools/wiedza_karty.py`: nowe polecenie `ocen` – ocena ścisła tez kart pytań (2 konieczna, 1 pokrewna, 0 nie dotyczy) po `zbuduj`
+  (spłata długu Z13; dawniej skrypt poza narzędziem). Ocenia tylko tezy bez oceny, z budżetem USD, limitem tygodnia i cache;
+  `--zastosuj` ustawia rdzeń (ocena 2 plus oceny 1 do `--rdzen`, domyślnie 200) i rozszerzenie, z kopią `karty.json.przed-ocena`.
+  `aktualizuj` ocenia tą samą drogą nowe tezy dopisane przez wybór (zamiast wpuszczać je do rdzenia bez oceny).
+- `wiedza/references/karty.md`: polecenie `ocen` w liście poleceń i w kroku „Nowa karta pytań”.
+- Dokumentacja: `docs/system-wiedzy.md` przepisany do stanu 2.16 (karty, praca bez Notion, tryb głęboki, automaty), nowy
+  `docs/wiedza-runbook.md` (odtworzenie od zera, komunikaty, pomiary, awarie, tokeny, słowniczek); README linkuje oba pliki (Z11).
+
 ## dom-budowa [2.16.5] – 2026-11-05
 
 - `pulpit` krok 5 i `obieg.md`: od pulpitu 0.10.0 publikacja z trzema plikami obok strony (`styl.css`, `skrypt.js`, `dane.js`);

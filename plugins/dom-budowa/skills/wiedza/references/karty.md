@@ -34,12 +34,14 @@ data ostatniego zapisu) i jadą do czatu razem z publikacją indeksu.
 - `zbuduj [--karty KOD,…] [--przebiegi 2]` – wybór tez do kart pytań modelem Sonnet: cała baza w porcjach po ok. 110 tez, dwa przebiegi
   w różnej kolejności, suma (to, co jeden przebieg pominął, łapie drugi). Wywołania idą przez cache; na końcu koszt w USD; przy limicie
   tygodnia model się zatrzymuje – dokończ po jego odnowieniu, nie ponawiaj na siłę.
-- ocena ścisła po `zbuduj` (rdzeń ≤ 200 tez + rozszerzenie) – dziś skrypt poza narzędziem (katalog planów na Macu, `ocen_karty.py
-  --zastosuj D`), do włączenia do `wiedza_karty.py`; bez niej `zbuduj` zostawia karty za duże dla telefonu (300–1000 tez).
+- `ocen [--karty KOD,…] [--zastosuj]` – ocena ścisła tez kart pytań po `zbuduj` (2 konieczna, 1 pokrewna, 0 nie dotyczy; tylko tezy
+  bez oceny, budżet USD i limit tygodnia jak w `zbuduj`); `--zastosuj` ustawia rdzeń ≤ 200 tez + rozszerzenie (kopia
+  `karty.json.przed-ocena`) – potem `pomiar --zapisz` i `zapisz --publikuj`. Bez niej `zbuduj` zostawia karty za duże dla telefonu.
 - `pomiar [--dopelnienie] [--zapisz] [--brakujace]` – pokrycie wobec wzorca; `--zapisz` zapisuje je do stanu (do nagłówka karty trafia z `zapisz`,
   a `zbuduj` je zeruje); pozostałe flagi: `pomiar --help`.
 - `zapisz [--publikuj]` – wyniki doboru (`karty.json`) do SQLite; `--publikuj` wysyła kopię dla czatu.
-- `aktualizuj [--cicho] [--publikuj]` – nowe tezy → tagi czynności i ocena względem każdej karty pytań → zapis → publikacja.
+- `aktualizuj [--cicho] [--publikuj]` – nowe tezy → tagi czynności, wybór i ocena ścisła względem każdej karty pytań (2 → rdzeń,
+  1 → rozszerzenie, 0 → wypada) → zapis → publikacja.
 
 ## Pokrycie – co znaczy i czego nie znaczy
 
@@ -58,7 +60,7 @@ zmierzyć), a pytanie spoza dziesięciu może potrzebować tez, których wzorzec
   `sync --publikuj` – nowe tezy dołączy najbliższy przebieg, a do tego czasu widać je w „Dopełnieniu z szukania”, o ile pasują do
   sformułowań pytania.
 - **Nowa karta pytań:** (1) dopisz wpis w `definicje.json` (m.in. kod ASCII, etap, nazwa, opis, przykładowe pytania) i uruchom `definicje --sprawdz`;
-  (2) `zbuduj --karty KOD`; (3) `pomiar --zapisz`, gdy karta ma wzorzec; (4) `zapisz --publikuj`. `zbuduj` kosztuje (dwa przebiegi modelu przez
+  (2) `zbuduj --karty KOD`; (3) `ocen --karty KOD --zastosuj`; (4) `pomiar --zapisz`, gdy karta ma wzorzec; (5) `zapisz --publikuj`. `zbuduj` kosztuje (dwa przebiegi modelu przez
   całą bazę, USD i limit tygodnia) – zaproponuj kartę inwestorowi (nazwa, rodzina pytań), zanim ją zbudujesz.
 - **Kiedy dodać kartę pytań:** pytanie inwestora powtarza się albo żadna karta pytań nie pasuje, a pytanie jest szerokie (czat składa je
   z kart czynności albo „trafienia poza wszystkimi kartami” > 15); pytanie, które poszło trybem głębokim (`tryb-gleboki.md`), to kandydat
