@@ -4,6 +4,19 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.9.0] – 2026-11-04
+
+- HZ-13: przegląd tygodnia nie usuwa bloków dni z „Przetworzone” starszych niż 14 dni, tylko przenosi je na nową podstronę
+  Dziennika „🗃 Przetworzone – archiwum” (najpierw kopia, potem zdjęcie z Dziennika); archiwum nie jest wpisem
+  (`przeglad-tygodnia-osobisty` D, `wpisy`, `przeglad-dnia`, mapa Notion).
+- HZ-11 wdrożone bez zmiany plików – jako nowy wiersz w bazie 🧭 Obszary Dziennika (rozwoj-harnessu B.7).
+
+## dom-budowa [2.16.4] – 2026-11-04
+
+- `harmonogram` B: terminy pochodne (zamówienia, bramki, umówienie ludzi, pogoda) tylko jako propozycja w odpowiedzi
+  i przeglądzie – bez zakładania zadań w TASKS (decyzja inwestora z 2.11.2026); przesunięcie kroku zmienia tylko istniejące
+  zadania. Odwołania w `budowa` („Jutro”) i `przeglad-tygodnia`.
+
 ## ja [1.8.1] – 2026-11-03
 
 - `wpisy`, krok 4: wpis jasny tylko w części – jasna część zapisana (ślad w „Przetworzone”), wpis zostaje we „Wpisach”

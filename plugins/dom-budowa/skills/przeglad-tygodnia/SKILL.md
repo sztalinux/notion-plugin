@@ -33,7 +33,7 @@ Pobierz w jak najmniejszej liczbie zapytań:
 4. **Notatnik budowy**: Status „Otwarte” lub „Do omówienia” z Priorytetem Krytyczne/Ważne; wpisy z „Kiedy” w ciągu 14 dni lub po terminie.
 5. **TASKS** (Obszar Dom albo puste – sprawy prywatne nie wchodzą do przeglądu budowy): niezakończone z „When” w ciągu 7 dni lub po terminie; osobno **czekam na** (Status „WAITING”, Kto ≠ Ja) – po terminie = „przypomnij się”.
 5a. **Harmonogram** (`collection://d7a479ab-1e23-453f-8f59-55f4097f7d04`): kroki startujące / kończące się w 14 dni, kroki po terminie
-    bez statusu „Zrobione”, kroki „Bez odwrotu” w 14 dni (czy jest zadanie bramki), terminy „Szacunek” na najbliższe 14 dni
+    bez statusu „Zrobione”, kroki „Bez odwrotu” w 14 dni (bramka wg `etap` – przypomnienie, bez zadania), terminy „Szacunek” na najbliższe 14 dni
     (do potwierdzenia u wykonawcy).
 5b. **🧱 Zakupy budowy**: „Zamówić do” w 14 dni lub po terminie, Status przed zamówieniem (nie Zamówione / Potwierdzone / Dostarczone); dostawy w 7 dni.
 5c. **Umowy i gwarancje**: Gwarancja do / Rękojmia do w ciągu 60 dni (przegląd przed upływem, zgłoszenie usterek).

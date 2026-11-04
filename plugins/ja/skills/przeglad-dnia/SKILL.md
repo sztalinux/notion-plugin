@@ -134,7 +134,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 
 Każdy przebieg to osobna sesja – nawet pusty zużywa limit konta na start (instrukcje, opisy skilli, narzędzia Notion) i jeden
 odczyt Dziennika. Dlatego tryb szybki ma wyjście w kroku A.2 bez dalszych odczytów i zapisów, a strona Dziennik ma zostać
-krótka (przegląd tygodnia czyści „Przetworzone” starsze niż 14 dni). Zacznij od co 2 godzin; częściej – gdy limit pozwala.
+krótka (przegląd tygodnia przenosi „Przetworzone” starsze niż 14 dni do archiwum). Zacznij od co 2 godzin; częściej – gdy limit pozwala.
 
 ## Rozszerzanie
 

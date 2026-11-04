@@ -26,7 +26,7 @@ jeszcze nie widział):
 		wpis niejasny                                     ← czeka tu, aż inwestor odpowie
 			❓ {okienko} **Co miałeś na myśli – X czy Y?** (propozycja: …)
 				✍️ odpowiedź inwestora
-	🗃 Przetworzone podstrony, 📆 Przeglądy dzienne (podstrony) ← nie są wpisami
+	🗃 Przetworzone podstrony, 🗃 Przetworzone – archiwum, 📆 Przeglądy dzienne / 📅 tygodniowe (podstrony) ← nie są wpisami
 Private (najwyższy poziom)
 	📌 DASHBOARD, 🛖 DOM, 📓 Dziennik, … 🔒 Prywatne   ← stałe strony (lista w ja/references/notion-mapa.md)
 	nowa strona z widgetu w telefonie                 ← NOWY wpis; po przetworzeniu przeniesiona pod 🗃
@@ -35,8 +35,8 @@ Private (najwyższy poziom)
 **Nowy wpis** = każdy blok pierwszego poziomu (akapit, punkt), **każdy blok w treści strony „📝 Wpisy”**
 (`3faf5982-09e7-80b2-9b33-c48745d67a4f`; inwestor często pisze tam wprost, bez zakładania podstrony), **każda jej
 podstrona** (tytuł + treść = wpis), podstrona Dziennika założona poza „Wpisami”, z wyjątkiem
-„Jak używać”, pustych linii, trzech zwijanych nagłówków i stałych podstron „📝 Wpisy”, „📆 Przeglądy dzienne”
-i „🗃 Przetworzone podstrony”, **oraz każda strona na najwyższym poziomie Private spoza listy stałych stron**
+„Jak używać”, pustych linii, trzech zwijanych nagłówków i stałych podstron „📝 Wpisy”, „📆 Przeglądy dzienne”,
+„📅 Przeglądy tygodniowe”, „🗃 Przetworzone podstrony” i „🗃 Przetworzone – archiwum”, **oraz każda strona na najwyższym poziomie Private spoza listy stałych stron**
 (lista z ID: `ja/references/notion-mapa.md`, „Struktura najwyższego poziomu”) – tam widget „nowa strona” w telefonie
 zakłada strony. Porównuj po ID, nie po tytule. 🔒 Prywatne jest na liście – nigdy jej nie otwieraj (`ja`, zasada 5).
 Nieznana strona na najwyższym poziomie, która ma podstrony lub bazę albo wygląda na nowy obszar (tytuł jak nazwa działu,
@@ -111,7 +111,7 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    „bez pytania”; w przeglądzie dnia – bez pytań.
 8. **Podsumuj** w blokach z `ja` („Domknięcie rozmowy”): 🛑 wpisy do wyjaśnienia (wpis: pytanie – czeka we „Wpisach”) · ✅ przetworzone (wpis → gdzie) ·
    ⏳ pominięte i dlaczego.
-   „Przetworzone” czyści przegląd tygodnia (bloki dni starsze niż 14 dni, po zgodzie).
+   Bloki dni starsze niż 14 dni przegląd tygodnia przenosi do „🗃 Przetworzone – archiwum” (`przeglad-tygodnia-osobisty`, D).
 
 ## Bez inwestora
 

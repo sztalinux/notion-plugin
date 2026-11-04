@@ -59,11 +59,13 @@ przeglad-tygodnia-osobisty z pluginu ja)”. Ręcznie: „przegląd tygodnia”.
 ## D. Porządki w Dzienniku
 
 Bez pytania (także w zaplanowanym przebiegu – to tylko ślad, linki są w docelowych miejscach):
-- bloki dni w „Przetworzone” w Dzienniku starsze niż 14 dni → usuń z Dziennika (jedna edycja strony);
+- bloki dni w „Przetworzone” w Dzienniku starsze niż 14 dni → **przenieś** (nie usuwaj) na podstronę Dziennika
+  „🗃 Przetworzone – archiwum” (ID w `ja/references/notion-mapa.md`): najpierw wklej te same zwijane bloki na górę archiwum
+  (najnowszy dzień na górze), sprawdź, że są, dopiero potem zdejmij je z Dziennika (jedna edycja każdej strony);
 - podstrony w „🗃 Przetworzone podstrony” zostają – nie ruszaj.
 Do zatwierdzenia (propozycja w przeglądzie):
 - wpisy z okienkiem ❓ i pozycje „❓” bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
 - TASKS prywatne po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze).
-Po „tak” wykonaj wsadowo (`ja`, zasada 2). Niczego innego nie usuwaj.
+Po „tak” wykonaj wsadowo (`ja`, zasada 2). Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.

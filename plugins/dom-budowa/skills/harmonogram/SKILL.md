@@ -28,26 +28,29 @@ Rzeczy bez daty (pytania, „pamiętać”) zostają w Notatniku – do TASKS tr
    Pewność terminu (Szacunek / Uzgodnione ustnie / Potwierdzone na piśmie). Długości i przerwy technologiczne
    (dojrzewanie betonu, schnięcie) – `zakupy/references/wyprzedzenia.md`; nieznane → szacunek z oznaczeniem.
 3. Pokaż plan jako tabelę (Nr | Krok | od–do | Kto | zależy od | bez odwrotu) i zapisz po „ok” jednym wywołaniem.
-4. Od razu wygeneruj **terminy pochodne** (sekcja B).
+4. Od razu pokaż **terminy pochodne** (sekcja B) – jako propozycję, bez zapisu do TASKS.
 
 ## B. Terminy pochodne (po każdym nowym lub przesuniętym kroku)
 
-Dla kroku z datą wylicz i zaproponuj jednym zestawem:
-- **Zamówienia:** materiał na krok (`zakupy`, sekcja A) → wiersze w Zakupach budowy z „Zamówić do” = start kroku minus
-  wyprzedzenie (`zakupy/references/wyprzedzenia.md`) minus 2 dni zapasu; dostawa ≥ 1 dzień przed startem.
-- **Bramka:** krok „Bez odwrotu” → zadanie dzień przed: „Bramka: <krok> – sprawdzić wg `etap` (B)”, Kto = Ja.
+Dla kroku z datą wylicz i **pokaż jako propozycję** (w odpowiedzi, w przeglądzie dnia lub tygodnia, w raporcie) –
+**bez zadań w TASKS**: inwestor sam dodaje zadania na bieżąco (decyzja z 2.11.2026). Zapisz coś dopiero na wyraźne
+„dodaj to zadanie”.
+- **Zamówienia:** materiał na krok (`zakupy`, sekcja A) → „Zamówić do” = start kroku minus wyprzedzenie
+  (`zakupy/references/wyprzedzenia.md`) minus 2 dni zapasu; dostawa ≥ 1 dzień przed startem. Pole „Zamówić do”
+  w 🧱 Zakupach budowy uzupełniaj tylko w wierszach, które już są (wiersze zakłada `zakupy`).
+- **Bramka:** krok „Bez odwrotu” → dzień przed: „Bramka: <krok> – sprawdzić wg `etap` (B)”.
 - **Ludzie:** kto musi być (`etap/references/formalnosci.md`, „kto musi być obecny”): kierownik przy odbiorze zbrojenia,
-  geotechnik przy dnie wykopu → zadanie „umówić <kogo> na <data>” z wyprzedzeniem 3–7 dni.
-- **Pogoda:** betonowanie, izolacje, tynki zewnętrzne – w zadaniu bramki dopisz „sprawdzić prognozę” (progi: `etap`).
+  geotechnik przy dnie wykopu → „umówić <kogo> na <data>” z wyprzedzeniem 3–7 dni.
+- **Pogoda:** betonowanie, izolacje, tynki zewnętrzne – przy bramce „sprawdzić prognozę” (progi: `etap`).
 - **Płatności:** transza po odbiorze kroku – przypomnienie dla `koszty` (sekcja D), bez kwot w Notion.
-Każde zadanie/zamówienie podpinaj relacją do kroku – wtedy przesunięcie kroku przesuwa je razem z nim.
+Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kroku – wtedy przesunięcie kroku je pokaże.
 
 ## C. Przesunięcie („płyta przesunięta o tydzień”, „ekipa spóźni się 3 dni”)
 
 1. Zmień Termin kroku (Status „Przesunięte”, w Uwagach powód i data zmiany).
-2. Przelicz kroki, które od niego zależą (relacja Blokuje), i ich terminy pochodne (zamówienia, bramki, umówieni ludzie).
+2. Przelicz kroki, które od niego zależą (relacja Blokuje), i pokaż ich terminy pochodne (propozycja, sekcja B).
 3. Pokaż zestawienie „było → jest” i co trzeba **odwołać lub przesunąć u innych** (dostawa, kierownik, pompa) – to są
-   zadania dla inwestora (Kto = Ja). Zapisz po „ok”.
+   istniejące zadania i zamówienia powiązane z krokiem – ich nowe terminy zapisz po „ok”; nowych zadań nie zakładaj.
 
 ## D. Czekam na („geodeta tyczy w czwartek”, „ekipa ma przysłać wycenę do 15.10”)
 
