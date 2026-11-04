@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [2.16.5] – 2026-11-05
+
+- `pulpit` krok 5 i `obieg.md`: od pulpitu 0.10.0 publikacja z trzema plikami obok strony (`styl.css`, `skrypt.js`, `dane.js`);
+  przed publikacją z nowej sesji lista plików artefaktu; `dane.js` zamiast `dist/dane.json`.
+
 ## ja [1.9.0] – 2026-11-04
 
 - HZ-13: przegląd tygodnia nie usuwa bloków dni z „Przetworzone” starszych niż 14 dni, tylko przenosi je na nową podstronę
