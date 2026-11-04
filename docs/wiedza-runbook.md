@@ -55,7 +55,7 @@ dane indeksu, definicje kart, zbiory oceny, prywatne repo kopii, automaty launch
    `python3 tools/wiedza_sens.py przelicz` (odciski i listy podobnych, ok. 3 minuty) i `python3 tools/wiedza.py stan` – liczniki muszą się zgadzać
    z Notion (informacje, tematy, źródła, SP).
 7. **Karty.** Dane kart (`definicje.json`, `wzorzec.json`, `pytania.json`, `tagi-z12.json`, `karty.json`, `oceny.json`) leżą w `.dom/wiedza/karty/` poza repo
-   i **muszą wrócić z kopii zapasowej** – z samego repo ich nie odtworzysz (definicje to prawdziwe pytania inwestora). Po przywróceniu:
+   i **muszą wrócić z kopii zapasowej** (utrzymuj regularną kopię całego `.dom/` – bez niej odbudowa kart kosztuje dziesiątki USD) – z samego repo ich nie odtworzysz (definicje to prawdziwe pytania inwestora). Po przywróceniu:
    `python3 tools/wiedza_karty.py definicje --sprawdz`, `python3 tools/wiedza_karty.py zapisz`. Bez kopii karty buduje się od nowa: definicje (kod, etap,
    nazwa, opis, przykładowe pytania) → `taguj` (karty czynności) → `zbuduj` → `ocen --zastosuj` → `pomiar --zapisz` (gdy karta ma wzorzec) → `zapisz --publikuj`.
    To kosztuje USD i limit tygodnia (koszty w `koszt.json` katalogu kart); nie zaczynaj, gdy limit tygodnia jest blisko progu.
@@ -134,7 +134,7 @@ Objaw: brak nowych linii „🤖” w Dzienniku, puste albo stare logi, „kopia
 3. **„Operation not permitted” w `launchd-<tryb>.log`:** macOS (TCC) odmawia stubowi `/usr/bin/python3` dostępu do plików w Dokumentach. W plistach `ProgramArguments` musi
    zaczynać się od pełnej ścieżki Pythona z frameworka Command Line Tools:
    `/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3`, a `Python.app` z tego frameworka musi mieć „Pełny dostęp do dysku”
-   (Ustawienia systemowe → Prywatność i ochrona). Po aktualizacji Command Line Tools sprawdź, czy ścieżka i wersja (3.x) wciąż istnieją i czy dostęp nadal jest nadany.
+   (Ustawienia systemowe → Prywatność i ochrona). Po nadaniu dostępu albo zmianie plistu: `bootout` i `bootstrap` danego automatu. Po aktualizacji Command Line Tools sprawdź, czy ścieżka i wersja (3.x) wciąż istnieją i czy dostęp nadal jest nadany.
    Test: tymczasowy plist, który wykonuje `-c "open('<ścieżka skryptu>')"`.
 4. **Czy Mac spał:** launchd z `StartCalendarInterval` nie uruchamia zadań w uśpieniu; pominięte uruchomienia scala w jedno po wybudzeniu. Mac wyłączony w porze zadania –
    przebieg przepada (wpisy poczekają na następny). Wieczorny po przegapionej porze uruchom ręcznie: `python3 <katalog automatów>/przeglad.py wieczorny`.
@@ -164,7 +164,7 @@ Po powrocie konektora Skrzynkę opróżnia przebieg godzinowy (albo „przerób 
 
 Czat zgłasza to, gdy nie pobierze `wiedza.sqlite` i `wiedza.py` z prywatnego repo kopii. Idź po kolei:
 
-1. **Na Macu:** `python3 tools/wiedza.py stan` – czy jest plik, `publikacja:` (data ostatniej wysyłki) i `kopia aktualna: tak/nie`. Nie: `python3 tools/wiedza.py publikuj --teraz`;
+1. **Na Macu:** `python3 tools/wiedza.py stan` – czy jest plik, `publikacja:` (data ostatniej wysyłki) i `kopia aktualna: tak/nie`. Nie: `python3 tools/wiedza.py publikuj --teraz` (omija odstęp 60 min, ale plik indeksu wysyła tylko po zmianie danych; po odtworzeniu repo kopii `--wymus`);
    po odtworzeniu repo kopii `publikuj --wymus`. Błąd HTTP 401/403/404 przy publikacji → token `GITHUB_TOKEN_SYNC` (5.8) albo zła nazwa w `GITHUB_REPO`; 301 – repo przemianowane,
    wpisz nową nazwę; „repo nie jest prywatne” – popraw (nie publikuj do publicznego).
 2. **Czy czat ma dostęp:** token odczytu (`GITHUB_TOKEN_SEARCH`) wygasł, został unieważniony albo strona „🔑 Asystent – dostęp” ma starą wartość → odnów wg 5.8 i zaktualizuj stronę
@@ -203,7 +203,7 @@ Odciski leżą w `.dom/wiedza/wektory.sqlite`, listy podobnych w tabeli `podobne
 ### 5.6 Karty są nieaktualne albo źle wyglądają
 
 - **Brakuje nowych tez na karcie:** przebieg godzinowy dołącza je przy najbliższym `aktualizuj`; do tego czasu są w „Dopełnieniu z szukania”. Ręcznie: `python3 tools/wiedza_karty.py aktualizuj --publikuj`.
-- **Karta za duża na telefon (więcej niż ok. 75 tys. znaków, więcej niż 3–4 części):** `python3 tools/wiedza_karty.py ocen --karty KOD --zastosuj`, potem `pomiar --zapisz`
+- **Karta za duża na telefon (jedna karta pytań ma mieścić się w ok. 75 tys. znaków, 3–4 częściach po ok. 25 tys.; rdzeń do 200 tez, a wybór inkluzywny daje 300–1000):** `python3 tools/wiedza_karty.py ocen --karty KOD --zastosuj`, potem `pomiar --zapisz`
   i `zapisz --publikuj`. `ocen` ocenia tylko tezy bez oceny (oceny w `oceny.json`), więc ponowne uruchomienie kosztuje tylko nowe tezy; przed zastosowaniem tworzy kopię `karty.json.przed-ocena`.
 - **Tezy „czekają na ocenę”** (komunikat `aktualizuj`): wpis zostaje w rdzeniu jak przed oceną i zostanie oceniony przy następnym przebiegu; `ocen` załatwia zaległości od ręki.
 - **Podział albo nowa karta:** zmiana definicji w `definicje.json` → `definicje --sprawdz` → `zbuduj --karty KOD` → `ocen --karty KOD --zastosuj` → `pomiar --zapisz` → `zapisz --publikuj`.

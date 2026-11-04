@@ -33,7 +33,7 @@ Czat na telefonie (claude.ai, pluginy ja + dom-budowa): karty → odpowiedź z n
 | Migawka (`tools/migawka.py`) | Otwarte wpisy Notatnika budowy i zadania w jednym pliku Markdown, publikowanym obok indeksu – czat bez Notion czyta z niej stan spraw | `references/indeks.md` |
 | Kopia dla czatu | Indeks, `wiedza.py` i migawka publikowane do prywatnego repo; czat pobiera je tokenem tylko do odczytu | `references/indeks.md`, `indeks-awarie.md` |
 | Praca bez Notion (zasada 13) | Gdy w rozmowie nie ma narzędzi Notion: wiedza z indeksu, Notatnik i zadania z migawki, a każdy zapis do dokumentu Claude „📥 Skrzynka” słowami, bez pól Notion; przebieg godzinowy na Macu przenosi wpisy do Notion | `plugins/ja/skills/wpisy/references/skrzynka.md` |
-| Tryb głęboki | Pytanie złożone, którego nie pokrywa żadna karta: czat zostawia je w prywatnym repo, workflow GitHub Actions (w tym repo; model przez token OAuth Claude Code) czyta całą bazę, pisze odpowiedź i odkłada ją do repo; 3–6 minut, ok. 1–2 USD. Lokalny skrypt Maca (`pytania.py`) jest wersją zapasową | `references/tryb-gleboki.md` |
+| Tryb głęboki | Pytanie złożone, którego nie pokrywa żadna karta: czat zostawia je w prywatnym repo, workflow GitHub Actions (leży w prywatnym repo kopii, nie w tym; model przez token OAuth Claude Code) czyta całą bazę, pisze odpowiedź i odkłada ją do repo; 3–6 minut, ok. 1–2 USD. Lokalny skrypt Maca (`pytania.py`) jest wersją zapasową | `references/tryb-gleboki.md` |
 | Automaty na Macu (launchd, poza repo) | Przeglądy Dziennika (szybki, wieczorny, tygodniowy) przez `claude -p` z lokalnym serwerem MCP Notion; przed każdym przebiegiem `sync --publikuj`, `migawka.py` i `wiedza_karty.py aktualizuj`. To one utrzymują kopię dla telefonu świeżą | `docs/wiedza-runbook.md`, sekcja „Automaty” |
 | Obserwator (`tools/wiedza_jakosc.py`) | Stałe zbiory pytań i znanych wierszy; alarm, gdy szukanie po zmianach zaczyna gubić to, co znajdowało | `references/indeks-jakosc.md` |
 | Sędzia LLM (`wiedza_jakosc.py sedzia`) | Model bez narzędzi ocenia sens wyników dla pytań testowych (0/1/2); bez filtra danych osobowych – do modeli Claude wolno, do repo nie | `references/indeks-sedzia.md` |
@@ -65,13 +65,13 @@ Czat na telefonie (claude.ai, pluginy ja + dom-budowa): karty → odpowiedź z n
 4. Pytanie złożone bez pasującej karty albo ponad 15 trafień poza kartami → tryb głęboki (wstępna odpowiedź z karty od razu).
 5. Karty niedostępne w kopii (stara kopia) → droga zapasowa: poziomy szukania szybko / normalnie / dokładnie.
 
-## Pomiary (stan na 1.11.2026)
+## Pomiary (ostatnie, do 29.10.2026)
 
 | Co | Wynik | Skąd |
 |---|---|---|
 | Szukanie przed zmianami – czy to, co czat zobaczył, zawiera trafne tezy (recall@widziane, 53 pytania, wzorzec 598 tez) | 25,3% | Z1, 25.10 |
 | Po zwartym wyniku i kilku sformułowaniach (2.7.0) | 42,0% (+16,7 pkt) przy 0,62× znaków | Z2 |
-| Po odciskach znaczenia i listach podobnych (2.9.0) | +5,1 pkt (47,5% przy 1,25× znaków) | Z4 |
+| Po odciskach znaczenia i listach podobnych (2.9.0) | 47,5% wobec 42,4% wariantu bez nich, tego samego dnia (+5,1 pkt), przy 1,25× znaków | Z4 |
 | Zgodność sędziego z oceną ręczną (30 par, reguła „trafny” ↔ ocena 2) | 10/10 przy „trafny” (dawna reguła: 7/10) | Z9 |
 | Mini-audyt: powiązania uwzględnione przy zapisie nowych źródeł (tryb indeksu) | 73,7% (audyt z 22.10: 63% w trybie indeksu, 47% w trybie Notion) | Z0, Z9 |
 | Kontrola wyrywkowa, 72 testy: pokrycie trafnych wyników | indeks 84%, wyszukiwarka Notion 40% | Z0 |
@@ -93,7 +93,7 @@ zmianie szukania lub kart: `wiedza_jakosc.py zloty` (alarmy obserwatora), `wiedz
 - **Lokalnie zamiast Bedrock.** Odciski liczy Ollama na Macu (bge-m3), bez nowej usługi zewnętrznej. Nowa usługa zewnętrzna wymaga zgody inwestora.
 - **Listy podobnych w kopii dla czatu.** Czat na telefonie wychodzi tylko do GitHuba i rejestrów pakietów, nie policzy embeddingów – dostaje wynik
   policzony na Macu.
-- **Karty zamiast poziomów szukania.** Sam czat widzi przy pytaniach szerokich ok. 60% trafnych tez, a poziom „cały etap” (330–390 tys. znaków)
+- **Karty zamiast poziomów szukania.** Sam czat widzi przy pytaniach szerokich ok. 60% trafnych tez (pomiar 28.10; w symulacji telefonu z tabeli wyżej poziom „dokładnie” dał 50%, bo dochodzi czytanie porcjami), a poziom „cały etap” (330–390 tys. znaków)
   przerasta okno rozmowy. Karty dają 83% przy połowie wywołań. Poziomy zostają jako droga zapasowa.
 - **Książki w Notion nie budujemy.** Rozdziały na temat (pilotaż) dały mniej niż karty; spis spisów nie zmniejszył czytania. Rekomendacja: nie.
 - **Ocena ścisła po wyborze inkluzywnym.** Wybór modelu jest szeroki (300–1000 tez na kartę), telefon czyta ok. 75 tys. znaków; ocena 2/1/0
