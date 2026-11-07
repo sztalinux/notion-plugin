@@ -4,6 +4,10 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.1.1] – 2026-11-07
+
+- `tools/wydatki.py kod`: wypisuje kod Apps Script z dokumentacji (`| pbcopy` – do schowka przy aktualizacji wdrożenia).
+
 ## dom-budowa [3.1.0] – 2026-11-07
 
 - Wydatek z ilością dopisuje się automatycznie także do arkusza Cennik (cena za jednostkę, dostawca, pozycja); bez duplikatów

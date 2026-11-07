@@ -50,6 +50,7 @@ Jeśli dopisałeś w nim wydatki po 2.09.2026, przepisz je do `Kosztorys_stan_ze
    Sprawdź: Plik → Ustawienia → Język i region = Polska, strefa czasowa = (GMT+01:00) Warsaw; w Wydatkach działają listy
    Etap / Pozycja / Typ.
 3. **Kod.** W arkuszu: Rozszerzenia → Apps Script. Skasuj zawartość `Kod.gs`, wklej kod z sekcji 7, zapisz (ikona dyskietki).
+   Do schowka skopiujesz go w Terminalu: `python3 tools/wydatki.py kod | pbcopy` (w katalogu repo harnessu).
 4. **Sekret.** W Apps Script: Ustawienia projektu (koło zębate) → Właściwości skryptu → Dodaj właściwość:
    nazwa `SEKRET`, wartość – długi losowy ciąg. Wygeneruj go w Terminalu:
    `python3 -c "import secrets; print(secrets.token_urlsafe(32))"`
@@ -102,6 +103,7 @@ Od tej chwili nic nie robisz ręcznie – przebiegi na Macu wołają skrypt same
 | `wydatki.py pobierz` | kopia arkusza → `Koszty/Kosztorys_google.xlsx` | przebieg wieczorny, ręcznie przed analizą |
 | `wydatki.py wycofaj <id>…` | czyści wydatek w arkuszu (Wydatki i Cennik), w Notion „Nie wysyłać” | ręcznie, asystent na prośbę |
 | `wydatki.py sprawdz` | sekrety, dostęp do bazy i arkusza | ręcznie |
+| `wydatki.py kod` | wypisuje kod Apps Script (z `| pbcopy` – do schowka) | ręcznie przy aktualizacji kodu |
 
 Kody wyjścia: 0 OK, 1 błąd (linie `✗`), 2 brak konfiguracji (ARKUSZ_URL / ARKUSZ_SEKRET). Wynik każdego uruchomienia
 z automatu jest w logu przebiegu (`~/Documents/Dom/.dom/automaty/<tryb>-RRRR-MM-DD.log`, linia „po przebiegu wydatki.py …”).

@@ -6,6 +6,7 @@
     python3 tools/wydatki.py pobierz [--cicho]          # kopia arkusza jako .xlsx do <hub>/Koszty/Kosztorys_google.xlsx
     python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (i Cennika), w Notion „Nie wysyłać”
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
+    python3 tools/wydatki.py kod | pbcopy               # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
 
 Przepływ: przebieg Dziennika (agent) albo inwestor dodaje w Notion wiersz z Arkusz = „Do arkusza”; `sync` wysyła takie
 wiersze do aplikacji Apps Script przypiętej do arkusza (kod i instrukcja: docs/wydatki-arkusz.md), a ta dopisuje je
@@ -38,6 +39,7 @@ ZASTEPCZA = "00.0"          # opcja-zaślepka Pozycji sprzed pierwszego `pozycje
 LIMIT_ARKUSZA_S = 90        # Apps Script bywa wolny przy zimnym starcie
 PACZKA = 25                 # wierszy w jednym żądaniu do arkusza
 PLIK_XLSX = "Kosztorys_google.xlsx"
+DOKUMENTACJA = Path(__file__).resolve().parent.parent / "docs" / "wydatki-arkusz.md"
 LP = re.compile(r"^(\d{1,2})\.(\d+)$|^(P\d)\.(\d+)$")
 
 
@@ -286,11 +288,18 @@ def sprawdz(k: dict) -> list:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz"])
+    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz", "kod"])
     ap.add_argument("ids", nargs="*", help="wycofaj: id stron Notion (z adresu strony albo z linii testu)")
     ap.add_argument("--proba", action="store_true", help="sync: tylko pokaż, co poszłoby do arkusza (bez zapisu)")
     ap.add_argument("--cicho", action="store_true", help="jedna linia wyniku (dla automatów)")
     a = ap.parse_args(argv)
+    if a.polecenie == "kod":
+        m = re.search(r"```javascript\n(.*?)```", DOKUMENTACJA.read_text(encoding="utf-8"), re.S)
+        if not m:
+            print(f"  ✗ brak bloku kodu w {DOKUMENTACJA.name}", file=sys.stderr)
+            return 1
+        sys.stdout.write(m.group(1))
+        return 0
     if a.polecenie == "wycofaj" and not a.ids:
         ap.error("wycofaj: podaj id stron Notion")
     k = konfiguracja()
