@@ -30,6 +30,8 @@ Pobierz w jak najmniejszej liczbie zapytań:
    Po przeglądzie ustaw im Pokazano = dzisiejsza data (to nie decyzja – wolno też w zaplanowanym przeglądzie).
    Reszta tylko licznikiem: „na ten etap jeszcze n niepokazanych” i „na później: SSO n, Deweloperski n, …”.
 3. **Rejestr sprzeczności**: Status „Czeka na decyzję” i „Do sprawdzenia u projektanta” (z datą zgłoszenia – najstarsze pierwsze).
+   Wiersze z wpisaną już Decyzją (widok „🤖 Decyzja wpisana – do domknięcia”) wymień osobno jako „wpisana, niedomknięta”
+   – domyka je przegląd dnia; ich obecność tutaj znaczy, że wieczorny przebieg ich nie zamknął.
 4. **Notatnik budowy**: Status „Otwarte” lub „Do omówienia” z Priorytetem Krytyczne/Ważne; wpisy z „Kiedy” w ciągu 14 dni lub po terminie.
 5. **TASKS** (Obszar Dom albo puste – sprawy prywatne nie wchodzą do przeglądu budowy): niezakończone z „When” w ciągu 7 dni lub po terminie; osobno **czekam na** (Status „WAITING”, Kto ≠ Ja) – po terminie = „przypomnij się”.
 5a. **Harmonogram** (`collection://d7a479ab-1e23-453f-8f59-55f4097f7d04`): kroki startujące / kończące się w 14 dni, kroki po terminie

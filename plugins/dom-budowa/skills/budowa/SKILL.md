@@ -82,15 +82,15 @@ własny przegląd, żeby nie zasłaniała spraw osobistych.
 
 1. **Dziś** (odczyt): wpisy o budowie przetworzone dziś (blok dnia w „Przetworzone” w Dzienniku), Dziennik budowy z dzisiejszą
    datą, Notatnik i TASKS (Obszar Dom/puste) zamknięte lub dodane dziś, nowe decyzje czekające na inwestora (❓ o budowie, SP),
-   wiersze „💸 Wydatki → arkusz” z Arkusz = „Błąd” (powód z pola Błąd).
-2. **Jutro** (odczyt): kroki Harmonogramu startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zakładania zadania),
-   dostawy jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone), TASKS Dom z When = jutro, „czekam na” (WAITING) z terminem
-   jutro albo po terminie.
+   wiersze „💸 Wydatki → arkusz” z Arkusz = „Błąd” (powód z pola Błąd). **Najpierw domknij decyzje wpisane** w Rejestrze (widok
+   „🤖 Decyzja wpisana – do domknięcia”) wg `wiedza/references/sprzecznosci.md`, „Bez inwestora” – jedyny zapis tego kroku.
+2. **Jutro** (odczyt): kroki Harmonogramu startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zadania), dostawy
+   jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone), TASKS Dom z When = jutro, WAITING z terminem jutro lub po.
 3. **Wpis w „📆 Przeglądy dzienne – budowa”** (`3f8f5982-09e7-815e-8b03-eacaa74db190`, strona na DOM) – tylko gdy dziś albo
    jutro coś jest: zwijany nagłówek „Przegląd dnia budowy – <dzień tygodnia> <data>” na górze strony (najnowszy pierwszy),
-   w środku **Dziś**, **Decyzje i pytania czekające**, **Jutro – plan** (po terminie na górze), opcjonalnie **Rozkminka**
+   w środku **Dziś**, **Decyzje i pytania** (SP domknięte dziś, czekające), **Jutro – plan** (po terminie na górze), opcjonalnie **Rozkminka**
    (gdy inwestor o nią prosił we wpisie, np. lista pytań na spotkanie). Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
-4. **Zwróć** do przeglądu dnia: wzmiankę (link) do tego wpisu, jedną linię skrótu („3 sprawy dziś, jutro: geodeta 8:00”)
+4. **Zwróć** do przeglądu dnia: wzmiankę (link) do tego wpisu, jedną linię skrótu („3 sprawy dziś, SP: 1 domknięte, jutro: geodeta 8:00”)
    i max 1 najważniejszy punkt jutra. Nic nie ma → „bez zmian”, bez wpisu.
 
 ## Zasady pracy (obowiązują we wszystkich procedurach)

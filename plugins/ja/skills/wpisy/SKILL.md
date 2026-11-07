@@ -128,6 +128,8 @@ z czatu bez Notion (`references/skrzynka.md`): te same kroki 3–7, ślad w Skrz
 - **Research (RES-n):** odpowiedź „RES-n: …” (w Dzienniku albo pod pytaniami na stronie researchu) → dopisz ją pod pytaniami
   na stronie RES-n z datą i ustaw Status „Do zrobienia” (wieczór dokończy); „RES-n niepotrzebny” albo zakup już Kupione →
   Status „Zamknięty”.
+- **Sprzeczności (SP-n):** odpowiedź „SP-n: …” (w Dzienniku, we „Wpisach” albo w okienku ❓) → `wiedza`, sekcja C (plugin
+  dom-budowa) – także w przeglądzie dnia bez inwestora; jasna = domknięcie ze skutkami, niejasna = okienko ❓ pod wpisem.
 - **Sprzątanie pytań:** pytanie (okienko pod wpisem, RES-n, SP-n, zadanie w „❓”), które inwestor rozstrzygnął w rozmowie,
   zamknij w tej samej pracy: dopisz wynik tam, gdzie żyje sprawa (strona RES-n z nowym Statusem itd.), a wpis z okienkiem
   albo linię „❓” przenieś do bloku dnia w „Przetworzone” jako `~~…~~ → rozwiązane w rozmowie (data): <wzmianka>`. Nie usuwaj.

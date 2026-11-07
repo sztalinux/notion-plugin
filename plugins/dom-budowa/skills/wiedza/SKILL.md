@@ -100,7 +100,8 @@ niosą główną myśl materiału. Mniej niż 3 informacje – pomiń blok (wszy
 
 ## C. Rozstrzygnięcie sprzeczności (po odpowiedzi inwestora)
 
-Tylko po wyraźnej odpowiedzi; niejasna → dopytaj, nie zgaduj. Kroki: `references/sprzecznosci.md`.
+Tylko po wyraźnej odpowiedzi; niejasna → dopytaj, nie zgaduj. Odpowiedzią jest też „SP-n: …” w Dzienniku i treść, którą
+inwestor sam wpisał w pole Decyzja – domyka je także przegląd dnia bez inwestora. Kroki: `references/sprzecznosci.md`.
 
 ## D. „Przejrzałem nowe”
 

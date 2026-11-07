@@ -4,6 +4,21 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.5.0] – 2026-11-08
+
+- Decyzja wpisana przez inwestora w pole Decyzja Rejestru sprzeczności albo wpisem „SP-n: …” jest domykana bez rozmowy:
+  `wiedza/references/sprzecznosci.md`, nowa sekcja „Bez inwestora” (jasna → Rozstrzygnięte z datą, Konsekwencjami, wpisem
+  w Notatniku, statusami wiedzy i „W skrócie” tematu; słowa inwestora zostają bez zmian; bez zadań i zmian w arkuszu;
+  niejasna → pytanie ❓). Nowy widok Rejestru „🤖 Decyzja wpisana – do domknięcia” (`notion-mapa.md`).
+- `budowa` „Wieczorem”: najpierw domyka decyzje wpisane; przegląd budowy pokazuje domknięte SP. `przeglad-tygodnia` wymienia
+  wpisane, a niedomknięte decyzje jako sygnał, że wieczór ich nie zamknął.
+
+## ja [1.10.0] – 2026-11-08
+
+- `przeglad-dnia`: zakaz zapisywania decyzji zawężony do wybierania i zgadywania za inwestora; decyzje, które inwestor sam
+  napisał (wpis „SP-n: …” / „decyzja: …”, pole Decyzja w Rejestrze), domykane ze skutkami; licznik „SP: n domknięte” w linii „🤖”.
+- `wpisy`: odpowiedź „SP-n: …” trafia do `wiedza`, sekcja C, także w przebiegu bez inwestora.
+
 ## dom-budowa [3.4.0] – 2026-11-08
 
 - Kod Apps Script v3 z `@OnlyCurrentDoc`: dostęp wyłącznie do arkusza kosztorysu (bez Dysku). Usunięte kopie na Dysku, kopie
