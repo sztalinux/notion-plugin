@@ -106,6 +106,7 @@ z automatu jest w logu przebiegu (`~/Documents/Dom/.dom/automaty/<tryb>-RRRR-MM-
 | Objaw | Przyczyna i naprawa |
 |---|---|
 | „odpowiedź nie jest JSON” | wdrożenie nie ma dostępu „Każdy” albo adres jest od edytora (`/dev`) – krok 5, adres `/exec` |
+| „Cannot read properties of null (reading 'getRange')” albo inna liczba pozycji niż w pliku | zaimportowano inny plik niż `Kosztorys_stan_zero_2026-11-07.xlsx` (brak zakładki Wydatki) – w tym samym arkuszu Google: Plik → Importuj → Prześlij → właściwy plik → „Zastąp arkusz kalkulacyjny”; kod Apps Script, sekret i adres zostają |
 | „zły sekret” | `ARKUSZ_SEKRET` ≠ właściwość `SEKRET` – krok 4 i 6 |
 | „pozycja … nie istnieje w Kosztorysie” | pozycję usunięto albo przenumerowano w arkuszu – wybierz inną, `pozycje` odświeży listę |
 | HTTP 404 z Notion | baza 💸 Wydatki niedostępna dla integracji – Notion → baza → ⋯ → Połączenia → dodaj integrację |
