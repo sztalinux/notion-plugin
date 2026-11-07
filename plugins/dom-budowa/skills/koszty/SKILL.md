@@ -56,7 +56,9 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
 5. Potwierdź jedną linią: „N wydatków w kolejce do arkusza (pozycje …) – trafią do niego przy najbliższym przebiegu na
    Macu”. Bez narzędzi Notion → Skrzynka (`budowa`, zasada 13), słowami ze wszystkimi polami z kroku 1.
 6. Wiersz z Arkusz = „Błąd” (powód w polu Błąd) pokazuj w przeglądzie dnia budowy jako sprawę czekającą; po poprawce pola
-   inwestor albo asystent ustawia znów „Do arkusza”. Wiersz „W arkuszu” poprawia się już w arkuszu, nie w Notion.
+   inwestor albo asystent ustawia znów „Do arkusza”. Wiersz „W arkuszu” poprawia się już w arkuszu, nie w Notion; wydatek
+   wysłany przez pomyłkę – w Claude Code `python3 tools/wydatki.py wycofaj <id strony>` (czyści Wydatki i Cennik).
+7. Wydatek z ilością automat dopisuje też do arkusza Cennik (cena za jednostkę) – nie podawaj go osobno.
 
 Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten wydatek.
 
@@ -91,7 +93,6 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
 - Kwoty wydatków = tyle, ile zapłacono (zwykle brutto). Oferty = netto + VAT.
 - Ceny rynkowe: z widełkami min–max i źródłem z datą; nie wymyślaj cen – wyszukaj.
 - Nie zmieniaj ilości ani cen PLAN bez wskazania źródła (przedmiar, zestawienie stali, oferta, umowa).
-- Ceny jednostkowe, po których inwestor kupił, prowadzi on sam w arkuszu Cennik; asystent podpowiada wiersz, gdy
-  wydatek ma ilość.
+- Ceny jednostkowe zakupów: arkusz Cennik – wydatki z ilością dopisuje automat, resztę (np. oferty hurtowni) inwestor.
 - Wiedza o kosztach z filmów trafia do Informacji w Bazie wiedzy (procedura `wiedza`, Rodzaj „Koszt / cena”,
   „Wrażliwe na czas”), a do arkusza tylko na prośbę inwestora.

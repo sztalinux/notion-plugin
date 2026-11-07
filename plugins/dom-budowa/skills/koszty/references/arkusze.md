@@ -25,8 +25,9 @@ Etapy SSO i dalsze dojdą, gdy będą oferty (pełny szacunek całej budowy: `Ko
 - **Etapy!A:O** – A Etap · B Stan · C Umowa z ekipą (transza) · D Uwagi / terminy · E–H PLAN: Materiał / Ekipa / Inne /
   razem · I–M WYDANE: Materiał / Ekipa / Inne / Bez typu / razem · N Pozostało · O Do zapłaty ekipie (kolumnę Wykonawca
   inwestor usunął 7.11.2026).
-- **Cennik!A:I** – ręczny rejestr cen zakupu: Data, Materiał / usługa, Jedn., Cena jedn. brutto, Dostawca, Ilość, Wartość
-  (formuła), Pozycja kosztorysu, Uwagi.
+- **Cennik!A:I** ⚙ – rejestr cen zakupu: Data, Materiał / usługa, Jedn., Cena jedn. brutto, Dostawca, Ilość, Wartość
+  (formuła – nie nadpisuj), Pozycja kosztorysu, Uwagi. Wydatki z ilością dopisuje automat (Uwagi „z wydatku · notion:<id>”),
+  resztę inwestor ręcznie.
 - **Podsumowanie!B** – rezerwa na stan zero (%).
 
 ## Trzy warstwy liczb

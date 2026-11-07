@@ -4,13 +4,14 @@
     python3 tools/wydatki.py sync [--proba] [--cicho]   # wiersze „Do arkusza” (i z pustym Arkusz) → arkusz Wydatki
     python3 tools/wydatki.py pozycje [--cicho]          # lista pozycji z arkusza Kosztorys → opcje pola Pozycja w Notion
     python3 tools/wydatki.py pobierz [--cicho]          # kopia arkusza jako .xlsx do <hub>/Koszty/Kosztorys_google.xlsx
+    python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (i Cennika), w Notion „Nie wysyłać”
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
 
 Przepływ: przebieg Dziennika (agent) albo inwestor dodaje w Notion wiersz z Arkusz = „Do arkusza”; `sync` wysyła takie
 wiersze do aplikacji Apps Script przypiętej do arkusza (kod i instrukcja: docs/wydatki-arkusz.md), a ta dopisuje je
 w pierwszym wolnym wierszu arkusza Wydatki (bez nadpisywania kolumn z formułami). Wynik wraca do Notion: „W arkuszu”
 z numerem wiersza albo „Błąd” z powodem. Ponowne wysłanie tej samej strony nie dubluje wiersza (kolumna Źródło
-= notion:<id strony>).
+= notion:<id strony>). Wydatek z ilością dopisuje się też do arkusza Cennik (cena za jednostkę).
 
 Sekrety (`<hub>/.dom/sekrety.env`, chmod 600): ARKUSZ_URL (adres wdrożenia /exec), ARKUSZ_SEKRET (ten sam co
 właściwość SEKRET w Apps Script), NOTION_TOKEN_WYDATKI albo NOTION_TOKEN (integracja z prawem odczytu i zmiany treści
@@ -175,7 +176,7 @@ def sync(k: dict, proba: bool) -> tuple:
     """→ (liczniki, błędy krytyczne). Błąd pojedynczego wiersza trafia do Notion, nie przerywa reszty."""
     wymagaj(k, "token") if proba else wymagaj(k, "token", "url", "sekret")
     wiersze = [na_wiersz(s) for s in kolejka(k)]
-    licz = {"w_kolejce": len(wiersze), "dopisane": 0, "juz_byly": 0, "bledy": 0}
+    licz = {"w_kolejce": len(wiersze), "dopisane": 0, "juz_byly": 0, "cennik": 0, "bledy": 0}
     bledy = []
     do_wyslania = []
     for w in wiersze:
@@ -202,11 +203,26 @@ def sync(k: dict, proba: bool) -> tuple:
         for r in wyniki:
             if r.get("ok"):
                 licz["juz_byly" if r.get("juz") else "dopisane"] += 1
+                licz["cennik"] += 1 if r.get("cennik") else 0
                 oznacz(k, r["id"], W_ARKUSZU, wiersz=r.get("wiersz"))
             else:
                 licz["bledy"] += 1
                 oznacz(k, r["id"], BLAD, blad=str(r.get("blad") or "odrzucone przez arkusz"))
     return licz, bledy
+
+
+def wycofaj(k: dict, ids: list) -> dict:
+    """Czyści wiersze tych stron w arkuszu (Wydatki i Cennik) i ustawia w Notion Arkusz = „Nie wysyłać”."""
+    wymagaj(k, "token", "url", "sekret")
+    ids = [i.strip() for i in ids if i.strip()]
+    wyniki = arkusz(k, "usun", ids=ids)["wyniki"]
+    licz = {"stron": len(ids), "wiersze_wydatkow": 0, "wiersze_cennika": 0}
+    for r in wyniki:
+        licz["wiersze_wydatkow"] += len(r.get("wydatki") or [])
+        licz["wiersze_cennika"] += len(r.get("cennik") or [])
+        W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{r['id']}", naglowki(k),
+                       {"properties": {"Arkusz": {"select": {"name": "Nie wysyłać"}}, "Wiersz arkusza": {"number": None}}})
+    return licz
 
 
 def nazwa_opcji(p: dict) -> str:
@@ -270,10 +286,13 @@ def sprawdz(k: dict) -> list:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "sprawdz"])
+    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz"])
+    ap.add_argument("ids", nargs="*", help="wycofaj: id stron Notion (z adresu strony albo z linii testu)")
     ap.add_argument("--proba", action="store_true", help="sync: tylko pokaż, co poszłoby do arkusza (bez zapisu)")
     ap.add_argument("--cicho", action="store_true", help="jedna linia wyniku (dla automatów)")
     a = ap.parse_args(argv)
+    if a.polecenie == "wycofaj" and not a.ids:
+        ap.error("wycofaj: podaj id stron Notion")
     k = konfiguracja()
     t0 = time.monotonic()
     bledy = []
@@ -285,6 +304,9 @@ def main(argv=None) -> int:
             licz, bledy = sync(k, a.proba)
             linia = ("sync" + (" (próba)" if a.proba else "") + ": " +
                      ", ".join(f"{n} {v}" for n, v in licz.items()))
+        elif a.polecenie == "wycofaj":
+            w = wycofaj(k, a.ids)
+            linia = "wycofaj: " + ", ".join(f"{n} {v}" for n, v in w.items())
         elif a.polecenie == "pozycje":
             w = pozycje(k)
             linia = f"pozycje: {w['pozycje']} w arkuszu, nowe opcje w Notion {w['nowe_opcje']}"

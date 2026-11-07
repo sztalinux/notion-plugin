@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.1.0] – 2026-11-07
+
+- Wydatek z ilością dopisuje się automatycznie także do arkusza Cennik (cena za jednostkę, dostawca, pozycja); bez duplikatów
+  przy ponownym wysłaniu (kod Apps Script w `docs/wydatki-arkusz.md` – po aktualizacji nowa wersja wdrożenia).
+- `tools/wydatki.py wycofaj <id strony>`: czyści wydatek w arkuszu (Wydatki i Cennik, formuły zostają), w Notion ustawia
+  „Nie wysyłać”; następny wydatek zajmuje zwolniony wiersz. `sync` liczy dopisane wiersze Cennika.
+- `koszty` B (kroki 6–7, zasady), `arkusze.md` (Cennik ⚙): Cennik wypełnia automat, pomyłkowy wydatek – `wycofaj`.
+
 ## dom-budowa [3.0.2] – 2026-11-07
 
 - `koszty/references/arkusze.md`: arkusz Etapy bez kolumny Wykonawca (A:O – umowa w C, „Do zapłaty ekipie” w O) i opis
