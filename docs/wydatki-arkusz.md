@@ -26,7 +26,10 @@ Notion: Arkusz = „W arkuszu” + numer wiersza   albo   „Błąd” + powód 
   cena za jednostkę, netto albo brutto (brutto liczy arkusz), dostawca, pozycja, status Oferta. Decyzja = Status wyceny
   „Wybrana” (pozostałe „Odrzucona”) i ponowne wysłanie – arkusz aktualizuje ten sam wiersz, a Kosztorys pokazuje cenę
   wybraną (kol. N–P). Wydatki do Cennika nie trafiają – cenę zapłaconą liczy kolumna Cena jedn. w Wydatkach.
-- Wyceny wymagają kodu Apps Script w wersji 2; przy starszym `sync` je wstrzymuje (linia „wyceny czekają” w logu).
+- Wyceny wymagają kodu Apps Script w wersji 2 i Cennika w nowym układzie; inaczej `sync` je wstrzymuje (linia „wyceny
+  czekają” w logu).
+- **Arkusza nie wgrywa się ponownie.** Zmiany układu i wyglądu (kolumny, formuły, kolory, listy) robi asystent na żywym
+  arkuszu – sekcja 8.
 - Kopia arkusza do analiz: `<hub>/Koszty/Kosztorys_google.xlsx`, odświeżana przez `wydatki.py pobierz` (przebieg wieczorny).
 
 ## 2. Kto ma dostęp do Notion (żeby się nie gubić)
@@ -52,7 +55,7 @@ Jeśli dopisałeś w nim wydatki po 2.09.2026, przepisz je do `Kosztorys_stan_ze
    Plik → Zapisz jako Arkusze Google. Nazwij np. „Kosztorys budowy”. Wgrany `.xlsx` usuń z Dysku, żeby nie mylić wersji.
    Sprawdź: Plik → Ustawienia → Język i region = Polska, strefa czasowa = (GMT+01:00) Warsaw; w Wydatkach działają listy
    Etap / Pozycja / Typ.
-3. **Kod.** W arkuszu: Rozszerzenia → Apps Script. Skasuj zawartość `Kod.gs`, wklej kod z sekcji 7, zapisz (ikona dyskietki).
+3. **Kod.** W arkuszu: Rozszerzenia → Apps Script. Skasuj zawartość `Kod.gs`, wklej kod z sekcji 9, zapisz (ikona dyskietki).
    Do schowka skopiujesz go w Terminalu: `python3 tools/wydatki.py kod | pbcopy` (w katalogu repo harnessu).
 4. **Sekret.** W Apps Script: Ustawienia projektu (koło zębate) → Właściwości skryptu → Dodaj właściwość:
    nazwa `SEKRET`, wartość – długi losowy ciąg. Wygeneruj go w Terminalu:
@@ -61,7 +64,10 @@ Jeśli dopisałeś w nim wydatki po 2.09.2026, przepisz je do `Kosztorys_stan_ze
    Wdróż → Autoryzuj dostęp → wybierz konto → „Zaawansowane” → „Przejdź do … (niebezpieczne)” (to Twój własny,
    niezweryfikowany przez Google skrypt) → Zezwól. Skopiuj „URL aplikacji internetowej” (kończy się na `/exec`).
    „Każdy” oznacza: kto zna adres, może wysłać żądanie – bez sekretu dostaje „zły sekret”. Adresu i sekretu nie
-   wklejaj nigdzie poza `sekrety.env`.
+   wklejaj nigdzie poza `sekrety.env`. Z sekretem skrypt umie: dopisać i wycofać wydatek albo wycenę, oddać kopię
+   arkusza, zrobić kopię pliku na Dysku i zmienić układ sześciu zakładek (wartości, formuły, kolory, listy) – bez usuwania
+   zakładek, bez formuł IMPORT…/IMAGE/HYPERLINK, a czyścić wolno tylko pusty Cennik. Wyciek adresu i sekretu → nowy
+   sekret (krok 4 i 6).
 6. **Sekrety na Macu.** Dopisz dwie linie do `~/Documents/Dom/.dom/sekrety.env`:
    ```
    ARKUSZ_URL=<URL z kroku 5>
@@ -109,6 +115,8 @@ Od tej chwili nic nie robisz ręcznie – przebiegi na Macu wołają skrypt same
 | `wydatki.py wycofaj <id>…` | czyści wydatek (Wydatki) albo wycenę (Cennik), w Notion „Nie wysyłać” | ręcznie, asystent na prośbę |
 | `wydatki.py sprawdz` | sekrety, dostęp do bazy i arkusza | ręcznie |
 | `wydatki.py kod` | wypisuje kod Apps Script (z `| pbcopy` – do schowka) | ręcznie przy aktualizacji kodu |
+| `wydatki.py migruj <zmiany.json> [--test]` | zmiana układu: na kopii próbnej (eksport do `.dom/wydatki/`) albo na arkuszu (z kopią zapasową) | asystent w Claude Code |
+| `wydatki.py kosz <id>` | kopia próbna „test zmian” do kosza Dysku | asystent po teście |
 
 Kody wyjścia: 0 OK, 1 błąd (linie `✗`), 2 brak konfiguracji (ARKUSZ_URL / ARKUSZ_SEKRET). Wynik każdego uruchomienia
 z automatu jest w logu przebiegu (`~/Documents/Dom/.dom/automaty/<tryb>-RRRR-MM-DD.log`, linia „po przebiegu wydatki.py …”).
@@ -125,21 +133,46 @@ z automatu jest w logu przebiegu (`~/Documents/Dom/.dom/automaty/<tryb>-RRRR-MM-
 | HTTP 403 z Notion przy zmianie pola | integracja bez prawa „Update content” – notion.so/my-integrations → Capabilities |
 | eksport `pobierz`: HTTP 401/403 | brak zgody na Dysk – w Apps Script uruchom raz dowolną funkcję (np. `ping`) z edytora i zaakceptuj nowe uprawnienia, potem nowa wersja wdrożenia |
 | data w arkuszu o dzień przesunięta | arkusz ma inną strefę niż Polska – Plik → Ustawienia → Strefa czasowa (GMT+01:00) Warsaw |
-| „nieznana akcja” przy `wycofaj` albo „arkusz ma kod w wersji 1 – wyceny czekają” | w Apps Script jest starszy kod – wklej kod z sekcji 7 i zrób nową wersję wdrożenia (wiersz niżej) |
+| „nieznana akcja” przy `wycofaj` albo „arkusz ma kod w wersji 1 – wyceny czekają” | w Apps Script jest starszy kod – sekcja 7 |
+| „Cennik w starym układzie – najpierw zmiana układu” | kod v2 jest, ale zmiana układu jeszcze nie przeszła – sekcja 8 |
 | zmieniłeś kod w Apps Script | Wdróż → Zarządzaj wdrożeniami → ołówek → Wersja: Nowa → Wdróż (adres zostaje ten sam) |
 
-## 7. Kod Apps Script (wklej do `Kod.gs`)
+## 7. Aktualizacja kodu Apps Script (rzadko – gdy asystent poprosi)
+
+1. Terminal, katalog repo harnessu: `python3 tools/wydatki.py kod | pbcopy` – cały kod trafia do schowka.
+2. W arkuszu: Rozszerzenia → Apps Script → plik `Kod.gs` → Cmd+A (zaznacz wszystko) → Cmd+V (wklej, zastępuje stary kod)
+   → zapisz.
+3. Wdróż → Zarządzaj wdrożeniami → ołówek przy wdrożeniu → Wersja: **Nowa wersja** → Wdróż. Adres `/exec` zostaje ten sam,
+   `sekrety.env` się nie zmienia. Google może poprosić o nowe uprawnienia (Dysk – kopie zapasowe) – zezwól.
+4. `python3 tools/wydatki.py sprawdz` pokazuje wersję kodu.
+
+## 8. Zmiany układu arkusza bez ponownego importu (asystent w Claude Code)
+
+1. Docelowy układ zbuduj lokalnie jako `.xlsx` (openpyxl) i porównaj z eksportem żywego arkusza (`wydatki.py pobierz`):
+   te same wiersze danych, kolumny z danymi inwestora poza zmienianymi zakresami.
+2. Plik zmian: `python3 ~/Documents/Dom/AI/automaty/arkusz_zmiany.py --cel cel.xlsx --wyjscie zmiany.json --zakres …`
+   (narzędzie lokalne poza repo – wymaga openpyxl; opis opcji: `--help`). Zapisz go w `.dom/wydatki/` z datą.
+3. `python3 tools/wydatki.py migruj zmiany.json --test` – kopia próbna na Dysku, zmiany na niej, eksport do
+   `.dom/wydatki/test-zmian.xlsx`. Przejrzyj: przelicz w LibreOffice (zero #NAME?/#REF!), sumy Podsumowania jak przed zmianą,
+   podgląd zakładek.
+4. `python3 tools/wydatki.py kosz <id kopii próbnej>`, potem `python3 tools/wydatki.py migruj zmiany.json` – kopia zapasowa
+   „kopia przed zmianą <data>” na Dysku i zmiany na arkuszu. `sprawdz` i `pobierz` na koniec.
+
+## 9. Kod Apps Script (`Kod.gs`)
 
 ```javascript
 /**
  * Kosztorys w Arkuszach Google – punkt wejścia dla tools/wydatki.py (Mac). Instrukcja: docs/wydatki-arkusz.md
  * w repozytorium harnessu. Kod nie zawiera danych – działa na arkuszu, do którego jest przypięty.
- * Akcje (POST, JSON {"sekret", "akcja", ...}): ping · pozycje · dopisz (wiersze[]) · usun (ids[]) · xlsx.
- * dopisz: rodzaj „Wycena” → arkusz Cennik (ponowne wysłanie aktualizuje ten sam wiersz – np. status Wybrana),
- * reszta → arkusz Wydatki. Kolumn z formułami (Wydatki I i N, Cennik F i J) skrypt nigdy nie nadpisuje; usun czyści
- * tylko pola wpisywane, więc formuły zostają.
+ * Akcje (POST, JSON {"sekret", "akcja", ...}):
+ *   ping · pozycje · dopisz (wiersze[]) · usun (ids[]) · xlsx (plik?)
+ *   kopia (nazwa) · zmien (plik?, operacje[]) · kosz (plik) – zmiany układu bez ponownego importu.
+ * dopisz: rodzaj „Wycena” → arkusz Cennik (ponowne wysłanie aktualizuje ten sam wiersz), reszta → arkusz Wydatki.
+ * Kolumn z formułami (Wydatki I i N, Cennik G i K, Kosztorys N–P) dopisz/usun nigdy nie nadpisują.
+ * zmien: tylko znane zakładki, bez usuwania zakładek, bez formuł IMPORT…/IMAGE; czyszczenie tylko pustego Cennika.
  */
 
+var WERSJA = 2;
 var ARKUSZ_WYDATKI = 'Wydatki';
 var ARKUSZ_KOSZTORYS = 'Kosztorys';
 var ARKUSZ_CENNIK = 'Cennik';
@@ -147,7 +180,12 @@ var PIERWSZY_WIERSZ = 5;
 var STATUSY = ['Zrealizowane', 'Do zapłaty'];
 var TYPY = ['Materiał', 'Robocizna', 'Sprzęt', 'Usługa', 'Formalności'];
 var STATUSY_WYCENY = ['Oferta', 'Wybrana', 'Odrzucona'];
-var WERSJA = 2;  // tools/wydatki.py wysyła wyceny dopiero od wersji 2
+var ZAKLADKI = ['Instrukcja', 'Podsumowanie', 'Wydatki', 'Cennik', 'Etapy', 'Kosztorys'];
+var ZAKAZANE = /IMPORTXML|IMPORTDATA|IMPORTHTML|IMPORTFEED|IMPORTRANGE|IMAGE\s*\(|HYPERLINK\s*\(/i;
+// Cennik: A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty) · E Netto / Brutto · F VAT % · G Cena brutto (formuła)
+// · H Dostawca · I Pozycja · J Status · K Najtańsza (formuła) · L Ważna do · M Uwagi · N Źródło (notion:<id>)
+var CENNIK_NAGLOWEK = ['Data', 'Materiał / usługa', 'Jedn.', 'Cena (z oferty)', 'Netto / Brutto', 'VAT %', 'Cena brutto',
+  'Dostawca', 'Pozycja kosztorysu', 'Status', 'Najtańsza', 'Ważna do', 'Uwagi (transport, min. ilość, rabat)', 'Źródło'];
 
 function doPost(e) {
   var zadanie;
@@ -164,9 +202,12 @@ function doPost(e) {
     switch (zadanie.akcja) {
       case 'ping': return odpowiedz(ping());
       case 'pozycje': return odpowiedz({ok: true, pozycje: pozycje()});
-      case 'dopisz': return odpowiedz(dopisz(zadanie.wiersze || []));
-      case 'usun': return odpowiedz(usun(zadanie.ids || []));
-      case 'xlsx': return odpowiedz(eksportXlsx());
+      case 'dopisz': return odpowiedz(podBlokada(function () { return dopisz(zadanie.wiersze || []); }));
+      case 'usun': return odpowiedz(podBlokada(function () { return usun(zadanie.ids || []); }));
+      case 'xlsx': return odpowiedz(eksportXlsx(zadanie.plik));
+      case 'kopia': return odpowiedz(kopia(zadanie.nazwa));
+      case 'zmien': return odpowiedz(podBlokada(function () { return zmien(zadanie.plik, zadanie.operacje || []); }));
+      case 'kosz': return odpowiedz(kosz(zadanie.plik));
       default: return odpowiedz({ok: false, blad: 'nieznana akcja'});
     }
   } catch (err) {
@@ -182,11 +223,23 @@ function odpowiedz(obiekt) {
   return ContentService.createTextOutput(JSON.stringify(obiekt)).setMimeType(ContentService.MimeType.JSON);
 }
 
+function podBlokada(f) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    return f();
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 function ping() {
   var ss = SpreadsheetApp.getActive();
   var dane = ss.getSheetByName(ARKUSZ_WYDATKI).getRange('C' + PIERWSZY_WIERSZ + ':C').getValues();
   var n = dane.filter(function (w) { return w[0] !== ''; }).length;
-  return {ok: true, arkusz: ss.getName(), wydatki: n, wersja: WERSJA};
+  var naglowek = ss.getSheetByName(ARKUSZ_CENNIK).getRange(4, 1, 1, CENNIK_NAGLOWEK.length).getValues()[0];
+  var cennikOk = naglowek.join('|') === CENNIK_NAGLOWEK.join('|');
+  return {ok: true, arkusz: ss.getName(), wydatki: n, wersja: WERSJA, cennik_ok: cennikOk};
 }
 
 /** Lp → {etap, klucz} z arkusza Kosztorys (kol. A Etap, B Lp, M Klucz). */
@@ -202,135 +255,51 @@ function pozycje() {
 }
 
 function dopisz(wiersze) {
-  var lock = LockService.getScriptLock();
-  lock.waitLock(30000);
-  try {
-    var arkusz = SpreadsheetApp.getActive().getSheetByName(ARKUSZ_WYDATKI);
-    var strefa = SpreadsheetApp.getActive().getSpreadsheetTimeZone();  // data = ten dzień w strefie arkusza
-    var mapa = {};
-    pozycje().forEach(function (p) { mapa[p.lp] = p; });
-    var ostatni = Math.max(arkusz.getLastRow(), PIERWSZY_WIERSZ);
-    var kolA = arkusz.getRange(PIERWSZY_WIERSZ, 1, ostatni - PIERWSZY_WIERSZ + 1, 1).getValues();
-    var kolO = arkusz.getRange(PIERWSZY_WIERSZ, 15, ostatni - PIERWSZY_WIERSZ + 1, 1).getValues();
-    var zajete = {};
-    kolO.forEach(function (w, i) {
-      var z = String(w[0]);
-      if (z.indexOf('notion:') === 0) zajete[z] = PIERWSZY_WIERSZ + i;
-    });
-    var wolny = PIERWSZY_WIERSZ + kolA.length;
-    for (var i = 0; i < kolA.length; i++) {
-      if (kolA[i][0] === '' && String(kolO[i][0]) === '') { wolny = PIERWSZY_WIERSZ + i; break; }
+  var ss = SpreadsheetApp.getActive();
+  var arkusz = ss.getSheetByName(ARKUSZ_WYDATKI);
+  var strefa = ss.getSpreadsheetTimeZone();  // data = ten dzień w strefie arkusza
+  var mapa = {};
+  pozycje().forEach(function (p) { mapa[p.lp] = p; });
+  var ostatni = Math.max(arkusz.getLastRow(), PIERWSZY_WIERSZ);
+  var kolA = arkusz.getRange(PIERWSZY_WIERSZ, 1, ostatni - PIERWSZY_WIERSZ + 1, 1).getValues();
+  var kolO = arkusz.getRange(PIERWSZY_WIERSZ, 15, ostatni - PIERWSZY_WIERSZ + 1, 1).getValues();
+  var zajete = {};
+  kolO.forEach(function (w, i) {
+    var z = String(w[0]);
+    if (z.indexOf('notion:') === 0) zajete[z] = PIERWSZY_WIERSZ + i;
+  });
+  var wolny = PIERWSZY_WIERSZ + kolA.length;
+  for (var i = 0; i < kolA.length; i++) {
+    if (kolA[i][0] === '' && String(kolO[i][0]) === '') { wolny = PIERWSZY_WIERSZ + i; break; }
+  }
+  var wyniki = [];
+  wiersze.forEach(function (w) {
+    if (w.rodzaj === 'Wycena') {
+      wyniki.push(wycena(w, mapa, strefa));
+      return;
     }
-    var wyniki = [];
-    wiersze.forEach(function (w) {
-      if (w.rodzaj === 'Wycena') {
-        wyniki.push(wycena(w, mapa, strefa));
-        return;
-      }
-      var zrodlo = 'notion:' + w.id;
-      if (zajete[zrodlo]) {
-        wyniki.push({id: w.id, ok: true, wiersz: zajete[zrodlo], juz: true});
-        return;
-      }
-      var blad = sprawdz(w, mapa);
-      if (blad) {
-        wyniki.push({id: w.id, ok: false, blad: blad});
-        return;
-      }
-      var p = mapa[w.lp];
-      arkusz.getRange(wolny, 1, 1, 8).setValues([[
-        Utilities.parseDate(w.data, strefa, 'yyyy-MM-dd'), w.status, Number(w.kwota), p.etap, p.klucz,
-        w.typ || '', w.ilosc === null || w.ilosc === undefined ? '' : Number(w.ilosc), w.jedn || '']]);
-      arkusz.getRange(wolny, 10, 1, 4).setValues([[w.sposob || '', w.opis || '', w.dostawca || '', w.notatki || '']]);
-      arkusz.getRange(wolny, 15).setValue(zrodlo);
-      zajete[zrodlo] = wolny;
-      wyniki.push({id: w.id, ok: true, wiersz: wolny, juz: false});
-      wolny = nastepnyWolny(arkusz, wolny + 1);
-    });
-    SpreadsheetApp.flush();
-    return {ok: true, wyniki: wyniki};
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-/** Wycena → Cennik: A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty) · E Netto / Brutto · F Cena brutto
- *  (formuła) · G Dostawca · H Pozycja · I Status · J Najtańsza (formuła) · K Ważna do · L Uwagi · M Źródło (notion:<id>).
- *  Strona już w Cenniku → aktualizacja tego wiersza (cena, status, uwagi), inaczej pierwszy wolny wiersz. */
-function wycena(w, mapa, strefa) {
-  var blad = sprawdzWycene(w, mapa);
-  if (blad) return {id: w.id, ok: false, blad: blad};
-  var c = SpreadsheetApp.getActive().getSheetByName(ARKUSZ_CENNIK);
-  var zrodlo = 'notion:' + w.id;
-  var n = Math.max(c.getLastRow(), PIERWSZY_WIERSZ) - PIERWSZY_WIERSZ + 1;
-  var dane = c.getRange(PIERWSZY_WIERSZ, 1, n, 13).getValues();
-  var wiersz = 0, juz = false;
-  for (var i = 0; i < dane.length; i++) {
-    if (String(dane[i][12]) === zrodlo) { wiersz = PIERWSZY_WIERSZ + i; juz = true; break; }
-  }
-  if (!wiersz) {
-    wiersz = PIERWSZY_WIERSZ + n;
-    for (var j = 0; j < dane.length; j++) {
-      if (dane[j][0] === '' && dane[j][1] === '' && dane[j][12] === '') { wiersz = PIERWSZY_WIERSZ + j; break; }
+    var zrodlo = 'notion:' + w.id;
+    if (zajete[zrodlo]) {
+      wyniki.push({id: w.id, ok: true, wiersz: zajete[zrodlo], juz: true});
+      return;
     }
-  }
-  var klucz = w.lp ? mapa[w.lp].klucz : '';
-  c.getRange(wiersz, 1, 1, 5).setValues([[Utilities.parseDate(w.data, strefa, 'yyyy-MM-dd'), w.opis, w.jedn,
-    Number(w.kwota), w.cena_podana || 'Brutto']]);
-  c.getRange(wiersz, 7, 1, 3).setValues([[w.dostawca || '', klucz, w.status_wyceny || 'Oferta']]);
-  c.getRange(wiersz, 11, 1, 3).setValues([[w.wazna_do ? Utilities.parseDate(w.wazna_do, strefa, 'yyyy-MM-dd') : '',
-    w.notatki || '', zrodlo]]);
-  return {id: w.id, ok: true, wiersz: wiersz, juz: juz, arkusz: ARKUSZ_CENNIK};
-}
-
-function sprawdzWycene(w, mapa) {
-  if (!w.id) return 'brak id strony';
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(w.data || ''))) return 'brak daty';
-  if (!(Number(w.kwota) > 0)) return 'brak ceny za jednostkę (pole Kwota)';
-  if (!w.jedn) return 'brak jednostki (Jedn.)';
-  if (!w.opis) return 'brak nazwy (Wydatek)';
-  if (w.lp && !mapa[w.lp]) return 'pozycja ' + w.lp + ' nie istnieje w Kosztorysie';
-  if (w.status_wyceny && STATUSY_WYCENY.indexOf(w.status_wyceny) < 0) return 'Status wyceny: ' + STATUSY_WYCENY.join(' / ');
-  if (w.cena_podana && ['Netto', 'Brutto'].indexOf(w.cena_podana) < 0) return 'Cena podana: Netto / Brutto';
-  return '';
-}
-
-/** Wycofanie: czyści pola wpisywane w Wydatkach (A:H, J:M, O) i w Cenniku (A:E, G:I, K:M) dla podanych stron
- *  Notion. Wiersz zostaje pusty, formuły zostają; następny dopisz zajmie tę lukę. */
-function usun(ids) {
-  var lock = LockService.getScriptLock();
-  lock.waitLock(30000);
-  try {
-    var ss = SpreadsheetApp.getActive();
-    var wyniki = [];
-    ids.forEach(function (id) {
-      var zrodlo = 'notion:' + id;
-      var wynik = {id: id, wydatki: [], cennik: []};
-      var a = ss.getSheetByName(ARKUSZ_WYDATKI);
-      var na = Math.max(a.getLastRow(), PIERWSZY_WIERSZ) - PIERWSZY_WIERSZ + 1;
-      a.getRange(PIERWSZY_WIERSZ, 15, na, 1).getValues().forEach(function (w, i) {
-        if (String(w[0]) === zrodlo) {
-          var r = PIERWSZY_WIERSZ + i;
-          a.getRange(r, 1, 1, 8).clearContent(); a.getRange(r, 10, 1, 4).clearContent(); a.getRange(r, 15).clearContent();
-          wynik.wydatki.push(r);
-        }
-      });
-      var c = ss.getSheetByName(ARKUSZ_CENNIK);
-      var nc = Math.max(c.getLastRow(), PIERWSZY_WIERSZ) - PIERWSZY_WIERSZ + 1;
-      c.getRange(PIERWSZY_WIERSZ, 13, nc, 1).getValues().forEach(function (w, i) {
-        if (String(w[0]) === zrodlo) {
-          var r = PIERWSZY_WIERSZ + i;
-          c.getRange(r, 1, 1, 5).clearContent(); c.getRange(r, 7, 1, 3).clearContent(); c.getRange(r, 11, 1, 3).clearContent();
-          wynik.cennik.push(r);
-        }
-      });
-      wyniki.push(wynik);
-    });
-    SpreadsheetApp.flush();
-    return {ok: true, wyniki: wyniki};
-  } finally {
-    lock.releaseLock();
-  }
+    var blad = sprawdz(w, mapa);
+    if (blad) {
+      wyniki.push({id: w.id, ok: false, blad: blad});
+      return;
+    }
+    var p = mapa[w.lp];
+    arkusz.getRange(wolny, 1, 1, 8).setValues([[
+      Utilities.parseDate(w.data, strefa, 'yyyy-MM-dd'), w.status, Number(w.kwota), p.etap, p.klucz,
+      w.typ || '', w.ilosc === null || w.ilosc === undefined ? '' : Number(w.ilosc), w.jedn || '']]);
+    arkusz.getRange(wolny, 10, 1, 4).setValues([[w.sposob || '', w.opis || '', w.dostawca || '', w.notatki || '']]);
+    arkusz.getRange(wolny, 15).setValue(zrodlo);
+    zajete[zrodlo] = wolny;
+    wyniki.push({id: w.id, ok: true, wiersz: wolny, juz: false});
+    wolny = nastepnyWolny(arkusz, wolny + 1);
+  });
+  SpreadsheetApp.flush();
+  return {ok: true, wyniki: wyniki};
 }
 
 function nastepnyWolny(arkusz, od) {
@@ -350,11 +319,173 @@ function sprawdz(w, mapa) {
   return '';
 }
 
-function eksportXlsx() {
+/** Wycena → Cennik (układ: CENNIK_NAGLOWEK). Strona już w Cenniku → aktualizacja tego wiersza, inaczej pierwszy wolny. */
+function wycena(w, mapa, strefa) {
+  var blad = sprawdzWycene(w, mapa);
+  if (blad) return {id: w.id, ok: false, blad: blad};
+  var c = SpreadsheetApp.getActive().getSheetByName(ARKUSZ_CENNIK);
+  var zrodlo = 'notion:' + w.id;
+  var n = Math.max(c.getLastRow(), PIERWSZY_WIERSZ) - PIERWSZY_WIERSZ + 1;
+  var dane = c.getRange(PIERWSZY_WIERSZ, 1, n, 14).getValues();
+  var wiersz = 0, juz = false;
+  for (var i = 0; i < dane.length; i++) {
+    if (String(dane[i][13]) === zrodlo) { wiersz = PIERWSZY_WIERSZ + i; juz = true; break; }
+  }
+  if (!wiersz) {
+    wiersz = PIERWSZY_WIERSZ + n;
+    for (var j = 0; j < dane.length; j++) {
+      if (dane[j][0] === '' && dane[j][1] === '' && dane[j][13] === '') { wiersz = PIERWSZY_WIERSZ + j; break; }
+    }
+  }
+  var klucz = w.lp ? mapa[w.lp].klucz : '';
+  var vat = w.vat === null || w.vat === undefined || w.vat === '' ? '' : Number(w.vat) / 100;
+  c.getRange(wiersz, 1, 1, 6).setValues([[Utilities.parseDate(w.data, strefa, 'yyyy-MM-dd'), w.opis, w.jedn,
+    Number(w.kwota), w.cena_podana || 'Brutto', vat]]);
+  c.getRange(wiersz, 8, 1, 3).setValues([[w.dostawca || '', klucz, w.status_wyceny || 'Oferta']]);
+  c.getRange(wiersz, 12, 1, 3).setValues([[w.wazna_do ? Utilities.parseDate(w.wazna_do, strefa, 'yyyy-MM-dd') : '',
+    w.notatki || '', zrodlo]]);
+  return {id: w.id, ok: true, wiersz: wiersz, juz: juz, arkusz: ARKUSZ_CENNIK};
+}
+
+function sprawdzWycene(w, mapa) {
+  if (!w.id) return 'brak id strony';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(w.data || ''))) return 'brak daty';
+  if (!(Number(w.kwota) > 0)) return 'brak ceny za jednostkę (pole Kwota)';
+  if (!w.jedn) return 'brak jednostki (Jedn.)';
+  if (!w.opis) return 'brak nazwy (Wydatek)';
+  if (w.lp && !mapa[w.lp]) return 'pozycja ' + w.lp + ' nie istnieje w Kosztorysie';
+  if (w.status_wyceny && STATUSY_WYCENY.indexOf(w.status_wyceny) < 0) return 'Status wyceny: ' + STATUSY_WYCENY.join(' / ');
+  if (w.cena_podana && ['Netto', 'Brutto'].indexOf(w.cena_podana) < 0) return 'Cena podana: Netto / Brutto';
+  if (w.cena_podana === 'Netto' && (w.vat === null || w.vat === undefined || w.vat === '')) return 'cena netto bez stawki VAT %';
+  return '';
+}
+
+/** Wycofanie: czyści pola wpisywane w Wydatkach (A:H, J:M, O) i w Cenniku (A:F, H:J, L:N). Formuły zostają. */
+function usun(ids) {
   var ss = SpreadsheetApp.getActive();
+  var wyniki = [];
+  ids.forEach(function (id) {
+    var zrodlo = 'notion:' + id;
+    var wynik = {id: id, wydatki: [], cennik: []};
+    var a = ss.getSheetByName(ARKUSZ_WYDATKI);
+    var na = Math.max(a.getLastRow(), PIERWSZY_WIERSZ) - PIERWSZY_WIERSZ + 1;
+    a.getRange(PIERWSZY_WIERSZ, 15, na, 1).getValues().forEach(function (w, i) {
+      if (String(w[0]) === zrodlo) {
+        var r = PIERWSZY_WIERSZ + i;
+        a.getRange(r, 1, 1, 8).clearContent(); a.getRange(r, 10, 1, 4).clearContent(); a.getRange(r, 15).clearContent();
+        wynik.wydatki.push(r);
+      }
+    });
+    var c = ss.getSheetByName(ARKUSZ_CENNIK);
+    var nc = Math.max(c.getLastRow(), PIERWSZY_WIERSZ) - PIERWSZY_WIERSZ + 1;
+    c.getRange(PIERWSZY_WIERSZ, 14, nc, 1).getValues().forEach(function (w, i) {
+      if (String(w[0]) === zrodlo) {
+        var r = PIERWSZY_WIERSZ + i;
+        c.getRange(r, 1, 1, 6).clearContent(); c.getRange(r, 8, 1, 3).clearContent(); c.getRange(r, 12, 1, 3).clearContent();
+        wynik.cennik.push(r);
+      }
+    });
+    wyniki.push(wynik);
+  });
+  SpreadsheetApp.flush();
+  return {ok: true, wyniki: wyniki};
+}
+
+function eksportXlsx(plik) {
+  var ss = plik ? SpreadsheetApp.openById(plik) : SpreadsheetApp.getActive();
   DriveApp.getFileById(ss.getId());  // wymusza zakres Dysku – bez niego eksport zwraca 401/403
   var url = 'https://docs.google.com/spreadsheets/d/' + ss.getId() + '/export?format=xlsx';
-  var plik = UrlFetchApp.fetch(url, {headers: {Authorization: 'Bearer ' + ScriptApp.getOAuthToken()}});
-  return {ok: true, nazwa: ss.getName(), xlsx: Utilities.base64Encode(plik.getBlob().getBytes())};
+  var dane = UrlFetchApp.fetch(url, {headers: {Authorization: 'Bearer ' + ScriptApp.getOAuthToken()}});
+  return {ok: true, nazwa: ss.getName(), xlsx: Utilities.base64Encode(dane.getBlob().getBytes())};
+}
+
+/** Kopia całego pliku obok oryginału (kopia zapasowa albo próbna przed zmianą układu). */
+function kopia(nazwa) {
+  var ss = SpreadsheetApp.getActive();
+  var plik = DriveApp.getFileById(ss.getId());
+  var nowa = plik.makeCopy(String(nazwa || (ss.getName() + ' – kopia')).slice(0, 120));
+  return {ok: true, plik: nowa.getId(), nazwa: nowa.getName()};
+}
+
+/** Do kosza tylko kopie próbne zrobione przez kopia(): nazwa musi zawierać „test zmian”. */
+function kosz(plik) {
+  var f = DriveApp.getFileById(plik);
+  if (f.getName().indexOf('test zmian') < 0) return {ok: false, blad: 'do kosza tylko kopie „test zmian”'};
+  f.setTrashed(true);
+  return {ok: true};
+}
+
+/** Zmiany układu i wyglądu na miejscu. Operacje: zakres, wyczysc, walidacja, warunkowe, szerokosci, wysokosci,
+ *  zamroz, siatka, ramka. Dane wpisane przez inwestora zmienia tylko „zakres” – generator wysyła tam wyłącznie
+ *  nagłówki, formuły i formaty, nigdy kolumn z danymi. */
+function zmien(plik, operacje) {
+  var ss = plik ? SpreadsheetApp.openById(plik) : SpreadsheetApp.getActive();
+  var wykonane = 0;
+  operacje.forEach(function (o, nr) {
+    if (ZAKLADKI.indexOf(o.arkusz) < 0) throw new Error('operacja ' + nr + ': nieznana zakładka ' + o.arkusz);
+    var a = ss.getSheetByName(o.arkusz);
+    switch (o.op) {
+      case 'zakres':
+        var r = a.getRange(o.a1);
+        if (o.wartosci) {
+          o.wartosci.forEach(function (w) { w.forEach(function (x) {
+            if (typeof x === 'string' && x.charAt(0) === '=' && ZAKAZANE.test(x)) throw new Error('operacja ' + nr + ': zakazana formuła');
+          }); });
+          r.setValues(o.wartosci);
+        }
+        if (o.formaty) r.setNumberFormats(o.formaty);
+        if (o.tla) r.setBackgrounds(o.tla);
+        if (o.kolory) r.setFontColors(o.kolory);
+        if (o.grubosci) r.setFontWeights(o.grubosci);
+        if (o.style) r.setFontStyles(o.style);
+        if (o.rozmiary) r.setFontSizes(o.rozmiary);
+        if (o.wyrownania) r.setHorizontalAlignments(o.wyrownania);
+        if (o.zawijanie !== undefined) r.setWrap(o.zawijanie);
+        if (o.pionowo) r.setVerticalAlignment(o.pionowo);
+        break;
+      case 'wyczysc':
+        if (o.arkusz !== ARKUSZ_CENNIK) throw new Error('operacja ' + nr + ': czyścić wolno tylko Cennik');
+        var dane = a.getRange(PIERWSZY_WIERSZ, 1, Math.max(a.getLastRow() - PIERWSZY_WIERSZ + 1, 1), 2).getValues();
+        if (dane.some(function (w) { return w[0] !== '' || w[1] !== ''; })) throw new Error('Cennik ma dane – nie czyszczę');
+        a.getRange(o.a1).clear().clearDataValidations();
+        break;
+      case 'walidacja':
+        var b = SpreadsheetApp.newDataValidation().setAllowInvalid(true);
+        b = o.lista ? b.requireValueInList(o.lista, true) : b.requireValueInRange(ss.getRange(o.zakres), true);
+        a.getRange(o.a1).setDataValidation(b.build());
+        break;
+      case 'warunkowe':
+        a.setConditionalFormatRules(o.reguly.map(function (g) {
+          var rb = SpreadsheetApp.newConditionalFormatRule().whenFormulaSatisfied(g.formula)
+            .setRanges(g.zakresy.map(function (z) { return a.getRange(z); }));
+          if (g.tlo) rb = rb.setBackground(g.tlo);
+          if (g.kolor) rb = rb.setFontColor(g.kolor);
+          if (g.pogrubienie) rb = rb.setBold(true);
+          if (g.kursywa) rb = rb.setItalic(true);
+          return rb.build();
+        }));
+        break;
+      case 'szerokosci':
+        Object.keys(o.kolumny).forEach(function (k) { a.setColumnWidth(a.getRange(k + '1').getColumn(), o.kolumny[k]); });
+        break;
+      case 'wysokosci':
+        a.setRowHeights(o.od, o.do - o.od + 1, o.px);
+        break;
+      case 'zamroz':
+        a.setFrozenRows(o.wiersze); a.setFrozenColumns(o.kolumny);
+        break;
+      case 'siatka':
+        a.setHiddenGridlines(!!o.ukryj);
+        break;
+      case 'ramka':
+        a.getRange(o.a1).setBorder(true, true, true, true, true, true, o.kolor || '#E3E6EA', SpreadsheetApp.BorderStyle.SOLID);
+        break;
+      default:
+        throw new Error('operacja ' + nr + ': nieznana ' + o.op);
+    }
+    wykonane++;
+  });
+  SpreadsheetApp.flush();
+  return {ok: true, wykonane: wykonane, plik: ss.getId()};
 }
 ```

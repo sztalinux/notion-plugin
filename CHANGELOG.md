@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.3.0] – 2026-11-07
+
+- Arkusz Google nie jest już wgrywany ponownie: kod Apps Script v2 ma akcje `kopia`, `zmien` (układ i wygląd sześciu
+  zakładek – wartości, formuły, kolory, listy, szerokości; bez usuwania zakładek, bez formuł IMPORT…/IMAGE/HYPERLINK,
+  czyszczenie tylko pustego Cennika) i `kosz` (tylko kopie „test zmian”). `tools/wydatki.py migruj <zmiany.json> [--test]`
+  i `kosz`; procedura w `docs/wydatki-arkusz.md`, sekcja 8; `koszty` C bez ponownego importu.
+- Cennik: kolumna VAT % (przy cenie netto obowiązkowa, bez niej „⚠ VAT?”); pole „VAT %” w kolejce Notion.
+- `sync`: wyceny dopiero przy kodzie v2 i Cenniku w nowym układzie (`ping`: `cennik_ok`); materiał bez ilości blokuje
+  tylko w etapach stanu zero 02–08 (jak Kontrola w arkuszu).
+- Dokumentacja: aktualizacja kodu krok po kroku (sekcja 7), uprawnienia skryptu opisane wprost.
+
 ## dom-budowa [3.2.0] – 2026-11-07
 
 - Cennik = rejestr wycen dostawców przed zakupem (na prośbę inwestora; wycofane automatyczne dopisywanie wydatków z 3.1.0):

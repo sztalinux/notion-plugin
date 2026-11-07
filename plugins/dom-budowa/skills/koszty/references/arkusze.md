@@ -1,6 +1,6 @@
 # Arkusz „Kosztorys budowy” – układ (stan: 2026-11-07)
 
-Arkusz Google prowadzi inwestor; kopia do analiz: `Koszty/Kosztorys_google.xlsx` w folderze budowy (`tools/wydatki.py
+Arkusz Google prowadzi inwestor i nie jest wgrywany ponownie (zmiany układu: `docs/wydatki-arkusz.md`, sekcja 8); kopia do analiz: `Koszty/Kosztorys_google.xlsx` w folderze budowy (`tools/wydatki.py
 pobierz`). Jeśli arkusz wygląda inaczej niż tu opisano – pracuj na faktycznym układzie i zgłoś aktualizację tego pliku
 (procedura `rozwoj-harnessu`). Kolumny czytane przez automat są oznaczone ⚙ – ich kolejności i nazw arkuszy nie zmieniaj
 bez zmiany `tools/wydatki.py` i kodu Apps Script (`docs/wydatki-arkusz.md`).
@@ -21,15 +21,15 @@ Etapy SSO i dalsze dojdą, gdy będą oferty (pełny szacunek całej budowy: `Ko
   nie nadpisuj) · O Źródło (`notion:<id>` = dopisane z kolejki 💸 Wydatki; stare wiersze – opis z dawnego arkusza Google).
 - **Kosztorys!A:M** ⚙ – A Etap · B Lp (np. 03.5) · C Pozycja · D Typ · E Jedn. · F Ilość plan · **G PLAN (zł)** – jedyna
   kolumna planu · H Ilość kupiona (z Wydatków) · I Wydane · J Pozostało · K Zakończono (Tak) · L Uwagi ([umowa] /
-  [szacunek AI]) · M Klucz (formuła „Lp Pozycja” – źródło listy w Wydatkach i w Notion) · N Cena wybrana (z Cennika, brutto)
+  [szacunek AI]) · M Klucz (formuła „Lp Pozycja” – źródło listy w Wydatkach i w Notion) · N Cena wybrana (Cennik kol. G)
   · O Najniższa oferta · P Ilość plan × cena wybrana (podpowiedź do PLAN).
 - **Etapy!A:O** – A Etap · B Stan · C Umowa z ekipą (transza) · D Uwagi / terminy · E–H PLAN: Materiał / Ekipa / Inne /
   razem · I–M WYDANE: Materiał / Ekipa / Inne / Bez typu / razem · N Pozostało · O Do zapłaty ekipie (kolumnę Wykonawca
   inwestor usunął 7.11.2026).
-- **Cennik!A:M** ⚙ – wyceny dostawców (jeden wiersz = jedna oferta): A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty)
-  · E Netto / Brutto · F Cena brutto (formuła, × 1,23 dla netto) · G Dostawca · H Pozycja kosztorysu (lista) · I Status
-  (Oferta / Wybrana / Odrzucona) · J Najtańsza (formuła ★, porównanie brutto w obrębie pozycji) · K Ważna do · L Uwagi ·
-  M Źródło (`notion:<id>` = wycena z kolejki; ponowne wysłanie aktualizuje wiersz).
+- **Cennik!A:N** ⚙ – wyceny dostawców (jeden wiersz = jedna oferta): A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty)
+  · E Netto / Brutto · F VAT % (przy netto obowiązkowy; bez niego G = „⚠ VAT?”) · G Cena brutto (formuła) · H Dostawca ·
+  I Pozycja kosztorysu (lista) · J Status (Oferta / Wybrana / Odrzucona) · K Najtańsza (formuła ★, porównanie brutto w obrębie
+  pozycji) · L Ważna do · M Uwagi · N Źródło (`notion:<id>` = wycena z kolejki; ponowne wysłanie aktualizuje wiersz).
 - **Podsumowanie!B** – rezerwa na stan zero (%).
 
 ## Trzy warstwy liczb

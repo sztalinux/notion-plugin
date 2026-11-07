@@ -75,6 +75,7 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 | Błąd | tekst | powód odrzucenia; po poprawce pola ustaw Arkusz = „Do arkusza” |
 | Wiersz arkusza | liczba | numer wiersza w arkuszu Wydatki albo Cennik (ustawia skrypt) |
 | Status wyceny | select | tylko Wycena: Oferta, Wybrana, Odrzucona – zmiana + „Do arkusza” aktualizuje wiersz Cennika |
-| Cena podana | select | tylko Wycena: Brutto, Netto (arkusz doliczy 23%) |
+| Cena podana | select | tylko Wycena: Brutto, Netto |
+| VAT % | liczba | tylko Wycena: stawka w procentach (23, 8…); obowiązkowa przy Netto |
 | Ważna do | data | tylko Wycena: termin ważności oferty |
 

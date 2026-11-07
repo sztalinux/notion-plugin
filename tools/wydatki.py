@@ -7,6 +7,9 @@
     python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (i Cennika), w Notion „Nie wysyłać”
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
     python3 tools/wydatki.py kod | pbcopy               # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
+    python3 tools/wydatki.py migruj <zmiany.json> --test # zmiana układu na kopii próbnej → <hub>/.dom/wydatki/test-zmian.xlsx
+    python3 tools/wydatki.py migruj <zmiany.json>        # ta sama zmiana na arkuszu (najpierw kopia zapasowa na Dysku)
+    python3 tools/wydatki.py kosz <id pliku>             # kopia próbna „test zmian” do kosza Dysku
 
 Przepływ: przebieg Dziennika (agent) albo inwestor dodaje w Notion wiersz z Arkusz = „Do arkusza”; `sync` wysyła takie
 wiersze do aplikacji Apps Script przypiętej do arkusza (kod i instrukcja: docs/wydatki-arkusz.md), a ta dopisuje je
@@ -14,7 +17,9 @@ w pierwszym wolnym wierszu arkusza Wydatki (bez nadpisywania kolumn z formułami
 z numerem wiersza albo „Błąd” z powodem. Ponowne wysłanie tej samej strony nie dubluje wiersza (kolumna Źródło
 = notion:<id strony>). Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;
 ponowne wysłanie tej samej strony aktualizuje jej wiersz (np. Status wyceny = Wybrana). Wyceny wymagają kodu Apps Script
-w wersji ≥ 2 (ping) – starszy kod zapisałby je jako wydatki, więc wtedy czekają w kolejce.
+w wersji ≥ 2 i Cennika w nowym układzie (ping: cennik_ok) – inaczej czekają w kolejce.
+Zmiany układu arkusza (kolumny, formuły, kolory) idą bez ponownego importu: plik zmian JSON z operacjami
+(akcja „zmien” w Apps Script), najpierw na kopii próbnej, potem na arkuszu po kopii zapasowej.
 
 Sekrety (`<hub>/.dom/sekrety.env`, chmod 600): ARKUSZ_URL (adres wdrożenia /exec), ARKUSZ_SEKRET (ten sam co
 właściwość SEKRET w Apps Script), NOTION_TOKEN_WYDATKI albo NOTION_TOKEN (integracja z prawem odczytu i zmiany treści
@@ -145,6 +150,7 @@ def na_wiersz(strona: dict) -> dict:
         "status_wyceny": wybor(p.get("Status wyceny") or {}),
         "cena_podana": wybor(p.get("Cena podana") or {}),
         "wazna_do": wazna[:10],
+        "vat": (p.get("VAT %") or {}).get("number"),
         "id": strona["id"],
         "data": data[:10],
         "status": wybor(p.get("Płatność") or {}) or "Zrealizowane",
@@ -170,6 +176,8 @@ def blad_lokalny(w: dict) -> str:
             return "wycena bez jednostki – wpisz Jedn."
         if not w["opis"]:
             return "wycena bez nazwy (Wydatek)"
+        if w["cena_podana"] == "Netto" and w["vat"] is None:
+            return "cena netto bez stawki – wpisz VAT %"
         if w["lp"] == ZASTEPCZA:
             w["lp"] = ""
         return ""
@@ -212,13 +220,15 @@ def sync(k: dict, proba: bool) -> tuple:
             print(f"  → {w['id'][:8]} {w['rodzaj']} {w['data']} poz. {w['lp'] or '–'} {w['typ'] or w['status_wyceny'] or ''} – wysłałbym")
         return licz, bledy
     if any(w["rodzaj"] == "Wycena" for w in do_wyslania):
-        wersja = arkusz(k, "ping").get("wersja") or 1
-        if wersja < WERSJA_WYCEN:
+        ping = arkusz(k, "ping")
+        wersja = ping.get("wersja") or 1
+        if wersja < WERSJA_WYCEN or not ping.get("cennik_ok"):
             czekaja = [w for w in do_wyslania if w["rodzaj"] == "Wycena"]
             do_wyslania = [w for w in do_wyslania if w["rodzaj"] != "Wycena"]
             licz["czekaja"] = len(czekaja)
-            bledy.append(f"arkusz ma kod w wersji {wersja} – {len(czekaja)} wycen czeka; wklej nowy kod i zrób nową wersję"
-                         " wdrożenia (docs/wydatki-arkusz.md)")
+            powod = (f"arkusz ma kod w wersji {wersja} – wklej nowy kod i zrób nową wersję wdrożenia"
+                     if wersja < WERSJA_WYCEN else "Cennik w starym układzie – najpierw zmiana układu (migruj)")
+            bledy.append(f"{len(czekaja)} wycen czeka: {powod} (docs/wydatki-arkusz.md)")
     for i in range(0, len(do_wyslania), PACZKA):
         paczka = do_wyslania[i:i + PACZKA]
         try:
@@ -251,6 +261,29 @@ def wycofaj(k: dict, ids: list) -> dict:
         W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{r['id']}", naglowki(k),
                        {"properties": {"Arkusz": {"select": {"name": "Nie wysyłać"}}, "Wiersz arkusza": {"number": None}}})
     return licz
+
+
+def migruj(k: dict, plik_zmian: Path, test: bool) -> dict:
+    """Plik zmian: {"opis": "...", "operacje": [...]}. --test: kopia próbna, zmiany na niej, eksport do .dom/wydatki/.
+    Bez --test: kopia zapasowa „przed zmianą”, potem zmiany na arkuszu. Operacje idą paczkami (limit czasu Apps Script)."""
+    wymagaj(k, "url", "sekret")
+    zmiany = json.loads(plik_zmian.read_text(encoding="utf-8"))
+    operacje = zmiany["operacje"]
+    dzien = time.strftime("%Y-%m-%d")
+    nazwa = f"Kosztorys budowy – {'test zmian' if test else 'kopia przed zmianą'} {dzien}"
+    kopia = arkusz(k, "kopia", nazwa=nazwa)
+    cel = kopia["plik"] if test else None
+    wykonane = 0
+    for i in range(0, len(operacje), 30):
+        wykonane += arkusz(k, "zmien", plik=cel, operacje=operacje[i:i + 30])["wykonane"]
+    wynik = {"operacje": wykonane, "kopia": kopia["nazwa"], "id_kopii": kopia["plik"]}
+    if test:
+        katalog = W.CONF / "wydatki"
+        katalog.mkdir(parents=True, exist_ok=True)
+        cel_xlsx = katalog / "test-zmian.xlsx"
+        cel_xlsx.write_bytes(base64.b64decode(arkusz(k, "xlsx", plik=cel)["xlsx"]))
+        wynik["eksport"] = str(cel_xlsx)
+    return wynik
 
 
 def nazwa_opcji(p: dict) -> str:
@@ -306,7 +339,8 @@ def sprawdz(k: dict) -> list:
     if k.get("url") and k.get("sekret"):
         try:
             p = arkusz(k, "ping")
-            print(f"arkusz: OK („{p.get('arkusz')}”, wierszy z kwotą: {p.get('wydatki')})")
+            print(f"arkusz: OK („{p.get('arkusz')}”, wierszy z kwotą: {p.get('wydatki')}, kod w wersji {p.get('wersja') or 1},"
+                  f" Cennik {'w nowym układzie' if p.get('cennik_ok') else 'w starym układzie'})")
         except BladArkusza as e:
             bledy.append(f"arkusz: {e}")
     return bledy
@@ -314,8 +348,9 @@ def sprawdz(k: dict) -> list:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz", "kod"])
-    ap.add_argument("ids", nargs="*", help="wycofaj: id stron Notion (z adresu strony albo z linii testu)")
+    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz", "kod", "migruj", "kosz"])
+    ap.add_argument("ids", nargs="*", help="wycofaj: id stron Notion; migruj: plik zmian JSON; kosz: id pliku kopii próbnej")
+    ap.add_argument("--test", action="store_true", help="migruj: na kopii próbnej, z eksportem do .dom/wydatki/")
     ap.add_argument("--proba", action="store_true", help="sync: tylko pokaż, co poszłoby do arkusza (bez zapisu)")
     ap.add_argument("--cicho", action="store_true", help="jedna linia wyniku (dla automatów)")
     a = ap.parse_args(argv)
@@ -326,8 +361,8 @@ def main(argv=None) -> int:
             return 1
         sys.stdout.write(m.group(1))
         return 0
-    if a.polecenie == "wycofaj" and not a.ids:
-        ap.error("wycofaj: podaj id stron Notion")
+    if a.polecenie in ("wycofaj", "migruj", "kosz") and not a.ids:
+        ap.error(f"{a.polecenie}: brak argumentu (id stron / plik zmian / id pliku)")
     k = konfiguracja()
     t0 = time.monotonic()
     bledy = []
@@ -342,6 +377,12 @@ def main(argv=None) -> int:
         elif a.polecenie == "wycofaj":
             w = wycofaj(k, a.ids)
             linia = "wycofaj: " + ", ".join(f"{n} {v}" for n, v in w.items())
+        elif a.polecenie == "migruj":
+            w = migruj(k, Path(a.ids[0]), a.test)
+            linia = "migruj" + (" (test)" if a.test else "") + ": " + ", ".join(f"{n} {v}" for n, v in w.items())
+        elif a.polecenie == "kosz":
+            arkusz(k, "kosz", plik=a.ids[0])
+            linia = "kosz: kopia próbna w koszu Dysku"
         elif a.polecenie == "pozycje":
             w = pozycje(k)
             linia = f"pozycje: {w['pozycje']} w arkuszu, nowe opcje w Notion {w['nowe_opcje']}"

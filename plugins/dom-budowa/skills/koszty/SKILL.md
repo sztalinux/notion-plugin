@@ -65,7 +65,7 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
 
 1. Jedna oferta jednego dostawcy na jedną rzecz = jeden wiersz w tej samej kolejce, **Rodzaj = Wycena**: Wydatek (co,
    np. „Beton C25/30 W8 (płyta)”), Data, Kwota = **cena za jednostkę**, Jedn., Cena podana (Netto / Brutto – nie zgaduj,
-   zapytaj), Dostawca, Pozycja (gdy pasuje), Status wyceny = Oferta, Ważna do, Notatki (transport, minimum, z czego
+   zapytaj), przy netto **VAT %** (stawka od inwestora albo z oferty), Dostawca, Pozycja (gdy pasuje), Status wyceny = Oferta, Ważna do, Notatki (transport, minimum, z czego
    wyliczona cena – np. „28 930 zł za 8 t”), Arkusz = „Do arkusza”. Cena za całość → przelicz na jednostkę i zapisz w Notatkach.
 2. Kilka ofert na to samo = kilka wierszy z tą samą Pozycją; arkusz oznacza najtańszą (★, porównanie brutto).
 3. Decyzja („biorę z X”) → w wierszu X Status wyceny = Wybrana, w pozostałych ofertach tej pozycji = Odrzucona; wszystkie
@@ -76,13 +76,12 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
 ## C. Zmiana w arkuszu (pozycja, kolumna, formuła)
 
 1. Opisz zmianę i jej wpływ (które arkusze i formuły) – przy większych poczekaj na „ok”.
-2. Arkusz jest online – asystent nie edytuje go sam. Prosta zmiana (nowa pozycja, nowa kwota PLAN) → instrukcja krok po
-   kroku dla inwestora (arkusz, wiersz, co wpisać, które formuły skopiować z wiersza wyżej). Nowa pozycja trafi na listę
-   w Notion przy wieczornym `wydatki.py pozycje` (od razu: uruchom je w Claude Code).
-3. Przebudowa → nowy plik `.xlsx` na kopii (openpyxl, bez utraty formuł, walidacji, formatowania warunkowego), przeliczony
-   w LibreOffice bez błędów (#REF!, #NAME?, #VALUE!, #DIV/0!, #N/A), zgodny z Arkuszami Google (SUMIFS, INDEX/MATCH, IF,
-   bez formuł tablicowych). Inwestor importuje go od nowa; przypomnij o ponownym wklejeniu kodu Apps Script i wdrożeniu
-   (`docs/wydatki-arkusz.md`, sekcja 3, kroki 3–7) – adres wdrożenia się zmieni.
+2. Nigdy nie proś o ponowny import pliku – arkusz żyje w Google. Prosta zmiana danych (nowa pozycja, kwota PLAN) →
+   instrukcja krok po kroku dla inwestora; nowa pozycja trafi na listę w Notion przy wieczornym `wydatki.py pozycje`.
+3. Zmiana układu lub wyglądu (kolumny, formuły, kolory, listy) – w Claude Code, na żywym arkuszu, według
+   `docs/wydatki-arkusz.md`, sekcja 8: docelowy `.xlsx` porównany z eksportem → plik zmian → `migruj --test` na kopii
+   próbnej i przegląd (zero błędów formuł, te same sumy) → `migruj` z kopią zapasową. Formuły zgodne z Arkuszami Google
+   (SUMIFS, INDEX/MATCH, IF, MINIFS; bez formuł tablicowych). Poza Claude Code – opisz zmianę i odłóż do Claude Code.
 4. Kolumny A–O arkusza Wydatki, kolumny A, B, M arkusza Kosztorys i nazwy tych arkuszy czyta automat – zmiana ich kolejności
    albo nazw wymaga zmiany `tools/wydatki.py` i kodu Apps Script w tym samym kroku.
 5. Oddaj plik albo instrukcję + krótką listę zmian (arkusz, zakres, co).
