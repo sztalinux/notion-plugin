@@ -1,6 +1,6 @@
 # Arkusz „Kosztorys budowy” – układ (stan: 2026-11-07)
 
-Arkusz Google prowadzi inwestor i nie jest wgrywany ponownie (zmiany układu: `docs/wydatki-arkusz.md`, sekcja 8); kopia do analiz: `Koszty/Kosztorys_google.xlsx` w folderze budowy (`tools/wydatki.py
+Arkusz Google prowadzi inwestor i nie jest wgrywany ponownie (zmiany układu: `docs/wydatki-arkusz.md`, sekcja 8); kopia wartości do analiz: `Koszty/Kosztorys_google.json` w folderze budowy (`tools/wydatki.py
 pobierz`). Jeśli arkusz wygląda inaczej niż tu opisano – pracuj na faktycznym układzie i zgłoś aktualizację tego pliku
 (procedura `rozwoj-harnessu`). Kolumny czytane przez automat są oznaczone ⚙ – ich kolejności i nazw arkuszy nie zmieniaj
 bez zmiany `tools/wydatki.py` i kodu Apps Script (`docs/wydatki-arkusz.md`).

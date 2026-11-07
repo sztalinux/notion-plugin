@@ -4,6 +4,13 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.4.0] – 2026-11-08
+
+- Kod Apps Script v3 z `@OnlyCurrentDoc`: dostęp wyłącznie do arkusza kosztorysu (bez Dysku). Usunięte kopie na Dysku, kopie
+  próbne i eksport `.xlsx`; nowa akcja `dane` – `wydatki.py pobierz` zapisuje wartości wszystkich zakładek do
+  `Koszty/Kosztorys_google.json`. Cofanie zmian układu – historia wersji arkusza. `zmien` obsługuje też archiwum szacunku AI.
+- `zakupy` 0 i trasa w `budowa`: rzecz do kupienia → 🧱 Zakupy budowy; zadanie w TASKS tylko przy zakupie „na już”.
+
 ## dom-budowa [3.3.0] – 2026-11-07
 
 - Arkusz Google nie jest już wgrywany ponownie: kod Apps Script v2 ma akcje `kopia`, `zmien` (układ i wygląd sześciu

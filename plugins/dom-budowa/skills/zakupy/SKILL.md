@@ -24,6 +24,8 @@ Zakupów budowy nie dubluj zadaniem w TASKS – termin trzyma pole „Zamówić 
    etapu zapytania) albo **Do zapytania** (materiał z hurtowni, betoniarni – sekcja B), Rodzaj, Sposób zakupu, Ilość
    (z jednostką), Specyfikacja (parametr z projektu, gdy dotyczy konstrukcji, izolacji, betonu), Link, Etap, Kto zamawia
    = Ja, Zamówić do – tylko gdy wpis ma termin albo wynika z kroku Harmonogramu (wtedy relacja Krok). Kwoty – nie tutaj.
+   Zadanie w TASKS dodaj tylko przy zakupie „na już” (na dziś–najbliższe dni albo blokuje pracę ekipy); w Uwagach zakupu
+   wzmianka o zadaniu. Zwykły zakup żyje wyłącznie w 🧱 Zakupach budowy.
 3. „Kupiłem X na budowę” → Status **Dostarczone**, Dostawa = data; wydatek → `koszty`, sekcja B (wiersz w „💸 Wydatki → arkusz”);
    materiał z WZ / deklaracją właściwości → sekcja C.1. „Zamówiłem” → Zamówione.
 

@@ -3,13 +3,11 @@
 
     python3 tools/wydatki.py sync [--proba] [--cicho]   # wiersze „Do arkusza” (i z pustym Arkusz) → Wydatki / Cennik
     python3 tools/wydatki.py pozycje [--cicho]          # lista pozycji z arkusza Kosztorys → opcje pola Pozycja w Notion
-    python3 tools/wydatki.py pobierz [--cicho]          # kopia arkusza jako .xlsx do <hub>/Koszty/Kosztorys_google.xlsx
+    python3 tools/wydatki.py pobierz [--cicho]          # wartości arkusza (JSON) do <hub>/Koszty/Kosztorys_google.json
     python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (i Cennika), w Notion „Nie wysyłać”
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
     python3 tools/wydatki.py kod | pbcopy               # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
-    python3 tools/wydatki.py migruj <zmiany.json> --test # zmiana układu na kopii próbnej → <hub>/.dom/wydatki/test-zmian.xlsx
-    python3 tools/wydatki.py migruj <zmiany.json>        # ta sama zmiana na arkuszu (najpierw kopia zapasowa na Dysku)
-    python3 tools/wydatki.py kosz <id pliku>             # kopia próbna „test zmian” do kosza Dysku
+    python3 tools/wydatki.py migruj <zmiany.json>        # zmiana układu na arkuszu (cofanie: Plik → Historia wersji)
 
 Przepływ: przebieg Dziennika (agent) albo inwestor dodaje w Notion wiersz z Arkusz = „Do arkusza”; `sync` wysyła takie
 wiersze do aplikacji Apps Script przypiętej do arkusza (kod i instrukcja: docs/wydatki-arkusz.md), a ta dopisuje je
@@ -19,7 +17,8 @@ z numerem wiersza albo „Błąd” z powodem. Ponowne wysłanie tej samej stron
 ponowne wysłanie tej samej strony aktualizuje jej wiersz (np. Status wyceny = Wybrana). Wyceny wymagają kodu Apps Script
 w wersji ≥ 2 i Cennika w nowym układzie (ping: cennik_ok) – inaczej czekają w kolejce.
 Zmiany układu arkusza (kolumny, formuły, kolory) idą bez ponownego importu: plik zmian JSON z operacjami
-(akcja „zmien” w Apps Script), najpierw na kopii próbnej, potem na arkuszu po kopii zapasowej.
+(akcja „zmien” w Apps Script). Skrypt ma dostęp tylko do tego arkusza (@OnlyCurrentDoc) – bez kopii na Dysku; zmianę
+cofa się z historii wersji arkusza.
 
 Sekrety (`<hub>/.dom/sekrety.env`, chmod 600): ARKUSZ_URL (adres wdrożenia /exec), ARKUSZ_SEKRET (ten sam co
 właściwość SEKRET w Apps Script), NOTION_TOKEN_WYDATKI albo NOTION_TOKEN (integracja z prawem odczytu i zmiany treści
@@ -27,7 +26,6 @@ w bazie). Zmienne WYDATKI_ARKUSZ_URL i WYDATKI_ARKUSZ_SEKRET nadpisują sekrety 
 i statusy – bez kwot i opisów.
 """
 import argparse
-import base64
 import json
 import os
 import re
@@ -46,7 +44,7 @@ ZASTEPCZA = "00.0"          # opcja-zaślepka Pozycji sprzed pierwszego `pozycje
 LIMIT_ARKUSZA_S = 90        # Apps Script bywa wolny przy zimnym starcie
 PACZKA = 25                 # wierszy w jednym żądaniu do arkusza
 WERSJA_WYCEN = 2            # minimalna wersja kodu Apps Script, która zapisuje wyceny do Cennika
-PLIK_XLSX = "Kosztorys_google.xlsx"
+PLIK_KOPII = "Kosztorys_google.json"
 DOKUMENTACJA = Path(__file__).resolve().parent.parent / "docs" / "wydatki-arkusz.md"
 LP = re.compile(r"^(\d{1,2})\.(\d+)$|^(P\d)\.(\d+)$")
 
@@ -263,27 +261,15 @@ def wycofaj(k: dict, ids: list) -> dict:
     return licz
 
 
-def migruj(k: dict, plik_zmian: Path, test: bool) -> dict:
-    """Plik zmian: {"opis": "...", "operacje": [...]}. --test: kopia próbna, zmiany na niej, eksport do .dom/wydatki/.
-    Bez --test: kopia zapasowa „przed zmianą”, potem zmiany na arkuszu. Operacje idą paczkami (limit czasu Apps Script)."""
+def migruj(k: dict, plik_zmian: Path) -> dict:
+    """Plik zmian: {"opis": "...", "operacje": [...]}. Operacje idą paczkami (limit czasu Apps Script); cofanie zmiany –
+    Plik → Historia wersji w arkuszu."""
     wymagaj(k, "url", "sekret")
-    zmiany = json.loads(plik_zmian.read_text(encoding="utf-8"))
-    operacje = zmiany["operacje"]
-    dzien = time.strftime("%Y-%m-%d")
-    nazwa = f"Kosztorys budowy – {'test zmian' if test else 'kopia przed zmianą'} {dzien}"
-    kopia = arkusz(k, "kopia", nazwa=nazwa)
-    cel = kopia["plik"] if test else None
+    operacje = json.loads(plik_zmian.read_text(encoding="utf-8"))["operacje"]
     wykonane = 0
     for i in range(0, len(operacje), 30):
-        wykonane += arkusz(k, "zmien", plik=cel, operacje=operacje[i:i + 30])["wykonane"]
-    wynik = {"operacje": wykonane, "kopia": kopia["nazwa"], "id_kopii": kopia["plik"]}
-    if test:
-        katalog = W.CONF / "wydatki"
-        katalog.mkdir(parents=True, exist_ok=True)
-        cel_xlsx = katalog / "test-zmian.xlsx"
-        cel_xlsx.write_bytes(base64.b64decode(arkusz(k, "xlsx", plik=cel)["xlsx"]))
-        wynik["eksport"] = str(cel_xlsx)
-    return wynik
+        wykonane += arkusz(k, "zmien", operacje=operacje[i:i + 30])["wykonane"]
+    return {"operacje": wykonane, "z": len(operacje)}
 
 
 def nazwa_opcji(p: dict) -> str:
@@ -317,10 +303,11 @@ def pozycje(k: dict) -> dict:
 
 def pobierz(k: dict) -> Path:
     wymagaj(k, "url", "sekret")
-    wynik = arkusz(k, "xlsx")
-    cel = W.HUB / "Koszty" / PLIK_XLSX
+    wynik = arkusz(k, "dane")
+    cel = W.HUB / "Koszty" / PLIK_KOPII
     tymczasowy = cel.with_suffix(".tmp")
-    tymczasowy.write_bytes(base64.b64decode(wynik["xlsx"]))
+    tymczasowy.write_text(json.dumps({"nazwa": wynik.get("nazwa"), "pobrano": time.strftime("%Y-%m-%d %H:%M"),
+                                      "arkusze": wynik["arkusze"]}, ensure_ascii=False), encoding="utf-8")
     tymczasowy.replace(cel)
     return cel
 
@@ -348,9 +335,8 @@ def sprawdz(k: dict) -> list:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz", "kod", "migruj", "kosz"])
-    ap.add_argument("ids", nargs="*", help="wycofaj: id stron Notion; migruj: plik zmian JSON; kosz: id pliku kopii próbnej")
-    ap.add_argument("--test", action="store_true", help="migruj: na kopii próbnej, z eksportem do .dom/wydatki/")
+    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz", "kod", "migruj"])
+    ap.add_argument("ids", nargs="*", help="wycofaj: id stron Notion; migruj: plik zmian JSON")
     ap.add_argument("--proba", action="store_true", help="sync: tylko pokaż, co poszłoby do arkusza (bez zapisu)")
     ap.add_argument("--cicho", action="store_true", help="jedna linia wyniku (dla automatów)")
     a = ap.parse_args(argv)
@@ -361,8 +347,8 @@ def main(argv=None) -> int:
             return 1
         sys.stdout.write(m.group(1))
         return 0
-    if a.polecenie in ("wycofaj", "migruj", "kosz") and not a.ids:
-        ap.error(f"{a.polecenie}: brak argumentu (id stron / plik zmian / id pliku)")
+    if a.polecenie in ("wycofaj", "migruj") and not a.ids:
+        ap.error(f"{a.polecenie}: brak argumentu (id stron / plik zmian)")
     k = konfiguracja()
     t0 = time.monotonic()
     bledy = []
@@ -378,11 +364,8 @@ def main(argv=None) -> int:
             w = wycofaj(k, a.ids)
             linia = "wycofaj: " + ", ".join(f"{n} {v}" for n, v in w.items())
         elif a.polecenie == "migruj":
-            w = migruj(k, Path(a.ids[0]), a.test)
-            linia = "migruj" + (" (test)" if a.test else "") + ": " + ", ".join(f"{n} {v}" for n, v in w.items())
-        elif a.polecenie == "kosz":
-            arkusz(k, "kosz", plik=a.ids[0])
-            linia = "kosz: kopia próbna w koszu Dysku"
+            w = migruj(k, Path(a.ids[0]))
+            linia = f"migruj: wykonano {w['operacje']} z {w['z']} operacji"
         elif a.polecenie == "pozycje":
             w = pozycje(k)
             linia = f"pozycje: {w['pozycje']} w arkuszu, nowe opcje w Notion {w['nowe_opcje']}"

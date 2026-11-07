@@ -10,13 +10,13 @@ Wydatki trafiają do niego przez **kolejkę w Notion „💸 Wydatki → arkusz�
 `tools/wydatki.py` na Macu po każdym przebiegu Dziennika dopisuje go do arkusza (bez AI). Jak to działa i jak
 skonfigurować: `docs/wydatki-arkusz.md` w repozytorium harnessu. Asystent:
 - nie pisze do arkusza bezpośrednio i nie trzyma własnej kopii kwot (żadnych JSON-ów, „zapamiętanych” liczb z rozmów),
-- do analiz czyta kopię `.xlsx` (niżej), a strukturę arkusza zmienia tylko na wyraźną prośbę (sekcja C).
+- do analiz czyta kopię wartości (niżej), a strukturę arkusza zmienia tylko na wyraźną prośbę (sekcja C).
 
 Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notatka/references/notion-schematy.md`.
 
 ## Gdzie są liczby
 
-- **Claude Code:** `Koszty/Kosztorys_google.xlsx` w folderze budowy – kopia arkusza, odświeżana co wieczór; świeżą
+- **Claude Code:** `Koszty/Kosztorys_google.json` w folderze budowy – wartości wszystkich zakładek, odświeżane co wieczór; świeże
   pobierzesz poleceniem `python3 tools/wydatki.py pobierz`. Nie ma jej (arkusz jeszcze nieskonfigurowany, kod 2) →
   najnowszy `Koszty/Kosztorys_stan_zero_*.xlsx` wg indeksu dokumentów (`python3 tools/dokumenty.py lista`). Nigdy nie
   kopiuj arkusza do repo.
@@ -79,8 +79,8 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
 2. Nigdy nie proś o ponowny import pliku – arkusz żyje w Google. Prosta zmiana danych (nowa pozycja, kwota PLAN) →
    instrukcja krok po kroku dla inwestora; nowa pozycja trafi na listę w Notion przy wieczornym `wydatki.py pozycje`.
 3. Zmiana układu lub wyglądu (kolumny, formuły, kolory, listy) – w Claude Code, na żywym arkuszu, według
-   `docs/wydatki-arkusz.md`, sekcja 8: docelowy `.xlsx` porównany z eksportem → plik zmian → `migruj --test` na kopii
-   próbnej i przegląd (zero błędów formuł, te same sumy) → `migruj` z kopią zapasową. Formuły zgodne z Arkuszami Google
+   `docs/wydatki-arkusz.md`, sekcja 8: docelowy `.xlsx` sprawdzony lokalnie i porównany z kopią → plik zmian → `migruj`
+   → `pobierz` i kontrola (zero błędów formuł, te same sumy); cofanie – historia wersji arkusza. Formuły zgodne z Arkuszami Google
    (SUMIFS, INDEX/MATCH, IF, MINIFS; bez formuł tablicowych). Poza Claude Code – opisz zmianę i odłóż do Claude Code.
 4. Kolumny A–O arkusza Wydatki, kolumny A, B, M arkusza Kosztorys i nazwy tych arkuszy czyta automat – zmiana ich kolejności
    albo nazw wymaga zmiany `tools/wydatki.py` i kodu Apps Script w tym samym kroku.
