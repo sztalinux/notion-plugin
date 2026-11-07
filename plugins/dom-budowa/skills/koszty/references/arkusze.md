@@ -24,9 +24,10 @@ Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje s
   [szacunek AI]) · M Klucz (formuła „Lp Pozycja” – źródło listy w Wydatkach i w Notion) · N Cena wybrana (Cennik kol. G)
   · O Najniższa oferta · P Ilość plan × cena wybrana (podpowiedź do PLAN) · Q Szacunek AI (suma wierszy szacunku
   przypisanych do pozycji).
-- **Etapy!A:O** – A Etap · B Stan · C Umowa z ekipą (transza) · D Uwagi / terminy · E–H PLAN: Materiał / Ekipa / Inne /
-  razem · I–M WYDANE: Materiał / Ekipa / Inne / Bez typu / razem · N Pozostało · O Do zapłaty ekipie · P Szacunek AI (wiersze
-  szacunku przypisane do etapu; kolumnę Wykonawca inwestor usunął 7.11.2026).
+- **Etapy!A:P** – A Etap · B Stan · C Umowa z ekipą (transza) · D–G PLAN: Materiał / Ekipa / Inne / razem · H–L WYDANE:
+  Materiał / Ekipa / Inne / Bez typu / razem · M Pozostało · N Do zapłaty ekipie · O Uwagi / terminy · P Szacunek AI (wiersze
+  szacunku przypisane do etapu). Kolumnę Wykonawca inwestor usunął, a Uwagi przeniósł na koniec (7.11.2026) – nowe formuły
+  odwołujące się do Etapów buduj po nagłówkach żywego arkusza (`wydatki.py pobierz`), nie po literach z tego opisu.
 - **Cennik!A:N** ⚙ – wyceny dostawców (jeden wiersz = jedna oferta): A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty)
   · E Netto / Brutto · F VAT % (przy netto obowiązkowy; bez niego G = „⚠ VAT?”) · G Cena brutto (formuła) · H Dostawca ·
   I Pozycja kosztorysu (lista) · J Status (Oferta / Wybrana / Odrzucona) · K Najtańsza (formuła ★, porównanie brutto w obrębie
@@ -37,8 +38,8 @@ Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje s
   J Etap kosztorysu · K Pozycja kosztorysu (J–K: przypisanie, kremowe; uzupełnia asystent) · L Uwagi.
 
 ## Trzy warstwy liczb
-PLAN = Kosztorys kol. G (sumy w Etapy E–H); UMÓWIONE = Etapy kol. C (umowa z ekipą) i wybrane oferty;
-WYDANE = Wydatki „Zrealizowane”; zobowiązania = Wydatki „Do zapłaty” i Etapy kol. O.
+PLAN = Kosztorys kol. G (sumy w Etapy D–G); UMÓWIONE = Etapy kol. C (umowa z ekipą) i wybrane oferty;
+WYDANE = Wydatki „Zrealizowane”; zobowiązania = Wydatki „Do zapłaty” i Etapy kol. N.
 Kolory: każdy etap ma własny pastel (pasek w kol. A Kosztorysu i Etapów, kol. Etap w Wydatkach); materiał – brzoskwiniowy,
 ekipa – zielony, inne – fioletowy, plan – niebieski, wydane – piaskowy, pozostało – miętowy, zakończone – zielony znacznik w kol. K.
 Wydatki: wiersze po dacie, odcień wiersza wg kwoty (do 500 / 500–5 000 / 5 000–50 000 / 50 000+ zł), niebieski = „Do zapłaty”,

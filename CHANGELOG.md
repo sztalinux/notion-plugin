@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.6.1] – 2026-11-08
+
+- `koszty/references/arkusze.md`: faktyczny układ Etapów (Uwagi na końcu, Szacunek AI w P); nowe formuły do Etapów budować po
+  nagłówkach żywego arkusza.
+
 ## dom-budowa [3.6.0] – 2026-11-08
 
 - Szacunek AI całej budowy (pełna wycena z 10.2026, wszystkie etapy) w zakładce „Szacunek AI 10.2026” z przypisaniem wierszy
