@@ -1,4 +1,4 @@
-# Arkusz „Kosztorys budowy” – układ (stan: 2026-11-08)
+# Arkusz „Kosztorys budowy” – układ (stan: 2026-11-07)
 
 Arkusz Google prowadzi inwestor; kopia do analiz: `Koszty/Kosztorys_google.xlsx` w folderze budowy (`tools/wydatki.py
 pobierz`). Jeśli arkusz wygląda inaczej niż tu opisano – pracuj na faktycznym układzie i zgłoś aktualizację tego pliku
@@ -24,7 +24,7 @@ Etapy SSO i dalsze dojdą, gdy będą oferty (pełny szacunek całej budowy: `Ko
   [szacunek AI]) · M Klucz (formuła „Lp Pozycja” – źródło listy w Wydatkach i w Notion).
 - **Etapy!A:O** – A Etap · B Stan · C Umowa z ekipą (transza) · D Uwagi / terminy · E–H PLAN: Materiał / Ekipa / Inne /
   razem · I–M WYDANE: Materiał / Ekipa / Inne / Bez typu / razem · N Pozostało · O Do zapłaty ekipie (kolumnę Wykonawca
-  inwestor usunął 8.11.2026).
+  inwestor usunął 7.11.2026).
 - **Cennik!A:I** – ręczny rejestr cen zakupu: Data, Materiał / usługa, Jedn., Cena jedn. brutto, Dostawca, Ilość, Wartość
   (formuła), Pozycja kosztorysu, Uwagi.
 - **Podsumowanie!B** – rezerwa na stan zero (%).
