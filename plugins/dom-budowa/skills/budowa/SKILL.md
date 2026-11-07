@@ -72,7 +72,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    | relacja z budowy, dostawa, usterka, godziny własne | `dziennik` | |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
    | wydatek, faktura, koszt | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
-   | oferta, wycena | `oferta` | |
+   | oferta, wycena | `oferta` | cena materiału od dostawcy → `koszty` (B2) |
    | „dostałem plik” | `dokumenty` | gdzie indziej niż Claude Code – przypomnienie, żeby wrzucić do `_Przychodzące/` |
 
 ## Wieczorem (przegląd dnia budowy)

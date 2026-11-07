@@ -61,8 +61,8 @@ wywołaniem; kwoty tylko w Excelu. Terminy „Zamówić do” liczy procedura `h
    z materiałem** (`budowa`, zasada 3) – gdy ekipa oferuje materiał w cenie, porównuj brutto do brutto.
 3. Zamienniki (inny producent, gęstość, klasa) tylko z zaznaczeniem i „do potwierdzenia z konstruktorem”, jeśli dotyczą
    konstrukcji lub izolacji przeciwwodnej (`analiza-techniczna`, Granice).
-4. Wybrana oferta → nowa kwota PLAN pozycji w arkuszu Kosztorys (instrukcja dla inwestora – `koszty`, sekcja C)
-   i cena jednostkowa do arkusza Cennik; zapłata albo faktura → wydatek (`koszty`, sekcja B).
+4. Każda oferta → wycena w kolejce (`koszty`, sekcja B2), trafia do arkusza Cennik; wybrana oferta → Status wyceny
+   „Wybrana”, pozostałe „Odrzucona”, i propozycja nowego PLAN pozycji; zapłata albo faktura → wydatek (`koszty`, sekcja B).
 
 ## C. Dostawa („przyjechało”, „brakuje”)
 

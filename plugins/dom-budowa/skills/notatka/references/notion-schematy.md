@@ -56,14 +56,15 @@ puste Obszar = stare wiersze budowy. Widoki budowy filtrują „Dom albo puste�
 
 ## 💸 Wydatki → arkusz – `collection://72cff09c-609b-405d-a32c-263271b3b59c`
 
-Kolejka wydatków do arkusza Google (procedura `koszty`, sekcja B; mechanizm: `docs/wydatki-arkusz.md`). Wiersz dodaje
+Kolejka wydatków i wycen do arkusza Google (procedura `koszty`, sekcje B i B2; mechanizm: `docs/wydatki-arkusz.md`). Wiersz dodaje
 asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `tools/wydatki.py`.
 
 | Pole | Typ | Wartości |
 |---|---|---|
-| Wydatek | tytuł | co kupione / za co zapłacone (→ kolumna Opis) |
+| Rodzaj | select | Wydatek (puste = Wydatek) → arkusz Wydatki; Wycena → arkusz Cennik |
+| Wydatek | tytuł | co kupione / za co zapłacone (→ Opis w Wydatkach / Materiał w Cenniku) |
 | Data | data | data płatności |
-| Kwota | liczba | zł brutto, tyle ile zapłacono |
+| Kwota | liczba | Wydatek: zł brutto, tyle ile zapłacono; Wycena: cena za jednostkę |
 | Pozycja | select | pozycje arkusza Kosztorys „Lp Nazwa” (przecinki zamienione na „;”); listę odświeża `wydatki.py pozycje` |
 | Typ | select | Materiał, Robocizna, Sprzęt, Usługa, Formalności |
 | Ilość, Jedn. | liczba, select | przy materiale obowiązkowo; Jedn.: kpl, m³, m², mb, kg, t, szt, h, dzień, mies., l |
@@ -72,5 +73,8 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 | Dostawca / nr FV, Notatki | tekst | |
 | Arkusz | select | Do arkusza albo puste (do wysłania), W arkuszu, Błąd, Nie wysyłać – „W arkuszu” i „Błąd” ustawia skrypt |
 | Błąd | tekst | powód odrzucenia; po poprawce pola ustaw Arkusz = „Do arkusza” |
-| Wiersz arkusza | liczba | numer wiersza w arkuszu Wydatki (ustawia skrypt) |
+| Wiersz arkusza | liczba | numer wiersza w arkuszu Wydatki albo Cennik (ustawia skrypt) |
+| Status wyceny | select | tylko Wycena: Oferta, Wybrana, Odrzucona – zmiana + „Do arkusza” aktualizuje wiersz Cennika |
+| Cena podana | select | tylko Wycena: Brutto, Netto (arkusz doliczy 23%) |
+| Ważna do | data | tylko Wycena: termin ważności oferty |
 

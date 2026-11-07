@@ -1,6 +1,6 @@
 ---
 name: koszty
-description: Kosztorys i wydatki budowy – arkusz Google „Kosztorys budowy” (źródło prawdy dla liczb, prowadzi inwestor) i kolejka wydatków w Notion „💸 Wydatki → arkusz”, z której automat na Macu dopisuje wydatki do arkusza. Używaj, gdy użytkownik podaje wydatek, fakturę, paragon, przelew dla ekipy („wydałem…”, „zapłaciłem…”, „kupiłem za…”), pyta „ile wydaliśmy”, „ile zostało”, „plan vs wydane”, „ile poszło na materiał / na ekipę”, prosi o analizę kosztorysu albo o zmianę w arkuszu (kolumna, formuła, pozycja).
+description: Kosztorys, wydatki i wyceny materiałów – arkusz Google „Kosztorys budowy” (źródło prawdy dla liczb, prowadzi inwestor) i kolejka w Notion „💸 Wydatki → arkusz”, z której automat na Macu dopisuje wydatki i wyceny do arkusza. Używaj, gdy użytkownik podaje wydatek, fakturę, paragon, przelew dla ekipy („wydałem…”, „zapłaciłem…”, „kupiłem za…”), cenę materiału od dostawcy („beton po 371 zł w X”, „biorę stal z Y”), pyta „ile wydaliśmy”, „ile zostało”, „plan vs wydane”, „ile poszło na materiał / na ekipę”, prosi o analizę kosztorysu albo o zmianę w arkuszu (kolumna, formuła, pozycja).
 ---
 
 # Koszty i kosztorys
@@ -57,10 +57,21 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
    Macu”. Bez narzędzi Notion → Skrzynka (`budowa`, zasada 13), słowami ze wszystkimi polami z kroku 1.
 6. Wiersz z Arkusz = „Błąd” (powód w polu Błąd) pokazuj w przeglądzie dnia budowy jako sprawę czekającą; po poprawce pola
    inwestor albo asystent ustawia znów „Do arkusza”. Wiersz „W arkuszu” poprawia się już w arkuszu, nie w Notion; wydatek
-   wysłany przez pomyłkę – w Claude Code `python3 tools/wydatki.py wycofaj <id strony>` (czyści Wydatki i Cennik).
-7. Wydatek z ilością automat dopisuje też do arkusza Cennik (cena za jednostkę) – nie podawaj go osobno.
+   wysłany przez pomyłkę – w Claude Code `python3 tools/wydatki.py wycofaj <id strony>`.
 
 Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten wydatek.
+
+## B2. Wycena dostawcy (cena materiału przed zakupem)
+
+1. Jedna oferta jednego dostawcy na jedną rzecz = jeden wiersz w tej samej kolejce, **Rodzaj = Wycena**: Wydatek (co,
+   np. „Beton C25/30 W8 (płyta)”), Data, Kwota = **cena za jednostkę**, Jedn., Cena podana (Netto / Brutto – nie zgaduj,
+   zapytaj), Dostawca, Pozycja (gdy pasuje), Status wyceny = Oferta, Ważna do, Notatki (transport, minimum, z czego
+   wyliczona cena – np. „28 930 zł za 8 t”), Arkusz = „Do arkusza”. Cena za całość → przelicz na jednostkę i zapisz w Notatkach.
+2. Kilka ofert na to samo = kilka wierszy z tą samą Pozycją; arkusz oznacza najtańszą (★, porównanie brutto).
+3. Decyzja („biorę z X”) → w wierszu X Status wyceny = Wybrana, w pozostałych ofertach tej pozycji = Odrzucona; wszystkie
+   zmienione znów „Do arkusza” (arkusz zaktualizuje te same wiersze). Kosztorys pokaże cenę wybraną i ilość × cena –
+   zaproponuj inwestorowi nowy PLAN pozycji (sekcja C, krok 2).
+4. Ceny zapłaconej nie wpisuj jako wyceny – wynika z wydatku (Wydatki, Cena jedn.).
 
 ## C. Zmiana w arkuszu (pozycja, kolumna, formuła)
 
@@ -93,6 +104,6 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
 - Kwoty wydatków = tyle, ile zapłacono (zwykle brutto). Oferty = netto + VAT.
 - Ceny rynkowe: z widełkami min–max i źródłem z datą; nie wymyślaj cen – wyszukaj.
 - Nie zmieniaj ilości ani cen PLAN bez wskazania źródła (przedmiar, zestawienie stali, oferta, umowa).
-- Ceny jednostkowe zakupów: arkusz Cennik – wydatki z ilością dopisuje automat, resztę (np. oferty hurtowni) inwestor.
+- Cennik = wyceny przed zakupem (sekcja B2); ceny zapłacone są w Wydatkach.
 - Wiedza o kosztach z filmów trafia do Informacji w Bazie wiedzy (procedura `wiedza`, Rodzaj „Koszt / cena”,
   „Wrażliwe na czas”), a do arkusza tylko na prośbę inwestora.

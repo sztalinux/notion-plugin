@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.2.0] – 2026-11-07
+
+- Cennik = rejestr wycen dostawców przed zakupem (na prośbę inwestora; wycofane automatyczne dopisywanie wydatków z 3.1.0):
+  jeden wiersz = jedna oferta, cena netto albo brutto (brutto liczy arkusz), status Oferta / Wybrana / Odrzucona,
+  ★ najtańsza w obrębie pozycji. Kosztorys: nowe kolumny N–P (cena wybrana, najniższa oferta, ilość × cena wybrana).
+- Kolejka „💸 Wydatki → arkusz”: pola Rodzaj (Wydatek / Wycena), Status wyceny, Cena podana, Ważna do. Wycena idzie do
+  Cennika; ponowne wysłanie aktualizuje ten sam wiersz (np. decyzja „Wybrana”). Kod Apps Script w wersji 2 (ping);
+  `tools/wydatki.py` wstrzymuje wyceny, dopóki w arkuszu działa starszy kod.
+- `koszty` nowa sekcja B2 (wycena), `zakupy` B.4, trasa w `budowa`, `arkusze.md`, `notion-schematy.md`, `notion-mapa.md`,
+  `docs/wydatki-arkusz.md`.
+
 ## dom-budowa [3.1.1] – 2026-11-07
 
 - `tools/wydatki.py kod`: wypisuje kod Apps Script z dokumentacji (`| pbcopy` – do schowka przy aktualizacji wdrożenia).

@@ -1,6 +1,6 @@
 # Wydatki → Arkusz Google (synchronizacja bez ręcznego wgrywania)
 
-Wydatek wpisany w Dzienniku (albo prosto w Notion) sam trafia do arkusza Google z kosztorysem. Bez AI po stronie
+Wydatek albo wycena dostawcy wpisane w Dzienniku (albo prosto w Notion) same trafiają do arkusza Google z kosztorysem. Bez AI po stronie
 arkusza, bez ręcznego eksportu i importu.
 
 ## 1. Jak to działa
@@ -12,7 +12,7 @@ arkusza, bez ręcznego eksportu i importu.
 💸 Wydatki → arkusz  (baza Notion na DOM, Arkusz = „Do arkusza”)   ← tu możesz też dopisać wiersz ręcznie z telefonu
    │  tools/wydatki.py sync – po każdym przebiegu (automaty/przeglad.py), czysty Python, token NOTION_TOKEN
    ▼
-Apps Script w arkuszu (aplikacja internetowa, sekret)  → dopisuje wiersz w arkuszu Wydatki (+ Cennik, gdy jest ilość)
+Apps Script w arkuszu (aplikacja internetowa, sekret)  → wydatek: arkusz Wydatki · wycena: arkusz Cennik
    │
    ▼
 Notion: Arkusz = „W arkuszu” + numer wiersza   albo   „Błąd” + powód (popraw pole, ustaw znów „Do arkusza”)
@@ -22,8 +22,11 @@ Notion: Arkusz = „W arkuszu” + numer wiersza   albo   „Błąd” + powód 
 - Mac wyłączony albo uśpiony → wpisy czekają w Notion i pójdą przy następnym przebiegu. Nic nie ginie.
 - Ten sam wpis wysłany dwa razy nie zdubluje się: arkusz rozpoznaje go po kolumnie Źródło (`notion:<id strony>`).
 - Lista Pozycja w Notion = pozycje z arkusza Kosztorys; odświeża ją `wydatki.py pozycje` (przebieg wieczorny).
-- Wydatek z ilością (np. 16 m³ betonu) dopisuje się też do arkusza Cennik: data, co, jednostka, cena za jednostkę,
-  dostawca, ilość, pozycja. Ręczne wpisy w Cenniku zostają nietknięte.
+- **Wycena** (Rodzaj = Wycena; „beton C12/15 371 zł/m³ brutto w firmie X”) idzie do arkusza Cennik jako jedna oferta:
+  cena za jednostkę, netto albo brutto (brutto liczy arkusz), dostawca, pozycja, status Oferta. Decyzja = Status wyceny
+  „Wybrana” (pozostałe „Odrzucona”) i ponowne wysłanie – arkusz aktualizuje ten sam wiersz, a Kosztorys pokazuje cenę
+  wybraną (kol. N–P). Wydatki do Cennika nie trafiają – cenę zapłaconą liczy kolumna Cena jedn. w Wydatkach.
+- Wyceny wymagają kodu Apps Script w wersji 2; przy starszym `sync` je wstrzymuje (linia „wyceny czekają” w logu).
 - Kopia arkusza do analiz: `<hub>/Koszty/Kosztorys_google.xlsx`, odświeżana przez `wydatki.py pobierz` (przebieg wieczorny).
 
 ## 2. Kto ma dostęp do Notion (żeby się nie gubić)
@@ -84,12 +87,14 @@ Od tej chwili nic nie robisz ręcznie – przebiegi na Macu wołają skrypt same
 - **Ręcznie z telefonu:** nowy wiersz w 💸 Wydatki: Wydatek, Data, Kwota, Pozycja (z listy), Typ, Ilość + Jedn.
   (materiał), Płatność, Sposób. Pole Arkusz możesz zostawić puste – pusty i „Do arkusza” idą tak samo; „Nie wysyłać”
   wstrzymuje wiersz.
+- **Wyceny we wpisach:** „X ma beton C25/30 W8 po 420 zł brutto”, „biorę stal z Y” – asystent założy albo zaktualizuje
+  wycenę. Ręcznie: wiersz w arkuszu Cennik (status z listy).
 - **Jedna droga na wydatek:** albo Dziennik / 💸 Wydatki, albo ręcznie w arkuszu – nie oba, bo wyjdzie podwójnie.
 - **Błąd** (pole Błąd mówi co): popraw pole, ustaw Arkusz = „Do arkusza” – pójdzie przy następnym przebiegu.
 - **Korekta po wysłaniu:** popraw wiersz bezpośrednio w arkuszu. Notion jest tylko kolejką; źródłem prawdy dla liczb
   jest arkusz.
 - **Pomyłka (wydatek nie powinien był pójść):** `python3 tools/wydatki.py wycofaj <id strony>` – czyści wiersz w Wydatkach
-  i w Cenniku, w Notion ustawia „Nie wysyłać”. Id strony to końcówka jej adresu w Notion.
+  albo wycenę w Cenniku, w Notion ustawia „Nie wysyłać”. Id strony to końcówka jej adresu w Notion.
 - **Nowa pozycja kosztorysu:** dodaj ją w arkuszu Kosztorys (instrukcja w arkuszu), lista w Notion odświeży się wieczorem
   (albo od razu: `python3 tools/wydatki.py pozycje`).
 
@@ -101,7 +106,7 @@ Od tej chwili nic nie robisz ręcznie – przebiegi na Macu wołają skrypt same
 | `wydatki.py sync --proba` | pokazuje, co poszłoby do arkusza; nic nie zapisuje | ręcznie |
 | `wydatki.py pozycje` | pozycje z arkusza → lista Pozycja w Notion | przebieg wieczorny |
 | `wydatki.py pobierz` | kopia arkusza → `Koszty/Kosztorys_google.xlsx` | przebieg wieczorny, ręcznie przed analizą |
-| `wydatki.py wycofaj <id>…` | czyści wydatek w arkuszu (Wydatki i Cennik), w Notion „Nie wysyłać” | ręcznie, asystent na prośbę |
+| `wydatki.py wycofaj <id>…` | czyści wydatek (Wydatki) albo wycenę (Cennik), w Notion „Nie wysyłać” | ręcznie, asystent na prośbę |
 | `wydatki.py sprawdz` | sekrety, dostęp do bazy i arkusza | ręcznie |
 | `wydatki.py kod` | wypisuje kod Apps Script (z `| pbcopy` – do schowka) | ręcznie przy aktualizacji kodu |
 
@@ -120,7 +125,7 @@ z automatu jest w logu przebiegu (`~/Documents/Dom/.dom/automaty/<tryb>-RRRR-MM-
 | HTTP 403 z Notion przy zmianie pola | integracja bez prawa „Update content” – notion.so/my-integrations → Capabilities |
 | eksport `pobierz`: HTTP 401/403 | brak zgody na Dysk – w Apps Script uruchom raz dowolną funkcję (np. `ping`) z edytora i zaakceptuj nowe uprawnienia, potem nowa wersja wdrożenia |
 | data w arkuszu o dzień przesunięta | arkusz ma inną strefę niż Polska – Plik → Ustawienia → Strefa czasowa (GMT+01:00) Warsaw |
-| „nieznana akcja” przy `wycofaj` albo brak wierszy w Cenniku | w Apps Script jest starszy kod – wklej kod z sekcji 7 i zrób nową wersję wdrożenia (wiersz niżej) |
+| „nieznana akcja” przy `wycofaj` albo „arkusz ma kod w wersji 1 – wyceny czekają” | w Apps Script jest starszy kod – wklej kod z sekcji 7 i zrób nową wersję wdrożenia (wiersz niżej) |
 | zmieniłeś kod w Apps Script | Wdróż → Zarządzaj wdrożeniami → ołówek → Wersja: Nowa → Wdróż (adres zostaje ten sam) |
 
 ## 7. Kod Apps Script (wklej do `Kod.gs`)
@@ -130,8 +135,9 @@ z automatu jest w logu przebiegu (`~/Documents/Dom/.dom/automaty/<tryb>-RRRR-MM-
  * Kosztorys w Arkuszach Google – punkt wejścia dla tools/wydatki.py (Mac). Instrukcja: docs/wydatki-arkusz.md
  * w repozytorium harnessu. Kod nie zawiera danych – działa na arkuszu, do którego jest przypięty.
  * Akcje (POST, JSON {"sekret", "akcja", ...}): ping · pozycje · dopisz (wiersze[]) · usun (ids[]) · xlsx.
- * Wydatek z ilością trafia też do Cennika (cena za jednostkę). Kolumn z formułami (Wydatki I i N, Cennik G) skrypt
- * nigdy nie nadpisuje; usun czyści tylko pola wpisywane, więc formuły zostają.
+ * dopisz: rodzaj „Wycena” → arkusz Cennik (ponowne wysłanie aktualizuje ten sam wiersz – np. status Wybrana),
+ * reszta → arkusz Wydatki. Kolumn z formułami (Wydatki I i N, Cennik F i J) skrypt nigdy nie nadpisuje; usun czyści
+ * tylko pola wpisywane, więc formuły zostają.
  */
 
 var ARKUSZ_WYDATKI = 'Wydatki';
@@ -140,6 +146,8 @@ var ARKUSZ_CENNIK = 'Cennik';
 var PIERWSZY_WIERSZ = 5;
 var STATUSY = ['Zrealizowane', 'Do zapłaty'];
 var TYPY = ['Materiał', 'Robocizna', 'Sprzęt', 'Usługa', 'Formalności'];
+var STATUSY_WYCENY = ['Oferta', 'Wybrana', 'Odrzucona'];
+var WERSJA = 2;  // tools/wydatki.py wysyła wyceny dopiero od wersji 2
 
 function doPost(e) {
   var zadanie;
@@ -178,7 +186,7 @@ function ping() {
   var ss = SpreadsheetApp.getActive();
   var dane = ss.getSheetByName(ARKUSZ_WYDATKI).getRange('C' + PIERWSZY_WIERSZ + ':C').getValues();
   var n = dane.filter(function (w) { return w[0] !== ''; }).length;
-  return {ok: true, arkusz: ss.getName(), wydatki: n};
+  return {ok: true, arkusz: ss.getName(), wydatki: n, wersja: WERSJA};
 }
 
 /** Lp → {etap, klucz} z arkusza Kosztorys (kol. A Etap, B Lp, M Klucz). */
@@ -215,6 +223,10 @@ function dopisz(wiersze) {
     }
     var wyniki = [];
     wiersze.forEach(function (w) {
+      if (w.rodzaj === 'Wycena') {
+        wyniki.push(wycena(w, mapa, strefa));
+        return;
+      }
       var zrodlo = 'notion:' + w.id;
       if (zajete[zrodlo]) {
         wyniki.push({id: w.id, ok: true, wiersz: zajete[zrodlo], juz: true});
@@ -232,8 +244,7 @@ function dopisz(wiersze) {
       arkusz.getRange(wolny, 10, 1, 4).setValues([[w.sposob || '', w.opis || '', w.dostawca || '', w.notatki || '']]);
       arkusz.getRange(wolny, 15).setValue(zrodlo);
       zajete[zrodlo] = wolny;
-      var cennik = Number(w.ilosc) > 0 ? doCennika(w, p, strefa, zrodlo) : null;
-      wyniki.push({id: w.id, ok: true, wiersz: wolny, juz: false, cennik: cennik});
+      wyniki.push({id: w.id, ok: true, wiersz: wolny, juz: false});
       wolny = nastepnyWolny(arkusz, wolny + 1);
     });
     SpreadsheetApp.flush();
@@ -243,27 +254,48 @@ function dopisz(wiersze) {
   }
 }
 
-/** Cennik: A Data · B Materiał / usługa · C Jedn. · D Cena jedn. · E Dostawca · F Ilość · G Wartość (formuła) ·
- *  H Pozycja · I Uwagi (tu znacznik notion:<id>). Zwraca numer wiersza albo null, gdy wpis już jest. */
-function doCennika(w, p, strefa, zrodlo) {
+/** Wycena → Cennik: A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty) · E Netto / Brutto · F Cena brutto
+ *  (formuła) · G Dostawca · H Pozycja · I Status · J Najtańsza (formuła) · K Ważna do · L Uwagi · M Źródło (notion:<id>).
+ *  Strona już w Cenniku → aktualizacja tego wiersza (cena, status, uwagi), inaczej pierwszy wolny wiersz. */
+function wycena(w, mapa, strefa) {
+  var blad = sprawdzWycene(w, mapa);
+  if (blad) return {id: w.id, ok: false, blad: blad};
   var c = SpreadsheetApp.getActive().getSheetByName(ARKUSZ_CENNIK);
+  var zrodlo = 'notion:' + w.id;
   var n = Math.max(c.getLastRow(), PIERWSZY_WIERSZ) - PIERWSZY_WIERSZ + 1;
-  var dane = c.getRange(PIERWSZY_WIERSZ, 1, n, 9).getValues();
-  var wolny = PIERWSZY_WIERSZ + n;
-  for (var i = dane.length - 1; i >= 0; i--) {
-    if (String(dane[i][8]).indexOf(zrodlo) >= 0) return null;
+  var dane = c.getRange(PIERWSZY_WIERSZ, 1, n, 13).getValues();
+  var wiersz = 0, juz = false;
+  for (var i = 0; i < dane.length; i++) {
+    if (String(dane[i][12]) === zrodlo) { wiersz = PIERWSZY_WIERSZ + i; juz = true; break; }
   }
-  for (var j = 0; j < dane.length; j++) {
-    if (dane[j][0] === '' && dane[j][1] === '') { wolny = PIERWSZY_WIERSZ + j; break; }
+  if (!wiersz) {
+    wiersz = PIERWSZY_WIERSZ + n;
+    for (var j = 0; j < dane.length; j++) {
+      if (dane[j][0] === '' && dane[j][1] === '' && dane[j][12] === '') { wiersz = PIERWSZY_WIERSZ + j; break; }
+    }
   }
-  var cena = Math.round(Number(w.kwota) / Number(w.ilosc) * 100) / 100;
-  c.getRange(wolny, 1, 1, 6).setValues([[Utilities.parseDate(w.data, strefa, 'yyyy-MM-dd'), w.opis || p.klucz,
-    w.jedn || '', cena, w.dostawca || '', Number(w.ilosc)]]);
-  c.getRange(wolny, 8, 1, 2).setValues([[p.klucz, 'z wydatku · ' + zrodlo]]);
-  return wolny;
+  var klucz = w.lp ? mapa[w.lp].klucz : '';
+  c.getRange(wiersz, 1, 1, 5).setValues([[Utilities.parseDate(w.data, strefa, 'yyyy-MM-dd'), w.opis, w.jedn,
+    Number(w.kwota), w.cena_podana || 'Brutto']]);
+  c.getRange(wiersz, 7, 1, 3).setValues([[w.dostawca || '', klucz, w.status_wyceny || 'Oferta']]);
+  c.getRange(wiersz, 11, 1, 3).setValues([[w.wazna_do ? Utilities.parseDate(w.wazna_do, strefa, 'yyyy-MM-dd') : '',
+    w.notatki || '', zrodlo]]);
+  return {id: w.id, ok: true, wiersz: wiersz, juz: juz, arkusz: ARKUSZ_CENNIK};
 }
 
-/** Wycofanie wydatków: czyści pola wpisywane w Wydatkach (A:H, J:M, O) i w Cenniku (A:F, H:I) dla podanych stron
+function sprawdzWycene(w, mapa) {
+  if (!w.id) return 'brak id strony';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(w.data || ''))) return 'brak daty';
+  if (!(Number(w.kwota) > 0)) return 'brak ceny za jednostkę (pole Kwota)';
+  if (!w.jedn) return 'brak jednostki (Jedn.)';
+  if (!w.opis) return 'brak nazwy (Wydatek)';
+  if (w.lp && !mapa[w.lp]) return 'pozycja ' + w.lp + ' nie istnieje w Kosztorysie';
+  if (w.status_wyceny && STATUSY_WYCENY.indexOf(w.status_wyceny) < 0) return 'Status wyceny: ' + STATUSY_WYCENY.join(' / ');
+  if (w.cena_podana && ['Netto', 'Brutto'].indexOf(w.cena_podana) < 0) return 'Cena podana: Netto / Brutto';
+  return '';
+}
+
+/** Wycofanie: czyści pola wpisywane w Wydatkach (A:H, J:M, O) i w Cenniku (A:E, G:I, K:M) dla podanych stron
  *  Notion. Wiersz zostaje pusty, formuły zostają; następny dopisz zajmie tę lukę. */
 function usun(ids) {
   var lock = LockService.getScriptLock();
@@ -285,10 +317,10 @@ function usun(ids) {
       });
       var c = ss.getSheetByName(ARKUSZ_CENNIK);
       var nc = Math.max(c.getLastRow(), PIERWSZY_WIERSZ) - PIERWSZY_WIERSZ + 1;
-      c.getRange(PIERWSZY_WIERSZ, 9, nc, 1).getValues().forEach(function (w, i) {
-        if (String(w[0]).indexOf(zrodlo) >= 0) {
+      c.getRange(PIERWSZY_WIERSZ, 13, nc, 1).getValues().forEach(function (w, i) {
+        if (String(w[0]) === zrodlo) {
           var r = PIERWSZY_WIERSZ + i;
-          c.getRange(r, 1, 1, 6).clearContent(); c.getRange(r, 8, 1, 2).clearContent();
+          c.getRange(r, 1, 1, 5).clearContent(); c.getRange(r, 7, 1, 3).clearContent(); c.getRange(r, 11, 1, 3).clearContent();
           wynik.cennik.push(r);
         }
       });

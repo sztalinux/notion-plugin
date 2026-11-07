@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Wydatki z Notion do arkusza Google „Kosztorys” – bez AI, na Macu (launchd przez automaty/przeglad.py).
 
-    python3 tools/wydatki.py sync [--proba] [--cicho]   # wiersze „Do arkusza” (i z pustym Arkusz) → arkusz Wydatki
+    python3 tools/wydatki.py sync [--proba] [--cicho]   # wiersze „Do arkusza” (i z pustym Arkusz) → Wydatki / Cennik
     python3 tools/wydatki.py pozycje [--cicho]          # lista pozycji z arkusza Kosztorys → opcje pola Pozycja w Notion
     python3 tools/wydatki.py pobierz [--cicho]          # kopia arkusza jako .xlsx do <hub>/Koszty/Kosztorys_google.xlsx
     python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (i Cennika), w Notion „Nie wysyłać”
@@ -12,7 +12,9 @@ Przepływ: przebieg Dziennika (agent) albo inwestor dodaje w Notion wiersz z Ark
 wiersze do aplikacji Apps Script przypiętej do arkusza (kod i instrukcja: docs/wydatki-arkusz.md), a ta dopisuje je
 w pierwszym wolnym wierszu arkusza Wydatki (bez nadpisywania kolumn z formułami). Wynik wraca do Notion: „W arkuszu”
 z numerem wiersza albo „Błąd” z powodem. Ponowne wysłanie tej samej strony nie dubluje wiersza (kolumna Źródło
-= notion:<id strony>). Wydatek z ilością dopisuje się też do arkusza Cennik (cena za jednostkę).
+= notion:<id strony>). Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;
+ponowne wysłanie tej samej strony aktualizuje jej wiersz (np. Status wyceny = Wybrana). Wyceny wymagają kodu Apps Script
+w wersji ≥ 2 (ping) – starszy kod zapisałby je jako wydatki, więc wtedy czekają w kolejce.
 
 Sekrety (`<hub>/.dom/sekrety.env`, chmod 600): ARKUSZ_URL (adres wdrożenia /exec), ARKUSZ_SEKRET (ten sam co
 właściwość SEKRET w Apps Script), NOTION_TOKEN_WYDATKI albo NOTION_TOKEN (integracja z prawem odczytu i zmiany treści
@@ -38,6 +40,7 @@ DO_ARKUSZA, W_ARKUSZU, BLAD = "Do arkusza", "W arkuszu", "Błąd"
 ZASTEPCZA = "00.0"          # opcja-zaślepka Pozycji sprzed pierwszego `pozycje`
 LIMIT_ARKUSZA_S = 90        # Apps Script bywa wolny przy zimnym starcie
 PACZKA = 25                 # wierszy w jednym żądaniu do arkusza
+WERSJA_WYCEN = 2            # minimalna wersja kodu Apps Script, która zapisuje wyceny do Cennika
 PLIK_XLSX = "Kosztorys_google.xlsx"
 DOKUMENTACJA = Path(__file__).resolve().parent.parent / "docs" / "wydatki-arkusz.md"
 LP = re.compile(r"^(\d{1,2})\.(\d+)$|^(P\d)\.(\d+)$")
@@ -136,7 +139,12 @@ def numer_pozycji(nazwa: str) -> str:
 def na_wiersz(strona: dict) -> dict:
     p = strona.get("properties") or {}
     data = ((p.get("Data") or {}).get("date") or {}).get("start") or ""
+    wazna = ((p.get("Ważna do") or {}).get("date") or {}).get("start") or ""
     return {
+        "rodzaj": wybor(p.get("Rodzaj") or {}) or "Wydatek",
+        "status_wyceny": wybor(p.get("Status wyceny") or {}),
+        "cena_podana": wybor(p.get("Cena podana") or {}),
+        "wazna_do": wazna[:10],
         "id": strona["id"],
         "data": data[:10],
         "status": wybor(p.get("Płatność") or {}) or "Zrealizowane",
@@ -156,11 +164,19 @@ def blad_lokalny(w: dict) -> str:
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", w["data"]):
         return "brak daty"
     if not isinstance(w["kwota"], (int, float)) or w["kwota"] <= 0:
-        return "brak kwoty"
+        return "brak kwoty" if w["rodzaj"] != "Wycena" else "brak ceny za jednostkę (pole Kwota)"
+    if w["rodzaj"] == "Wycena":
+        if not w["jedn"]:
+            return "wycena bez jednostki – wpisz Jedn."
+        if not w["opis"]:
+            return "wycena bez nazwy (Wydatek)"
+        if w["lp"] == ZASTEPCZA:
+            w["lp"] = ""
+        return ""
     if not w["lp"] or w["lp"] == ZASTEPCZA:
         return "brak pozycji – wybierz z listy Pozycja"
-    if w["typ"] == "Materiał" and not w["ilosc"]:
-        return "materiał bez ilości – wpisz Ilość i Jedn."
+    if w["typ"] == "Materiał" and not w["ilosc"] and "02" <= w["lp"][:2] <= "08":
+        return "materiał stanu zero bez ilości – wpisz Ilość i Jedn."
     return ""
 
 
@@ -178,7 +194,7 @@ def sync(k: dict, proba: bool) -> tuple:
     """→ (liczniki, błędy krytyczne). Błąd pojedynczego wiersza trafia do Notion, nie przerywa reszty."""
     wymagaj(k, "token") if proba else wymagaj(k, "token", "url", "sekret")
     wiersze = [na_wiersz(s) for s in kolejka(k)]
-    licz = {"w_kolejce": len(wiersze), "dopisane": 0, "juz_byly": 0, "cennik": 0, "bledy": 0}
+    licz = {"w_kolejce": len(wiersze), "dopisane": 0, "juz_byly": 0, "wyceny": 0, "bledy": 0, "czekaja": 0}
     bledy = []
     do_wyslania = []
     for w in wiersze:
@@ -193,8 +209,16 @@ def sync(k: dict, proba: bool) -> tuple:
             do_wyslania.append(w)
     if proba:
         for w in do_wyslania:
-            print(f"  → {w['id'][:8]} {w['data']} poz. {w['lp']} {w['typ'] or '(bez typu)'} – wysłałbym")
+            print(f"  → {w['id'][:8]} {w['rodzaj']} {w['data']} poz. {w['lp'] or '–'} {w['typ'] or w['status_wyceny'] or ''} – wysłałbym")
         return licz, bledy
+    if any(w["rodzaj"] == "Wycena" for w in do_wyslania):
+        wersja = arkusz(k, "ping").get("wersja") or 1
+        if wersja < WERSJA_WYCEN:
+            czekaja = [w for w in do_wyslania if w["rodzaj"] == "Wycena"]
+            do_wyslania = [w for w in do_wyslania if w["rodzaj"] != "Wycena"]
+            licz["czekaja"] = len(czekaja)
+            bledy.append(f"arkusz ma kod w wersji {wersja} – {len(czekaja)} wycen czeka; wklej nowy kod i zrób nową wersję"
+                         " wdrożenia (docs/wydatki-arkusz.md)")
     for i in range(0, len(do_wyslania), PACZKA):
         paczka = do_wyslania[i:i + PACZKA]
         try:
@@ -204,8 +228,10 @@ def sync(k: dict, proba: bool) -> tuple:
             break
         for r in wyniki:
             if r.get("ok"):
-                licz["juz_byly" if r.get("juz") else "dopisane"] += 1
-                licz["cennik"] += 1 if r.get("cennik") else 0
+                if r.get("arkusz") == "Cennik":
+                    licz["wyceny"] += 1
+                else:
+                    licz["juz_byly" if r.get("juz") else "dopisane"] += 1
                 oznacz(k, r["id"], W_ARKUSZU, wiersz=r.get("wiersz"))
             else:
                 licz["bledy"] += 1
