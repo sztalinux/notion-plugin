@@ -40,7 +40,7 @@ dane indeksu, definicje kart, zbiory oceny, prywatne repo kopii, automaty launch
 2. **Notion – integracja tylko do odczytu.** Utwórz integrację z uprawnieniem „Read content” i udostępnij jej stronę DOM (cztery bazy wiedzy
    oraz Notatnik budowy i zadania dla migawki). Zapisy robi wyłącznie asystent przez serwer MCP Notion, nie ta integracja.
 3. **Plik sekretów** `.dom/sekrety.env` (tryb 600). Klucze (bez wartości):
-   - `NOTION_TOKEN` – odczyt Notion przez API (`sync`, `migawka.py`);
+   - `NOTION_TOKEN` – Notion przez API: odczyt (`sync`, `migawka.py`) i zmiana treści w bazie 💸 Wydatki (`wydatki.py`);
    - `GITHUB_REPO` – `właściciel/repo` prywatnego repo kopii (nazwa, nie sekret);
    - `GITHUB_TOKEN_SYNC` – zapis kopii; używa go tylko Mac;
    - `GITHUB_TOKEN_SEARCH` – odczyt kopii w czacie na telefonie;

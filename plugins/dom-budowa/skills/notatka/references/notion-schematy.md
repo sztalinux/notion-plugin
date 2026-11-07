@@ -70,7 +70,7 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 | Płatność | select | Zrealizowane (zapłacone), Do zapłaty (faktura / transza czeka) |
 | Sposób | select | Przelew, Gotówka, Karta, BLIK |
 | Dostawca / nr FV, Notatki | tekst | |
-| Arkusz | select | Do arkusza (do wysłania), W arkuszu, Błąd, Nie wysyłać – „W arkuszu” i „Błąd” ustawia skrypt |
+| Arkusz | select | Do arkusza albo puste (do wysłania), W arkuszu, Błąd, Nie wysyłać – „W arkuszu” i „Błąd” ustawia skrypt |
 | Błąd | tekst | powód odrzucenia; po poprawce pola ustaw Arkusz = „Do arkusza” |
 | Wiersz arkusza | liczba | numer wiersza w arkuszu Wydatki (ustawia skrypt) |
 

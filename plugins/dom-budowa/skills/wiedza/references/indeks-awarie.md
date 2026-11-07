@@ -35,7 +35,7 @@ Wartości trzymaj wyłącznie w `.dom/sekrety.env` (hub; `chmod 600`), w formaci
 **Nigdy nie wklejaj wartości do rozmowy, notatki, Dziennika, commita ani pliku w repo** – repo jest publiczne,
 a historia rozmów nie jest miejscem na sekrety.
 
-- `NOTION_TOKEN` – integracja Notion tylko do odczytu, udostępniona stronie DOM. Utwórz nową integrację z odczytem,
+- `NOTION_TOKEN` – integracja Notion udostępniona stronie DOM: odczyt, a w bazie 💸 Wydatki także zmiana treści (`wydatki.py`). Utwórz nową integrację z odczytem i zmianą treści,
   udostępnij jej stronę DOM, podmień wartość w `sekrety.env`, usuń starą integrację.
 - `GITHUB_REPO` – `właściciel/repo` prywatnego repo kopii (to nazwa, nie sekret).
 - `GITHUB_TOKEN_SYNC` – zapis kopii do tego repo; używa go tylko Mac. Wystaw nowy, podmień w `sekrety.env`, unieważnij stary.

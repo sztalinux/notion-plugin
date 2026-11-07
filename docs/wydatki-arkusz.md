@@ -29,7 +29,7 @@ Notion: Arkusz = „W arkuszu” + numer wiersza   albo   „Błąd” + powód 
 | Gdzie | Jak łączy się z Notion | Co robi |
 |---|---|---|
 | Claude Code na Macu (ta aplikacja i `claude -p` w automatach) | lokalny serwer MCP `notion` (logowanie OAuth przez `/mcp`) | czyta i zapisuje – przebiegi Dziennika, rozmowy |
-| Skrypty Pythona na Macu (`wiedza.py`, `migawka.py`, `wydatki.py`) | token integracji `NOTION_TOKEN` z `.dom/sekrety.env` | indeks wiedzy i migawka – tylko odczyt; `wydatki.py` – odczyt kolejki i zmiana pól Arkusz/Błąd/Wiersz w bazie 💸 Wydatki |
+| Skrypty Pythona na Macu (`wiedza.py`, `migawka.py`, `wydatki.py`) | token integracji `NOTION_TOKEN` z `.dom/sekrety.env` (prawo odczytu i zmiany treści) | indeks wiedzy i migawka – tylko odczyt; `wydatki.py` – odczyt kolejki, zmiana pól Arkusz/Błąd/Wiersz i listy Pozycja w bazie 💸 Wydatki |
 | GitHub Actions (prywatne repo kopii, `tryb-gleboki.yml`) | **żadnego** – ma tylko token Claude | odpowiada na pytania z telefonu z kopii indeksu wiedzy |
 | claude.ai (czat, telefon) | konektor Notion zablokowany przez organizację | zapisy idą do „📥 Skrzynki”, Mac przenosi je do Notion |
 
@@ -45,7 +45,8 @@ Jeśli dopisałeś w nim wydatki po 2.09.2026, przepisz je do `Kosztorys_stan_ze
    z dostępem „Każdy”, a dane budowy to sprawa prywatna.
 2. **Import arkusza.** Dysk Google → Nowy → Prześlij plik → `Koszty/Kosztorys_stan_zero_2026-11-07.xlsx`. Otwórz go,
    Plik → Zapisz jako Arkusze Google. Nazwij np. „Kosztorys budowy”. Wgrany `.xlsx` usuń z Dysku, żeby nie mylić wersji.
-   Sprawdź: Plik → Ustawienia → Język i region = Polska; w Wydatkach działają listy Etap / Pozycja / Typ.
+   Sprawdź: Plik → Ustawienia → Język i region = Polska, strefa czasowa = (GMT+01:00) Warsaw; w Wydatkach działają listy
+   Etap / Pozycja / Typ.
 3. **Kod.** W arkuszu: Rozszerzenia → Apps Script. Skasuj zawartość `Kod.gs`, wklej kod z sekcji 7, zapisz (ikona dyskietki).
 4. **Sekret.** W Apps Script: Ustawienia projektu (koło zębate) → Właściwości skryptu → Dodaj właściwość:
    nazwa `SEKRET`, wartość – długi losowy ciąg. Wygeneruj go w Terminalu:
@@ -65,9 +66,11 @@ Jeśli dopisałeś w nim wydatki po 2.09.2026, przepisz je do `Kosztorys_stan_ze
    python3 tools/wydatki.py sprawdz
    python3 tools/wydatki.py pozycje
    ```
-   Pierwsze ma pokazać „arkusz: OK”, drugie – liczbę pozycji wgranych do listy Pozycja w Notion.
+   Pierwsze ma pokazać „arkusz: OK”, drugie – liczbę pozycji wgranych do listy Pozycja w Notion. Potem
+   `python3 tools/wydatki.py pobierz` – ma zapisać `Koszty/Kosztorys_google.xlsx`.
 8. **Próba.** W Notion → DOM → 💸 Wydatki → arkusz dodaj wiersz testowy (kwota 1 zł, pozycja dowolna, Arkusz
-   „Do arkusza”), uruchom `python3 tools/wydatki.py sync` i sprawdź wiersz w arkuszu. Potem usuń go w obu miejscach.
+   „Do arkusza”), uruchom `python3 tools/wydatki.py sync` i sprawdź wiersz w arkuszu – zwłaszcza datę (ten sam dzień co
+   w Notion) i kwotę. Potem usuń go w obu miejscach.
 
 Od tej chwili nic nie robisz ręcznie – przebiegi na Macu wołają skrypt same.
 
@@ -76,7 +79,9 @@ Od tej chwili nic nie robisz ręcznie – przebiegi na Macu wołają skrypt same
 - **W Dzienniku** pisz jak zwykle: kwota, na co, ile (przy materiale), jak zapłacone. Przebieg zrobi z tego wiersz
   w 💸 Wydatki. Niejasne (nie wiadomo, która pozycja) → pytanie ❓ pod wpisem, jak przy innych wpisach.
 - **Ręcznie z telefonu:** nowy wiersz w 💸 Wydatki: Wydatek, Data, Kwota, Pozycja (z listy), Typ, Ilość + Jedn.
-  (materiał), Płatność, Sposób, Arkusz = „Do arkusza”.
+  (materiał), Płatność, Sposób. Pole Arkusz możesz zostawić puste – pusty i „Do arkusza” idą tak samo; „Nie wysyłać”
+  wstrzymuje wiersz.
+- **Jedna droga na wydatek:** albo Dziennik / 💸 Wydatki, albo ręcznie w arkuszu – nie oba, bo wyjdzie podwójnie.
 - **Błąd** (pole Błąd mówi co): popraw pole, ustaw Arkusz = „Do arkusza” – pójdzie przy następnym przebiegu.
 - **Korekta po wysłaniu:** popraw wiersz bezpośrednio w arkuszu. Notion jest tylko kolejką; źródłem prawdy dla liczb
   jest arkusz.
@@ -105,6 +110,8 @@ z automatu jest w logu przebiegu (`~/Documents/Dom/.dom/automaty/<tryb>-RRRR-MM-
 | „pozycja … nie istnieje w Kosztorysie” | pozycję usunięto albo przenumerowano w arkuszu – wybierz inną, `pozycje` odświeży listę |
 | HTTP 404 z Notion | baza 💸 Wydatki niedostępna dla integracji – Notion → baza → ⋯ → Połączenia → dodaj integrację |
 | HTTP 403 z Notion przy zmianie pola | integracja bez prawa „Update content” – notion.so/my-integrations → Capabilities |
+| eksport `pobierz`: HTTP 401/403 | brak zgody na Dysk – w Apps Script uruchom raz dowolną funkcję (np. `ping`) z edytora i zaakceptuj nowe uprawnienia, potem nowa wersja wdrożenia |
+| data w arkuszu o dzień przesunięta | arkusz ma inną strefę niż Polska – Plik → Ustawienia → Strefa czasowa (GMT+01:00) Warsaw |
 | zmieniłeś kod w Apps Script | Wdróż → Zarządzaj wdrożeniami → ołówek → Wersja: Nowa → Wdróż (adres zostaje ten sam) |
 
 ## 7. Kod Apps Script (wklej do `Kod.gs`)
@@ -179,6 +186,7 @@ function dopisz(wiersze) {
   lock.waitLock(30000);
   try {
     var arkusz = SpreadsheetApp.getActive().getSheetByName(ARKUSZ_WYDATKI);
+    var strefa = SpreadsheetApp.getActive().getSpreadsheetTimeZone();  // data = ten dzień w strefie arkusza
     var mapa = {};
     pozycje().forEach(function (p) { mapa[p.lp] = p; });
     var ostatni = Math.max(arkusz.getLastRow(), PIERWSZY_WIERSZ);
@@ -206,9 +214,8 @@ function dopisz(wiersze) {
         return;
       }
       var p = mapa[w.lp];
-      var d = w.data.split('-');
       arkusz.getRange(wolny, 1, 1, 8).setValues([[
-        new Date(Number(d[0]), Number(d[1]) - 1, Number(d[2])), w.status, Number(w.kwota), p.etap, p.klucz,
+        Utilities.parseDate(w.data, strefa, 'yyyy-MM-dd'), w.status, Number(w.kwota), p.etap, p.klucz,
         w.typ || '', w.ilosc === null || w.ilosc === undefined ? '' : Number(w.ilosc), w.jedn || '']]);
       arkusz.getRange(wolny, 10, 1, 4).setValues([[w.sposob || '', w.opis || '', w.dostawca || '', w.notatki || '']]);
       arkusz.getRange(wolny, 15).setValue(zrodlo);
@@ -242,6 +249,7 @@ function sprawdz(w, mapa) {
 
 function eksportXlsx() {
   var ss = SpreadsheetApp.getActive();
+  DriveApp.getFileById(ss.getId());  // wymusza zakres Dysku – bez niego eksport zwraca 401/403
   var url = 'https://docs.google.com/spreadsheets/d/' + ss.getId() + '/export?format=xlsx';
   var plik = UrlFetchApp.fetch(url, {headers: {Authorization: 'Bearer ' + ScriptApp.getOAuthToken()}});
   return {ok: true, nazwa: ss.getName(), xlsx: Utilities.base64Encode(plik.getBlob().getBytes())};

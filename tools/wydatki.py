@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Wydatki z Notion do arkusza Google „Kosztorys” – bez AI, na Macu (launchd przez automaty/przeglad.py).
 
-    python3 tools/wydatki.py sync [--proba] [--cicho]   # wiersze „Do arkusza” z bazy 💸 Wydatki → arkusz Wydatki
+    python3 tools/wydatki.py sync [--proba] [--cicho]   # wiersze „Do arkusza” (i z pustym Arkusz) → arkusz Wydatki
     python3 tools/wydatki.py pozycje [--cicho]          # lista pozycji z arkusza Kosztorys → opcje pola Pozycja w Notion
     python3 tools/wydatki.py pobierz [--cicho]          # kopia arkusza jako .xlsx do <hub>/Koszty/Kosztorys_google.xlsx
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
@@ -98,7 +98,9 @@ def naglowki(k: dict) -> dict:
 
 def kolejka(k: dict) -> list:
     url = f"{W.NOTION_API}/v1/data_sources/{ZRODLO}/query"
-    cialo = {"page_size": 100, "filter": {"property": "Arkusz", "select": {"equals": DO_ARKUSZA}},
+    # puste Arkusz też idzie: wiersz dodany z telefonu nie ma wartości domyślnej; „Nie wysyłać” = świadome wyłączenie
+    cialo = {"page_size": 100, "filter": {"or": [{"property": "Arkusz", "select": {"equals": DO_ARKUSZA}},
+                                                 {"property": "Arkusz", "select": {"is_empty": True}}]},
              "sorts": [{"timestamp": "created_time", "direction": "ascending"}]}
     strony = []
     while True:

@@ -49,7 +49,8 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
      w rozmowie – wprost); nowa pozycja to zmiana arkusza (sekcja C).
 3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą → zaktualizuj go zamiast dodawać drugi.
 4. Zapisz wiersze w „💸 Wydatki → arkusz” jednym wywołaniem: Wydatek (krótko, co kupione), Data, Kwota, Pozycja, Typ,
-   Ilość + Jedn. (materiał – obowiązkowo), Płatność, Sposób, Dostawca / nr FV, Notatki, **Arkusz = „Do arkusza”**.
+   Ilość + Jedn. (materiał – obowiązkowo), Płatność, Sposób, Dostawca / nr FV, Notatki, **Arkusz = „Do arkusza”**
+   (puste działa tak samo; „Nie wysyłać” wstrzymuje). Wydatek wpisany ręcznie w arkuszu nie idzie do kolejki – jedna droga.
    Brakujące pole, które da się uzupełnić później (sposób, nr FV) – zostaw puste; brak kwoty, daty albo pozycji → pytanie
    zamiast zapisu.
 5. Potwierdź jedną linią: „N wydatków w kolejce do arkusza (pozycje …) – trafią do niego przy najbliższym przebiegu na
