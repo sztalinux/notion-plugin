@@ -24,7 +24,7 @@ Zakupów budowy nie dubluj zadaniem w TASKS – termin trzyma pole „Zamówić 
    etapu zapytania) albo **Do zapytania** (materiał z hurtowni, betoniarni – sekcja B), Rodzaj, Sposób zakupu, Ilość
    (z jednostką), Specyfikacja (parametr z projektu, gdy dotyczy konstrukcji, izolacji, betonu), Link, Etap, Kto zamawia
    = Ja, Zamówić do – tylko gdy wpis ma termin albo wynika z kroku Harmonogramu (wtedy relacja Krok). Kwoty – nie tutaj.
-3. „Kupiłem X na budowę” → Status **Dostarczone**, Dostawa = data; wydatek → `koszty` (gotowy wiersz do Excela);
+3. „Kupiłem X na budowę” → Status **Dostarczone**, Dostawa = data; wydatek → `koszty`, sekcja B (wiersz w „💸 Wydatki → arkusz”);
    materiał z WZ / deklaracją właściwości → sekcja C.1. „Zamówiłem” → Zamówione.
 
 ## A. Lista zakupów na etap („co kupić na ściany parteru”)
@@ -61,8 +61,8 @@ wywołaniem; kwoty tylko w Excelu. Terminy „Zamówić do” liczy procedura `h
    z materiałem** (`budowa`, zasada 3) – gdy ekipa oferuje materiał w cenie, porównuj brutto do brutto.
 3. Zamienniki (inny producent, gęstość, klasa) tylko z zaznaczeniem i „do potwierdzenia z konstruktorem”, jeśli dotyczą
    konstrukcji lub izolacji przeciwwodnej (`analiza-techniczna`, Granice).
-4. Wybrana oferta → wiersze do Excela: Wydatki „Planowane” (data dostawy, kwota brutto, etap, Typ Materiał, dostawca) –
-   gotowe do wklejenia (`koszty`, sekcja B).
+4. Wybrana oferta → nowa kwota PLAN pozycji w arkuszu Kosztorys (instrukcja dla inwestora – `koszty`, sekcja C)
+   i cena jednostkowa do arkusza Cennik; zapłata albo faktura → wydatek (`koszty`, sekcja B).
 
 ## C. Dostawa („przyjechało”, „brakuje”)
 
@@ -70,7 +70,7 @@ Aktualizuj wiersz w Zakupach budowy: Status (Zamówione → Potwierdzone → Dos
 
 1. Sprawdź z zamówieniem: ilość, asortyment, uszkodzenia, dokumenty (WZ, deklaracja właściwości) → folder budowy (`dokumenty`);
    są w folderze → zaznacz „Dokumenty dostawy”.
-2. Wydatek → `koszty` (Zrealizowane, nr FV); wpis w `dziennik` (dostawy).
+2. Wydatek → `koszty`, sekcja B (Zrealizowane, nr FV); wpis w `dziennik` (dostawy).
 3. Braki / nadwyżki: co dokupić → nowy wiersz w Zakupach budowy (z „Zamówić do”); co zwrócić → Uwagi
    w wierszu dostawy.
 

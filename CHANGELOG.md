@@ -4,6 +4,20 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.0.0] – 2026-11-07
+
+- Kosztorys przeniesiony do arkusza Google „Kosztorys budowy” (źródło prawdy dla liczb, prowadzi inwestor). Nowy układ
+  (`koszty/references/arkusze.md`): etapy stanu zero wg umowy z ekipą, jedna kolumna PLAN, ilości plan/kupione, podział
+  materiał / ekipa / inne w Etapach i Podsumowaniu, arkusz Cennik; status wydatku „Planowane” zastąpiony „Do zapłaty”.
+- Nowa baza Notion „💸 Wydatki → arkusz” (kolejka) i narzędzie `tools/wydatki.py` (`sync`, `pozycje`, `pobierz`,
+  `sprawdz`): wydatek z Dziennika albo dopisany ręcznie trafia do arkusza bez ręcznego wgrywania – przez aplikację
+  Apps Script przypiętą do arkusza; wynik (W arkuszu / Błąd) wraca do Notion. Dokumentacja i kod Apps Script:
+  `docs/wydatki-arkusz.md`.
+- `koszty` przepisana: sekcja B zapisuje wydatek w kolejce (pozycja z listy, ilość przy materiale, płatność
+  Zrealizowane / Do zapłaty), sekcja C – zmiany arkusza jako instrukcja albo nowy plik, sekcja D – transze z kolumn Etapów.
+- `budowa` (zasady 4–5, trasa wydatku, przegląd dnia – błędy kolejki), `dziennik`, `zakupy`, `etap`, `przeglad-tygodnia`,
+  `zrodla.md`, `notion-mapa.md`, `notion-schematy.md`: odwołania do arkusza i kolejki zamiast „wierszy do Excela”.
+
 ## dom-budowa [2.16.6] – 2026-11-05
 
 - `tools/wiedza_karty.py`: nowe polecenie `ocen` – ocena ścisła tez kart pytań (2 konieczna, 1 pokrewna, 0 nie dotyczy) po `zbuduj`

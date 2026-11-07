@@ -32,7 +32,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | wkleja ofertę, wycenę, notatkę z rozmowy z wykonawcą; „porównaj oferty” | `oferta` |
 | wpis z Dziennika o budowie (przekazany przez `wpisy`), kilka luźnych notatek o budowie naraz | sekcja „Luźny wpis z Dziennika” niżej |
 | ma spotkanie, rozmowę lub decyzję: „jutro spotkanie z kierownikiem”, „o co zapytać”, „przygotuj mnie”, „kogo wybrać z kilku” | `przygotowanie` (liczby z `oferta`) |
-| podaje wydatek, fakturę, paragon; prosi o Excel, kosztorys, „ile wydaliśmy” | `koszty` |
+| podaje wydatek, fakturę, paragon; prosi o kosztorys, arkusz, „ile wydaliśmy” | `koszty` |
 | dyktuje notatkę, ustalenie, decyzję, zadanie; „zapisz”, „dodaj do Notion” | `notatka` |
 | pyta o projekt, rysunek, umowę, normę, technologię, „czy to dobrze” | `analiza-techniczna` |
 | wkleja transkrypcję filmu/artykuł; relacjonuje rozmowę („dzwoniłem do konstruktora…”); odpowiada „SP-n: …” | `wiedza` |
@@ -71,7 +71,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia) | `zakupy` (0) | 🧱 Zakupy budowy, bez zadania w TASKS |
    | relacja z budowy, dostawa, usterka, godziny własne | `dziennik` | |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
-   | wydatek, faktura, koszt | `koszty` | wiersz do Excela – wpis zostaje z pytaniem, dopóki inwestor go nie wpisze |
+   | wydatek, faktura, koszt | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
    | oferta, wycena | `oferta` | |
    | „dostałem plik” | `dokumenty` | gdzie indziej niż Claude Code – przypomnienie, żeby wrzucić do `_Przychodzące/` |
 
@@ -81,7 +81,8 @@ Skill `przeglad-dnia` (plugin `ja`) wywołuje tę sekcję w trybie wieczornym; r
 własny przegląd, żeby nie zasłaniała spraw osobistych.
 
 1. **Dziś** (odczyt): wpisy o budowie przetworzone dziś (blok dnia w „Przetworzone” w Dzienniku), Dziennik budowy z dzisiejszą
-   datą, Notatnik i TASKS (Obszar Dom/puste) zamknięte lub dodane dziś, nowe decyzje czekające na inwestora (❓ o budowie, SP).
+   datą, Notatnik i TASKS (Obszar Dom/puste) zamknięte lub dodane dziś, nowe decyzje czekające na inwestora (❓ o budowie, SP),
+   wiersze „💸 Wydatki → arkusz” z Arkusz = „Błąd” (powód z pola Błąd).
 2. **Jutro** (odczyt): kroki Harmonogramu startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zakładania zadania),
    dostawy jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone), TASKS Dom z When = jutro, „czekam na” (WAITING) z terminem
    jutro albo po terminie.
@@ -103,10 +104,10 @@ własny przegląd, żeby nie zasłaniała spraw osobistych.
 3. **Kwoty:** zawsze netto/brutto jawnie. Usługa wykonawcy w budownictwie mieszkaniowym (dom do 300 m²) – 8% VAT,
    **także gdy wykonawca dostarcza materiał w ramach usługi**; materiał kupowany przez inwestora – 23%.
    Dlatego „ekipa z materiałem” vs „materiał sam” porównuj brutto do brutto. Ceny bez faktury traktuj osobno.
-4. **Trzy warstwy liczb:** PLAN = kosztorys; UMÓWIONE = oferty „Wybrana”;
+4. **Trzy warstwy liczb:** PLAN = kosztorys; UMÓWIONE = umowy i oferty wybrane;
    WYDANE = wydatki „Zrealizowane”. Nie mieszaj ich w jednej kolumnie.
-5. **Excel jest źródłem prawdy dla liczb** i prowadzi go inwestor. Asystent pracuje na pliku,
-   który inwestor załączył w tej rozmowie, i zmienia go tylko na wyraźną prośbę (procedura `koszty`).
+5. **Arkusz Google „Kosztorys budowy” jest źródłem prawdy dla liczb** (prowadzi inwestor). Wydatki idą przez kolejkę
+   „💸 Wydatki → arkusz”; strukturę arkusza asystent zmienia tylko na wyraźną prośbę (procedura `koszty`).
 6. **Notion – zapisy wsadowe, ale bez straty jakości.** Gdy każdy zapis wymaga zgody inwestora
    (np. Cowork), ma on zatwierdzać jak najmniej razy:
    - najpierw wykonaj wszystkie odczyty i przygotuj komplet zmian, dopiero potem zapisuj;

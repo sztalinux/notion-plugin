@@ -60,8 +60,9 @@ Pobierz w jak najmniejszej liczbie zapytań:
     - jakość wyszukiwania: w Claude Code `python3 tools/wiedza_jakosc.py raport` → alarmy i zapytania bez wyników do decyzji
       inwestora (`indeks-jakosc.md`); na claude.ai napisz, że raport jakości jest dostępny tylko w Claude Code.
 11. **Zamówienia z wyprzedzeniem**: pozycje na najbliższe dwa etapy, których termin zamówienia (`zakupy/references/wyprzedzenia.md`)
-   wypada w ciągu 14 dni; **płatności** – Wydatki „Planowane” z datą w 14 dni i transze po odbiorach, jeśli Excel jest
-   dostępny w tym miejscu (inaczej napisz, że to wymaga aktualnego pliku).
+   wypada w ciągu 14 dni; **płatności** – Wydatki „Do zapłaty” i transze, których odbiór wypada w 14 dni (Etapy kol. „Do zapłaty
+   ekipie”, Harmonogram), jeśli kopia arkusza jest dostępna w tym miejscu (inaczej napisz, że to wymaga aktualnego pliku);
+   wiersze „💸 Wydatki → arkusz” z Arkusz = „Błąd” – do poprawy.
 
 ## Wynik
 

@@ -53,3 +53,24 @@ puste Obszar = stare wiersze budowy. Widoki budowy filtrują „Dom albo puste�
 | Knock-out OK | checkbox | żelbet zgodny z projektem, umowa + faktura, OC, termin |
 | Robocizna netto, Materiał netto | liczba | (Razem netto = formuła, tylko odczyt) |
 | Brakuje w zakresie, Do dopytania, Drenaż opaskowy, Hydroizolacja (system), Szalunki i sprzęt, Gwarancja, Płatności / zaliczka, Termin startu / czas, Referencje (piwnice), Wrażenie / uwagi | tekst | |
+
+## 💸 Wydatki → arkusz – `collection://72cff09c-609b-405d-a32c-263271b3b59c`
+
+Kolejka wydatków do arkusza Google (procedura `koszty`, sekcja B; mechanizm: `docs/wydatki-arkusz.md`). Wiersz dodaje
+asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `tools/wydatki.py`.
+
+| Pole | Typ | Wartości |
+|---|---|---|
+| Wydatek | tytuł | co kupione / za co zapłacone (→ kolumna Opis) |
+| Data | data | data płatności |
+| Kwota | liczba | zł brutto, tyle ile zapłacono |
+| Pozycja | select | pozycje arkusza Kosztorys „Lp Nazwa” (przecinki zamienione na „;”); listę odświeża `wydatki.py pozycje` |
+| Typ | select | Materiał, Robocizna, Sprzęt, Usługa, Formalności |
+| Ilość, Jedn. | liczba, select | przy materiale obowiązkowo; Jedn.: kpl, m³, m², mb, kg, t, szt, h, dzień, mies., l |
+| Płatność | select | Zrealizowane (zapłacone), Do zapłaty (faktura / transza czeka) |
+| Sposób | select | Przelew, Gotówka, Karta, BLIK |
+| Dostawca / nr FV, Notatki | tekst | |
+| Arkusz | select | Do arkusza (do wysłania), W arkuszu, Błąd, Nie wysyłać – „W arkuszu” i „Błąd” ustawia skrypt |
+| Błąd | tekst | powód odrzucenia; po poprawce pola ustaw Arkusz = „Do arkusza” |
+| Wiersz arkusza | liczba | numer wiersza w arkuszu Wydatki (ustawia skrypt) |
+

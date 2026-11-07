@@ -20,7 +20,7 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 | Co i jak kontrolować | Baza wiedzy przez `wiedza/references/pytanie-do-bazy.md`: karta pytań kontroli i zamknięcia etapu (stan zero – trzy karty: `stan-zero-kontrola-zakrycie` przed betonowaniem i zakryciem, `stan-zero-kontrola-zasypka` izolacje, drenaż i zasypka, `stan-zero-zamkniecie` odbiór etapu; inny etap: karta `<etap>-kontrola`, gdy istnieje – wskaże ją `karty --do`, inaczej karty czynności etapu); także na telefonie, z kopii indeksu – Notatnik sam nie wystarcza; na Macu wolno też `etap --kontrola`; Rodzaj „Kontrola / odbiór”, „Błąd do uniknięcia”, „Kolejność prac”; `references/odbiory.md` |
 | Parametry projektu | ściąga projektu (`budowa/references/projekt.md`) – grubości, klasy, rzędne, zbrojenie |
 | Kto robi (Sam / Ekipa), ilości | Excel: arkusze Etapy i Kosztorys (`koszty/references/arkusze.md`) |
-| Zakres umowy z ekipą | Oferty „Wybrana” w Excelu + umowa w folderze budowy (`dokumenty`) |
+| Zakres umowy z ekipą | arkusz kosztorysu: Etapy kol. „Umowa z ekipą” + umowa w folderze budowy (`dokumenty`) |
 | Formalności i obecność osób | `references/formalnosci.md` |
 
 ## A. Plan etapu („zaczynamy stan zero / SSO”, „ekipa wchodzi za 2 tygodnie”)

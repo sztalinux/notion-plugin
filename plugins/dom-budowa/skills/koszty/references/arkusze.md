@@ -1,50 +1,34 @@
-# Excel „Kosztorys_stan_zero.xlsx” – układ (stan: 2026-10-09)
+# Arkusz „Kosztorys budowy” – układ (stan: 2026-11-07)
 
-Plik prowadzi inwestor ręcznie; poniższy opis może się zdezaktualizować – jeśli plik wygląda inaczej,
-pracuj na faktycznym układzie i zaproponuj aktualizację tego pliku (procedura `rozwoj-harnessu`).
+Arkusz Google prowadzi inwestor; kopia do analiz: `Koszty/Kosztorys_google.xlsx` w folderze budowy (`tools/wydatki.py
+pobierz`). Jeśli arkusz wygląda inaczej niż tu opisano – pracuj na faktycznym układzie i zgłoś aktualizację tego pliku
+(procedura `rozwoj-harnessu`). Kolumny czytane przez automat są oznaczone ⚙ – ich kolejności i nazw arkuszy nie zmieniaj
+bez zmiany `tools/wydatki.py` i kodu Apps Script (`docs/wydatki-arkusz.md`).
 
 ## Arkusze (kolejność)
-Instrukcja · Podsumowanie · Realizacja · Wydatki · Wykonawcy · Oferty · Porównanie ofert · Etapy · Kosztorys ·
-Parametry · Cennik · Porównanie · Zestawienie.
+Instrukcja · Podsumowanie · Wydatki ⚙ · Cennik · Etapy · Kosztorys ⚙ · Szacunek AI 10.2026 (archiwum wartości).
 
-## Kolumny wejściowe (wpisywane ręcznie)
-- **Wydatki!A:K** – Data, Status (Zrealizowane/Planowane), Kwota, Etap (lista z Etapy!A), Kod (opcj.), Typ
-  (Materiał/Robocizna/Sprzęt/Usługa), Sposób (Gotówka/Przelew/Karta/BLIK), Kto płacił, Opis, Dostawca / nr FV, Notatki.
-  L:N liczą się same (Stan, Miesiąc, Nazwa z cennika).
-- **Oferty!A:H + J:O** – Wykonawca (lista z Wykonawcy!A), Nr/data, Etap/Stan (główny), Obejmuje etapy („02,05,07”),
-  Kod, Zakres, Kwota netto, VAT (0%/8%/23%) | Materiał w cenie? (Tak/Nie/Częściowo/Tylko materiał), Zgodna z projektem?
-  (Tak/Nie/Do sprawdzenia), Termin, Status (Otrzymana/Negocjacje/Wybrana/Odrzucona), Ocena 1–5, Uwagi.
-  I (brutto), P–R (stan, plan dla zakresu, różnica) liczą się same. Robocizna i materiał tej samej firmy = osobne wiersze.
-- **Wykonawcy!A:K** – Wykonawca, Branża, Telefon, E-mail, Dzwonione (T/N), E-mail wysłany (T/N), Status, Dostępność,
-  Ocena, Notatki, Etap domyślny. L:N (liczba i suma ofert, wybrany) liczą się same.
-- **Cennik!H** – cena z oferty (nadpisuje średnią min–max).
-- **Kosztorys!G / P** – ilość (nadpisanie formuły) / wykonawca pozycji (Sam/Ekipa).
-- **Etapy!C / D** – Wykonawca etapu (Ekipa/Sam), Uwzględnij (1/0).
-- **Parametry!B** – wymiary i założenia.
-- **Realizacja!J** – etap zakończony (1/0).
-- **„Porównanie ofert”!G4:P4** – nazwy porównywanych wykonawców.
+## Etapy
+Stan zero = etapy z umowy z ekipą: 01 Przygotowanie i obsługa · 02 Droga dojazdowa · 03 Płyta fundamentowa · 04 Ściany
+piwnicy · 05 Izolacje i zasypka · 06 Strop i schody · 07 Rozszalowanie i sprzątanie · 08 Rezerwa i roboty dodatkowe.
+Organizacja: P1–P4 (sprzed budowy), 15 Obsługa budowy – kolejne etapy, 16 Narzędzia. Teren: 50 Przyłącza, zbiorniki, zjazd.
+Etapy SSO i dalsze dojdą, gdy będą oferty (pełny szacunek całej budowy: `Kosztorys_17.10.2026_v3.xlsx`).
+
+## Kolumny wejściowe (żółte – wpisuje inwestor albo automat)
+- **Wydatki!A:O** ⚙ – A Data · B Status (Zrealizowane / Do zapłaty) · C Kwota brutto · D Etap (lista z Etapy!A) · E Pozycja
+  (lista „Lp Nazwa” z Kosztorys!M) · F Typ (Materiał / Robocizna / Sprzęt / Usługa / Formalności) · G Ilość · H Jedn. ·
+  I Cena jedn. (formuła – nie nadpisuj) · J Sposób · K Opis · L Dostawca / nr FV · M Notatki · N Kontrola (formuła ⚠ –
+  nie nadpisuj) · O Źródło (`notion:<id>` = dopisane z kolejki 💸 Wydatki; stare wiersze – opis z dawnego arkusza Google).
+- **Kosztorys!A:M** ⚙ – A Etap · B Lp (np. 03.5) · C Pozycja · D Typ · E Jedn. · F Ilość plan · **G PLAN (zł)** – jedyna
+  kolumna planu · H Ilość kupiona (z Wydatków) · I Wydane · J Pozostało · K Zakończono (Tak) · L Uwagi ([umowa] /
+  [szacunek AI]) · M Klucz (formuła „Lp Pozycja” – źródło listy w Wydatkach i w Notion).
+- **Etapy!A:P** – A Etap · B Stan · C Wykonawca · D Umowa z ekipą (transza) · E Uwagi / terminy · F–I PLAN: Materiał /
+  Ekipa / Inne / razem · J–N WYDANE: Materiał / Ekipa / Inne / Bez typu / razem · O Pozostało · P Do zapłaty ekipie.
+- **Cennik!A:I** – ręczny rejestr cen zakupu: Data, Materiał / usługa, Jedn., Cena jedn. brutto, Dostawca, Ilość, Wartość
+  (formuła), Pozycja kosztorysu, Uwagi.
+- **Podsumowanie!B** – rezerwa na stan zero (%).
 
 ## Trzy warstwy liczb
-PLAN = Kosztorys/Etapy; UMÓWIONE = Oferty „Wybrana”; WYDANE = Wydatki „Zrealizowane” („Planowane” = zobowiązania).
-
-## Płatności (arkusz proponowany – dodaje inwestor)
-
-Harmonogram płatności z umów: jedna transza = jeden wiersz. Kolumny:
-
-| Kol. | Nazwa | Zawartość |
-|---|---|---|
-| A | Umowa / wykonawca | lista z Wykonawcy!A |
-| B | Etap | lista z Etapy!A |
-| C | Transza | „zaliczka”, „transza 1 – po odbiorze płyty”, „zatrzymanie 5% do końca gwarancji” |
-| D | Warunek | co musi się stać: protokół odbioru <krok>, FV, zgłoszenie |
-| E | Netto | |
-| F | VAT % | 8 (usługa z materiałem w budownictwie mieszkaniowym) / 23 (materiał kupowany przez inwestora) |
-| G | Brutto | `=E*(1+F/100)` |
-| H | Termin | data wymagalności (z umowy albo planowana data odbioru + dni z umowy) |
-| I | Status | Planowana / Do zapłaty (warunek spełniony) / Zapłacona |
-| J | Data zapłaty | |
-| K | Nr FV / protokół | odwołanie do dokumentu w folderze budowy |
-| L | Uwagi | |
-
-Zapłacona → wiersz w Wydatkach „Zrealizowane” (WYDANE); niezapłacone to zobowiązania. Formuła kontrolna w Podsumowaniu:
-`=SUMIFS(Płatności!G:G;Płatności!I:I;"<>Zapłacona")` – ile jeszcze do zapłaty z umów.
+PLAN = Kosztorys kol. G (sumy w Etapy F–I); UMÓWIONE = Etapy kol. D (umowa z ekipą) i wybrane oferty;
+WYDANE = Wydatki „Zrealizowane”; zobowiązania = Wydatki „Do zapłaty” i Etapy kol. P.
+„Ekipa” = Typ Robocizna (transze z umowy, roboty dodatkowe); „Inne” = Sprzęt, Usługa, Formalności.

@@ -23,7 +23,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: folder budowy `Zdjęcia/
 2. **Wyłuskaj to, co idzie dalej** (jedno wywołanie na bazę – `budowa`, zasada 6):
    | Co w relacji | Dokąd |
    |---|---|
-   | dostawa, zakup, zaliczka, gotówka dla ekipy | `koszty` – gotowe wiersze Wydatków (Zrealizowane / Planowane) |
+   | dostawa, zakup, zaliczka, gotówka dla ekipy | `koszty`, sekcja B – wiersze w „💸 Wydatki → arkusz” (Zrealizowane / Do zapłaty) |
    | ustalenie, pytanie, ryzyko, decyzja | `notatka` – Notatnik budowy z Etapem i Do kogo |
    | usterka do poprawy, rzecz do zrobienia z terminem | `notatka` – TASKS (When), Do kogo = Ekipa |
    | „ekipa chce dopłatę za…” (roboty dodatkowe) | sekcja B |
@@ -45,8 +45,8 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: folder budowy `Zdjęcia/
    jeśli pozycja jest w cenie, napisz to wprost z odwołaniem do punktu umowy.
 3. Zasada: **cena uzgodniona na piśmie przed wykonaniem** (SMS/mail wystarczy). Zaproponuj treść wiadomości
    do wykonawcy (co, cena, termin, że wchodzi do protokołu odbioru).
-4. Zapis: wiersz Oferty (ten sam wykonawca, Zakres „roboty dodatkowe: …”, Status wg ustaleń) do Excela przez `koszty`;
-   wpis w dzienniku; decyzja → Notatnik (Typ „Decyzja”).
+4. Zapis: uzgodniona kwota → PLAN pozycji „Roboty dodatkowe – poza umową” w etapie (instrukcja – `koszty`, sekcja C),
+   zapłata → wydatek na tę pozycję (`koszty`, sekcja B); wpis w dzienniku; decyzja → Notatnik (Typ „Decyzja”).
 
 ## C. Godziny własne i narzędzia
 
@@ -73,5 +73,5 @@ Przekazane: koszty <n> wierszy | notatnik <n> | zadania <n> | etap: …
 
 - Jeden dzień / jedna wizyta = jeden wpis; dopisek tego samego dnia → aktualizuj wpis, nie twórz drugiego.
 - Pisz, co widziałeś i co powiedziano – oceny techniczne oddzielnie (`[opinia]`) i tylko na prośbę.
-- Nie zapisuj kwot wyłącznie w dzienniku – każda kwota idzie też do Excela (`koszty`).
+- Nie zapisuj kwot wyłącznie w dzienniku – każda zapłacona kwota idzie też do kolejki „💸 Wydatki → arkusz” (`koszty`, sekcja B).
 - Zdjęcia nigdy do repozytorium ani do paczki dla claude.ai.
