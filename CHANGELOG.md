@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.0.2] – 2026-11-08
+
+- `koszty/references/arkusze.md`: arkusz Etapy bez kolumny Wykonawca (A:O – umowa w C, „Do zapłaty ekipie” w O) i opis
+  nowych kolorów arkusza (pastel na etap, zielony znacznik zakończonych pozycji zamiast szarych wierszy).
+
 ## dom-budowa [3.0.1] – 2026-11-07
 
 - `tools/wydatki.py`: kolejka bierze też wiersze z pustym polem Arkusz (dodane z telefonu); „Nie wysyłać” wstrzymuje wiersz.
