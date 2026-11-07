@@ -32,7 +32,7 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
    z ekipą”, wybrane oferty) · WYDANE (Wydatki „Zrealizowane”), plus zobowiązania (Wydatki „Do zapłaty”, Etapy kol.
    „Do zapłaty ekipie”).
 4. Dla stanu zero podawaj podział z Podsumowania: materiał / ekipa / inne per etap (płyta, ściany, izolacje, strop…),
-   plan i wydane. Na końcu 3 największe odchylenia z komentarzem i suma wydatków stanu zero bez typu (psuje podział).
+   plan, wydane i szacunek AI (kolumna obok; całość budowy wg stanów – tabela „Szacunek AI całej budowy”). Na końcu 3 największe odchylenia z komentarzem i suma wydatków stanu zero bez typu (psuje podział).
 
 ## B. Wydatek (Dziennik, rozmowa, faktura, paragon, przelew)
 
@@ -82,9 +82,12 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
    `docs/wydatki-arkusz.md`, sekcja 8: docelowy `.xlsx` sprawdzony lokalnie i porównany z kopią → plik zmian → `migruj`
    → `pobierz` i kontrola (zero błędów formuł, te same sumy); cofanie – historia wersji arkusza. Formuły zgodne z Arkuszami Google
    (SUMIFS, INDEX/MATCH, IF, MINIFS; bez formuł tablicowych). Poza Claude Code – opisz zmianę i odłóż do Claude Code.
-4. Kolumny A–O arkusza Wydatki, kolumny A, B, M arkusza Kosztorys i nazwy tych arkuszy czyta automat – zmiana ich kolejności
+4. Szacunek AI (zakładka „Szacunek AI 10.2026”, pełna wycena z 10.2026): gdy dochodzi nowa pozycja albo etap (np. SSO),
+   przypisz pasujące wiersze szacunku w kol. J (etap) i K (pozycja „Lp Nazwa”) – plik zmian z operacją `zakres` tylko na
+   tych komórkach J:K; nie zmieniaj kwot szacunku. Wiersze niepasujące zostają bez przypisania (liczą się wg stanu).
+5. Kolumny A–O arkusza Wydatki, kolumny A, B, M arkusza Kosztorys i nazwy tych arkuszy czyta automat – zmiana ich kolejności
    albo nazw wymaga zmiany `tools/wydatki.py` i kodu Apps Script w tym samym kroku.
-5. Oddaj plik albo instrukcję + krótką listę zmian (arkusz, zakres, co).
+6. Oddaj plik albo instrukcję + krótką listę zmian (arkusz, zakres, co).
 
 ## D. Płatności, transze, kredyt
 

@@ -6,13 +6,13 @@ pobierz`). Jeśli arkusz wygląda inaczej niż tu opisano – pracuj na faktyczn
 bez zmiany `tools/wydatki.py` i kodu Apps Script (`docs/wydatki-arkusz.md`).
 
 ## Arkusze (kolejność)
-Instrukcja · Podsumowanie · Wydatki ⚙ · Cennik · Etapy · Kosztorys ⚙ · Szacunek AI 10.2026 (archiwum wartości).
+Instrukcja · Podsumowanie · Wydatki ⚙ · Cennik ⚙ · Etapy · Kosztorys ⚙ · Szacunek AI 10.2026 (pełna wycena AI, wartości).
 
 ## Etapy
 Stan zero = etapy z umowy z ekipą: 01 Przygotowanie i obsługa · 02 Droga dojazdowa · 03 Płyta fundamentowa · 04 Ściany
 piwnicy · 05 Izolacje i zasypka · 06 Strop i schody · 07 Rozszalowanie i sprzątanie · 08 Rezerwa i roboty dodatkowe.
 Organizacja: P1–P4 (sprzed budowy), 15 Obsługa budowy – kolejne etapy, 16 Narzędzia. Teren: 50 Przyłącza, zbiorniki, zjazd.
-Etapy SSO i dalsze dojdą, gdy będą oferty (pełny szacunek całej budowy: `Kosztorys_17.10.2026_v3.xlsx`).
+Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje szacunek AI (zakładka i tabela wg stanów).
 
 ## Kolumny wejściowe (kremowe – wpisuje inwestor albo automat)
 - **Wydatki!A:O** ⚙ – A Data · B Status (Zrealizowane / Do zapłaty) · C Kwota brutto · D Etap (lista z Etapy!A) · E Pozycja
@@ -22,15 +22,19 @@ Etapy SSO i dalsze dojdą, gdy będą oferty (pełny szacunek całej budowy: `Ko
 - **Kosztorys!A:M** ⚙ – A Etap · B Lp (np. 03.5) · C Pozycja · D Typ · E Jedn. · F Ilość plan · **G PLAN (zł)** – jedyna
   kolumna planu · H Ilość kupiona (z Wydatków) · I Wydane · J Pozostało · K Zakończono (Tak) · L Uwagi ([umowa] /
   [szacunek AI]) · M Klucz (formuła „Lp Pozycja” – źródło listy w Wydatkach i w Notion) · N Cena wybrana (Cennik kol. G)
-  · O Najniższa oferta · P Ilość plan × cena wybrana (podpowiedź do PLAN).
+  · O Najniższa oferta · P Ilość plan × cena wybrana (podpowiedź do PLAN) · Q Szacunek AI (suma wierszy szacunku
+  przypisanych do pozycji).
 - **Etapy!A:O** – A Etap · B Stan · C Umowa z ekipą (transza) · D Uwagi / terminy · E–H PLAN: Materiał / Ekipa / Inne /
-  razem · I–M WYDANE: Materiał / Ekipa / Inne / Bez typu / razem · N Pozostało · O Do zapłaty ekipie (kolumnę Wykonawca
-  inwestor usunął 7.11.2026).
+  razem · I–M WYDANE: Materiał / Ekipa / Inne / Bez typu / razem · N Pozostało · O Do zapłaty ekipie · P Szacunek AI (wiersze
+  szacunku przypisane do etapu; kolumnę Wykonawca inwestor usunął 7.11.2026).
 - **Cennik!A:N** ⚙ – wyceny dostawców (jeden wiersz = jedna oferta): A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty)
   · E Netto / Brutto · F VAT % (przy netto obowiązkowy; bez niego G = „⚠ VAT?”) · G Cena brutto (formuła) · H Dostawca ·
   I Pozycja kosztorysu (lista) · J Status (Oferta / Wybrana / Odrzucona) · K Najtańsza (formuła ★, porównanie brutto w obrębie
   pozycji) · L Ważna do · M Uwagi · N Źródło (`notion:<id>` = wycena z kolejki; ponowne wysłanie aktualizuje wiersz).
-- **Podsumowanie!B** – rezerwa na stan zero (%).
+- **Podsumowanie!B** – rezerwa na stan zero (%). Kol. M – szacunek AI etapów stanu zero; tabela H:K „Szacunek AI całej
+  budowy wg stanów” (szacunek, plan, wydane dla Organizacji, stanu zero, SSO, deweloperskiego, wykończenia, terenu).
+- **Szacunek AI 10.2026!A:L** – A Stan · B Etap (wycena AI) · C Lp · D Pozycja · E Typ · F Ilość · G Jedn. · H Cena · I Wartość AI ·
+  J Etap kosztorysu · K Pozycja kosztorysu (J–K: przypisanie, kremowe; uzupełnia asystent) · L Uwagi.
 
 ## Trzy warstwy liczb
 PLAN = Kosztorys kol. G (sumy w Etapy E–H); UMÓWIONE = Etapy kol. C (umowa z ekipą) i wybrane oferty;
