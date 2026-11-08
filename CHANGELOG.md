@@ -4,6 +4,10 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.7.1] – 2026-11-08
+
+- Cennik: kolumna O „Cena netto” (z ceny i VAT %); VAT wpisany jako liczba (8, 23) liczy się jako procent.
+
 ## dom-budowa [3.7.0] – 2026-11-08
 
 - Arkusz: szacunek AI rozbity na materiał / robociznę / razem (Kosztorys Q–S, Etapy P–R, Podsumowanie M–O i tabela wg
