@@ -69,8 +69,8 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
    wyliczona cena – np. „28 930 zł za 8 t”), Arkusz = „Do arkusza”. Cena za całość → przelicz na jednostkę i zapisz w Notatkach.
 2. Kilka ofert na to samo = kilka wierszy z tą samą Pozycją; arkusz oznacza najtańszą (★, porównanie brutto).
 3. Decyzja („biorę z X”) → w wierszu X Status wyceny = Wybrana, w pozostałych ofertach tej pozycji = Odrzucona; wszystkie
-   zmienione znów „Do arkusza” (arkusz zaktualizuje te same wiersze). Kosztorys pokaże cenę wybraną i ilość × cena –
-   zaproponuj inwestorowi nowy PLAN pozycji (sekcja C, krok 2).
+   zmienione znów „Do arkusza” (arkusz zaktualizuje te same wiersze). PLAN pozycji przelicza się wtedy sam (wybrana oferta ×
+   ilość plan); oferta dla materiału z grupą (Kosztorys kol. V, np. stal) działa dla wszystkich pozycji tej grupy.
 4. Ceny zapłaconej nie wpisuj jako wyceny – wynika z wydatku (Wydatki, Cena jedn.).
 
 ## C. Zmiana w arkuszu (pozycja, kolumna, formuła)

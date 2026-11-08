@@ -19,19 +19,22 @@ Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje s
   (lista „Lp Nazwa” z Kosztorys!M) · F Typ (Materiał / Robocizna / Sprzęt / Usługa / Formalności) · G Ilość · H Jedn. ·
   I Cena jedn. (formuła – nie nadpisuj) · J Sposób · K Opis · L Dostawca / nr FV · M Notatki · N Kontrola (formuła ⚠ –
   nie nadpisuj) · O Źródło (`notion:<id>` = dopisane z kolejki 💸 Wydatki; stare wiersze – opis z dawnego arkusza Google).
-- **Kosztorys!A:T** ⚙ – A Etap (formuła: wiersz etapu `=Etapy!A<n>`, pozycje `=$A$<wiersz etapu>` – nazwa i stan idą z Etapów;
-  nagłówek etapu w C pokazuje „NAZWA · stan”) · B Lp (np. 03.5) · C Pozycja · D Typ · E Jedn. · F Ilość plan · **G PLAN (zł)** – jedyna
-  kolumna planu · H Ilość kupiona (z Wydatków) · I Wydane · J Pozostało · K Zakończono (Tak) · L Uwagi ([umowa] /
+- **Kosztorys!A:V** ⚙ – A Etap (formuła: wiersz etapu `=Etapy!A<n>`, pozycje `=$A$<wiersz etapu>` – nazwa i stan idą z Etapów;
+  nagłówek etapu w C pokazuje „NAZWA · stan”) · B Lp (np. 03.5) · C Pozycja · D Typ · E Jedn. · F Ilość plan · **G PLAN (zł)** – formuła: wybrana
+  oferta × ilość plan (kol. P), a bez niej kol. U · H Ilość kupiona (z Wydatków) · I Wydane · J Pozostało · K Zakończono (Tak) · L Uwagi ([umowa] /
   [szacunek AI]) · M Klucz (formuła „Lp Pozycja” – źródło listy w Wydatkach i w Notion) · N Cena wybrana (Cennik kol. G)
   · O Najniższa oferta · P Ilość plan × cena wybrana (podpowiedź do PLAN) · Q–S Szacunek AI: materiał / robocizna / razem
-  (razem także ze sprzętem i usługami) · T Kontrola (⚠ etap spoza Etapów, ⚠ brak typu).
+  (razem także ze sprzętem i usługami) · T Kontrola (⚠ etap spoza Etapów, ⚠ brak typu) · U Plan ręczny (kwota PLAN, gdy brak wybranej oferty – wpisuje
+  inwestor) · V Materiał (grupa – wspólna oferta z Cennika dla kilku pozycji, np. stal płyty, ścian i stropu). Ceny N–O
+  są w jednostce pozycji (oferta za tonę → zł/kg przy pozycji w kg).
 - **Etapy!A:P** – A Etap · B Stan · C Umowa z ekipą (transza) · D–G PLAN: Materiał / Ekipa / Inne / razem · H–L WYDANE:
   Materiał / Ekipa / Inne / Bez typu / razem · M Pozostało · N Do zapłaty ekipie · O Uwagi / terminy · P–R Szacunek AI:
   materiał / robocizna / razem (wiersze szacunku przypisane do etapu). Kolumnę Wykonawca inwestor usunął, a Uwagi przeniósł na koniec (7.11.2026) – nowe formuły
   odwołujące się do Etapów buduj po nagłówkach żywego arkusza (`wydatki.py pobierz`), nie po literach z tego opisu.
 - **Cennik!A:O** ⚙ – wyceny dostawców (jeden wiersz = jedna oferta): A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty)
   · E Netto / Brutto · F VAT % (wpis 8 albo 23 = procent; przy netto obowiązkowy, bez niego G = „⚠ VAT?”) · G Cena brutto
-  (formuła) · O Cena netto (formuła, na końcu, żeby nie przesuwać kolumn czytanych przez skrypt) · H Dostawca ·
+  (formuła) · O Cena netto (formuła, na końcu, żeby nie przesuwać kolumn czytanych przez skrypt) · P Materiał (grupa – formuła z pozycji) ·
+  Q Cena brutto za jednostkę bazową (t → kg) · H Dostawca ·
   I Pozycja kosztorysu (lista) · J Status (Oferta / Wybrana / Odrzucona) · K Najtańsza (formuła ★, porównanie brutto w obrębie
   pozycji) · L Ważna do · M Uwagi · N Źródło (`notion:<id>` = wycena z kolejki; ponowne wysłanie aktualizuje wiersz).
 - **Podsumowanie!B** – rezerwa na stan zero (%). Kol. M–O – szacunek AI etapów stanu zero (materiał / robocizna / razem); tabela H:M
