@@ -37,7 +37,7 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
 ## B. Wydatek (Dziennik, rozmowa, faktura, paragon, przelew)
 
 1. Wyciągnij: datę, kwotę **brutto** (tyle, ile zapłacono), na co, przy materiale ilość i jednostkę, typ (Materiał /
-   Robocizna / Sprzęt / Usługa / Formalności), sposób (Przelew / Gotówka / Karta / BLIK), płatność (Zrealizowane =
+   Robocizna / Sprzęt / Usługa / Formalności – zawsze, także poza stanem zero), sposób (Przelew / Gotówka / Karta / BLIK), płatność (Zrealizowane =
    zapłacone; Do zapłaty = faktura albo transza czeka), dostawcę / nr FV. Datę względną przelicz na datę.
 2. **Pozycja** – wybierz z listy pola Pozycja w bazie (opcje = pozycje arkusza Kosztorys, numer + nazwa; pobierz schemat
    bazy). Zasady:

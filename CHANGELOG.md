@@ -4,6 +4,13 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.7.0] – 2026-11-08
+
+- Arkusz: szacunek AI rozbity na materiał / robociznę / razem (Kosztorys Q–S, Etapy P–R, Podsumowanie M–O i tabela wg
+  stanów); etap w Kosztorysie powiązany formułą z zakładką Etapy (zmiana nazwy przenosi się sama), stan w nagłówku etapu;
+  kontrola: Kosztorys kol. T i „Kontrola powiązań” w Podsumowaniu. `arkusze.md` opisuje nowy układ.
+- `koszty` B: typ wydatku zawsze, także poza stanem zero (brakujące typy w arkuszu uzupełnione z pozycji kosztorysu).
+
 ## dom-budowa [3.6.1] – 2026-11-08
 
 - `koszty/references/arkusze.md`: faktyczny układ Etapów (Uwagi na końcu, Szacunek AI w P); nowe formuły do Etapów budować po
