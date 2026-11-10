@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.11.1] – 2026-11-11
+
+- Poprawki po próbie sześciu poleceń na świeżej sesji (POM-1, sekcja 17, warunek 3): `docs/zdjecia-i-kopia.md` – jak
+  zbudować `.dom/zdjecia/dysk.json` od zera i jego format, wywołania konektora (`contentMimeType` folderu, brak rekurencji,
+  `fileSize`), szukanie zdjęć kroku, „aplikacja Dysku nie działa”, kolejność i zapis cofnięcia, rozłożenie paczki kopii
+  z listą do zatwierdzenia; tryb „aplikacja” w `kopia.py stan` dopiero po potwierdzeniu inwestora.
+- `tools/zdjecia.py cofnij`: oznacza przebieg jako cofnięty (`--wykonaj` lokalnie, `--zrobione` po konektorze) – kolejne
+  „cofnij” bierze wcześniejszy przebieg.
+- Routing: samo zdjęcie faktury → `dokumenty` (nie wydatek); „wgrałem” rozróżnia paczkę dla claude.ai, kopię na Dysk
+  i fakturę z telefonu; frazy w opisach `dziennik` i `dokumenty`, w `AGENTS.md` i routerze `budowa`.
+- Pole „Zdjęcia” w Dzienniku budowy: `N zdj.: …` (liczba nadal na początku).
+
 ## dom-budowa [3.11.0] – 2026-11-10
 
 - POM-1 (etapy C–F, część harnessu): zdjęcia z budowy na Dysku Google w folderach kroków `Dom/Zdjęcia/<etap>/<krok>/`,

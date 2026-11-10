@@ -16,13 +16,13 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 | Zadanie | Procedura |
 |---|---|
 | Oferta / wycena / rozmowa z wykonawcą | `plugins/dom-budowa/skills/oferta/SKILL.md` |
-| Arkusz kosztorysu (Google), wydatek, płatność, faktura, wycena dostawcy, budżet | `plugins/dom-budowa/skills/koszty/SKILL.md` |
+| Arkusz kosztorysu (Google), wydatek, płatność, faktura do zapłaty / zapłacona, wycena dostawcy, budżet (samo zdjęcie faktury wgrane na Dysk → `dokumenty`) | `plugins/dom-budowa/skills/koszty/SKILL.md` |
 | Notatka, ustalenie, decyzja, zadanie → Notion | `plugins/dom-budowa/skills/notatka/SKILL.md` |
 | Projekt, rysunki, umowa, norma, pytanie techniczne | `plugins/dom-budowa/skills/analiza-techniczna/SKILL.md` |
 | Transkrypcja filmu, artykuł, relacja z rozmowy, sprzeczności „SP-n” | `plugins/dom-budowa/skills/wiedza/SKILL.md` |
-| Nowe pliki od projektanta/wykonawcy, paczka dokumentów dla claude.ai, dokumenty z telefonu, kopia dokumentów na Dysk | `plugins/dom-budowa/skills/dokumenty/SKILL.md` |
+| Nowe pliki od projektanta/wykonawcy, paczka dokumentów dla claude.ai, dokumenty z telefonu („wgrałem fakturę / WZ”), kopia dokumentów na Dysk, „aplikacja Dysku nie działa” | `plugins/dom-budowa/skills/dokumenty/SKILL.md` |
 | Start etapu, „co sprawdzić przed betonowaniem”, odbiór, usterki | `plugins/dom-budowa/skills/etap/SKILL.md` |
-| Relacja z dnia na budowie, zdjęcia („rozłóż zdjęcia”), godziny własne, roboty dodatkowe | `plugins/dom-budowa/skills/dziennik/SKILL.md` |
+| Relacja z dnia na budowie, zdjęcia („rozłóż zdjęcia”, „gdzie są zdjęcia…”, „cofnij rozłożenie”), godziny własne, roboty dodatkowe | `plugins/dom-budowa/skills/dziennik/SKILL.md` |
 | Harmonogram, terminy, przesunięcia, „czekam na”, „co mnie czeka” | `plugins/dom-budowa/skills/harmonogram/SKILL.md` |
 | Pulpit budowy: „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło”, decyzje z pulpitu do Notion | `plugins/dom-budowa/skills/pulpit/SKILL.md` |
 | Lista zakupów na etap, oferty hurtowni, kiedy zamawiać, dostawa | `plugins/dom-budowa/skills/zakupy/SKILL.md` |

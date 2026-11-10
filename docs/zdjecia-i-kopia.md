@@ -150,9 +150,12 @@ brak → paczka. Czat i telefon bez konektora nie czytają dokumentów z Dysku �
 - **Tryb paczki**: `kopia.py paczka` (na sucho) → `kopia.py paczka --wykonaj` składa `_Na Dysk/RRRR-MM-DD/` (nowe,
   zmienione, przeniesione pliki + `SPIS.txt` z usuniętymi). Inwestor przeciąga ten folder w przeglądarce do `Dom/_Kopie`
   i mówi „wgrałem kopię” → `kopia.py wgrane`. Niewgrana paczka → następna zawiera też jej zmiany (porównanie zawsze
-  z potwierdzonym stanem). Z konektorem możesz po „wgrałem” rozłożyć paczkę do właściwych folderów: zmieniony plik –
-  poprzednia wersja do `_Archiwum/RRRR-MM-DD/`, usunięty na Macu – do `_Archiwum`, przeniesiony – przenieś. Ta sama
-  paczka wgrana dwa razy → druga kopia do `_Archiwum/Duplikaty/`.
+  z potwierdzonym stanem). `wgrane` znaczy tylko „paczka jest na Dysku” – kopia
+  już istnieje, nawet nierozłożona. Rozłożenie konektorem jest opcjonalne i jak każdy ruch – najpierw lista „co, skąd,
+  dokąd” (z `SPIS.txt` paczki) do zatwierdzenia, identyfikatory z `dysk.json`: zmieniony plik – poprzednia wersja do
+  `_Archiwum/RRRR-MM-DD/`, usunięty na Macu – do `_Archiwum`, przeniesiony – przenieś. Ta sama paczka wgrana dwa razy →
+  druga kopia do `_Archiwum/Duplikaty/`. Pliki dodane konektorem prosto na Dysk (dokumenty z telefonu bez aplikacji)
+  wymień w komunikacie 🔔 z kluczem `kopia` jako „do pobrania na Maca”.
 - **Tryb aplikacji**: `kopia.py aplikacja [--wykonaj]` – kopiuje do lokalnego folderu Dysku według tych samych reguł,
   pliki tylko na Dysku wypisuje do pobrania na Maca. Plik zmieniony po obu stronach → obie wersje (Dysk do `_Archiwum`)
   i komunikat. Arkusze i dokumenty Google nie mają pliku na Macu – zostają tylko na Dysku.
@@ -163,30 +166,50 @@ brak → paczka. Czat i telefon bez konektora nie czytają dokumentów z Dysku �
 
 ## 8. Przepływy krok po kroku (Claude Code)
 
+**Pierwsze uruchomienie / brak `.dom/zdjecia/dysk.json`** (zapisz go, zanim cokolwiek przeniesiesz):
+`search_files` z `title = 'Dom'` i `mimeType = 'application/vnd.google-apps.folder'` (folder w `root`) → jego dzieci
+(`parentId = '<id Dom>'`) → `Zdjęcia` → dzieci `Zdjęcia` (`_nowe`, etapy, tematy) → dzieci etapów (foldery kroków).
+Format: `{"foldery": {"Zdjęcia": "<id>", "Zdjęcia/_nowe": "<id>", "Zdjęcia/<Etap>/<Krok>": "<id>", "Faktury": "<id>", …}}`
+– klucz = ścieżka od `Dom`, wartość = identyfikator. Każdy folder utworzony albo przeniesiony konektorem dopisz/popraw
+od razu. Brak `kroki.json` → zbuduj go (sekcja 3); bez kroków plan zostawia wszystko w `_nowe`.
+
 **„rozłóż zdjęcia”** (tryb 2):
 1. `python3 tools/zdjecia.py stan` (blokada? ostatni przebieg?). Odśwież `.dom/zdjecia/kroki.json` z Harmonogramu
    i Dziennika budowy (sekcja 3).
-2. Konektor: `search_files` z `parentId` folderu `_nowe` (identyfikatory w `.dom/zdjecia/dysk.json`), rekurencyjnie po
-   podfolderach; do tego pliki folderów docelowych, do których coś może trafić (duplikaty). Zapisz listę w
+2. Konektor: `search_files` z `parentId` folderu `_nowe` (z `dysk.json`); narzędzie nie schodzi w głąb samo – wywołaj
+   je osobno dla każdego podfolderu (`mimeType` folderu w wynikach). Do tego pliki folderów docelowych, do których coś
+   może trafić (duplikaty). Pole rozmiaru w wynikach to `fileSize` (tekst – zamień na liczbę). Zapisz listę w
    `.dom/zdjecia/lista-<data>.json`: `nowe` – `id`, `nazwa` (title), `folder` (ścieżka od `_nowe`, "" luzem), `rozmiar`
    (fileSize), `utworzono` (createdTime), `zmieniono` (modifiedTime); `istniejace` – `folder` (ścieżka od `Dom`),
    `nazwa`, `rozmiar`.
 3. `python3 tools/zdjecia.py plan --lista <lista>` → plan i pytania. Pokaż inwestorowi listę ruchów (zasada 10);
    po „ok” wykonaj.
-4. Ruchy konektorem: `update_file` z `parentId` folderu docelowego i `title` = nowa nazwa. Brak folderu docelowego →
-   `create_file` (mimeType folderu), identyfikator dopisz do `dysk.json`. Pusty folder z `_nowe` → `_Archiwum/Puste
+4. Ruchy konektorem: `update_file` z `fileId`, `parentId` folderu docelowego (z `dysk.json`) i `title` = nowa nazwa –
+   jedno wywołanie. Brak folderu docelowego → `create_file` z `title`, `parentId` i
+   `contentMimeType = 'application/vnd.google-apps.folder'`; identyfikator dopisz do `dysk.json`. Pusty folder z `_nowe` → `_Archiwum/Puste
    foldery`. Błąd → zatrzymaj się (zasada 7).
 5. `python3 tools/zdjecia.py zapisz-ruchy <plan> --kto konektor --tylko <id wykonanych, po przecinku>`.
 6. `python3 tools/zdjecia.py slad <plan>` → ślad w Dzienniku budowy (sekcja 10, `dziennik` E).
 7. Pytania z planu → jeden komunikat 🔔 z kluczem `zdjecia` (aktualizowany, nie powielany).
 
 **„wgrałem fakturę”** – jak wyżej (folder „faktura …” w `_nowe` albo luzem), potem odczyt i nazwa wg sekcji 4; bez
-wydatku. **„gdzie są zdjęcia zbrojenia”** – pole „Zdjęcia” kroku w Harmonogramie (link) albo wpis Dziennika budowy z dnia;
-dzień: data `RRRR-MM-DD` w wyszukiwarce Dysku. **„zrób kopię dokumentów”** – `kopia.py stan` → `paczka` (na sucho) →
-`paczka --wykonaj` → instrukcja dla inwestora (sekcja 9, pkt 6). **„aplikacja Dysku nie działa”** – tryb 2/paczka,
-nic do naprawiania po stronie asystenta (MDM – sprawa dla IT inwestora; nie obchodź zabezpieczeń). **„cofnij ostatnie
-rozłożenie”** – `zdjecia.py cofnij` wypisuje odwrotny plan ostatniego przebiegu (`.dom/zdjecia/cofniecie.json`);
-lokalnie `--wykonaj`, na Dysku wykonaj ruchy konektorem; ślad w Notion popraw ręcznie (liczby i linki).
+wydatku (o wydatek zapytaj jednym zdaniem – inwestor może chcieć go zapisać; wtedy `koszty` B).
+**„gdzie są zdjęcia zbrojenia”** – dopasuj krok w Harmonogramie (kilka pasuje → wymień je z linkami) i podaj link z pola
+„Zdjęcia” oraz liczbę plików (`search_files` z `parentId` folderu; osobno `przed zakryciem/`). Pole puste → folder z
+`dysk.json` albo `search_files` z `title contains '<słowo z kroku>'` i `mimeType` folderu. Dzień: data `RRRR-MM-DD`
+w wyszukiwarce Dysku albo wpis Dziennika budowy z tego dnia. Zdjęć nie otwieraj bez prośby (zasada 9). **„zrób kopię dokumentów”** – `kopia.py stan` → `paczka` (na sucho) →
+`paczka --wykonaj` → instrukcja dla inwestora (sekcja 9, pkt 6). `kopia.py stan` podaje tryb „aplikacja”, gdy istnieje
+lokalny folder Dysku – dopóki inwestor nie potwierdzi, że aplikacja działa (stan od 10.11.2026: nie działa), używaj paczki,
+nie `kopia.py aplikacja`.
+**„aplikacja Dysku nie działa”** – nic do naprawiania po stronie asystenta (Mac służbowy, MDM – sprawa dla IT inwestora;
+nie obchodź zabezpieczeń, nie przeinstalowuj). Potwierdź jednym zdaniem, że wszystko działa dalej: zdjęcia – wgrywanie
+z telefonu i „rozłóż zdjęcia” konektorem (tryb 2), kopia – paczka; zapytaj, co zrobić teraz.
+**„cofnij ostatnie rozłożenie”** – `zdjecia.py cofnij` wypisuje odwrotny plan ostatniego niecofniętego przebiegu
+(`.dom/zdjecia/cofniecie.json`). Pokaż go i po „ok” wykonaj: najpierw foldery (z `_Archiwum/Puste foldery` z powrotem do
+`_nowe`; identyfikator folderu wyszukaj po nazwie w archiwum), potem pliki (`fileId` z planu, `parentId` z `dysk.json` –
+popraw w nim ścieżki przeniesionych folderów, `title` = dawna nazwa). Lokalnie: `cofnij --wykonaj`. Po konektorze:
+`cofnij --zrobione` (oznacza przebieg jako cofnięty – kolejne „cofnij” weźmie wcześniejszy). Ślad w Notion popraw ręcznie
+(liczby i linki).
 
 **Zdjęcia z dnia albo tygodnia**: każdy plik zaczyna się od daty, więc data w wyszukiwarce Dysku (albo Findera) pokazuje
 wszystkie zdjęcia dnia ze wszystkich folderów; wpis Dziennika budowy z dnia ma linki do folderów kroków; przegląd tygodnia
@@ -209,7 +232,7 @@ z dowiązaniami.
 
 - **Dziennik budowy** (wpis z dnia zrobienia, nie wgrania; brak → wpis minimalny: data, etap, krok, zdjęcia; dwa wpisy
   z jednego dnia → ten z pasującym krokiem, inaczej pierwszy):
-  - „Zdjęcia” = `<łącznie> zdjęć: <NN Krok> (<n>) <link folderu>; …` – liczba na początku (czyta ją pulpit budowy);
+  - „Zdjęcia” = `<łącznie> zdj.: <NN Krok> (<n>) <link folderu>; …` – liczba na początku (czyta ją pulpit budowy);
   - „Krok harmonogramu” = relacja do kroków, w których przybyły zdjęcia;
   - „Ujęcia przed zakryciem” = które ujęcia z listy `etap` B są, których brakuje (zdjęcia w `przed zakryciem/`);
     „Przed zakryciem OK” – tylko przy komplecie;

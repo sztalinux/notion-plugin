@@ -182,7 +182,7 @@ class Plan(unittest.TestCase):
         self.assertEqual(s["przed_zakryciem"], 1)
         self.assertEqual(len(s["dokumenty"]), 1)
         pole = Z.pole_zdjecia(s, {"Zdjęcia/Etap A/01 Wykop i odbiór dna": "https://example.invalid/f1"})
-        self.assertTrue(pole.startswith("3 zdjęć: "))
+        self.assertTrue(pole.startswith("3 zdj.: "))
         self.assertIn("01 Wykop i odbiór dna (2) https://example.invalid/f1", pole)
 
 
@@ -211,6 +211,8 @@ class Lokalnie(unittest.TestCase):
         c = Z.plan_cofniecia(Z.wczytaj_ruchy())
         self.assertEqual(len(c["ruchy"]), 1)
         self.assertEqual(c["ruchy"][0]["do"], "Zdjęcia/_nowe/wykop")
+        Z.oznacz_cofniety(c["przebieg"], "skrypt")
+        self.assertIsNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
         # ponowny przebieg: nic do zrobienia poza czekającym
         p2 = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)
         self.assertEqual(p2["ruchy"], [])

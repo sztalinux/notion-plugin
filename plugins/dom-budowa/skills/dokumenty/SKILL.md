@@ -1,6 +1,6 @@
 ---
 name: dokumenty
-description: Porządek w dokumentach budowy (folder budowy na komputerze inwestora) i paczka aktualnych plików dla claude.ai. Używaj, gdy raport „[dokumenty]” (z listy startowej) pokazuje nowe lub zmienione pliki, gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co mam wgrać do claude.ai”, „wgrałem”, albo pyta, gdzie jest dany dokument lub która wersja jest aktualna.
+description: Porządek w dokumentach budowy (folder budowy na komputerze inwestora) i paczka aktualnych plików dla claude.ai. Używaj, gdy raport „[dokumenty]” (z listy startowej) pokazuje nowe lub zmienione pliki, gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co mam wgrać do claude.ai”, „wgrałem” (paczka), albo pyta, gdzie jest dany dokument lub która wersja jest aktualna. Także dokumenty z telefonu i kopia na Dysk Google: „wgrałem fakturę / WZ / wpis kierownika”, „zrób kopię dokumentów”, „wgrałem kopię”, „aplikacja Dysku nie działa”.
 ---
 
 # Dokumenty budowy
@@ -71,7 +71,7 @@ nie ma go albo tekst nieczytelny (rysunki) → poproś jak wyżej.
 - Oferta wykonawcy → procedura `oferta`.
 - Ostrzeżenia skryptu („powyżej limitu”, informacja o danych osobowych) przekaż inwestorowi jednym zdaniem z propozycją
   (np. zmniejszona kopia PDF obok oryginału, oznaczona do paczki zamiast niego).
-- Na koniec podaj listę „dodaj / podmień / usuń” z raportu. Po słowach „wgrałem”: `python3 tools/dokumenty.py wgrane`.
+- Na koniec podaj listę „dodaj / podmień / usuń” z raportu. Po „wgrałem” o paczce dla claude.ai: `python3 tools/dokumenty.py wgrane`; „wgrałem kopię” (Dysk) – sekcja D.
 
 ## C. Przewodnik w Notion (Claude Code, automatycznie)
 
@@ -97,6 +97,9 @@ Pełne reguły, tryby bez aplikacji/konektora i przypadki brzegowe: `docs/zdjeci
   `paczka --wykonaj`; inwestor przeciąga `_Na Dysk/<data>` do `Dom/_Kopie` i mówi „wgrałem kopię” → `kopia.py wgrane`,
   potem (z konektorem) rozłóż paczkę wg `docs/zdjecia-i-kopia.md`, 7. Działa aplikacja Dysku → `kopia.py aplikacja`.
   Na Dysk nigdy: `.dom`, `AI`, `Wiedza…`, `_Przychodzące`, `_Do claude.ai`.
+- **„Aplikacja Dysku nie działa”** – nic do naprawiania (Mac służbowy – sprawa dla IT inwestora, nie obchodź zabezpieczeń);
+  zdjęcia i dokumenty idą konektorem, kopia paczką (`docs/zdjecia-i-kopia.md`, 5 i 8). `kopia.py aplikacja` dopiero, gdy
+  inwestor potwierdzi, że aplikacja działa.
 - Nic nie kasuj ani nie nadpisuj – stare wersje i usunięte na Macu idą do `_Archiwum` na Dysku.
 
 ## Zasady

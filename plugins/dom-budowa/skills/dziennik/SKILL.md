@@ -1,6 +1,6 @@
 ---
 name: dziennik
-description: Dziennik inwestora – wpis z budowy po każdym dniu pracy lub wizycie (co zrobiono, kto był, pogoda, dostawy, godziny własne, problemy, ustalenia z ekipą, roboty dodatkowe, zdjęcia) do Notion „Dziennik budowy”. Używaj, gdy użytkownik relacjonuje dzień na budowie („dziś na budowie…”, „ekipa zrobiła…”, „byłem na działce”, „przyjechał beton”), wysyła zdjęcia z budowy, podaje swoje godziny pracy, mówi o problemie lub usterce, o robotach dodatkowych („ekipa chce dopłatę za…”), albo pyta „co się działo w zeszłym tygodniu”.
+description: Dziennik inwestora – wpis z budowy po każdym dniu pracy lub wizycie (co zrobiono, kto był, pogoda, dostawy, godziny własne, problemy, ustalenia z ekipą, roboty dodatkowe, zdjęcia) do Notion „Dziennik budowy”. Używaj, gdy użytkownik relacjonuje dzień na budowie („dziś na budowie…”, „ekipa zrobiła…”, „byłem na działce”, „przyjechał beton”), wysyła zdjęcia z budowy, podaje swoje godziny pracy, mówi o problemie lub usterce, o robotach dodatkowych („ekipa chce dopłatę za…”), albo pyta „co się działo w zeszłym tygodniu”. Także zdjęcia na Dysku Google: „rozłóż zdjęcia”, „wgrałem zdjęcia”, „gdzie są zdjęcia …”, „cofnij ostatnie rozłożenie”.
 ---
 
 # Dziennik budowy (inwestora)
@@ -68,11 +68,13 @@ Rozkładanie `Zdjęcia/_nowe` (konektor Dysku albo skrypt, plan na sucho, dzienn
 `docs/zdjecia-i-kopia.md`, sekcja 8; tam też tryby bez aplikacji/konektora i przypadki brzegowe. Ślad (raport
 `python3 tools/zdjecia.py slad <plan>`), jednym wywołaniem na dzień zrobienia (nie wgrania):
 - wpis z tego dnia jest → uzupełnij; nie ma → wpis minimalny (Data, Etap, Krok, Zdjęcia); dwa wpisy → ten z pasującym krokiem;
-- „Zdjęcia” = `<łącznie> zdjęć: <NN Krok> (<n>) <link folderu>; …` – liczba zawsze na początku (czyta ją pulpit);
+- „Zdjęcia” = `<łącznie> zdj.: <NN Krok> (<n>) <link folderu>; …` – liczba zawsze na początku (czyta ją pulpit);
 - „Krok harmonogramu” = kroki, w których przybyły zdjęcia; „Dokumenty z dnia” = linki faktur, WZ, wpisów KB;
 - „Ujęcia przed zakryciem” = które ujęcia z listy `etap` B są w `przed zakryciem/`, których brakuje; „Przed zakryciem OK”
   zaznacz tylko przy komplecie, inaczej wymień braki w podsumowaniu.
 Ślad dopiero po udanym ruchu pliku; nieudany zapis do Notion ponów przy następnym przebiegu.
+„Gdzie są zdjęcia X” → link z pola „Zdjęcia” kroku i liczba plików; „cofnij ostatnie rozłożenie” → `zdjecia.py cofnij`
+(plan, „ok”, `--zrobione`) – oba wg `docs/zdjecia-i-kopia.md`, 8.
 
 ## Wynik w rozmowie
 

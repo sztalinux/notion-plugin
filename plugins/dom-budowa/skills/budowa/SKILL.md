@@ -39,9 +39,9 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | pyta „co nowego”, „co czeka na mnie”, „podsumuj tydzień” | `przeglad-tygodnia` |
 | „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` (plugin `ja`); przegląd dnia budowy – sekcja „Wieczorem” niżej |
 | „przegląd dnia budowy”, „co dziś na budowie i co jutro” | sekcja „Wieczorem” niżej |
-| dostał nowe pliki od projektanta/wykonawcy, pyta o dokument, „co wgrać do claude.ai”, „wgrałem” | `dokumenty` |
+| dostał nowe pliki od projektanta/wykonawcy, pyta o dokument, „co wgrać do claude.ai”, „wgrałem” (paczka, kopia, faktura z telefonu), „aplikacja Dysku nie działa” | `dokumenty` |
 | „zaczynamy etap”, „jutro betonowanie – co sprawdzić”, „ekipa skończyła”, odbiór, usterki | `etap` |
-| relacjonuje dzień na budowie, wysyła zdjęcia, podaje swoje godziny, „ekipa chce dopłatę za…” | `dziennik` |
+| relacjonuje dzień na budowie, wysyła zdjęcia, „rozłóż zdjęcia”, podaje swoje godziny, „ekipa chce dopłatę za…” | `dziennik` (zdjęcia na Dysku – E); dokumenty z telefonu, kopia na Dysk – `dokumenty` D |
 | „co kupić na…”, „kupić X na budowę / działkę”, „ile zamówić”, „kiedy zamawiać okna”, oferta hurtowni, „przyjechała dostawa” | `zakupy` |
 | „ekipa wchodzi…”, „przesuwamy…”, „ułóż harmonogram”, „do piątku mam…”, „czekam na…”, „co mnie czeka” | `harmonogram` |
 | „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło”, „przenieś decyzje z pulpitu”, „opublikuj pulpit”, polecenie z przycisku „Odśwież” na stronie pulpitu | `pulpit` (tylko sesja interaktywna Claude Code: przenosi zaznaczenia ze strony pulpitu do Notion, ściąga świeże dane, testuje i publikuje stronę) |
@@ -71,7 +71,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia) | `zakupy` (0) | 🧱 Zakupy budowy; zadanie w TASKS tylko przy zakupie „na już” |
    | relacja z budowy, dostawa, usterka, godziny własne | `dziennik` | |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
-   | wydatek, faktura, koszt | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
+   | wydatek, faktura do zapłaty / zapłacona, koszt (samo zdjęcie faktury na Dysku – `dokumenty` D) | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
    | oferta, wycena | `oferta` | cena materiału od dostawcy → `koszty` (B2) |
    | plan kwoty od inwestora („planuję wydać…”, „szacowałem…”) | `koszty` (B3) | Rodzaj Plan; wydatek z tego wpisu – osobna strona |
    | „dostałem plik” | `dokumenty` | gdzie indziej niż Claude Code – przypomnienie, żeby wrzucić do `_Przychodzące/` |

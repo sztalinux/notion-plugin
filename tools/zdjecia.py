@@ -4,7 +4,7 @@
     python3 tools/zdjecia.py plan --lista <lista.json> [--teraz ISO] [--wyjscie plan.json]   # konektor: lista → plan (na sucho)
     python3 tools/zdjecia.py rozloz [--wykonaj]          # tryb lokalny: <hub>/Zdjęcia/_nowe → foldery kroków na Macu
     python3 tools/zdjecia.py zapisz-ruchy <plan.json> [--kto konektor] [--tylko id,id]   # dziennik ruchów po wykonaniu planu
-    python3 tools/zdjecia.py cofnij [--wykonaj]          # plan odwrotny ostatniego przebiegu (lokalnie: wykonuje)
+    python3 tools/zdjecia.py cofnij [--wykonaj|--zrobione]   # plan odwrotny ostatniego niecofniętego przebiegu
     python3 tools/zdjecia.py slad <plan.json>             # ślad do Notion: dzień → krok → liczba, folder
     python3 tools/zdjecia.py wg-dni                       # Mac: Zdjęcia/_wg dni/RRRR-MM-DD/ z dowiązaniami
     python3 tools/zdjecia.py stan                         # kroki, ostatni przebieg, blokada, liczba ruchów
@@ -342,7 +342,7 @@ def pole_zdjecia(dzien: dict, linki: dict = None) -> str:
     for folder, n in dzien["kroki"].items():
         nazwa = folder.rsplit("/", 1)[-1]
         czesci.append(f"{nazwa} ({n})" + (f" {linki[folder]}" if linki.get(folder) else ""))
-    return f"{dzien['lacznie']} zdjęć: " + "; ".join(czesci)
+    return f"{dzien['lacznie']} zdj.: " + "; ".join(czesci)
 
 
 # ---------- dziennik ruchów, blokada ----------
@@ -380,6 +380,8 @@ def wczytaj_ruchy() -> list:
 
 def plan_cofniecia(ruchy: list) -> dict:
     """Odwrotność ostatniego przebiegu (najpierw ostatnie ruchy)."""
+    cofniete = {r["przebieg"] for r in ruchy if r.get("cofniety")}
+    ruchy = [r for r in ruchy if r["przebieg"] not in cofniete]
     if not ruchy:
         return {"przebieg": None, "ruchy": [], "foldery": []}
     ost = ruchy[-1]["przebieg"]
@@ -389,6 +391,14 @@ def plan_cofniecia(ruchy: list) -> dict:
     foldery = [{"folder": r["folder"].rsplit("/", 1)[-1], "z": r["do"], "do": r["folder"].rsplit("/", 1)[0]}
                for r in wybrane if "folder" in r]
     return {"przebieg": ost, "ruchy": pliki, "foldery": foldery}
+
+
+def oznacz_cofniety(przebieg: str, kto: str):
+    """Po wykonaniu cofnięcia: kolejne `cofnij` bierze wcześniejszy przebieg."""
+    DANE.mkdir(parents=True, exist_ok=True)
+    with _dziennik().open("a", encoding="utf-8") as f:
+        f.write(json.dumps({"przebieg": przebieg, "cofniety": True, "kto": kto,
+                            "czas": datetime.now(PL).isoformat(timespec="seconds")}, ensure_ascii=False) + "\n")
 
 
 class Zajete(Exception):
@@ -545,7 +555,8 @@ def main(argv=None):
     a.add_argument("--kto", default="konektor")
     a.add_argument("--tylko", default="")
     a = sub.add_parser("cofnij")
-    a.add_argument("--wykonaj", action="store_true")
+    a.add_argument("--wykonaj", action="store_true", help="lokalnie: przenieś pliki z powrotem")
+    a.add_argument("--zrobione", action="store_true", help="konektor: cofnięcie wykonane – zapisz w dzienniku ruchów")
     a = sub.add_parser("slad")
     a.add_argument("plan")
     sub.add_parser("wg-dni")
@@ -586,7 +597,12 @@ def main(argv=None):
         if not c["przebieg"]:
             print("[zdjęcia] brak ruchów do cofnięcia")
             return 0
-        print(f"[zdjęcia] cofnięcie przebiegu {c['przebieg']}: plików {len(c['ruchy'])}, folderów {len(c['foldery'])}")
+        if a.zrobione:
+            oznacz_cofniety(c["przebieg"], "konektor")
+            print(f"[zdjęcia] przebieg {c['przebieg']} oznaczony jako cofnięty")
+            return 0
+        print(f"[zdjęcia] cofnięcie przebiegu {c['przebieg']}: plików {len(c['ruchy'])}, folderów {len(c['foldery'])}"
+              " (najpierw foldery, potem pliki)")
         for r in c["ruchy"]:
             print(f"  {r['z']}/{r['nazwa']} → {r['do']}/{r['nowa_nazwa']}")
         for f in c["foldery"]:
@@ -602,7 +618,7 @@ def main(argv=None):
                 if z.exists() and not cel.exists():
                     cel.parent.mkdir(parents=True, exist_ok=True)
                     shutil.move(str(z), str(cel))
-        DANE.mkdir(parents=True, exist_ok=True)
+            oznacz_cofniety(c["przebieg"], "skrypt")
         (DANE / "cofniecie.json").write_text(json.dumps(c, ensure_ascii=False, indent=1), encoding="utf-8")
         return 0
     if a.cmd == "slad":
