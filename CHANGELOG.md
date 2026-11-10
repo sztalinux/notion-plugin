@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.12.2] – 2026-11-11
+
+Nocna samonaprawa, obszar 04-dziennik:
+- `wpisy` krok 7: po edycji Dziennika na pierwszym poziomie zostaje pięć stałych podstron (lista z definicji nowego wpisu), nie dwie.
+
 ## dom-budowa [3.11.3] – 2026-11-11
 
 Nocna samonaprawa, obszar 03-koszty (kolejka 💸 Wydatki → arkusz Google):
