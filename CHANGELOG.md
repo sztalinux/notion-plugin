@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.10.6] – 2026-11-10
+
+- Nowy `docs/decyzje-system-wiedzy.md`: rejestr 29 decyzji o systemie wiedzy (ADR) – kontekst, wybór, odrzucone warianty
+  z liczbami z pomiarów, skutki, wersja wdrożenia; na końcu pytania otwarte. Powstał z planów i raportów nocnych
+  z 16.10–5.11.2026 przed usunięciem folderu planów. Procedury bez zmian.
+- `docs/wiedza-runbook.md`: lokalne README przeniesione z folderu planów do prywatnego folderu importu wiedzy; `README.md`:
+  odesłanie do rejestru decyzji.
+
 ## ja [1.12.0] – 2026-11-10
 
 - POM-19: komunikaty asystenta – problemy asynchroniczne (przebieg na Macu nieudany lub nieuruchomiony, brak logowania MCP,

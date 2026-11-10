@@ -3,7 +3,7 @@
 Instrukcja krok po kroku: jak odtworzyć system wiedzy od zera, jak działa na co dzień i co robić, gdy coś przestaje działać.
 Mapa całości i decyzje: `docs/system-wiedzy.md`; polecenia i komunikaty: `plugins/dom-budowa/skills/wiedza/references/`
 (`indeks.md`, `indeks-awarie.md`, `indeks-jakosc.md`, `karty.md`). Ten plik jest ogólny – **ścieżki prywatne, nazwy kanałów, adres
-prywatnego repo kopii i terminy konkretnych tokenów** są poza repo, w lokalnym README inwestora (`README-lokalne.md` w katalogu planów).
+prywatnego repo kopii i terminy konkretnych tokenów** są poza repo, w lokalnym README inwestora (`docs/README-lokalne.md` w prywatnym folderze importu wiedzy, obok nocnej kolejki).
 Wszystkie polecenia uruchamiaj na Macu z katalogu repo, o ile nie napisano inaczej.
 
 Zasady, które obowiązują w każdej sekcji:

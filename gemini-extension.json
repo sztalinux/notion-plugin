@@ -1,6 +1,6 @@
 {
   "name": "dom-budowa",
-  "version": "3.10.5",
+  "version": "3.10.6",
   "description": "Harness budowy domu: zasady pracy, wiedza, oferty, koszty, notatki, analiza techniczna, przegląd tygodnia.",
   "contextFileName": "AGENTS.md"
 }
