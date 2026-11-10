@@ -125,7 +125,7 @@ Błąd pojedynczej strony nie zmienia kodu: `sync` zapisuje go w Notion (Arkusz 
 (linia `✗` nad podsumowaniem, licznik `bledy`). Wynik z automatu: log przebiegu
 `<hub>/.dom/automaty/<tryb>-RRRR-MM-DD.log`, linia „po przebiegu wydatki.py …”.
 
-Zabezpieczenia w `sync`: walidacja przed wysyłką (data, kwota, pozycja, ilość materiału 02–08; wycena – jednostka, nazwa,
+Zabezpieczenia w `sync`: walidacja przed wysyłką (data, kwota, pozycja, ilość i jednostka materiału 02–08; wycena – jednostka, nazwa,
 VAT przy netto) → strona dostaje „Błąd” z powodem; wyceny czekają, gdy kod Apps Script < 2 albo Cennik w starym układzie
 (`cennik_ok`), zwroty – gdy kod < 4; kolumny z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) nigdy nie są
 nadpisywane; zapis pod
@@ -139,7 +139,7 @@ blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 | „odpowiedź nie jest JSON” | wdrożenie bez dostępu „Każdy” albo adres `/dev` zamiast `/exec` – sekcja 7, krok 4 |
 | „zły sekret” | `ARKUSZ_SEKRET` ≠ właściwość `SEKRET` – sekcja 7, kroki 3 i 5 |
 | „pozycja … nie istnieje w Kosztorysie” | pozycję usunięto lub przenumerowano – wybierz inną; `pozycje` odświeży listę |
-| „materiał stanu zero bez ilości” | dopisz Ilość i Jedn., ustaw „Do arkusza” |
+| „materiał stanu zero bez ilości albo jednostki” | dopisz Ilość i Jedn., ustaw „Do arkusza” |
 | „pozycja … ma już inny plan ręczny” | inwestor decyduje: zaznacz „Nadpisz plan” i „Do arkusza” albo zostaw stary plan („Nie wysyłać”) |
 | „plany: timeout – strony zostają w kolejce” | odczyt Kosztorysu przekroczył czas – plany pójdą przy następnym `sync` |
 | „cena netto bez stawki” | wpisz VAT % (nie zgaduj – zapytaj inwestora) |

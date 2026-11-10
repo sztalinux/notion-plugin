@@ -209,7 +209,7 @@ def blad_lokalny(w: dict) -> str:
     if not w["lp"] or w["lp"] == ZASTEPCZA:
         return "brak pozycji – wybierz z listy Pozycja"
     if w["rodzaj"] != ZWROT and w["typ"] == "Materiał" and not (w["ilosc"] and w["jedn"]) and "02" <= w["lp"][:2] <= "08":
-        return "materiał stanu zero bez ilości – wpisz Ilość i Jedn."
+        return "materiał stanu zero bez ilości albo jednostki – wpisz Ilość i Jedn."
     return ""
 
 
