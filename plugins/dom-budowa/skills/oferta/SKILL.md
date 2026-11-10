@@ -26,7 +26,7 @@ jest wykonawcą lub której fazy dotyczy oferta – zapytaj jednym pytaniem.
    Niczego nie dopisuj od siebie do zakresu – jeśli czegoś nie ma w ofercie, to tego nie ma.
 3. **Sprawdź zakres i zgodność** z `references/etapy.md` (lista etapów i punkty krytyczne projektu):
    - każdy etap: ✓ wyceniony / ◐ w pakiecie bez kwoty / ✗ brak,
-   - niezgodności z projektem (np. murowane ściany piwnicy zamiast żelbetu W8) → Zgodna z projektem „Nie” i wyraźnie w podsumowaniu,
+   - niezgodności z projektem (np. murowane ściany piwnicy zamiast żelbetu W8) → Zgodny z projektem „Nie” i wyraźnie w podsumowaniu,
    - knock-out i czerwone flagi: Notion → „Wybór wykonawcy – stan zero”, sekcja Runda 1,
    - technologia wykonawcy sprzeczna z Bazą wiedzy lub rozstrzygnięciem SP → wpis w Rejestrze sprzeczności
      (Rodzaj „Źródło vs oferta wykonawcy”, procedura `wiedza`); rozstrzyga inwestor.
