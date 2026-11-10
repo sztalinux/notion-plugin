@@ -102,7 +102,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    (krok 8) i do linii „🤖” weź liczby per kategoria, nazwy zamkniętych i zmienionych (max 5 na obszar, reszta „+k”) i listę
    uzupełnionych pól.
 6. **Jutro – sprawy osobiste** (odczyt; jedyny zapis – zadanie z suplementami, niżej): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
-   (When < dziś, niezakończone), suplementy z Buy = tak (licznik), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
+   (When < dziś, niezakończone – widok „📅 Dziś”, ID w mapie), suplementy z Buy = tak (licznik), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)
    sprawdź ID, jeśli któryś odczyt się nie powiedzie.
 
@@ -137,7 +137,8 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **Ręczny przebieg** (prośba w rozmowie) = osobny wpis z tą samą datą i dopiskiem „(ręczne)”, kolejne „(ręczne 2)”… –
    tak samo w przeglądzie budowy. Nigdy nie nadpisuj wcześniejszego wpisu – sprostowanie to jedna linia kursywą na jego
    górze z odesłaniem.
-9. **Linia „🤖”** – na górze dzisiejszego bloku w „Przetworzone”, w tej samej edycji Dziennika co krok 1:
+9. **Linia „🤖”** – na górze dzisiejszego bloku w „Przetworzone”, w tej samej edycji Dziennika co zapisy kroku 1 – tę jedną
+   edycję (`wpisy`, krok 7) zrób na końcu przebiegu, po kroku 8, gdy znasz już wszystkie liczby:
    ```
    🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · czeka na Ciebie 1 · komunikaty: 1 · pomysły – 1 · research: 1 gotowy · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy
