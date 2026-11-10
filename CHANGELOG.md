@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.11.3] – 2026-11-11
+
+Nocna samonaprawa, obszar 03-koszty (kolejka 💸 Wydatki → arkusz Google):
+- `koszty/references/arkusze.md`: zakresy kolumn zgodne z arkuszem – Etapy A:R, Cennik A:Q.
+- `docs/wydatki-arkusz.md`: kody wyjścia `wydatki.py` – błąd pojedynczej strony daje kod 0 (trafia do Notion jako „Błąd”).
+- `docs/wydatki-arkusz.md`: `sync --proba` sprawdza tylko pola strony; pozycję wobec Kosztorysu, konflikt planu i wersję
+  kodu Apps Script sprawdza dopiero `sync`.
+- `budowa/references/notion-mapa.md`: lista pól kolejki 💸 uzupełniona o „VAT %”.
+- `docs/wydatki-arkusz.md`, `notatka/references/notion-schematy.md`: odesłania do `koszty` obejmują B3 (plan pozycji).
+- `dziennik`: zakup narzędzi – „Pozycja z etapu 16” (kolejka nie ma pola Etap).
+
 ## dom-budowa [3.11.2] – 2026-11-11
 
 Nocna samonaprawa, obszar 02-spojnosc (spójność procedur, Notion i narzędzi):
