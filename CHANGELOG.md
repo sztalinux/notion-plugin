@@ -4,6 +4,28 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.11.2] – 2026-11-11
+
+Nocna samonaprawa, obszar 02-spojnosc (spójność procedur, Notion i narzędzi):
+- `notatka/references/notion-schematy.md`: linia widoku „⚠ Błędy do zgłoszenia” rozcinała tabelę kolejki 💸 – pięć pól
+  wypadało poza tabelę; przeniesiona pod tabelę.
+- `dziennik`: usterka do TASKS z polem „Kto = Ekipa” (TASKS nie ma pola „Do kogo”).
+- `oferta`: status karty wykonawcy „Wybrany” (nie „Wybrana”) i pole „Zgodny z projektem” – jak w bazie.
+- `budowa/references/notion-mapa.md`: Harmonogram z polami Wykonawca i Uwagi; Porównanie wykonawców – „Ocena technologia”
+  i „Ocena ogólna” zamiast „Ocena”.
+- Martwe odesłania: `budowa` (indeks.md nie ma zasad – kolejność to zasada 10 `budowa`; przegląd tygodnia – punkt 10
+  „Spójność”), `docs/system-wiedzy.md` (zasada 13 `budowa`; runbook – sekcje 2 i 5.1), `README.md` (sędzia – sekcja
+  „Zgoda i granice” w `indeks-sedzia.md` zamiast nieistniejącej „zasady 6”).
+- `wiedza/references/indeks-jakosc.md`, `indeks-sedzia.md`: „hook startu” → lista startowa sesji (`CLAUDE.md`).
+- `.claude-plugin/marketplace.json`: opis „koszty (arkusz Google)” zamiast „(Excel)”.
+
+## ja [1.12.1] – 2026-11-11
+
+Nocna samonaprawa, obszar 02-spojnosc:
+- `rozwoj-harnessu` (z `references/dostawcy.md`, `pisanie-procedur.md`): „Excel” → arkusz kosztorysu; opcja skrzynki
+  „Zmiana struktury Notion / Excela” zostaje (nazwa opcji w Notion).
+- `ja/references/notion-mapa.md`: opcja Zlecenia w Research to „Z wpisu (asystent)”.
+
 ## dom-budowa [3.11.1] – 2026-11-11
 
 - Poprawki po próbie sześciu poleceń na świeżej sesji (POM-1, sekcja 17, warunek 3): `docs/zdjecia-i-kopia.md` – jak
