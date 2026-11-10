@@ -54,7 +54,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
 
 - Godziny pracy własnej zapisuj we wpisie (liczba, co robiono). Na życzenie podaj sumę za etap – służy do uczciwego
   porównania „sam vs ekipa” (`oferta`, sekcja „Sam czy ekipa”) i do planowania kolejnych etapów.
-- Zakup lub wynajem narzędzi → `koszty` (Typ „Sprzęt”, etap 16 lub etap, dla którego kupiono).
+- Zakup lub wynajem narzędzi → `koszty` (Typ „Sprzęt”, Pozycja z etapu 16 albo z etapu, dla którego kupiono).
 - Wypadek, zagrożenie, praca na wysokości / w wykopie bez zabezpieczeń → zapisz jako Ryzyko Krytyczne i powiedz wprost.
 
 ## D. „Co się działo” (pytanie o okres)
