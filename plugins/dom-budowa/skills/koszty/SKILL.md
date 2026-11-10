@@ -1,6 +1,6 @@
 ---
 name: koszty
-description: Kosztorys, wydatki i wyceny materiałów – arkusz Google „Kosztorys budowy” (źródło prawdy dla liczb, prowadzi inwestor) i kolejka w Notion „💸 Wydatki → arkusz”, z której automat na Macu dopisuje wydatki i wyceny do arkusza. Używaj, gdy użytkownik podaje wydatek, fakturę, paragon, przelew dla ekipy („wydałem…”, „zapłaciłem…”, „kupiłem za…”), cenę materiału od dostawcy („beton po 371 zł w X”, „biorę stal z Y”), pyta „ile wydaliśmy”, „ile zostało”, „plan vs wydane”, „ile poszło na materiał / na ekipę”, prosi o analizę kosztorysu albo o zmianę w arkuszu (kolumna, formuła, pozycja).
+description: Kosztorys, wydatki i wyceny materiałów – arkusz Google „Kosztorys budowy” (źródło prawdy dla liczb, prowadzi inwestor) i kolejka w Notion „💸 Wydatki → arkusz”, z której automat na Macu dopisuje wydatki i wyceny do arkusza. Używaj, gdy użytkownik podaje wydatek, fakturę, paragon, przelew dla ekipy („wydałem…”, „zapłaciłem…”, „kupiłem za…”), cenę materiału od dostawcy („beton po N zł/m³ w X”, „biorę stal z Y”), pyta „ile wydaliśmy”, „ile zostało”, „plan vs wydane”, „ile poszło na materiał / na ekipę”, prosi o analizę kosztorysu albo o zmianę w arkuszu (kolumna, formuła, pozycja).
 ---
 
 # Koszty i kosztorys
@@ -36,9 +36,14 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
 
 ## B. Wydatek (Dziennik, rozmowa, faktura, paragon, przelew)
 
+Źródło bywa różne – wpis w 📓 Dzienniku (przebieg bez inwestora, `wpisy` → `budowa`), wiadomość do asystenta („dopisz
+wydatki: 150 zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to samo; kilka płatności w jednej wiadomości = kilka wierszy.
+
 1. Wyciągnij: datę, kwotę **brutto** (tyle, ile zapłacono), na co, przy materiale ilość i jednostkę, typ (Materiał /
    Robocizna / Sprzęt / Usługa / Formalności – zawsze, także poza stanem zero), sposób (Przelew / Gotówka / Karta / BLIK), płatność (Zrealizowane =
-   zapłacone; Do zapłaty = faktura albo transza czeka), dostawcę / nr FV. Datę względną przelicz na datę.
+   zapłacone; Do zapłaty = faktura albo transza czeka), dostawcę / nr FV. Datę względną przelicz na datę; daty brak →
+   dzień wpisu albo wiadomości i w Notatkach „data = dzień zgłoszenia”. Niepewny opis albo typ („chyba rynny”) nie blokuje
+   zapisu – zapisz najlepszą wersję i w Notatkach „do potwierdzenia: …”. Pytaj tylko o brakującą kwotę albo niepewną pozycję.
 2. **Pozycja** – wybierz z listy pola Pozycja w bazie (opcje = pozycje arkusza Kosztorys, numer + nazwa; pobierz schemat
    bazy). Zasady:
    - przelew dla ekipy za etap z umowy → „Ekipa – transza …” tego etapu, Typ Robocizna;
@@ -47,17 +52,24 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
    - jedna faktura na kilka pozycji → kilka wierszy (podziel kwotę wg faktury; bez rozbicia → zapytaj);
    - brak pasującej pozycji albo niepewność → nie zgaduj: pytanie z propozycją (we wpisie Dziennika „❓” wg `wpisy`,
      w rozmowie – wprost); nowa pozycja to zmiana arkusza (sekcja C).
-3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą → zaktualizuj go zamiast dodawać drugi.
+3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą → zaktualizuj go zamiast dodawać drugi; w Claude Code sprawdź też
+   kopię arkusza (`Kosztorys_google.json`, zakładka Wydatki) – starsze wydatki są tylko tam.
 4. Zapisz wiersze w „💸 Wydatki → arkusz” jednym wywołaniem: Wydatek (krótko, co kupione), Data, Kwota, Pozycja, Typ,
    Ilość + Jedn. (materiał – obowiązkowo), Płatność, Sposób, Dostawca / nr FV, Notatki, **Arkusz = „Do arkusza”**
    (puste działa tak samo; „Nie wysyłać” wstrzymuje). Wydatek wpisany ręcznie w arkuszu nie idzie do kolejki – jedna droga.
    Brakujące pole, które da się uzupełnić później (sposób, nr FV) – zostaw puste; brak kwoty, daty albo pozycji → pytanie
    zamiast zapisu.
-5. Potwierdź jedną linią: „N wydatków w kolejce do arkusza (pozycje …) – trafią do niego przy najbliższym przebiegu na
-   Macu”. Bez narzędzi Notion → Skrzynka (`budowa`, zasada 13), słowami ze wszystkimi polami z kroku 1.
+5. Wysyłka zależy od kanału:
+   - **Claude Code z inwestorem:** po zapisie `python3 tools/wydatki.py sync` – od razu w arkuszu; podaj wiersz.
+   - **Przebieg bez inwestora (`claude -p`):** tylko kolejka – `sync` uruchamia automat po przebiegu.
+   - **claude.ai / telefon bez Notion:** Skrzynka (`budowa`, zasada 13) ze wszystkimi polami z kroku 1; Mac przeniesie.
+   Potwierdź jedną linią: „N wydatków: wiersze … w arkuszu” albo „w kolejce – trafią przy najbliższym przebiegu”.
 6. Wiersz z Arkusz = „Błąd” (powód w polu Błąd) pokazuj w przeglądzie dnia budowy jako sprawę czekającą; po poprawce pola
-   inwestor albo asystent ustawia znów „Do arkusza”. Wiersz „W arkuszu” poprawia się już w arkuszu, nie w Notion; wydatek
-   wysłany przez pomyłkę – w Claude Code `python3 tools/wydatki.py wycofaj <id strony>`.
+   inwestor albo asystent ustawia znów „Do arkusza”.
+7. Korekta wydatku już w arkuszu („zapłaciłem tę fakturę”, zła kwota) – popraw pola tej samej strony w Notion (np. Płatność
+   = Zrealizowane, Data = dzień zapłaty) i ustaw Arkusz = „Do arkusza”: `sync` nadpisze jej wiersz (pola A:H, J:M), nie doda
+   nowego. Inwestor może też poprawić wiersz w arkuszu ręcznie – wtedy nie wysyłaj tej strony ponownie, bo nadpisze jego
+   zmianę. Wydatek wysłany przez pomyłkę – w Claude Code `python3 tools/wydatki.py wycofaj <id strony>`.
 
 Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten wydatek.
 

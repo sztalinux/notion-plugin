@@ -13,7 +13,9 @@ Przepływ: przebieg Dziennika (agent) albo inwestor dodaje w Notion wiersz z Ark
 wiersze do aplikacji Apps Script przypiętej do arkusza (kod i instrukcja: docs/wydatki-arkusz.md), a ta dopisuje je
 w pierwszym wolnym wierszu arkusza Wydatki (bez nadpisywania kolumn z formułami). Wynik wraca do Notion: „W arkuszu”
 z numerem wiersza albo „Błąd” z powodem. Ponowne wysłanie tej samej strony nie dubluje wiersza (kolumna Źródło
-= notion:<id strony>). Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;
+= notion:<id strony>). Strona już dopisana, która wróci do kolejki (zmienione pola + Arkusz = „Do arkusza”), poprawia swój
+wiersz (pola wpisywane A:H, J:M – np. „Do zapłaty” → „Zrealizowane”); korekta z Notion nadpisuje ręczne zmiany tego wiersza
+w arkuszu. Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;
 ponowne wysłanie tej samej strony aktualizuje jej wiersz (np. Status wyceny = Wybrana). Wyceny wymagają kodu Apps Script
 w wersji ≥ 2 i Cennika w nowym układzie (ping: cennik_ok) – inaczej czekają w kolejce.
 Zmiany układu arkusza (kolumny, formuły, kolory) idą bez ponownego importu: plik zmian JSON z operacjami
@@ -200,7 +202,7 @@ def sync(k: dict, proba: bool) -> tuple:
     """→ (liczniki, błędy krytyczne). Błąd pojedynczego wiersza trafia do Notion, nie przerywa reszty."""
     wymagaj(k, "token") if proba else wymagaj(k, "token", "url", "sekret")
     wiersze = [na_wiersz(s) for s in kolejka(k)]
-    licz = {"w_kolejce": len(wiersze), "dopisane": 0, "juz_byly": 0, "wyceny": 0, "bledy": 0, "czekaja": 0}
+    licz = {"w_kolejce": len(wiersze), "dopisane": 0, "poprawione": 0, "wyceny": 0, "bledy": 0, "czekaja": 0}
     bledy = []
     do_wyslania = []
     for w in wiersze:
@@ -227,6 +229,8 @@ def sync(k: dict, proba: bool) -> tuple:
             powod = (f"arkusz ma kod w wersji {wersja} – wklej nowy kod i zrób nową wersję wdrożenia"
                      if wersja < WERSJA_WYCEN else "Cennik w starym układzie – najpierw zmiana układu (migruj)")
             bledy.append(f"{len(czekaja)} wycen czeka: {powod} (docs/wydatki-arkusz.md)")
+    po_id = {w["id"]: w for w in do_wyslania}
+    mapa = None
     for i in range(0, len(do_wyslania), PACZKA):
         paczka = do_wyslania[i:i + PACZKA]
         try:
@@ -238,13 +242,41 @@ def sync(k: dict, proba: bool) -> tuple:
             if r.get("ok"):
                 if r.get("arkusz") == "Cennik":
                     licz["wyceny"] += 1
+                elif r.get("juz"):
+                    # strona była już w arkuszu i wróciła do kolejki = korekta (np. „Do zapłaty” → „Zrealizowane”)
+                    try:
+                        if mapa is None:
+                            mapa = {p["lp"]: p for p in arkusz(k, "pozycje")["pozycje"]}
+                        blad = popraw_wiersz(k, po_id[r["id"]], r["wiersz"], mapa)
+                    except BladArkusza as e:
+                        bledy.append(f"korekta wiersza {r.get('wiersz')}: {e} – strona zostaje w kolejce")
+                        continue
+                    if blad:
+                        licz["bledy"] += 1
+                        oznacz(k, r["id"], BLAD, wiersz=r.get("wiersz"), blad=blad)
+                        continue
+                    licz["poprawione"] += 1
                 else:
-                    licz["juz_byly" if r.get("juz") else "dopisane"] += 1
+                    licz["dopisane"] += 1
                 oznacz(k, r["id"], W_ARKUSZU, wiersz=r.get("wiersz"))
             else:
                 licz["bledy"] += 1
                 oznacz(k, r["id"], BLAD, blad=str(r.get("blad") or "odrzucone przez arkusz"))
     return licz, bledy
+
+
+def popraw_wiersz(k: dict, w: dict, wiersz: int, mapa: dict) -> str:
+    """Nadpisuje pola wpisywane (A:H, J:M) wiersza Wydatków danymi strony Notion – formuły I i N oraz Źródło zostają.
+    Zwraca opis błędu albo ''."""
+    p = mapa.get(w["lp"])
+    if not p:
+        return f"pozycja {w['lp']} nie istnieje w Kosztorysie"
+    a_h = [[w["data"], w["status"], w["kwota"], p["etap"], p["klucz"], w["typ"] or "",
+            "" if w["ilosc"] is None else w["ilosc"], w["jedn"] or ""]]
+    j_m = [[w["sposob"] or "", w["opis"] or "", w["dostawca"] or "", w["notatki"] or ""]]
+    arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Wydatki", "a1": f"A{wiersz}:H{wiersz}", "wartosci": a_h},
+                                  {"op": "zakres", "arkusz": "Wydatki", "a1": f"J{wiersz}:M{wiersz}", "wartosci": j_m}])
+    return ""
 
 
 def wycofaj(k: dict, ids: list) -> dict:

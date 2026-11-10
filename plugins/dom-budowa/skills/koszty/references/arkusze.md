@@ -1,4 +1,4 @@
-# Arkusz „Kosztorys budowy” – układ (stan: 2026-11-07)
+# Arkusz „Kosztorys budowy” – układ (stan: 2026-11-10)
 
 Arkusz Google prowadzi inwestor i nie jest wgrywany ponownie (zmiany układu: `docs/wydatki-arkusz.md`, sekcja 8); kopia wartości do analiz: `Koszty/Kosztorys_google.json` w folderze budowy (`tools/wydatki.py
 pobierz`). Jeśli arkusz wygląda inaczej niż tu opisano – pracuj na faktycznym układzie i zgłoś aktualizację tego pliku
@@ -18,7 +18,7 @@ Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje s
 - **Wydatki!A:O** ⚙ – A Data · B Status (Zrealizowane / Do zapłaty) · C Kwota brutto · D Etap (lista z Etapy!A) · E Pozycja
   (lista „Lp Nazwa” z Kosztorys!M) · F Typ (Materiał / Robocizna / Sprzęt / Usługa / Formalności) · G Ilość · H Jedn. ·
   I Cena jedn. (formuła – nie nadpisuj) · J Sposób · K Opis · L Dostawca / nr FV · M Notatki · N Kontrola (formuła ⚠ –
-  nie nadpisuj) · O Źródło (`notion:<id>` = dopisane z kolejki 💸 Wydatki; stare wiersze – opis z dawnego arkusza Google).
+  nie nadpisuj) · O Źródło (`notion:<id>` = dopisane z kolejki 💸 Wydatki – ponowne wysłanie tej strony poprawia ten wiersz, A:H i J:M; stare wiersze – opis z dawnego arkusza Google).
 - **Kosztorys!A:V** ⚙ – A Etap (formuła: wiersz etapu `=Etapy!A<n>`, pozycje `=$A$<wiersz etapu>` – nazwa i stan idą z Etapów;
   nagłówek etapu w C pokazuje „NAZWA · stan”) · B Lp (np. 03.5) · C Pozycja · D Typ · E Jedn. · F Ilość plan · **G PLAN (zł)** – formuła: wybrana
   oferta × ilość plan (kol. P), a bez niej kol. U · H Ilość kupiona (z Wydatków) · I Wydane · J Pozostało · K Zakończono (Tak) · L Uwagi ([umowa] /

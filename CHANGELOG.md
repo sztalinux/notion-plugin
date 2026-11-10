@@ -4,6 +4,20 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.9.0] – 2026-11-10
+
+- Korekta wydatku już wysłanego: strona „W arkuszu” przestawiona znów na „Do arkusza” poprawia swój wiersz w Wydatkach
+  (A:H, J:M), nie dodaje nowego – np. „Do zapłaty” → „Zrealizowane” (`tools/wydatki.py sync`, licznik „poprawione”).
+- `koszty` B: płatności z wpisów i z wiadomości do asystenta – kilka płatności = kilka stron, brak daty = dzień zgłoszenia,
+  niepewny opis nie blokuje zapisu, wysyłka zależnie od kanału (w Claude Code od razu `sync`), korekta i wycofanie.
+- `docs/wydatki-arkusz.md` przepisany dla agentów: przepływ i kanały, obsługa płatności, powiązania formuł, dostęp
+  (także konektor Google Sheets – tylko odczyt bez polecenia), problemy, zmiany układu z pułapkami polskich ustawień.
+
+## ja [1.10.1] – 2026-11-10
+
+- `przeglad-dnia`: zakaz zmian w arkuszu kosztów dotyczy układu i planu – wydatki i wyceny z wpisów idą do kolejki
+  „💸 Wydatki → arkusz” (`koszty` B/B2).
+
 ## dom-budowa [3.8.0] – 2026-11-08
 
 - Arkusz: PLAN liczy się sam (wybrana oferta × ilość plan, a bez oferty „Plan ręczny” w kol. U); grupy materiałów (Kosztorys V,

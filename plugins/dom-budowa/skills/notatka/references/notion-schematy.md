@@ -67,11 +67,11 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 | Kwota | liczba | Wydatek: zł brutto, tyle ile zapłacono; Wycena: cena za jednostkę |
 | Pozycja | select | pozycje arkusza Kosztorys „Lp Nazwa” (przecinki zamienione na „;”); listę odświeża `wydatki.py pozycje` |
 | Typ | select | Materiał, Robocizna, Sprzęt, Usługa, Formalności |
-| Ilość, Jedn. | liczba, select | przy materiale obowiązkowo; Jedn.: kpl, m³, m², mb, kg, t, szt, h, dzień, mies., l |
+| Ilość, Jedn. | liczba, select | przy materiale w etapach 02–08 obowiązkowo; Jedn.: kpl, m³, m², mb, kg, t, szt, h, dzień, mies., l |
 | Płatność | select | Zrealizowane (zapłacone), Do zapłaty (faktura / transza czeka) |
 | Sposób | select | Przelew, Gotówka, Karta, BLIK |
 | Dostawca / nr FV, Notatki | tekst | |
-| Arkusz | select | Do arkusza albo puste (do wysłania), W arkuszu, Błąd, Nie wysyłać – „W arkuszu” i „Błąd” ustawia skrypt |
+| Arkusz | select | Do arkusza albo puste (do wysłania), W arkuszu, Błąd, Nie wysyłać – „W arkuszu” i „Błąd” ustawia skrypt; strona „W arkuszu” przestawiona znów na „Do arkusza” = korekta jej wiersza (np. Do zapłaty → Zrealizowane) |
 | Błąd | tekst | powód odrzucenia; po poprawce pola ustaw Arkusz = „Do arkusza” |
 | Wiersz arkusza | liczba | numer wiersza w arkuszu Wydatki albo Cennik (ustawia skrypt) |
 | Status wyceny | select | tylko Wycena: Oferta, Wybrana, Odrzucona – zmiana + „Do arkusza” aktualizuje wiersz Cennika |

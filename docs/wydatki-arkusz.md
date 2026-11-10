@@ -1,162 +1,168 @@
-# Wydatki → Arkusz Google (synchronizacja bez ręcznego wgrywania)
+# Wydatki → Arkusz Google – jak to działa (dla agentów i inwestora)
 
-Wydatek albo wycena dostawcy wpisane w Dzienniku (albo prosto w Notion) same trafiają do arkusza Google z kosztorysem. Bez AI po stronie
-arkusza, bez ręcznego eksportu i importu.
+Kosztorys budowy żyje w arkuszu Google „Kosztorys budowy” (prywatne konto inwestora). Arkusz jest **jedynym źródłem
+prawdy dla liczb**; Notion jest tylko kolejką, którą automat na Macu przenosi do arkusza. Wydatek albo wycena napisane
+we wpisie w Dzienniku lub w wiadomości do asystenta trafiają do arkusza bez ręcznego eksportu i importu.
 
-## 1. Jak to działa
+Gdzie co jest opisane:
+- procedura dla agenta (co zapisać, kiedy pytać): `plugins/dom-budowa/skills/koszty/SKILL.md`, sekcje B (wydatek),
+  B2 (wycena), C (zmiana układu), D (transze);
+- układ zakładek i kolumn: `plugins/dom-budowa/skills/koszty/references/arkusze.md`;
+- pola bazy 💸 Wydatki → arkusz: `plugins/dom-budowa/skills/notatka/references/notion-schematy.md`;
+- narzędzie: `tools/wydatki.py` (sam Python, biblioteka standardowa); kod Apps Script: sekcja 9 tego pliku.
+
+## 1. Przepływ danych
 
 ```
-📓 Dziennik („wydałem 5 200 zł na beton na chudziak, 16 m³, przelew”)
-   │  przebieg szybki na Macu (co godzinę, claude -p + MCP Notion) – procedura koszty, sekcja B
+wpis w 📓 Dzienniku  ·  wiadomość do asystenta  ·  zdjęcie faktury  ·  wiersz dodany ręcznie w Notion
+   │  agent wg koszty B/B2 zapisuje stronę z Arkusz = „Do arkusza”
    ▼
-💸 Wydatki → arkusz  (baza Notion na DOM, Arkusz = „Do arkusza”)   ← tu możesz też dopisać wiersz ręcznie z telefonu
-   │  tools/wydatki.py sync – po każdym przebiegu (automaty/przeglad.py), czysty Python, token NOTION_TOKEN
+💸 Wydatki → arkusz   (baza Notion na DOM, collection://72cff09c-609b-405d-a32c-263271b3b59c)
+   │  tools/wydatki.py sync  – NOTION_TOKEN, bez AI
    ▼
-Apps Script w arkuszu (aplikacja internetowa, sekret)  → wydatek: arkusz Wydatki · wycena: arkusz Cennik
-   │
+Apps Script przypięty do arkusza (aplikacja internetowa + sekret, @OnlyCurrentDoc)
+   │  Rodzaj Wydatek → zakładka Wydatki  ·  Rodzaj Wycena → zakładka Cennik
    ▼
-Notion: Arkusz = „W arkuszu” + numer wiersza   albo   „Błąd” + powód (popraw pole, ustaw znów „Do arkusza”)
+Notion: Arkusz = „W arkuszu” + Wiersz arkusza   albo   „Błąd” + powód w polu Błąd
 ```
 
-- Opóźnienie: do godziny (przebieg szybki 8:05–22:05 i 22:30) plus kilka sekund.
-- Mac wyłączony albo uśpiony → wpisy czekają w Notion i pójdą przy następnym przebiegu. Nic nie ginie.
-- Ten sam wpis wysłany dwa razy nie zdubluje się: arkusz rozpoznaje go po kolumnie Źródło (`notion:<id strony>`).
-- Lista Pozycja w Notion = pozycje z arkusza Kosztorys; odświeża ją `wydatki.py pozycje` (przebieg wieczorny).
-- **Wycena** (Rodzaj = Wycena; „beton C12/15 371 zł/m³ brutto w firmie X”) idzie do arkusza Cennik jako jedna oferta:
-  cena za jednostkę, netto albo brutto (brutto liczy arkusz), dostawca, pozycja, status Oferta. Decyzja = Status wyceny
-  „Wybrana” (pozostałe „Odrzucona”) i ponowne wysłanie – arkusz aktualizuje ten sam wiersz, a Kosztorys pokazuje cenę
-  wybraną (kol. N–P). Wydatki do Cennika nie trafiają – cenę zapłaconą liczy kolumna Cena jedn. w Wydatkach.
-- Wyceny wymagają kodu Apps Script w wersji 2 i Cennika w nowym układzie; inaczej `sync` je wstrzymuje (linia „wyceny
-  czekają” w logu).
-- **Arkusza nie wgrywa się ponownie.** Zmiany układu i wyglądu (kolumny, formuły, kolory, listy) robi asystent na żywym
-  arkuszu – sekcja 8.
-- Kopia wartości arkusza do analiz: `<hub>/Koszty/Kosztorys_google.json` (wszystkie zakładki, bez formuł), odświeżana przez
-  `wydatki.py pobierz` (przebieg wieczorny).
+Kanały i kiedy wiersz trafia do arkusza:
 
-## 2. Kto ma dostęp do Notion (żeby się nie gubić)
-
-| Gdzie | Jak łączy się z Notion | Co robi |
+| Kanał | Kto zapisuje do kolejki | Kiedy w arkuszu |
 |---|---|---|
-| Claude Code na Macu (ta aplikacja i `claude -p` w automatach) | lokalny serwer MCP `notion` (logowanie OAuth przez `/mcp`) | czyta i zapisuje – przebiegi Dziennika, rozmowy |
-| Skrypty Pythona na Macu (`wiedza.py`, `migawka.py`, `wydatki.py`) | token integracji `NOTION_TOKEN` z `.dom/sekrety.env` (prawo odczytu i zmiany treści) | indeks wiedzy i migawka – tylko odczyt; `wydatki.py` – odczyt kolejki, zmiana pól Arkusz/Błąd/Wiersz i listy Pozycja w bazie 💸 Wydatki |
-| GitHub Actions (prywatne repo kopii, `tryb-gleboki.yml`) | **żadnego** – ma tylko token Claude | odpowiada na pytania z telefonu z kopii indeksu wiedzy |
-| claude.ai (czat, telefon) | konektor Notion zablokowany przez organizację | zapisy idą do „📥 Skrzynki”, Mac przenosi je do Notion |
+| Claude Code z inwestorem (Mac) | agent przez MCP Notion | od razu – agent uruchamia `python3 tools/wydatki.py sync` i podaje numer wiersza |
+| Przebieg Dziennika bez inwestora (`claude -p`, launchd) | agent w przebiegu (`wpisy` → `budowa` → `koszty`) | zaraz po przebiegu: `AI/automaty/przeglad.py` woła `sync` (hook PO_PRZEBIEGU) |
+| claude.ai / telefon bez Notion | agent pisze do „📥 Skrzynki” słowami, ze wszystkimi polami | Mac przenosi Skrzynkę do Notion w przebiegu, potem jak wyżej |
+| Inwestor ręcznie w Notion | inwestor (pole Arkusz puste albo „Do arkusza”) | najbliższy przebieg (co godzinę 8:05–22:05 i 22:30) |
+| Inwestor ręcznie w arkuszu | – (z pominięciem kolejki) | od razu; tej płatności nie wolno już zapisywać w Notion |
 
-Arkusz Google nie ma konektora AI. Dopisuje do niego wyłącznie skrypt Apps Script na Twoim koncie Google, wołany
-przez `wydatki.py`. Claude nie czyta arkusza bezpośrednio – do analiz służy kopia JSON (sekcja 1). Skrypt ma dostęp tylko
-do tego jednego arkusza (`@OnlyCurrentDoc`) – nie widzi Dysku ani innych plików.
+Harmonogram automatu: przebieg szybki → `sync`; wieczorny → `sync`, `pozycje`, `pobierz`; tygodniowy → `sync`. Mac
+wyłączony → strony czekają w Notion, nic nie ginie. GitHub Actions nie mają dostępu do Notion – całość działa na Macu.
 
-## 3. Konfiguracja – krok po kroku (raz)
+## 2. Obsługa płatności przez agenta (skrót – pełne reguły w `koszty` B/B2/D)
 
-Krok 0 – porządek z Excelem. Zamknij stary plik `Kosztorys_17.10.2026_stan_zero_v2.xlsx` (Excel trzyma go otwartego).
-Jeśli dopisałeś w nim wydatki po 2.09.2026, przepisz je do `Kosztorys_stan_zero_2026-11-07.xlsx` przed importem.
+| Sytuacja | Co zapisać w 💸 Wydatki | Uwagi |
+|---|---|---|
+| „zapłaciłem / wydałem / kupiłem za …” | Rodzaj Wydatek, Płatność „Zrealizowane” | kilka płatności w jednej wiadomości = kilka stron |
+| faktura albo transza czeka na zapłatę | Płatność „Do zapłaty” | liczy się do zobowiązań, nie do WYDANE |
+| „zapłaciłem tę fakturę” (strona już w arkuszu) | ta sama strona: Płatność „Zrealizowane”, Data = dzień zapłaty, Arkusz „Do arkusza” | `sync` poprawia jej wiersz (A:H, J:M), nie dodaje nowego |
+| zła kwota / pozycja w wysłanym wydatku | popraw pola tej samej strony, Arkusz „Do arkusza” | jak wyżej; nadpisze ręczną zmianę inwestora w tym wierszu |
+| wydatek wysłany przez pomyłkę | – | `python3 tools/wydatki.py wycofaj <id strony>` (czyści wiersz, w Notion „Nie wysyłać”) |
+| oferta / cena dostawcy („X ma beton po … zł/m³ brutto”) | Rodzaj Wycena, Kwota = cena za jednostkę, Jedn., Cena podana Netto/Brutto, VAT % | idzie do Cennika, nie do Wydatków; wybór = Status wyceny „Wybrana” i ponowne wysłanie |
+| „kupić X na budowę” (jeszcze nie kupione) | nic – to zakup, procedura `zakupy` | koszt powstaje dopiero przy zapłacie |
 
-1. **Konto Google: prywatne**, nie służbowe. Na koncie firmowym administrator może blokować aplikacje Apps Script
-   z dostępem „Każdy”, a dane budowy to sprawa prywatna.
-2. **Import arkusza.** Dysk Google → Nowy → Prześlij plik → `Koszty/Kosztorys_stan_zero_2026-11-07.xlsx`. Otwórz go,
-   Plik → Zapisz jako Arkusze Google. Nazwij np. „Kosztorys budowy”. Wgrany `.xlsx` usuń z Dysku, żeby nie mylić wersji.
-   Sprawdź: Plik → Ustawienia → Język i region = Polska, strefa czasowa = (GMT+01:00) Warsaw; w Wydatkach działają listy
-   Etap / Pozycja / Typ.
-3. **Kod.** W arkuszu: Rozszerzenia → Apps Script. Skasuj zawartość `Kod.gs`, wklej kod z sekcji 9, zapisz (ikona dyskietki).
-   Do schowka skopiujesz go w Terminalu: `python3 tools/wydatki.py kod | pbcopy` (w katalogu repo harnessu).
-4. **Sekret.** W Apps Script: Ustawienia projektu (koło zębate) → Właściwości skryptu → Dodaj właściwość:
-   nazwa `SEKRET`, wartość – długi losowy ciąg. Wygeneruj go w Terminalu:
-   `python3 -c "import secrets; print(secrets.token_urlsafe(32))"`
-5. **Wdrożenie.** Wdróż → Nowe wdrożenie → typ „Aplikacja internetowa”. Wykonaj jako: **Ja**. Kto ma dostęp: **Każdy**.
-   Wdróż → Autoryzuj dostęp → wybierz konto → „Zaawansowane” → „Przejdź do … (niebezpieczne)” (to Twój własny,
-   niezweryfikowany przez Google skrypt) → Zezwól. Skopiuj „URL aplikacji internetowej” (kończy się na `/exec`).
-   „Każdy” oznacza: kto zna adres, może wysłać żądanie – bez sekretu dostaje „zły sekret”. Adresu i sekretu nie
-   wklejaj nigdzie poza `sekrety.env`. Z sekretem skrypt umie: dopisać i wycofać wydatek albo wycenę, oddać kopię
-   arkusza (wartości) i zmienić układ zakładek (wartości, formuły, kolory, listy) – bez usuwania zakładek, bez formuł
-   IMPORT…/IMAGE/HYPERLINK, czyścić wolno tylko pusty Cennik i archiwum szacunku AI. Dostęp: wyłącznie ten arkusz. Wyciek adresu i sekretu → nowy
-   sekret (krok 4 i 6).
-6. **Sekrety na Macu.** Dopisz dwie linie do `~/Documents/Dom/.dom/sekrety.env`:
-   ```
-   ARKUSZ_URL=<URL z kroku 5>
-   ARKUSZ_SEKRET=<ten sam ciąg co w kroku 4>
-   ```
-7. **Sprawdzenie** (Terminal, w katalogu repo harnessu):
-   ```
-   python3 tools/wydatki.py sprawdz
-   python3 tools/wydatki.py pozycje
-   ```
-   Pierwsze ma pokazać „arkusz: OK”, drugie – liczbę pozycji wgranych do listy Pozycja w Notion. Potem
-   `python3 tools/wydatki.py pobierz` – ma zapisać `Koszty/Kosztorys_google.json`.
-8. **Próba.** W Notion → DOM → 💸 Wydatki → arkusz dodaj wiersz testowy (kwota 1 zł, pozycja dowolna, Arkusz
-   „Do arkusza”), uruchom `python3 tools/wydatki.py sync` i sprawdź wiersz w arkuszu – zwłaszcza datę (ten sam dzień co
-   w Notion) i kwotę. Potem usuń go w obu miejscach.
+Pola obowiązkowe wydatku: Data, Kwota (to, co zapłacono – zwykle brutto), Pozycja z listy (= pozycja Kosztorysu, z niej
+arkusz bierze etap), Typ (Materiał / Robocizna / Sprzęt / Usługa / Formalności – zawsze). Materiał w etapach 02–08 – także
+Ilość i Jedn. Brak daty → dzień wpisu albo wiadomości i w Notatkach „data = dzień zgłoszenia”. Niepewny opis lub typ nie
+blokuje – zapisz z „do potwierdzenia: …” w Notatkach. Pytaj (❓ pod wpisem albo w rozmowie) tylko o brakującą kwotę albo
+niepewną pozycję. Nie zgaduj netto/brutto ani stawki VAT (zasada 7 `budowa`): VAT 8% usługa z materiałem, 23% sam materiał.
 
-Od tej chwili nic nie robisz ręcznie – przebiegi na Macu wołają skrypt same.
+Duplikaty: przed zapisem szukaj w bazie strony z tą samą datą i kwotą; w Claude Code sprawdź też kopię arkusza
+(`Koszty/Kosztorys_google.json`, zakładka Wydatki) – starsze wydatki są tylko tam. Ta sama strona wysłana dwa razy nie
+zdubluje wiersza: arkusz rozpoznaje ją po kolumnie Źródło `notion:<id strony>`.
 
-## 4. Na co dzień
+## 3. Co liczy arkusz sam (powiązania formuł)
 
-- **W Dzienniku** pisz jak zwykle: kwota, na co, ile (przy materiale), jak zapłacone. Przebieg zrobi z tego wiersz
-  w 💸 Wydatki. Niejasne (nie wiadomo, która pozycja) → pytanie ❓ pod wpisem, jak przy innych wpisach.
-- **Ręcznie z telefonu:** nowy wiersz w 💸 Wydatki: Wydatek, Data, Kwota, Pozycja (z listy), Typ, Ilość + Jedn.
-  (materiał), Płatność, Sposób. Pole Arkusz możesz zostawić puste – pusty i „Do arkusza” idą tak samo; „Nie wysyłać”
-  wstrzymuje wiersz.
-- **Wyceny we wpisach:** „X ma beton C25/30 W8 po 420 zł brutto”, „biorę stal z Y” – asystent założy albo zaktualizuje
-  wycenę. Ręcznie: wiersz w arkuszu Cennik (status z listy).
-- **Jedna droga na wydatek:** albo Dziennik / 💸 Wydatki, albo ręcznie w arkuszu – nie oba, bo wyjdzie podwójnie.
-- **Błąd** (pole Błąd mówi co): popraw pole, ustaw Arkusz = „Do arkusza” – pójdzie przy następnym przebiegu.
-- **Korekta po wysłaniu:** popraw wiersz bezpośrednio w arkuszu. Notion jest tylko kolejką; źródłem prawdy dla liczb
-  jest arkusz.
-- **Pomyłka (wydatek nie powinien był pójść):** `python3 tools/wydatki.py wycofaj <id strony>` – czyści wiersz w Wydatkach
-  albo wycenę w Cenniku, w Notion ustawia „Nie wysyłać”. Id strony to końcówka jej adresu w Notion.
-- **Nowa pozycja kosztorysu:** dodaj ją w arkuszu Kosztorys (instrukcja w arkuszu), lista w Notion odświeży się wieczorem
-  (albo od razu: `python3 tools/wydatki.py pozycje`).
+Agent nie przelicza ręcznie niczego, co liczy arkusz – zmienia dane wejściowe, a formuły robią resztę.
 
-## 5. Polecenia
+- **Etap pozycji:** Kosztorys kol. A to formuła z zakładki Etapy (wiersz etapu `=Etapy!A<n>`, pozycje `=$A$<wiersz etapu>`);
+  stan budowy (Stan zero, SSO…) też pochodzi z Etapów. Wydatek dostaje etap z pozycji (akcja `pozycje`).
+- **PLAN pozycji (Kosztorys G):** wybrana oferta z Cennika × Ilość plan (kol. P); bez wybranej oferty – Plan ręczny (kol. U,
+  wpisuje inwestor). Zmiana ilości, ceny albo wyboru oferty przelicza PLAN, sumy etapów i Podsumowanie.
+- **Grupy materiałów (Kosztorys V, Cennik P):** jedna oferta (np. stal) zasila kilka pozycji tej samej grupy.
+- **Jednostki:** Cennik Q przelicza cenę na jednostkę bazową (t → kg), żeby oferta za tonę pasowała do pozycji w kg.
+- **VAT w Cenniku:** G = cena brutto, O = cena netto; VAT % wpisany jako 8 albo 0,08 działa tak samo.
+- **WYDANE:** sumy Wydatków „Zrealizowane” po pozycji i typie → Kosztorys I, Etapy H–L, Podsumowanie.
+- **Szacunek AI:** zakładka „Szacunek AI 10.2026” (pełna wycena AI, wartości); kol. J–K przypisują wiersz do etapu i pozycji
+  Kosztorysu, stąd Kosztorys Q–S, Etapy P–R i tabela „wg stanów” w Podsumowaniu (materiał / robocizna / razem).
+- **Kontrole:** Kosztorys T (⚠ etap spoza Etapów, brak typu), Wydatki N (⚠ przy wierszu), Podsumowanie „Kontrola
+  powiązań” (PLAN i WYDANE: Kosztorys − Etapy, Wydatki − Etapy; liczba ⚠) – wszystko ma dawać 0 / ✓.
+
+## 4. Dostęp i bezpieczeństwo
+
+| Kto | Jak sięga do danych | Co może |
+|---|---|---|
+| Claude Code na Macu (rozmowa i `claude -p`) | MCP Notion | czyta i zapisuje kolejkę 💸 Wydatki |
+| `tools/wydatki.py` | `NOTION_TOKEN` + `ARKUSZ_URL` i `ARKUSZ_SEKRET` z `.dom/sekrety.env` | kolejka → arkusz, pola Arkusz/Błąd/Wiersz, lista Pozycja |
+| Apps Script | przypięty do jednego arkusza (`@OnlyCurrentDoc`) | dopisz / usuń / zmień układ – bez Dysku i innych plików |
+| Konektor Google Drive / Sheets (gdy włączony w sesji Claude) | konto Google inwestora | odczyt arkusza z formułami do analiz i przed zmianą układu; zapis tylko na wyraźne polecenie inwestora, nigdy dla wydatków (omija kolejkę i deduplikację); nie zakładaj, że działa w `claude -p` |
+| GitHub Actions | brak dostępu do Notion i arkusza | – |
+
+Sekretów (adres `/exec`, sekret, tokeny) nigdy nie wypisuj ani nie wklejaj poza `sekrety.env`. Wyciek → nowy sekret
+(sekcja 7, kroki 3 i 5). Komunikaty `wydatki.py` niosą tylko liczby, numery pozycji i statusy – bez kwot i opisów.
+Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
+
+## 5. Polecenia (`python3 tools/wydatki.py …`, katalog repo)
 
 | Polecenie | Co robi | Kto woła |
 |---|---|---|
-| `wydatki.py sync` | kolejka „Do arkusza” → arkusz, wynik do Notion | `automaty/przeglad.py` po każdym przebiegu |
-| `wydatki.py sync --proba` | pokazuje, co poszłoby do arkusza; nic nie zapisuje | ręcznie |
-| `wydatki.py pozycje` | pozycje z arkusza → lista Pozycja w Notion | przebieg wieczorny |
-| `wydatki.py pobierz` | wartości arkusza → `Koszty/Kosztorys_google.json` | przebieg wieczorny, ręcznie przed analizą |
-| `wydatki.py wycofaj <id>…` | czyści wydatek (Wydatki) albo wycenę (Cennik), w Notion „Nie wysyłać” | ręcznie, asystent na prośbę |
-| `wydatki.py sprawdz` | sekrety, dostęp do bazy i arkusza | ręcznie |
-| `wydatki.py kod` | wypisuje kod Apps Script (z `| pbcopy` – do schowka) | ręcznie przy aktualizacji kodu |
-| `wydatki.py migruj <zmiany.json>` | zmiana układu na arkuszu (cofanie: Plik → Historia wersji) | asystent w Claude Code |
+| `sync` | kolejka „Do arkusza” (i puste Arkusz) → arkusz; strona już w arkuszu = korekta jej wiersza | automat po przebiegu; agent w Claude Code po zapisie |
+| `sync --proba` | pokazuje, co by poszło; nic nie zapisuje | ręcznie |
+| `pozycje` | pozycje Kosztorysu → opcje pola Pozycja w Notion | przebieg wieczorny; po dodaniu pozycji w arkuszu |
+| `pobierz` | wartości wszystkich zakładek → `<hub>/Koszty/Kosztorys_google.json` | przebieg wieczorny; przed analizą liczb |
+| `wycofaj <id>…` | czyści wiersz w Wydatkach / Cenniku, w Notion „Nie wysyłać” | agent na prośbę |
+| `sprawdz` | sekrety, dostęp do bazy i arkusza, wersja kodu | ręcznie, przy problemach |
+| `kod` | kod Apps Script z sekcji 9 (z `\| pbcopy` – do schowka) | przy aktualizacji kodu |
+| `migruj <zmiany.json>` | zmiana układu na żywym arkuszu (sekcja 8) | agent w Claude Code |
 
-Kody wyjścia: 0 OK, 1 błąd (linie `✗`), 2 brak konfiguracji (ARKUSZ_URL / ARKUSZ_SEKRET). Wynik każdego uruchomienia
-z automatu jest w logu przebiegu (`~/Documents/Dom/.dom/automaty/<tryb>-RRRR-MM-DD.log`, linia „po przebiegu wydatki.py …”).
+Kody wyjścia: 0 OK, 1 błąd (linie `✗`), 2 brak konfiguracji. Wynik z automatu: log przebiegu
+`<hub>/.dom/automaty/<tryb>-RRRR-MM-DD.log`, linia „po przebiegu wydatki.py …”.
+
+Zabezpieczenia w `sync`: walidacja przed wysyłką (data, kwota, pozycja, ilość materiału 02–08; wycena – jednostka, nazwa,
+VAT przy netto) → strona dostaje „Błąd” z powodem; wyceny czekają, gdy kod Apps Script < 2 albo Cennik w starym układzie
+(`cennik_ok`); kolumny z formułami (Wydatki I i N, Cennik G i K, Kosztorys N–P) nigdy nie są nadpisywane; zapis pod
+blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 
 ## 6. Problemy
 
 | Objaw | Przyczyna i naprawa |
 |---|---|
-| „odpowiedź nie jest JSON” | wdrożenie nie ma dostępu „Każdy” albo adres jest od edytora (`/dev`) – krok 5, adres `/exec` |
-| „Cannot read properties of null (reading 'getRange')” albo inna liczba pozycji niż w pliku | zaimportowano inny plik niż `Kosztorys_stan_zero_2026-11-07.xlsx` (brak zakładki Wydatki) – w tym samym arkuszu Google: Plik → Importuj → Prześlij → właściwy plik → „Zastąp arkusz kalkulacyjny”; kod Apps Script, sekret i adres zostają |
-| „zły sekret” | `ARKUSZ_SEKRET` ≠ właściwość `SEKRET` – krok 4 i 6 |
-| „pozycja … nie istnieje w Kosztorysie” | pozycję usunięto albo przenumerowano w arkuszu – wybierz inną, `pozycje` odświeży listę |
-| HTTP 404 z Notion | baza 💸 Wydatki niedostępna dla integracji – Notion → baza → ⋯ → Połączenia → dodaj integrację |
-| HTTP 403 z Notion przy zmianie pola | integracja bez prawa „Update content” – notion.so/my-integrations → Capabilities |
-| data w arkuszu o dzień przesunięta | arkusz ma inną strefę niż Polska – Plik → Ustawienia → Strefa czasowa (GMT+01:00) Warsaw |
-| „nieznana akcja” przy `wycofaj` albo „arkusz ma kod w wersji 1 – wyceny czekają” | w Apps Script jest starszy kod – sekcja 7 |
-| „Cennik w starym układzie – najpierw zmiana układu” | kod v2 jest, ale zmiana układu jeszcze nie przeszła – sekcja 8 |
-| zmieniłeś kod w Apps Script | Wdróż → Zarządzaj wdrożeniami → ołówek → Wersja: Nowa → Wdróż (adres zostaje ten sam) |
+| `arkusz: timeout` | Google bywa chwilowo wolny (zdarzało się, że przez kilka godzin także ping) – strony zostają „Do arkusza” i pójdą przy następnym przebiegu; ponów później `sprawdz`. Nie wysyłaj ich drugą drogą |
+| „odpowiedź nie jest JSON” | wdrożenie bez dostępu „Każdy” albo adres `/dev` zamiast `/exec` – sekcja 7, krok 4 |
+| „zły sekret” | `ARKUSZ_SEKRET` ≠ właściwość `SEKRET` – sekcja 7, kroki 3 i 5 |
+| „pozycja … nie istnieje w Kosztorysie” | pozycję usunięto lub przenumerowano – wybierz inną; `pozycje` odświeży listę |
+| „materiał stanu zero bez ilości” | dopisz Ilość i Jedn., ustaw „Do arkusza” |
+| „cena netto bez stawki” | wpisz VAT % (nie zgaduj – zapytaj inwestora) |
+| HTTP 404 / 403 z Notion | integracja bez dostępu do bazy (⋯ → Połączenia) albo bez prawa „Update content” |
+| data przesunięta o dzień | strefa arkusza ≠ Warsaw – Plik → Ustawienia |
+| „wyceny czekają: kod w wersji …” / „Cennik w starym układzie” | starszy kod (sekcja 7) albo brak zmiany układu (sekcja 8) |
+| #ERROR! / dziwne liczby po zmianie układu | formuła z „,” zamiast „;” (arkusz ma polskie ustawienia) – sekcja 8, pułapki |
 
-## 7. Aktualizacja kodu Apps Script (rzadko – gdy asystent poprosi)
+## 7. Konfiguracja od zera (już zrobiona – tylko przy odtwarzaniu)
 
-1. Terminal, katalog repo harnessu: `python3 tools/wydatki.py kod | pbcopy` – cały kod trafia do schowka.
-2. W arkuszu: Rozszerzenia → Apps Script → plik `Kod.gs` → Cmd+A (zaznacz wszystko) → Cmd+V (wklej, zastępuje stary kod)
-   → zapisz.
-3. Wdróż → Zarządzaj wdrożeniami → ołówek przy wdrożeniu → Wersja: **Nowa wersja** → Wdróż. Adres `/exec` zostaje ten sam,
-   `sekrety.env` się nie zmienia. Gdy kod potrzebuje innych uprawnień, w edytorze wybierz funkcję `doGet` → Uruchom →
-   zezwól (dostęp tylko do tego arkusza).
-4. `python3 tools/wydatki.py sprawdz` pokazuje wersję kodu.
+1. Arkusz Google na **prywatnym** koncie; Plik → Ustawienia: Polska, strefa (GMT+01:00) Warsaw. Arkusza nie importuje się
+   ponownie – zastąpienie pliku kasuje wydatki dopisane od tamtej pory.
+2. Rozszerzenia → Apps Script → `Kod.gs` = kod z sekcji 9 (`python3 tools/wydatki.py kod | pbcopy`), zapisz.
+3. Ustawienia projektu → Właściwości skryptu → `SEKRET` = `python3 -c "import secrets; print(secrets.token_urlsafe(32))"`.
+4. Wdróż → Nowe wdrożenie → Aplikacja internetowa, Wykonaj jako **Ja**, dostęp **Każdy** (bez sekretu odpowiedź „zły
+   sekret”). Autoryzuj (skrypt prosi tylko o ten arkusz). Skopiuj adres `/exec`.
+5. `<hub>/.dom/sekrety.env`: `ARKUSZ_URL=<adres>`, `ARKUSZ_SEKRET=<sekret>`.
+6. `wydatki.py sprawdz`, `pozycje`, `pobierz`; próba: strona testowa 1 zł → `sync` → sprawdź datę i kwotę w arkuszu →
+   `wycofaj <id>` i strona do kosza.
 
-## 8. Zmiany układu arkusza bez ponownego importu (asystent w Claude Code)
+Aktualizacja kodu: wklej nowy kod jak w kroku 2, potem Wdróż → Zarządzaj wdrożeniami → ołówek → Wersja: **Nowa** → Wdróż
+(adres i sekret bez zmian). `sprawdz` pokaże wersję. Kod zmieniasz tylko w tym pliku (sekcja 9) – `kod` czyta go stąd.
 
-1. Docelowy układ zbuduj lokalnie jako `.xlsx` (openpyxl) i porównaj z kopią żywego arkusza (`wydatki.py pobierz`, JSON):
-   te same wiersze danych, kolumny z danymi inwestora poza zmienianymi zakresami.
-2. Plik zmian: `python3 ~/Documents/Dom/AI/automaty/arkusz_zmiany.py --cel cel.xlsx --wyjscie zmiany.json --zakres …`
-   (narzędzie lokalne poza repo – wymaga openpyxl; opis opcji: `--help`). Zapisz go w `.dom/wydatki/` z datą.
-3. Przetestuj docelowy `.xlsx` lokalnie (LibreOffice: zero #NAME?/#REF!, sumy jak przed zmianą, podgląd zakładek) i plik
-   zmian na makiecie, jeśli zmienia kod albo nowe rodzaje operacji.
-4. `python3 tools/wydatki.py migruj zmiany.json`, potem `pobierz` i kontrola: zero błędów formuł w JSON, sumy Podsumowania
-   jak przed zmianą. Coś nie tak → inwestor cofa w arkuszu: Plik → Historia wersji → wersja sprzed zmiany.
+## 8. Zmiany układu na żywym arkuszu (agent w Claude Code)
+
+Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) – zawsze pracuj na aktualnym stanie.
+
+1. `wydatki.py pobierz` – aktualne wartości i nagłówki. Odwołania do innych zakładek buduj po **nagłówkach z JSON**, nie po
+   literach z `arkusze.md` (kolumny bywają przesunięte). Formuł JSON nie zawiera – gdy potrzebujesz formuł, czytaj je
+   konektorem Google Sheets, jeśli jest włączony.
+2. Plik zmian JSON (lista operacji akcji `zmien`: `zakres`, `wyczysc`, `walidacja`, `warunkowe`, `szerokosci`, `wysokosci`,
+   `zamroz`, `siatka`, `ramka`) – ręcznie albo narzędziem `python3 ~/Documents/Dom/AI/automaty/arkusz_zmiany.py` (poza
+   repo, openpyxl; z docelowego `.xlsx`). Zapisz go w `<hub>/.dom/wydatki/` z datą, obok migawkę „przed”.
+3. **Pułapki polskich ustawień:** formuły w operacji `zakres` muszą mieć „;” jako separator i przecinek dziesiętny
+   (`arkusz_zmiany.py` robi to funkcją `pl()`); reguły formatowania warunkowego pisz bez przecinków i ułamków – iloczyn
+   zamiast AND, suma zamiast OR, porównania `>=`/`<` zamiast LEFT (`cf_bez_przecinkow()`). VAT czytaj jako
+   `IF(F>1;F/100;F)`.
+4. Sprawdź lokalnie (LibreOffice: zero #NAME?/#REF!, sumy jak przed), przy nowym rodzaju operacji – na makiecie Node.
+5. `wydatki.py migruj zmiany.json`, potem `pobierz` i kontrola: zero błędów formuł, sumy Podsumowania jak przed (różnica
+   = ręczna zmiana inwestora, nie Twoja – sprawdź, zanim „naprawisz”), „Kontrola powiązań” = 0. Coś nie tak → inwestor
+   cofa: Plik → Historia wersji.
+6. Zmieniony układ opisz w `koszty/references/arkusze.md`; zmiana kolumn czytanych przez skrypt (⚙) wymaga też zmiany
+   kodu (sekcja 9) i `tools/wydatki.py`.
 
 ## 9. Kod Apps Script (`Kod.gs`)
 
