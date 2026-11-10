@@ -116,7 +116,9 @@ Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
 | `kod` | kod Apps Script z sekcji 9 (z `\| pbcopy` – do schowka) | przy aktualizacji kodu |
 | `migruj <zmiany.json>` | zmiana układu na żywym arkuszu (sekcja 8) | agent w Claude Code |
 
-Kody wyjścia: 0 OK, 1 błąd (linie `✗`), 2 brak konfiguracji. Wynik z automatu: log przebiegu
+Kody wyjścia: 0 OK, 1 błąd polecenia (linie `✗` pod podsumowaniem, np. timeout arkusza, Notion), 2 brak konfiguracji.
+Błąd pojedynczej strony nie zmienia kodu: `sync` zapisuje go w Notion (Arkusz = „Błąd”), a `sync --proba` tylko go wypisuje
+(linia `✗` nad podsumowaniem, licznik `bledy`). Wynik z automatu: log przebiegu
 `<hub>/.dom/automaty/<tryb>-RRRR-MM-DD.log`, linia „po przebiegu wydatki.py …”.
 
 Zabezpieczenia w `sync`: walidacja przed wysyłką (data, kwota, pozycja, ilość materiału 02–08; wycena – jednostka, nazwa,

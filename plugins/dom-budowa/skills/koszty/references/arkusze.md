@@ -27,11 +27,11 @@ Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje s
   (razem także ze sprzętem i usługami) · T Kontrola (⚠ etap spoza Etapów, ⚠ brak typu) · U Plan ręczny (kwota PLAN, gdy brak wybranej oferty – wpisuje
   inwestor albo `sync` z kolejki, Rodzaj Plan) · V Materiał (grupa – wspólna oferta z Cennika dla kilku pozycji, np. stal płyty, ścian i stropu). Ceny N–O
   są w jednostce pozycji (oferta za tonę → zł/kg przy pozycji w kg).
-- **Etapy!A:P** – A Etap · B Stan · C Umowa z ekipą (transza) · D–G PLAN: Materiał / Ekipa / Inne / razem · H–L WYDANE:
+- **Etapy!A:R** – A Etap · B Stan · C Umowa z ekipą (transza) · D–G PLAN: Materiał / Ekipa / Inne / razem · H–L WYDANE:
   Materiał / Ekipa / Inne / Bez typu / razem · M Pozostało · N Do zapłaty ekipie · O Uwagi / terminy · P–R Szacunek AI:
   materiał / robocizna / razem (wiersze szacunku przypisane do etapu). Kolumnę Wykonawca inwestor usunął, a Uwagi przeniósł na koniec (7.11.2026) – nowe formuły
   odwołujące się do Etapów buduj po nagłówkach żywego arkusza (`wydatki.py pobierz`), nie po literach z tego opisu.
-- **Cennik!A:O** ⚙ – wyceny dostawców (jeden wiersz = jedna oferta): A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty)
+- **Cennik!A:Q** ⚙ – wyceny dostawców (jeden wiersz = jedna oferta): A Data · B Materiał / usługa · C Jedn. · D Cena (z oferty)
   · E Netto / Brutto · F VAT % (wpis 8 albo 23 = procent; przy netto obowiązkowy, bez niego G = „⚠ VAT?”) · G Cena brutto
   (formuła) · O Cena netto (formuła, na końcu, żeby nie przesuwać kolumn czytanych przez skrypt) · P Materiał (grupa – formuła z pozycji) ·
   Q Cena brutto za jednostkę bazową (t → kg) · H Dostawca ·
