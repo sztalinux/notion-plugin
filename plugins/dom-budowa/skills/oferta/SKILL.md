@@ -57,7 +57,7 @@ Wartość własnego czasu w zł podaj tylko, jeśli inwestor ją podał.
 
 ## Po wyborze – zakres do umowy
 
-Status „Wybrana” (decyzja inwestora) → przygotuj zakres do umowy wg `references/umowa.md`, sekcja „Zakres do umowy”:
+Status „Wybrany” na karcie wykonawcy (decyzja inwestora) → przygotuj zakres do umowy wg `references/umowa.md`, sekcja „Zakres do umowy”:
 pozycje w cenie, „nie w cenie”, pytania na piśmie, transze powiązane z odbiorami (`etap`). Projekt umowy od wykonawcy
 sprawdza `analiza-techniczna`, sekcja „Umowy”.
 Po podpisaniu → wiersz w Notion **Umowy i gwarancje** (`collection://60c06f30-7867-435d-8f2e-1e025a3daa5c`): Rodzaj, Strona, Zakres,
@@ -81,4 +81,4 @@ robocizna netto, materiał netto, braki doliczone z planu, razem porównywalne, 
 
 - Nie wybieraj wykonawcy za użytkownika – rekomenduj z uzasadnieniem wg kryteriów z wagami (Notion, sekcja „Kryteria i wagi oceny”).
 - Telefony i e-maile tylko w „📇 Kontakty” na DOM (`budowa`, zasada 8), nigdzie indziej.
-- Nie zmieniaj statusu oferty na „Wybrana” bez wyraźnej decyzji użytkownika.
+- Nie zmieniaj statusu karty wykonawcy na „Wybrany” bez wyraźnej decyzji użytkownika.
