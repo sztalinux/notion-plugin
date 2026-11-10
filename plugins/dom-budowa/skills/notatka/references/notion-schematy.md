@@ -56,7 +56,7 @@ puste Obszar = stare wiersze budowy. Widoki budowy filtrują „Dom albo puste�
 
 ## 💸 Wydatki → arkusz – `collection://72cff09c-609b-405d-a32c-263271b3b59c`
 
-Kolejka wydatków i wycen do arkusza Google (procedura `koszty`, sekcje B i B2; mechanizm: `docs/wydatki-arkusz.md`). Wiersz dodaje
+Kolejka wydatków, wycen i planów pozycji do arkusza Google (procedura `koszty`, sekcje B, B2 i B3; mechanizm: `docs/wydatki-arkusz.md`). Wiersz dodaje
 asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `tools/wydatki.py`.
 
 | Pole | Typ | Wartości |

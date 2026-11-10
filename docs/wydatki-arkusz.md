@@ -17,7 +17,7 @@ Gdzie co jest opisane:
 
 ```
 wpis w 📓 Dzienniku  ·  wiadomość do asystenta  ·  zdjęcie faktury  ·  wiersz dodany ręcznie w Notion
-   │  agent wg koszty B/B2 zapisuje stronę z Arkusz = „Do arkusza”
+   │  agent wg koszty B/B2/B3 zapisuje stronę z Arkusz = „Do arkusza”
    ▼
 💸 Wydatki → arkusz   (baza Notion na DOM, collection://72cff09c-609b-405d-a32c-263271b3b59c)
    │  tools/wydatki.py sync  – NOTION_TOKEN, bez AI
@@ -45,7 +45,7 @@ Harmonogram automatu: przebieg szybki → `sync` i `pobierz --gdy-starsza 12` (p
 udała); wieczorny → `sync`, `pozycje`, `pobierz`; tygodniowy → `sync`. Mac
 wyłączony → strony czekają w Notion, nic nie ginie. GitHub Actions nie mają dostępu do Notion – całość działa na Macu.
 
-## 2. Obsługa płatności przez agenta (skrót – pełne reguły w `koszty` B/B2/D)
+## 2. Obsługa płatności przez agenta (skrót – pełne reguły w `koszty` B/B2/B3/D)
 
 | Sytuacja | Co zapisać w 💸 Wydatki | Uwagi |
 |---|---|---|
