@@ -80,5 +80,5 @@ robocizna netto, materiał netto, braki doliczone z planu, razem porównywalne, 
 ## Czego nie robić
 
 - Nie wybieraj wykonawcy za użytkownika – rekomenduj z uzasadnieniem wg kryteriów z wagami (Notion, sekcja „Kryteria i wagi oceny”).
-- Nie zapisuj telefonów i e-maili nigdzie poza arkuszem Wykonawcy w Excelu.
+- Telefony i e-maile tylko w „📇 Kontakty” na DOM (`budowa`, zasada 8), nigdzie indziej.
 - Nie zmieniaj statusu oferty na „Wybrana” bez wyraźnej decyzji użytkownika.

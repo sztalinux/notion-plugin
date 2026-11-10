@@ -40,7 +40,7 @@ puste Obszar = stare wiersze budowy. Widoki budowy filtrują „Dom albo puste�
 
 | Pole | Typ | Wartości |
 |---|---|---|
-| Wykonawca | tytuł | nazwa jak w Excelu (arkusz Wykonawcy) |
+| Wykonawca | tytuł | nazwa jak w „📇 Kontakty” (DOM → 👷 Wykonawcy) |
 | Status | select | Czekam na wycenę, Wycena ustna, Oferta pisemna, Finał – spotkanie, Wybrany, Odpada |
 | Zakres | select | Pełny 01–13, Częściowy, Tylko część robocizny, ? |
 | Zgodny z projektem | select | Tak, Nie, Do sprawdzenia |

@@ -4,6 +4,12 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.10.3] – 2026-11-10
+
+- Kontakty budowy: jedyne miejsce to Notion, DOM → 👷 Wykonawcy → „📇 Kontakty – kluczowe role” (przeniesione z zakładki
+  Więcej); `budowa` zasada 8, `oferta`, `zakupy`, schemat Notatnika i mapa Notion odsyłają tam zamiast do nieistniejącego
+  arkusza Wykonawcy w Excelu.
+
 ## dom-budowa [3.10.2] – 2026-11-10
 
 - `harmonogram` C.4 i `dziennik`: wpis z budowy o tempie prac („nie skończyliśmy, jutro kontynuujemy”) przesuwa termin kroku

@@ -26,8 +26,8 @@ DOM
 │  ├─ 📒 Notatnik → Notatnik budowy (baza): pytania, decyzje, ryzyka, „pamiętać” – bez daty zdarzenia
 │  ├─ 📓 Dziennik → Dziennik budowy (baza): co się działo na budowie danego dnia
 │  ├─ 📚 Wiedza → strona Baza wiedzy (Tematy, Informacje, Rozmowy i źródła, Rejestr sprzeczności)
-│  ├─ 👷 Wykonawcy → „Wybór wykonawcy – stan zero” (rundy, zakres, wagi) + baza Porównanie wykonawców; baza Umowy i gwarancje
-│  └─ 🗂 Więcej → Przeglądy dzienne – budowa (wzmianka; strona na dole DOM), Przeglądy tygodniowe, Kontakty – kluczowe role (pełna lista w Excelu), zdjęcia i linki, Archiwum – stare notatki
+│  ├─ 👷 Wykonawcy → „Wybór wykonawcy – stan zero” (rundy, zakres, wagi) + baza Porównanie wykonawców; baza Umowy i gwarancje; 📇 Kontakty – kluczowe role (jedyne miejsce telefonów i e-maili)
+│  └─ 🗂 Więcej → Przeglądy dzienne – budowa (wzmianka; strona na dole DOM), Przeglądy tygodniowe, odnośnik do kontaktów, zdjęcia i linki, Archiwum – stare notatki
 └─ 🤖 Dla asystenta (toggle) → 📑 Przewodnik po dokumentach i Notion, odnośnik do 🤖 Asystent AI, nagłówek
       „📐 Dane projektu (ściąga)” – JEDYNE źródło ściągi
 Poza DOM (najwyższy poziom Private, plugin `ja`): 🤖 Asystent AI – wersja pluginów, skrzynka Zmiany do harnessu,

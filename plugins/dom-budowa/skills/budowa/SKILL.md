@@ -132,8 +132,8 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    albo wpisz `?` i wymień to w podsumowaniu. Brakuje treści dokumentu (projekt, opinia, oferta, umowa, Excel) →
    poproś jawnie o konkretny plik z przewodnika po dokumentach (nazwa, ścieżka, strona/arkusz, po co) – procedura
    `dokumenty`, „Prośba o dokument”. W Claude Code przeczytaj go z folderu budowy.
-8. **Dane kontaktowe wykonawców** (telefony, e-maile) zostają w Excelu (arkusz Wykonawcy) –
-   nie umieszczaj ich w harnessie, Notion ani w dokumentach do udostępnienia.
+8. **Dane kontaktowe** (telefony, e-maile) – tylko w Notion: DOM → 👷 Wykonawcy → „📇 Kontakty – kluczowe role”
+   (nowe dopisuj tam); nigdy w harnessie, na innych stronach Notion ani w dokumentach do udostępnienia.
 9. **Harness jest publiczny.** Do repozytorium (procedury, przykłady, changelog) nie trafiają żadne dane osobowe
    ani dane projektu: imiona i nazwiska, nazwy firm i wykonawców, adres, miejscowość, numery działek, PESEL,
    numery kont, telefony, e-maile, kwoty ofert i wydatków, treść notatek. Te są w Notion, arkuszu kosztorysu, ściądze projektu

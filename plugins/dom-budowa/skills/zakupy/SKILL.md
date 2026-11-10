@@ -81,4 +81,4 @@ Aktualizuj wiersz w Zakupach budowy: Status (Zamówione → Potwierdzone → Dos
 - Ilości i ceny mają źródło (kosztorys, rysunek, oferta z datą). Ceny rynkowe tylko z widełkami i datą (`koszty`, Zasady).
 - Zamawiaj materiał na konkretny krok, nie „na całą budowę” – chyba że cena lub dostępność tego wymaga (wtedy napisz dlaczego).
 - Nie zmieniaj materiałów przewidzianych w projekcie bez projektanta.
-- Dane dostawców (telefony, e-maile) tylko w Excelu, arkusz Wykonawcy (`budowa`, zasada 8).
+- Dane dostawców (telefony, e-maile) tylko w „📇 Kontakty” na DOM (`budowa`, zasada 8).
