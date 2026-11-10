@@ -36,7 +36,8 @@ Bez tej kontroli takie wpisy lądowały w TASKS zamiast na listach i stronach os
    | Kategoria | Zakup (tylko zadanie dołożone do pozycji Zakupów, sekcja niżej) / Zdrowie / Nauka / Inne |
    | Kto | Ja; ktoś inny ma coś zrobić → jego rola opisowo w Desc, Kto = Inny, Status WAITING |
    | Desc | jedno zdanie (skąd, po co); linki, listy, szczegóły – w treści strony |
-3. Termin względny bez daty wpisu (np. „w piątek” w wpisie bez @today) → pytanie, nie zgaduj.
+3. Termin względny bez daty wpisu (np. „w piątek” w wpisie bez @today) → licz od daty przetwarzania, bez pytania
+   (`wpisy`, krok 3 – „Data zdarzenia”, z wyjątkiem pierwszego przebiegu dnia).
 
 ## Zakupy (baza 🛒 Zakupy)
 

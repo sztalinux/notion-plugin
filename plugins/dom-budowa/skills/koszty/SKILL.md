@@ -53,7 +53,7 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
    - dopłata poza umową → „Roboty dodatkowe – poza umową” w etapie, którego dotyczy (osobny wiersz, nigdy w transzy);
    - materiał → pozycja materiału w etapie, na który poszedł (beton na chudziak → chudziak, stal na ściany → stal ścian);
    - jedna faktura na kilka pozycji → kilka wierszy (podziel kwotę wg faktury; bez rozbicia → zapytaj);
-   - brak pasującej pozycji albo niepewność → nie zgaduj: pytanie z propozycją (we wpisie Dziennika „❓” wg `wpisy`,
+   - brak pasującej pozycji albo niepewność → nie zgaduj: pytanie z propozycją (okienko ❓ pod wpisem we „📝 Wpisach” – `wpisy/references/pytania.md`, A;
      w rozmowie – wprost); nowa pozycja to zmiana arkusza (sekcja C).
 3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą → zaktualizuj go zamiast dodawać drugi; w Claude Code sprawdź też
    kopię arkusza (`Kosztorys_google.json`, zakładka Wydatki) – starsze wydatki są tylko tam.
@@ -112,8 +112,8 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 ## C. Zmiana w arkuszu (pozycja, kolumna, formuła)
 
 1. Opisz zmianę i jej wpływ (które arkusze i formuły) – przy większych poczekaj na „ok”.
-2. Nigdy nie proś o ponowny import pliku – arkusz żyje w Google. Prosta zmiana danych (nowa pozycja, kwota PLAN) →
-   instrukcja krok po kroku dla inwestora; nowa pozycja trafi na listę w Notion przy wieczornym `wydatki.py pozycje`.
+2. Nigdy nie proś o ponowny import pliku – arkusz żyje w Google. Prosta zmiana danych (nowa pozycja) →
+   instrukcja krok po kroku dla inwestora (kwota planu – kolejka, sekcja B3); nowa pozycja trafi na listę w Notion przy wieczornym `wydatki.py pozycje`.
 3. Zmiana układu lub wyglądu (kolumny, formuły, kolory, listy) – w Claude Code, na żywym arkuszu, według
    `docs/wydatki-arkusz.md`, sekcja 8:
    - **konektor Google Sheets** (szybciej): migawka zakresu przed zmianą (z formułami), zapis, odczyt kontrolny; formuły ze
@@ -153,7 +153,8 @@ Arkusz = Błąd, puste Zgłoszono). Dla każdej strony:
 2. Odpowiedź → popraw pola strony (sekcje B, B2, B3), Arkusz = „Do arkusza”; wpis z okienkiem do „Przetworzone”
    (`~~💸 …~~ → poprawione: <wzmianka>`). Komunikat 💸 bez odpowiedzi, a strona nie jest już „Błąd” (inwestor poprawił sam)
    → zamknij je tak samo z dopiskiem „naprawione w 💸”.
-3. `sync` czyści Zgłoszono przy każdym ponownym wysłaniu – nowy błąd tej samej strony da nowe pytanie.
+3. `sync` czyści Zgłoszono przy każdym ponownym wysłaniu – nowy błąd tej samej strony aktualizuje istniejący blok 💸
+   (`wpisy/references/pytania.md`, C.2), nie dodaje drugiego.
 
 ## Zasady
 

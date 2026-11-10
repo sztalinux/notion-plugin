@@ -47,7 +47,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    jeśli pozycja jest w cenie, napisz to wprost z odwołaniem do punktu umowy.
 3. Zasada: **cena uzgodniona na piśmie przed wykonaniem** (SMS/mail wystarczy). Zaproponuj treść wiadomości
    do wykonawcy (co, cena, termin, że wchodzi do protokołu odbioru).
-4. Zapis: uzgodniona kwota → PLAN pozycji „Roboty dodatkowe – poza umową” w etapie (instrukcja – `koszty`, sekcja C),
+4. Zapis: uzgodniona kwota → plan pozycji „Roboty dodatkowe – poza umową” w etapie (kolejka, Rodzaj = Plan – `koszty`, sekcja B3),
    zapłata → wydatek na tę pozycję (`koszty`, sekcja B); wpis w dzienniku; decyzja → Notatnik (Typ „Decyzja”).
 
 ## C. Godziny własne i narzędzia
