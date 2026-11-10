@@ -1,6 +1,6 @@
 ---
 name: rozwoj-harnessu
-description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez skrzynkę „Zmiany do harnessu” w Notion oraz analiza pomysłów na rozwój setupu (baza „Pomysły na rozwój”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/Excela, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, albo pyta o przeniesienie harnessu do innego AI.
+description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez skrzynkę „Zmiany do harnessu” w Notion oraz analiza pomysłów na rozwój setupu (baza „Pomysły na rozwój”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/Excela, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, „zrób ZP-2”, „znane problemy”, albo pyta o przeniesienie harnessu do innego AI.
 ---
 
 # Rozwój harnessu
@@ -16,6 +16,7 @@ Konfiguracja projektu „Dom” na claude.ai (instrukcje, wiedza): `references/c
 | Czat, telefon, Cowork, inne AI (bez repo) | **Zgłoszenie** do skrzynki w Notion – sekcja A |
 | Claude Code w folderze repo | **Wdrożenie** skrzynki do plików + push – sekcja B (na starcie sesji tylko po zaznaczeniu „Skrzynka zmian” na liście startowej, `CLAUDE.md`) |
 | Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, Excel) | **Pomysł** do bazy „Pomysły na rozwój” → analiza → wdrożenie na polecenie – sekcja C |
+| Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Znany problem** w bazie „🧯 Znane problemy” → naprawa w Claude Code – sekcja D |
 
 Skrzynka = konkretna reguła, wchodzi od razu. Pomysł = coś do przemyślenia; nic nie wchodzi samo, decyduje inwestor.
 
@@ -123,6 +124,24 @@ i słowa inwestora. Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to
 **Wdrożenie** – tylko gdy inwestor powie w Claude Code „zrób POM-n” (albo ustawi „Do zrobienia” i poprosi o to):
 przeczytaj stronę pomysłu z analizą, potwierdź decyzje z „Do decyzji przed startem”, potem kroki B.2–B.8. Na końcu Status
 „Zrobione”, „Zrobiono w wersji”, w treści linia „Wdrożone w <wersja> (data): co weszło, co pominięto”.
+
+## D. Znane problemy
+
+Baza: Notion → 🤖 Asystent AI → „🧯 Znane problemy”, `collection://f387bb3c-796f-435a-a684-819196fd6aa4`
+(widok „🧯 Otwarte” `view://414f5982-09e7-8172-abde-000c5e85c87a`: Status inny niż Rozwiązany / Zostaje).
+Pola: Problem (tytuł), Status (Nowy / Czeka na mnie / W toku / Rozwiązany / Zostaje), Obszar, Skąd (klucz komunikatu albo
+procedura), Pierwszy raz, Ostatnio, Co zrobić (jedno zdanie: następny krok i kto), Rozwiązano w wersji, ID (ZP-n).
+Treść strony: objaśnienie, wystąpienia z datą, ustalenia z odpowiedzi inwestora.
+
+- **Kto wpisuje:** przebieg, gdy odpowiedź pod komunikatem 🔔 wymaga pracy poza przebiegiem (`wpisy/references/pytania.md`,
+  C.5); Claude Code, gdy w pracy trafi na powtarzalną usterkę spoza bieżącego zadania; inwestor ręcznie (pusty Status =
+  Nowy). Przed dodaniem szukaj tego samego problemu (Skąd, 2–3 słowa) – jest → zaktualizuj Ostatnio i treść.
+- **Problem a pomysł:** coś, co miało działać, a nie działa → tu; nowa funkcja albo zmiana sposobu pracy → sekcja C lub A.
+- **Naprawa** – w Claude Code na „zrób ZP-n” (albo po zaznaczeniu „Pomysły” na liście startowej, gdy inwestor wskaże ZP):
+  przeczytaj stronę, ustal przyczynę (log, `stan.json`, skrypt), napraw; zmiana harnessu → kroki B.2–B.8. Na końcu Status
+  „Rozwiązany”, Rozwiązano w wersji (albo „skrypt poza repo, data”), w treści linia „Naprawione (data): przyczyna, co
+  zmieniono”. Nie da się albo nie warto → Status „Czeka na mnie” z pytaniem (format B) albo „Zostaje” po decyzji inwestora.
+- Komunikat 🔔 z linią `→ ZP-n` znika z „Wpisów”, gdy wiersz jest „Rozwiązany” albo „Zostaje” (sprawdza przebieg wieczorny).
 
 ## Nowa procedura – minimum
 

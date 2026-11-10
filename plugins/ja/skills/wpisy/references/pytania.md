@@ -1,12 +1,13 @@
 # Format pytań do inwestora w Notion
 
 Inwestor odpowiada z telefonu i zagląda głównie do „📝 Wpisy”. Tabel nie używaj (na telefonie przewijanie w bok i niewygodna
-edycja komórek). Dwa formaty:
+edycja komórek). Trzy formaty:
 
 | Pytanie dotyczy | Gdzie | Format |
 |---|---|---|
 | konkretnego wpisu (Dziennik, „Wpisy”, podstrona, widget, Skrzynka) | okienko pod wpisem w „📝 Wpisy” (`wpisy`, krok 4) | A |
 | czegoś spoza wpisów: RES-n, luki w zadaniach z przeglądu dnia | Dziennik „❓ Czeka na Twoją odpowiedź”, strona RES-n („### ❓ Pytania”), strona pomysłu | B |
+| problemu, którego nie wywołał żaden wpis (automat Maca, skrypt, błąd kolejki 💸) | zwijany nagłówek „🔔 Komunikaty asystenta” w „📝 Wpisy” | C |
 
 ## A. Okienko pod wpisem („📝 Wpisy”)
 
@@ -70,3 +71,47 @@ Inwestor ma móc zaznaczyć jedno pole, zamiast pisać.
 Odczyt: zaznaczony to-do = zgoda na propozycję; tekst dopisany pod to-do = odpowiedź i **ma pierwszeństwo** przed
 zaznaczeniem; niezaznaczony i bez dopisku = brak odpowiedzi; częściowa odpowiedź – przetwórz odpowiedziane punkty (ślad
 w „Przetworzone”), reszta zostaje. Zaznaczony checkbox liczy się jako odpowiedź inwestora (`przeglad-dnia`, A.2).
+
+## C. Komunikaty asystenta (🔔 we „📝 Wpisach”)
+
+Problemy asynchroniczne – nikt o nie nie pytał we wpisie, a inwestor powinien o nich wiedzieć: przebieg na Macu się nie udał
+albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błąd, wpis kolejki 💸 nie trafił do arkusza
+(`koszty`, E). Wszystkie w jednym miejscu: zwijany nagłówek „🔔 Komunikaty asystenta” na górze treści „📝 Wpisy”
+(nad wpisami). Nagłówek zostaje także pusty – nie usuwaj go; brak → utwórz przy pierwszym komunikacie.
+
+1. **Jeden problem = jeden blok** pod nagłówkiem: akapit `🔔 <dd.mm gg:mm> · <skąd> – <co się stało, jedno zdanie>`
+   (od drugiego razu dopisek `(od <dd.mm>, n razy)`), na końcu klucz problemu w kodzie (`` `przebieg-wieczorny` ``; z listy
+   automatu – dosłownie, 💸 – wzmianka strony kolejki zamiast klucza). Pod akapitem okienko jak w A: ❓, żółte tło,
+   pogrubione „Co możesz zrobić” z propozycją (do ok. 20 słów, np. „Nic – ponowię sam; napisz »log«, a zajrzę do logu”),
+   linia `✍️`. 💸: format z `koszty`, E – tylko miejsce się zmienia.
+2. **Ten sam problem po raz kolejny** (ten sam klucz albo ta sama strona 💸) → zaktualizuj istniejący blok (data, „od”,
+   licznik), nie dodawaj drugiego.
+3. **Ustąpiło samo** (automat podał „ustąpiło”, strona 💸 nie jest już „Błąd”) → blok do „Przetworzone” jako
+   `~~🔔 <skrót>~~ → ustąpiło <dd.mm>`, bez pytania. Automat podał „bloku nie było” (problem minął, zanim dało się go
+   zgłosić – np. brak logowania MCP) → sam ślad w bloku dnia „Przetworzone” w tym formacie, bez bloku 🔔.
+4. **Odpowiedź inwestora** (odczyt jak w A) = praca dla najbliższego przebiegu (szybkiego albo wieczornego): wykonaj, co się
+   da w przebiegu, i przenieś blok do „Przetworzone” (`~~🔔 <skrót>~~ (❓ … → ✍️ …) → <co zrobiono>`).
+5. **Za duże na przebieg** (wymaga Claude Code, zmiany skryptu, decyzji technicznej) → wiersz w bazie „🧯 Znane problemy”
+   (`rozwoj-harnessu`, D; ten sam problem już jest → zaktualizuj Ostatnio i treść), w okienku zamiast `✍️` linia
+   `→ ZP-n (<status>)`. Blok zostaje, dopóki wiersz nie ma Statusu „Rozwiązany” albo „Zostaje” – wtedy do „Przetworzone”
+   (`→ ZP-n rozwiązany` / `zostaje`); statusy ZP sprawdza tylko przebieg wieczorny.
+6. **Blok bez odpowiedzi nie jest nowym wpisem** – tryb szybki go pomija (`przeglad-dnia`, A.2); zmienia go tylko nowa lista
+   od automatu, odpowiedź albo zmiana stanu (pkt 2–5).
+
+Zapis w Notion (przykład zmyślony; nagłówek to zwijany nagłówek h3, komunikat jego dzieckiem):
+
+```
+<toggle heading="h3">
+🔔 Komunikaty asystenta
+
+<p>
+🔔 10.11 21:30 · przegląd wieczorny – przerwany limitem czasu (od 09.11, 2 razy) `przebieg-wieczorny`
+
+<callout icon="❓" color="yellow_bg">
+<b>Co możesz zrobić:</b> nic – ponowię jutro (propozycja: napisz „log”, sprawdzę przyczynę)
+
+✍️
+</callout>
+</p>
+</toggle>
+```

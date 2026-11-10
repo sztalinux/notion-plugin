@@ -3,12 +3,12 @@
 Kosztorys budowy żyje w arkuszu Google „Kosztorys budowy” (prywatne konto inwestora). Arkusz jest **jedynym źródłem
 prawdy dla liczb**; Notion jest tylko kolejką, którą automat na Macu przenosi do arkusza. Wydatek, wycena albo plan kwoty
 napisane we wpisie w Dzienniku lub w wiadomości do asystenta trafiają do arkusza bez ręcznego eksportu i importu. Błąd
-wraca do inwestora jako pytanie we „📝 Wpisach”. Konektor Google Sheets przyspiesza odczyt i zmiany układu, ale nic od
+wraca do inwestora jako komunikat 🔔 we „📝 Wpisach”. Konektor Google Sheets przyspiesza odczyt i zmiany układu, ale nic od
 niego nie zależy – bez niego działa droga zapasowa (sekcje 4 i 8).
 
 Gdzie co jest opisane:
 - procedura dla agenta (co zapisać, kiedy pytać): `plugins/dom-budowa/skills/koszty/SKILL.md`, sekcje B (wydatek),
-  B2 (wycena), B3 (plan pozycji), C (zmiana układu), D (transze), E (błąd → pytanie we Wpisach);
+  B2 (wycena), B3 (plan pozycji), C (zmiana układu), D (transze), E (błąd → komunikat 🔔 we Wpisach);
 - układ zakładek i kolumn: `plugins/dom-budowa/skills/koszty/references/arkusze.md`;
 - pola bazy 💸 Wydatki → arkusz: `plugins/dom-budowa/skills/notatka/references/notion-schematy.md`;
 - narzędzie: `tools/wydatki.py` (sam Python, biblioteka standardowa); kod Apps Script: sekcja 9 tego pliku.
@@ -26,7 +26,7 @@ Apps Script przypięty do arkusza (aplikacja internetowa + sekret, @OnlyCurrentD
    │  Rodzaj Wydatek → zakładka Wydatki  ·  Wycena → Cennik  ·  Plan → Kosztorys, kolumna „Plan ręczny”
    ▼
 Notion: Arkusz = „W arkuszu” + Wiersz arkusza   albo   „Błąd” + powód w polu Błąd
-   │  przebieg szybki: widok „⚠ Błędy do zgłoszenia” → okienko ❓ we „📝 Wpisach”, Zgłoszono = dziś
+   │  przebieg szybki: widok „⚠ Błędy do zgłoszenia” → komunikat 🔔 z okienkiem ❓ we „📝 Wpisach”, Zgłoszono = dziś
    ▼
 odpowiedź inwestora → agent poprawia pola, „Do arkusza” → następny `sync`
 ```

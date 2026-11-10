@@ -27,7 +27,7 @@ Statusem „Do wdrożenia” **albo pustym** – inwestor dodaje je też ręczni
 - **Gdziekolwiek indziej:** traktuj je jako obowiązujące zasady, nadrzędne wobec procedur. Statusu nie zmieniaj.
 - Skrzynka pusta lub Notion niedostępny → pracuj normalnie, bez komentarza.
 - **Pomysły na rozwój** (`collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3`) nie są zasadami. W Claude Code dopisz jedną linię
-  „Pomysły: n nowych do analizy, m »Do zrobienia«” (pomiń przy zerach) – tylko po zaznaczeniu „Pomysły” na liście startowej; analiza – `rozwoj-harnessu`, sekcja C.
+  „Pomysły: n nowych do analizy, m »Do zrobienia« · znane problemy: k otwartych” (pomiń przy zerach) – tylko po zaznaczeniu „Pomysły” na liście startowej; analiza – `rozwoj-harnessu`, sekcja C, znane problemy (ZP-n) – sekcja D.
 
 ## Mapa procedur
 
@@ -44,7 +44,7 @@ Podział wpisów na obszary **nie jest w harnessie** – jest w bazie Notion „
 | „kończy się X”, „kupiłem X”, „zaczynam / przerwa od” (suplement) | `suple` |
 | „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` |
 | „przegląd tygodnia”, „podsumuj tydzień”, tygodniowe zaplanowane zadanie, „posprzątaj dziennik” | `przeglad-tygodnia-osobisty` (uruchamia też przegląd budowy) |
-| poprawia sposób pracy asystenta, „zapamiętaj na przyszłość”, „mam pomysł na…”, „zrób POM-n”, nowa procedura | `rozwoj-harnessu` |
+| poprawia sposób pracy asystenta, „zapamiętaj na przyszłość”, „mam pomysł na…”, „zrób POM-n”, „zrób ZP-n”, nowa procedura | `rozwoj-harnessu` |
 | budowa domu: ekipa, projekt, kosztorys, działka, wiedza budowlana, dokumenty budowy | `budowa` (plugin `dom-budowa`) |
 
 Jedna wiadomość może wymagać kilku procedur – wykonuj je po kolei. Rzecz z obszaru „ogólna” (np. książka do przeczytania)

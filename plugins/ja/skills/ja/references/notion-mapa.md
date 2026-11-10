@@ -11,7 +11,9 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 ├─ Jak używać (toggle)
 ├─ nowe wpisy inwestora – bloki 1. poziomu (po przebiegu pusto)
 ├─ 📝 Wpisy (podstrona) – wpisy pisane wprost w treści albo jako osobne strony (bloki i podstrony; po przetworzeniu zostają
-│   tylko niejasne – z okienkiem ❓ pytania asystenta i linią ✍️ na odpowiedź)
+│   tylko niejasne – z okienkiem ❓ pytania asystenta i linią ✍️ na odpowiedź); na górze zwijany nagłówek
+│   „🔔 Komunikaty asystenta” – problemy bez wpisu (automaty Maca, skrypty, błędy kolejki 💸), nie są wpisami
+│   (`wpisy/references/pytania.md`, C)
 │   (drugie wejście: strony na najwyższym poziomie Private, np. z widgetu „nowa strona” w telefonie – lista stałych stron niżej)
 ├─ ### ❓ Czeka na Twoją odpowiedź (toggle) – pytania asystenta spoza wpisów (RES-n, luki w zadaniach), odpowiedź pod pytaniem
 ├─ ### Przetworzone (toggle) – zwijany blok na każdy dzień: linia „🤖” + ślad „~~wpis~~ → gdzie”
@@ -26,7 +28,7 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 |---|---|---|---|
 | Nowe wpisy, pytania asystenta spoza wpisów | 📓 Dziennik (schemat wyżej) | `3f8f5982-09e7-80c8-a154-c59aeb844e8f` | – (wolny tekst) |
 | Podział wpisów na obszary (dokąd co idzie) | 🧭 Obszary Dziennika → widok „🤖 Aktywne (dla asystenta)” (tryb view – bez limitu) | `collection://253b7564-00ac-45b2-a3f4-956275e3a7e0`, `view://3faf5982-09e7-817b-a060-000c05f26c6a` | Obszar, Rozpoznawanie, Gdzie, Jak zapisać, Procedura, Aktywny, Kolejność, Przykład |
-| Wpisy pisane w treści „Wpisów” albo jako osobne strony | 📝 Wpisy (pod Dziennikiem) – bloki w treści i podstrony = nowe wpisy; niejasne czekają tu z okienkiem ❓ | `3faf5982-09e7-80b2-9b33-c48745d67a4f` | – |
+| Wpisy pisane w treści „Wpisów” albo jako osobne strony | 📝 Wpisy (pod Dziennikiem) – bloki w treści i podstrony = nowe wpisy; niejasne czekają tu z okienkiem ❓; nagłówek „🔔 Komunikaty asystenta” z blokami pod nim – nie wpisy | `3faf5982-09e7-80b2-9b33-c48745d67a4f` | – |
 | Wpisy z widgetu „nowa strona” (telefon) | najwyższy poziom Private – każda strona spoza listy stałych stron niżej (lista stron prywatnych) | – | – |
 | Przegląd dnia – sprawy osobiste (dziś / jutro; ręczne „(ręczne)”) | 📆 Przeglądy dzienne (pod Dziennikiem) | `3faf5982-09e7-81df-a361-cc65fddb81f4` | – |
 | Przegląd tygodnia – sprawy osobiste | 📅 Przeglądy tygodniowe (pod Dziennikiem) | `3faf5982-09e7-81e3-a6af-e3786ca4a074` | – |
@@ -54,7 +56,8 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 | Filmy i seriale do obejrzenia | 🎬 Films (w 🗂️ Collections) | `collection://bea14b52-2a7f-45a2-b5a7-cbd1c255fa8b` | Name, Status (To watch / Watched), Tags, URL |
 | Poprawki sposobu pracy asystenta | Zmiany do harnessu | `collection://e217448a-60ec-4af6-8584-8f368315109c` | Zmiana, Status, **Plugin**, Procedura, Rodzaj, Treść do wdrożenia, Dlaczego |
 | Pomysły na rozwój harnessu | Pomysły na rozwój (na stronie 🤖 Asystent AI) | `collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3` | ID (POM-n), Status, Obszar, Nakład, Wymaga ode mnie |
-| Wersja harnessu, skrzynka i pomysły | 🤖 Asystent AI | `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` | – |
+| Problemy w tle, których przebieg nie załatwi (ZP-n) | 🧯 Znane problemy (na stronie 🤖 Asystent AI; `rozwoj-harnessu`, D) → widok „🧯 Otwarte” (tryb view) | `collection://f387bb3c-796f-435a-a684-819196fd6aa4`, `view://414f5982-09e7-8172-abde-000c5e85c87a` | Problem, ID (ZP-n), Status (Nowy / Czeka na mnie / W toku / Rozwiązany / Zostaje), Obszar, Skąd, Pierwszy raz, Ostatnio, Co zrobić, Rozwiązano w wersji |
+| Wersja harnessu, skrzynka, pomysły i znane problemy | 🤖 Asystent AI | `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` | – |
 | Dostęp do indeksu wiedzy z czatu (kopia, token odczytu, polecenia) | 🔑 Asystent – dostęp (podstrona 🤖 Asystent AI; tylko dla asystenta) | `3fcf5982-09e7-810e-aaca-f2b582438924` | – |
 
 **Struktura najwyższego poziomu (POM-9, 15.10.2026)** – strona startowa 📌 DASHBOARD w zakładkach, opis całości dla inwestora: „🗺 Mapa Notion”
@@ -66,7 +69,7 @@ każda inna strona na tym poziomie to nowy wpis z widgetu, `wpisy`):**
 - ✅ Zadania `3faf5982-09e7-8188-8bbd-ce6f8f691cdd` – zakładki (📅 Dziś i tydzień, 🛒 Zakupy, 🏠 Prywatne, 🏗 Budowa, 👪 Dziecko), pod nimi baza TASKS
   (wszystkie obszary) i jej widoki, bazy 🛒 Zakupy i 🔎 Research; na DOM tylko widok zadań budowy;
 - 🤖 Asystent AI `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` – wszystko o samym asystencie (budowa i sprawy osobiste): wersja pluginów,
-  skrzynka Zmiany do harnessu, baza Pomysły na rozwój; podstrona 🔑 Asystent – dostęp `3fcf5982-09e7-810e-aaca-f2b582438924` (dostęp do indeksu wiedzy dla czatu –
+  skrzynka Zmiany do harnessu, baza Pomysły na rozwój, baza 🧯 Znane problemy; podstrona 🔑 Asystent – dostęp `3fcf5982-09e7-810e-aaca-f2b582438924` (dostęp do indeksu wiedzy dla czatu –
   nie jest stroną najwyższego poziomu);
 - 👨‍👩‍👧 Rodzina `3faf5982-09e7-8134-b482-c6eb748e87a7` – strona dziecka, 💞 Relacja, 💍 Wesele;
 - 🩺 Zdrowie `3faf5982-09e7-81a2-93bd-c85b2ebe040b` – Suplementacja (baza Suple), Examinations, notatki zdrowotne;

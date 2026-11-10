@@ -55,7 +55,9 @@ claude.ai (telefon, czat, Cowork) ◄── pluginy ja + dom-budowa ─┘   (ka
 
 Mac (launchd, `AI/automaty/przeglad.py`, poza repo) ── co godzinę 8–22, wieczorem, w niedzielę:
    ├─ `claude -p` + MCP Notion: Skrzynka i 📓 Dziennik → Notion (przegląd dnia, tygodnia)
-   └─ po przebiegu `tools/wydatki.py`: kolejka „💸 Wydatki → arkusz” → arkusz Google „Kosztorys budowy”
+   ├─ po przebiegu `tools/wydatki.py`: kolejka „💸 Wydatki → arkusz” → arkusz Google „Kosztorys budowy”
+   └─ problem, który trwa (przebieg nieudany lub nieuruchomiony, logowanie MCP, błąd skryptu) → `stan.json` →
+      następny udany przebieg → „🔔 Komunikaty asystenta” we „📝 Wpisach”; większe sprawy → baza „🧯 Znane problemy”
 ```
 
 ## Konektory i drogi zapasowe
@@ -65,7 +67,7 @@ z ⚠ i inwestor o tym wie.
 
 | Konektor | Do czego | Gdy go zabraknie |
 |---|---|---|
-| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają w Dzienniku i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania”; skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
+| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają w Dzienniku i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json` i trafia do „🔔 Komunikaty asystenta” przy pierwszym udanym przebiegu – do tego czasu widać go tylko w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
 | Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
 | Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
 | Google Sheets / Drive | liczby z żywego arkusza, zmiany układu | kopia `Kosztorys_google.json` (Apps Script z sekretem), eksport od inwestora, `wydatki.py migruj` (`docs/wydatki-arkusz.md`) |
@@ -77,14 +79,14 @@ z ⚠ i inwestor o tym wie.
 | Procedura | Kiedy | Co robi |
 |---|---|---|
 | `ja` | każda rozmowa o dniu, zadaniach, emocjach, dziecku, Dzienniku, harnessie | kontekst, zasady, mapa procedur, skrzynka zmian |
-| `wpisy` | „przerób dziennik”, luźne notatki naraz | rozpoznaje obszar wg bazy „🧭 Obszary Dziennika”, przekazuje do procedury, niejasne → pytanie w okienku pod wpisem w „📝 Wpisy” |
+| `wpisy` | „przerób dziennik”, luźne notatki naraz | rozpoznaje obszar wg bazy „🧭 Obszary Dziennika”, przekazuje do procedury, niejasne → pytanie w okienku pod wpisem w „📝 Wpisy”; problemy bez wpisu (automaty, 💸) → „🔔 Komunikaty asystenta” na górze „Wpisów” |
 | `emocje` | „czułem…”, „dziś w pracy…”, „podsumuj emocje” | Wpisy emocji, Dziennik produktywności, podsumowania na prośbę |
 | `zadania` | „muszę…”, „zrobiłem X”, „co mam jutro” | wspólna TASKS z polem Obszar; zmiana statusu z Dziennika |
 | `dziecko` | obserwacja, „porozmawiać z nią o…”, prezent, zalecenie | strona dziecka w sekcjach |
 | `suple` | „kończy się…”, „kupiłem…”, przerwa | baza Suple: Buy, Status, Last break |
 | `przeglad-dnia` | co godzinę (tryb szybki) i wieczorem – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; wieczorny: podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan na jutro – osobiste pod Dziennikiem, budowa osobno na DOM (z odnośnikiem), analiza pomysłów |
 | `przeglad-tygodnia-osobisty` | raz w tygodniu – automat na Macu / „przegląd tygodnia” | sprawy osobiste w liczbach, zaległe, najbliższy tydzień, porządki w Dzienniku; uruchamia przegląd budowy i linkuje do niego |
-| `rozwoj-harnessu` | „zapamiętaj na przyszłość”, nowa procedura, „mam pomysł…”, „zrób POM-n” | skrzynka w Notion → wdrożenie do repo; pomysły → analiza → wdrożenie na polecenie |
+| `rozwoj-harnessu` | „zapamiętaj na przyszłość”, nowa procedura, „mam pomysł…”, „zrób POM-n”, „zrób ZP-n” | skrzynka w Notion → wdrożenie do repo; pomysły → analiza → wdrożenie na polecenie; „🧯 Znane problemy” – sprawy, których przebieg nie załatwi |
 
 **Plugin `dom-budowa`**
 
@@ -92,7 +94,7 @@ z ⚠ i inwestor o tym wie.
 |---|---|---|
 | `budowa` | każda rozmowa o budowie | kontekst, zasady, mapa procedur, luźne wpisy o budowie, część budowlana przeglądu dnia |
 | `oferta` | oferta / wycena / rozmowa z ekipą | rozbicie, zakres 01–13, zgodność z projektem, porównanie, pytania; „sam czy ekipa”; zakres do umowy |
-| `koszty` | wydatek, faktura, cena dostawcy, „planuję wydać…”, „ile wydaliśmy” | kolejka „💸 Wydatki → arkusz” → arkusz Google (wydatki, Cennik, plan pozycji); plan / umówione / wydane; błędy → pytanie we Wpisach; transze |
+| `koszty` | wydatek, faktura, cena dostawcy, „planuję wydać…”, „ile wydaliśmy” | kolejka „💸 Wydatki → arkusz” → arkusz Google (wydatki, Cennik, plan pozycji); plan / umówione / wydane; błędy → komunikat 🔔 we Wpisach; transze |
 | `notatka` | „zapisz”, „ustaliliśmy”, „decyzja” | Notatnik budowy, TASKS (Obszar Dom), „Do zamknięcia” |
 | `analiza-techniczna` | projekt, rysunek, umowa, pytanie techniczne, „jak to zrobić samemu” | [projekt]/[szacunek]/[opinia], pytania do projektanta, instrukcja pracy własnej |
 | `wiedza` | transkrypcja, artykuł, „dzwoniłem do…”, „SP-n: …”, „co wiemy o…” | Baza wiedzy, sprzeczności (ADR), odczyt stanu wiedzy; szukanie i duplikaty przez indeks `tools/wiedza.py` |
@@ -183,7 +185,7 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
 - Wszystko, co przyjdzie Ci do głowy (emocja, zadanie, dziecko, suplement, budowa), wpisuj na stronę „📓 Dziennik” w Notion –
   punkt pod punktem albo jako podstronę (telefon wystarczy; widget „nowa strona” w telefonie zakłada stronę na najwyższym
   poziomie Private – też trafi do Dziennika). Szybki przebieg co 1–2 h i wieczorny przegląd dnia rozłożą to według bazy „🧭 Obszary
-  Dziennika”, a pod niejasnymi wpisami w „📝 Wpisy” doda krótkie okienko z pytaniem – odpowiedź wpisujesz w nim, przerobi ją następny przebieg. Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
+  Dziennika”, a pod niejasnymi wpisami w „📝 Wpisy” doda krótkie okienko z pytaniem – odpowiedź wpisujesz w nim, przerobi ją następny przebieg. Gdy coś zepsuje się „w tle” (automat na Macu, skrypt, wydatek, który nie wszedł do arkusza), na górze „Wpisów” pojawi się blok pod „🔔 Komunikaty asystenta” – odpisz pod nim albo zostaw, jeśli ustąpi samo; sprawy za duże na przebieg trafiają do bazy „🧯 Znane problemy” na stronie 🤖 Asystent AI. Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
   Ręcznie: „przerób dziennik”.
 - Poprawki „na przyszłość” z telefonu trafiają do skrzynki w Notion; Claude Code wdroży je po zaznaczeniu „Skrzynka zmian” na starcie sesji.
 - Dzień na budowie → powiedz asystentowi, co się działo (telefon wystarczy) – trafi do Dziennika budowy, a „nie skończyliśmy, jutro kontynuujemy” przesunie kroki Harmonogramu; zdjęcia wrzuć do `Dom/Zdjęcia/RRRR-MM-DD_<krok>/`.

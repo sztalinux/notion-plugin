@@ -4,6 +4,24 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.12.0] – 2026-11-10
+
+- POM-19: komunikaty asystenta – problemy asynchroniczne (przebieg na Macu nieudany lub nieuruchomiony, brak logowania MCP,
+  błąd skryptu, błąd kolejki 💸) w jednym miejscu: zwijany nagłówek „🔔 Komunikaty asystenta” na górze „📝 Wpisy”.
+  Format, aktualizacja tego samego problemu, „ustąpiło”, obieg odpowiedzi – `wpisy/references/pytania.md`, C; `wpisy`:
+  blok 🔔 nie jest wpisem, rozdział pytanie (pod wpisem) / komunikat (🔔) / pytanie spoza wpisów („❓” Dziennika).
+- `przeglad-dnia`: lista „Komunikaty z automatów Maca” w poleceniu przebiegu jako szóste źródło trybu szybkiego; blok 🔔
+  bez odpowiedzi nie liczy się jako „nowe” (pusty przebieg zostaje tani); wieczorem statusy ZP i licznik „komunikaty: n”
+  w przeglądzie i linii „🤖”.
+- Nowa baza Notion „🧯 Znane problemy” (ZP-n, 🤖 Asystent AI, widok „🧯 Otwarte”) na sprawy, których przebieg nie
+  załatwi – `rozwoj-harnessu`, sekcja D („zrób ZP-n”); mapa Notion `ja`, `ja` (linia startowa), `CLAUDE.md` (opcja „Pomysły”
+  liczy też otwarte ZP), `AGENTS.md`, README.
+
+## dom-budowa [3.10.5] – 2026-11-10
+
+- POM-19: `koszty` E – błąd kolejki 💸 to komunikat pod „🔔 Komunikaty asystenta” we „📝 Wpisach” (ten sam format
+  okienka, inne miejsce); `docs/wydatki-arkusz.md`.
+
 ## dom-budowa [3.10.4] – 2026-11-10
 
 - `koszty` B.8: zakup albo zamówienie u dostawcy z wyceną w kolejce = wybór oferty (Wybrana, reszta pozycji/grupy

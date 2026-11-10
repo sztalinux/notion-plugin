@@ -137,15 +137,16 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 4. „Ile potrzebuję w tym miesiącu”: wydatki „Do zapłaty” + transze, których odbiór wypada w miesiącu (Harmonogram) +
    zamówienia z `zakupy` z terminem w miesiącu; osobno zobowiązania bez daty.
 
-## E. Błąd kolejki → pytanie we „📝 Wpisach”
+## E. Błąd kolejki → komunikat 🔔 we „📝 Wpisach”
 
 Przebieg szybki (`przeglad-dnia`, A) czyta widok „⚠ Błędy do zgłoszenia” (`view://414f5982-09e7-8182-a74d-000c2bef9ffb`:
 Arkusz = Błąd, puste Zgłoszono). Dla każdej strony:
-1. We „Wpisach” akapit `💸 <wzmianka strony> – nie trafiło do arkusza` z okienkiem ❓ (`wpisy/references/pytania.md`, A):
+1. We „Wpisach” pod nagłówkiem „🔔 Komunikaty asystenta” (`wpisy/references/pytania.md`, C – plugin ja) akapit
+   `💸 <wzmianka strony> – nie trafiło do arkusza` z okienkiem ❓ (format A):
    pytanie wynikające z pola Błąd, z propozycją („Która pozycja – 01.5 Prąd budowlany?”), linia ✍️. W tej samej edycji
    „Wpisów” co reszta przebiegu; potem jednym zapisem Zgłoszono = dziś na tych stronach.
 2. Odpowiedź → popraw pola strony (sekcje B, B2, B3), Arkusz = „Do arkusza”; wpis z okienkiem do „Przetworzone”
-   (`~~💸 …~~ → poprawione: <wzmianka>`). Okienko 💸 bez odpowiedzi, a strona nie jest już „Błąd” (inwestor poprawił sam)
+   (`~~💸 …~~ → poprawione: <wzmianka>`). Komunikat 💸 bez odpowiedzi, a strona nie jest już „Błąd” (inwestor poprawił sam)
    → zamknij je tak samo z dopiskiem „naprawione w 💸”.
 3. `sync` czyści Zgłoszono przy każdym ponownym wysłaniu – nowy błąd tej samej strony da nowe pytanie.
 

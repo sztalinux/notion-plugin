@@ -18,9 +18,10 @@ pytanie z listą wielokrotnego wyboru (narzędzie AskUserQuestion, `multiSelect`
     `plugins/ja/skills/rozwoj-harnessu/SKILL.md`, sekcja „Wdrożenie” (zmiana plików → wersja → CHANGELOG →
     `python3 tools/build.py` → commit → push → oznaczenie wpisów jako „Wdrożone”). Wpis niejasny albo sprzeczny z inną
     procedurą – zapytaj inwestora przed wdrożeniem. Skrzynka pusta – jedna linia „Harness aktualny (dom-budowa X.Y.Z, ja X.Y.Z)”.
-  - **Pomysły** – jedna linia „Pomysły: n nowych do analizy, m »Do zrobienia«” z bazy „Pomysły na rozwój”
-    (`collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3`; pomiń przy zerach). Niczego z niej nie analizuj ani nie wdrażaj bez
-    polecenia „zrób POM-n” (`rozwoj-harnessu`, sekcja C).
+  - **Pomysły** – jedna linia „Pomysły: n nowych do analizy, m »Do zrobienia« · znane problemy: k otwartych” z bazy „Pomysły
+    na rozwój” (`collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3`) i widoku „🧯 Otwarte” bazy „🧯 Znane problemy”
+    (`view://414f5982-09e7-8172-abde-000c5e85c87a`; pomiń przy zerach). Niczego z nich nie analizuj, nie wdrażaj ani nie naprawiaj bez
+    polecenia „zrób POM-n” / „zrób ZP-n” (`rozwoj-harnessu`, sekcje C i D).
   - **git pull** – zaktualizuj repo.
 - Pytanie „Dane i dokumenty”:
   - **Dokumenty budowy** – `python3 tools/dokumenty.py`; „Przewodnik zmieniony” → od razu przepisz stronę przewodnika w Notion

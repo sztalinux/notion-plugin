@@ -23,6 +23,7 @@ jeszcze nie widział):
 			- ~~wpis~~ → Wpisy emocji: <link>
 	### 🧭 Dla asystenta {toggle}  ← baza Obszary; nie ruszaj
 	📝 Wpisy (podstrona) ← inwestor pisze tu wprost w treści albo zakłada wpisy jako osobne strony; bloki i podstrony = nowe wpisy
+		### 🔔 Komunikaty asystenta {toggle}  ← na górze; problemy bez wpisu (automaty, 💸) – references/pytania.md, C; nie są wpisami
 		wpis niejasny                                     ← czeka tu, aż inwestor odpowie
 			❓ {okienko} **Co miałeś na myśli – X czy Y?** (propozycja: …)
 				✍️ odpowiedź inwestora
@@ -35,7 +36,8 @@ Private (najwyższy poziom)
 **Nowy wpis** = każdy blok pierwszego poziomu (akapit, punkt), **każdy blok w treści strony „📝 Wpisy”**
 (`3faf5982-09e7-80b2-9b33-c48745d67a4f`; inwestor często pisze tam wprost, bez zakładania podstrony), **każda jej
 podstrona** (tytuł + treść = wpis), podstrona Dziennika założona poza „Wpisami”, z wyjątkiem
-„Jak używać”, pustych linii, trzech zwijanych nagłówków i stałych podstron „📝 Wpisy”, „📆 Przeglądy dzienne”,
+„Jak używać”, pustych linii, trzech zwijanych nagłówków Dziennika, nagłówka „🔔 Komunikaty asystenta” we „Wpisach” z blokami pod nim
+(komunikat staje się pracą dopiero po odpowiedzi – `references/pytania.md`, C) i stałych podstron „📝 Wpisy”, „📆 Przeglądy dzienne”,
 „📅 Przeglądy tygodniowe”, „🗃 Przetworzone podstrony” i „🗃 Przetworzone – archiwum”, **oraz każda strona na najwyższym poziomie Private spoza listy stałych stron**
 (lista z ID: `ja/references/notion-mapa.md`, „Struktura najwyższego poziomu”) – tam widget „nowa strona” w telefonie
 zakłada strony. Porównuj po ID, nie po tytule. 🔒 Prywatne jest na liście – nigdy jej nie otwieraj (`ja`, zasada 5).
@@ -53,7 +55,7 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    listy stron prywatnych; strony spoza listy stałych otwórz, żeby mieć treść i czas ostatniej edycji – tylko je). Brak
    narzędzia do listy stron prywatnych → pomiń to źródło i dopisz w linii „🤖”: „strony z widgetu – brak odczytu”.
    Nowe wpisy oraz wpisy z okienkiem ❓ we „Wpisach”, w którym inwestor coś dopisał – te oceń ponownie; odczyt odpowiedzi:
-   `references/pytania.md`, A. Wpis z okienkiem bez odpowiedzi nie jest nowy – pomiń go. Brak obu → „Dziennik pusty”
+   `references/pytania.md`, A. Komunikaty 🔔 z odpowiedzią albo zmianą stanu – obsłuż wg `references/pytania.md`, C. Wpis z okienkiem bez odpowiedzi nie jest nowy – pomiń go. Brak obu → „Dziennik pusty”
    (+ liczba czekających we „Wpisach”).
 2. **Pobierz Obszary** – zapisany widok „🤖 Aktywne (dla asystenta)” (`view://3faf5982-09e7-817b-a060-000c05f26c6a`, tryb view:
    Aktywny = tak, sort Kolejność; baza `collection://253b7564-00ac-45b2-a3f4-956275e3a7e0`).
@@ -103,7 +105,8 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    z widgetu przenosisz jednym osobnym wywołaniem przed nią; po nim na najwyższym poziomie Private zostają tylko stałe strony
    (i te z okienkiem we „Wpisach”). Bloki z treści „📝 Wpisy” idą w tej edycji Dziennika do „Przetworzone”; **jedna** edycja
    „Wpisów” (punktowa, podstron nie ruszaj) zdejmuje przetworzone bloki z ich okienkami, dodaje okienka pod niejasnymi
-   i przenosi tu niejasne z Dziennika – po niej treść „Wpisów” to tylko wpisy z okienkami ❓, podstrony i 1 pusta linia.
+   i przenosi tu niejasne z Dziennika – po niej treść „Wpisów” to tylko nagłówek 🔔 z komunikatami, wpisy z okienkami ❓, podstrony i 1 pusta linia
+   (zmiany w 🔔 idą w tej samej edycji).
    Po edycji Dziennika **pierwszy poziom jest pusty** – poza „Jak używać”, trzema nagłówkami, dwiema stałymi podstronami i 1–2 pustymi
    liniami do pisania. Linia „🤖” idzie na górę bloku dnia:
    ```
@@ -138,7 +141,10 @@ z czatu bez Notion (`references/skrzynka.md`): te same kroki 3–7, ślad w Skrz
   albo linię „❓” przenieś do bloku dnia w „Przetworzone” jako `~~…~~ → rozwiązane w rozmowie (data): <wzmianka>`. Nie usuwaj.
 - **Wpis w „❓” Dziennika** (stary format albo pomyłka) → przy najbliższej edycji przenieś go do „Wpisów” z jednym okienkiem
   (scal pytania, dopisane odpowiedzi uwzględnij) – pytania o wpisy mają być tam, gdzie inwestor pisze.
-- **Okienko 💸** (błąd kolejki wydatków, zakłada je przebieg): odpowiedź i zamknięcie – `koszty`, sekcja E (plugin
+- **Pytanie czy komunikat:** pytanie o to, co inwestor sam wpisał → okienko pod wpisem (A); problem, którego nie wywołał
+  żaden wpis (automat, skrypt, błąd kolejki) → blok pod „🔔 Komunikaty asystenta” (C). Pytania spoza wpisów (RES-n, luki
+  w zadaniach) zostają w „❓” Dziennika (B).
+- **Komunikat 💸** (błąd kolejki wydatków, zakłada go przebieg pod 🔔): odpowiedź i zamknięcie – `koszty`, sekcja E (plugin
   dom-budowa); bez odpowiedzi sprawdź stan strony – nie jest już „Błąd” → zamknij jako naprawione.
 - Zdjęcia we wpisie: budowa → `dziennik` (plugin dom-budowa); inne – zostaw w treści docelowej strony.
 - Dziennik to skrzynka wejściowa, nie archiwum: wpis żyje w docelowym miejscu, „Przetworzone” to ślad na kilka dni.
