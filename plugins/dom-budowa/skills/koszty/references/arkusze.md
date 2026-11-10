@@ -11,7 +11,7 @@ Instrukcja · Podsumowanie · Wydatki ⚙ · Cennik ⚙ · Etapy · Kosztorys �
 ## Etapy
 Stan zero = etapy z umowy z ekipą: 01 Przygotowanie i obsługa · 02 Droga dojazdowa · 03 Płyta fundamentowa · 04 Ściany
 piwnicy · 05 Izolacje i zasypka · 06 Strop i schody · 07 Rozszalowanie i sprzątanie · 08 Rezerwa i roboty dodatkowe.
-Organizacja: P1–P4 (sprzed budowy), 15 Obsługa budowy – kolejne etapy, 16 Narzędzia. Teren: 50 Przyłącza, zbiorniki, zjazd.
+Koszty ogólne (stan w Etapy kol. B; do 10.11.2026 „Organizacja”): P1–P4 (sprzed budowy), 15 Obsługa budowy – kolejne etapy, 16 Narzędzia. Teren: 50 Przyłącza, zbiorniki, zjazd.
 Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje szacunek AI (zakładka i tabela wg stanów).
 
 ## Kolumny wejściowe (kremowe – wpisuje inwestor albo automat)

@@ -55,7 +55,8 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
    (`wpisy`, krok 6).
 4. **Są wpisy:** procedura `wpisy`, kroki 2–7, bez pytań w rozmowie (wyjątki z zasad wyżej). Błędy kolejki 💸 –
    `koszty`, sekcja E, w tej samej edycji „Wpisów”. Linia „🤖” w bloku dnia –
-   krótka, z godziną: `🤖 11:00: przetworzono 2 (zadania 1, emocje 1), czeka na Ciebie 1, świeże pominięte 1`. Kolejne
+   krótka, z godziną, bez wyliczania zapisów (te są w podpunktach wpisów, `wpisy` krok 6): `🤖 11:00: przetworzono 2
+   (zadania 1, emocje 1), czeka na Ciebie 1, świeże pominięte 1`; liczby per źródło – tylko w odpowiedzi (log). Kolejne
    przebiegi tego dnia dopisują swoje linie pod spodem w tym samym bloku; tytuł bloku pokazuje sumę dnia. W odpowiedzi
    podaj nowe wpisy per źródło – „Dziennik n · Wpisy n · widget n · Skrzynka n” (albo „widget – brak odczytu”) – żeby było
    widać, że przebieg sprawdził wszystkie cztery.

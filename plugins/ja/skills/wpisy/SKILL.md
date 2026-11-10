@@ -90,7 +90,10 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
      pole, inny format) – stosuj je, jeśli są czymś więcej niż odesłaniem do skilla.
    - Procedura = `ogólna` → zapisz według „Gdzie” i „Jak zapisać” z wiersza; najpierw szukaj duplikatu (2–3 słowa).
 6. **Zamknij wpis:** przenieś go do „Przetworzone” (z okienkiem: pytanie i odpowiedź w jednej linii `(❓ … → ✍️ …)`), do **zwijanego bloku dzisiejszego dnia** (`<details>`,
-   tytuł „📅 <dd.mm> <dzień> · <skrót linii 🤖>”; brak – utwórz na górze), jako `~~wpis~~ → <gdzie>: <link>`
+   tytuł „📅 <dd.mm> <dzień> · <skrót linii 🤖>”; brak – utwórz na górze), jako `~~wpis~~ → <gdzie>: <link>`;
+   **wpis rozłożony na więcej niż dwa miejsca** – punkt z przekreślonym skrótem wpisu (do ok. 80 znaków) i pod nim po
+   jednym podpunkcie na miejsce, z ikoną i liczbą: `📓 Dziennik budowy: <link>` · `💸 Wydatki (3): <link>, …` ·
+   `✅ TASKS (2): <link>, …` · `🧱 Zakupy: ZAM-6, ZAM-8 – …` · `📅 Harmonogram: HR-1 Zrobione, …` (bez jednej długiej linii)
    (blok z treści „Wpisów”: `~~wpis~~ (Wpisy) → <gdzie>: <link>`;
    podstrona: `~~tytuł~~ (podstrona → <wzmianka>) → <gdzie>: <link>`, strona z widgetu: `(widget → <wzmianka>)`, po
    przeniesieniu jej pod „🗃 Przetworzone podstrony”). Zdublowane / nieprzydatne / testowe / pusta strona z widgetu (bez

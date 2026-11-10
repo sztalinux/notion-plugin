@@ -2,11 +2,17 @@
 
 Nazwy muszą być identyczne jak w arkuszu kosztorysu (zakładka Etapy, kolumna A). Gdy inwestor zmieni listę w arkuszu – zaktualizuj tę tabelę.
 
+> **Uwaga (10.11.2026):** numeracja 00a–14 niżej to siatka z porównania ofert stanu zero (10.2026) – używają jej karty
+> w „Porównanie wykonawców” (pole Obejmuje etapy). Arkusz kosztorysu ma od 7.11.2026 własne etapy: P1–P4 (koszty ogólne
+> sprzed budowy), 01 Przygotowanie i obsługa, 02 Droga dojazdowa, 03 Płyta fundamentowa, 04 Ściany piwnicy, 05 Izolacje
+> i zasypka, 06 Strop i schody, 07 Rozszalowanie i sprzątanie, 08 Rezerwa i roboty dodatkowe, 15 Obsługa budowy, 16 Narzędzia,
+> 50 Przyłącza, zbiorniki, zjazd. Nowe oferty i wydatki przypisuj do etapów arkusza; starą siatkę tylko czytaj.
+
 | Nr | Etap | Stan |
 |---|---|---|
 | 00a | Działka | Przed budową |
 | 00b | Projekt, badania, formalności | Przed budową |
-| 00c | Przygotowanie terenu i zaplecze | Organizacja |
+| 00c | Przygotowanie terenu i zaplecze | Koszty ogólne |
 | 01 | Przygotowanie i obsługa | Stan zero |
 | 02 | Roboty ziemne | Stan zero |
 | 03 | Kanalizacja i przepusty | Stan zero |
@@ -21,8 +27,8 @@ Nazwy muszą być identyczne jak w arkuszu kosztorysu (zakładka Etapy, kolumna 
 | 12 | Stopy tarasu ST-1 | Stan zero |
 | 13 | Strop nad piwnicą i schody | Stan zero |
 | 14 | Rezerwy – ryzyka gruntowe | Stan zero |
-| 15 | Obsługa budowy – kolejne etapy | Organizacja |
-| 16 | Narzędzia i sprzęt do pracy własnej | Organizacja |
+| 15 | Obsługa budowy – kolejne etapy | Koszty ogólne |
+| 16 | Narzędzia i sprzęt do pracy własnej | Koszty ogólne |
 | 20 | Ściany nośne parteru | SSO |
 | 21 | Ściany działowe (parter, piętro, piwnica) | SSO |
 | 22 | Strop nad parterem P-2 i schody | SSO |

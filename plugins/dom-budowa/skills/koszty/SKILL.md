@@ -75,6 +75,10 @@ wydatki: 150 zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to 
    zmianę. Wydatek wysłany przez pomyłkę – w Claude Code `python3 tools/wydatki.py wycofaj <id strony>`.
 
 Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten wydatek.
+8. **Zakup to wybór oferty.** Wydatek albo zamówienie („kupiłem / zamówiłem stal w X”) u dostawcy, który ma wycenę
+   w kolejce dla tej pozycji albo jej grupy (Kosztorys kol. V) → w tym samym przebiegu ta wycena Status wyceny „Wybrana”,
+   pozostałe oferty tej pozycji / grupy „Odrzucona”, wszystkie znów „Do arkusza” (sekcja B2, krok 3). Ilość kupiona większa
+   niż ilość plan → zaznacz to w odpowiedzi albo w przeglądzie dnia (PLAN zmienia tylko inwestor).
 
 ## B2. Wycena dostawcy (cena materiału przed zakupem)
 

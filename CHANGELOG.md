@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.10.4] – 2026-11-10
+
+- `koszty` B.8: zakup albo zamówienie u dostawcy z wyceną w kolejce = wybór oferty (Wybrana, reszta pozycji/grupy
+  Odrzucona) w tym samym przebiegu; ilość kupiona większa od planu – sygnał w odpowiedzi.
+- Grupa kosztów spoza budowy w arkuszu nazywa się „Koszty ogólne” (dawniej „Organizacja”); `arkusze.md`, `oferta/references/etapy.md`
+  (plus uwaga: stara numeracja etapów z porównania ofert vs etapy arkusza od 7.11).
+
+## ja [1.11.3] – 2026-11-10
+
+- `wpisy` krok 6 i `przeglad-dnia` A.4: czytelniejszy ślad w „Przetworzone” – wpis rozłożony na kilka miejsc ma podpunkty
+  (📓 / 💸 / ✅ / 🧱 / 📅) zamiast jednej długiej linii; linia „🤖” bez wyliczania zapisów.
+
 ## dom-budowa [3.10.3] – 2026-11-10
 
 - Kontakty budowy: jedyne miejsce to Notion, DOM → 👷 Wykonawcy → „📇 Kontakty – kluczowe role” (przeniesione z zakładki
