@@ -32,7 +32,20 @@ SKILLS = PLUGIN / "skills"
 KONTEKST = {"dom-budowa": "budowa", "ja": "ja"}  # skill kontekstowy pluginu = mapa jego procedur
 DIST = ROOT / "dist"
 NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
-HUB = Path(os.environ.get("DOM_HUB", ROOT.parent.parent)).expanduser()
+
+
+def glowna_kopia(root: Path) -> Path:
+    """Kopia robocza git (np. .claude/worktrees/<nazwa>) ma plik .git „gitdir: <repo>/.git/worktrees/<nazwa>” –
+    folder budowy liczymy od głównej kopii, inaczej lista zakazanych słów byłaby szukana w złym miejscu."""
+    g = root / ".git"
+    if g.is_file():
+        t = g.read_text(encoding="utf-8").strip()
+        if t.startswith("gitdir:"):
+            return Path(t[7:].strip()).resolve().parent.parent.parent
+    return root
+
+
+HUB = Path(os.environ.get("DOM_HUB", glowna_kopia(ROOT).parent.parent)).expanduser()
 ZAKAZANE = HUB / ".dom" / "zakazane-w-repo.txt"  # poza repo: sama lista byłaby wyciekiem
 TEKSTOWE = {".md", ".json", ".py", ".txt", ".toml", ".yml", ".yaml", ""}
 
@@ -139,6 +152,10 @@ WZORCE = [
     (re.compile(r"\b\d{2}-\d{3}\b"), "kod pocztowy"),
     (re.compile(r"\b(ul\.|ulica)\s+[A-ZĄĆĘŁŃÓŚŹŻ]", re.U), "adres"),
     (re.compile(r"PESEL\D{0,5}\d{11}", re.I), "PESEL"),
+    (re.compile(r"(?<![\w.-])\d{11}(?![\w.-])"), "PESEL (11 cyfr)"),
+    (re.compile(r"\b\d{2}(?:[ ]?\d{4}){6}\b"), "numer konta"),
+    # pozostałe prefiksy tokenów (Notion, GitHub PAT) łapie lista zakazanych słów spoza repo
+    (re.compile(r"\b(ghp_|gho_|ghs_|sk-ant-|xox[bp]-)[A-Za-z0-9_-]{16,}"), "token / klucz API"),
 ]
 DOZWOLONE = [re.compile(r"noreply@anthropic\.com"),            # stopka Co-Authored-By
              re.compile(r"[\w.+-]+@users\.noreply\.github\.com")]  # anonimowy adres GitHuba
@@ -159,7 +176,7 @@ def zakazane_slowa() -> list:
             out += [w.strip().lower() for w in lista.read_text(encoding="utf-8").splitlines()
                     if w.strip() and not w.strip().startswith("#")]
     if not out:
-        print(f"UWAGA: brak listy {ZAKAZANE} – sprawdzam tylko wzorce (telefon, e-mail, działka, kod, adres, PESEL)")
+        print(f"UWAGA: brak listy {ZAKAZANE} – sprawdzam tylko wzorce (telefon, e-mail, działka, kod, adres, PESEL, konto, token)")
     return out
 
 
