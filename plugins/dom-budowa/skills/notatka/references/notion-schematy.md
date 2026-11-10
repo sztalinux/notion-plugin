@@ -75,11 +75,11 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 | Błąd | tekst | powód odrzucenia; po poprawce pola ustaw Arkusz = „Do arkusza” (przy „W arkuszu” – ewentualna uwaga, np. plan zapasowy) |
 | Nadpisz plan | checkbox | tylko Plan: ten plan zastępuje inny plan ręczny pozycji |
 | Zgłoszono | data | dzień pytania o błąd we „📝 Wpisach” (ustawia przebieg, `koszty` E; czyści `sync`) |
-
-Widok „⚠ Błędy do zgłoszenia” (`view://414f5982-09e7-8182-a74d-000c2bef9ffb`): Arkusz = Błąd i puste Zgłoszono – czyta go przebieg szybki.
 | Wiersz arkusza | liczba | numer wiersza w arkuszu Wydatki albo Cennik (ustawia skrypt) |
 | Status wyceny | select | tylko Wycena: Oferta, Wybrana, Odrzucona – zmiana + „Do arkusza” aktualizuje wiersz Cennika |
 | Cena podana | select | tylko Wycena: Brutto, Netto |
 | VAT % | liczba | tylko Wycena: stawka w procentach (23, 8…); obowiązkowa przy Netto |
 | Ważna do | data | tylko Wycena: termin ważności oferty |
+
+Widok „⚠ Błędy do zgłoszenia” (`view://414f5982-09e7-8182-a74d-000c2bef9ffb`): Arkusz = Błąd i puste Zgłoszono – czyta go przebieg szybki.
 
