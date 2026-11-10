@@ -153,8 +153,8 @@ Arkusz = Błąd, puste Zgłoszono). Dla każdej strony:
 2. Odpowiedź → popraw pola strony (sekcje B, B2, B3), Arkusz = „Do arkusza”; wpis z okienkiem do „Przetworzone”
    (`~~💸 …~~ → poprawione: <wzmianka>`). Komunikat 💸 bez odpowiedzi, a strona nie jest już „Błąd” (inwestor poprawił sam)
    → zamknij je tak samo z dopiskiem „naprawione w 💸”.
-3. `sync` czyści Zgłoszono przy każdym ponownym wysłaniu – nowy błąd tej samej strony aktualizuje istniejący blok 💸
-   (`wpisy/references/pytania.md`, C.2), nie dodaje drugiego.
+3. `sync` czyści Zgłoszono przy każdym ponownym wysłaniu – nowy błąd tej samej strony: blok 💸 jeszcze otwarty
+   → zaktualizuj go (`wpisy/references/pytania.md`, C.2); blok już w „Przetworzone” → nowe pytanie.
 
 ## Zasady
 
