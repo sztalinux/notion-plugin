@@ -14,19 +14,22 @@ skonfigurować: `docs/wydatki-arkusz.md` w repozytorium harnessu. Asystent:
 
 Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notatka/references/notion-schematy.md`.
 
-## Gdzie są liczby
+## Gdzie są liczby (od najszybszego; brak narzędzia albo błąd → następne źródło, bez ponawiania)
 
+- **Konektor Google Sheets** (gdy jest w sesji – Claude Code, claude.ai, telefon): żywy arkusz „Kosztorys budowy” (plik
+  znajdź po tytule wyszukiwarką Dysku; ID nie zapisuj w repo). Liczby bierz z wartości komórek, nie z tekstu „12 345 zł”.
+  Przebiegi bez inwestora (`claude -p`) nigdy na nim nie polegają.
 - **Claude Code:** `Koszty/Kosztorys_google.json` w folderze budowy – wartości wszystkich zakładek, odświeżane co wieczór; świeże
   pobierzesz poleceniem `python3 tools/wydatki.py pobierz`. Nie ma jej (arkusz jeszcze nieskonfigurowany, kod 2) →
   najnowszy `Koszty/Kosztorys_stan_zero_*.xlsx` wg indeksu dokumentów (`python3 tools/dokumenty.py lista`). Nigdy nie
   kopiuj arkusza do repo.
-- **claude.ai, telefon, Cowork:** poproś o eksport (Arkusze Google → Plik → Pobierz → Microsoft Excel) i załączenie.
+- **claude.ai, telefon, Cowork bez konektora:** poproś o eksport (Arkusze Google → Plik → Pobierz → Microsoft Excel) i załączenie.
 - Wydatki jeszcze w kolejce (Arkusz „Do arkusza” albo „Błąd”) nie są w arkuszu – przy „ile wydaliśmy” dolicz je osobno
   i powiedz to.
 
 ## A. Pytanie o liczby („ile wydaliśmy”, „ile poszło na płytę”, „co przekracza plan”)
 
-1. Potrzebna aktualna kopia (wyżej). Jej brak → poproś o nią jednym zdaniem. Nie odpowiadaj z pamięci.
+1. Potrzebne aktualne liczby (wyżej, w tej kolejności). Ich brak → poproś o eksport jednym zdaniem. Nie odpowiadaj z pamięci.
 2. Odczytaj wartości z przeliczonego pliku (formuły bez zapisanych wyników → przelicz kopię w LibreOffice).
 3. Odpowiedz w trzech warstwach (`budowa`, zasada 4): PLAN (Kosztorys kol. PLAN, Etapy) · UMÓWIONE (Etapy kol. „Umowa
    z ekipą”, wybrane oferty) · WYDANE (Wydatki „Zrealizowane”), plus zobowiązania (Wydatki „Do zapłaty”, Etapy kol.
@@ -64,8 +67,8 @@ wydatki: 150 zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to 
    - **Przebieg bez inwestora (`claude -p`):** tylko kolejka – `sync` uruchamia automat po przebiegu.
    - **claude.ai / telefon bez Notion:** Skrzynka (`budowa`, zasada 13) ze wszystkimi polami z kroku 1; Mac przeniesie.
    Potwierdź jedną linią: „N wydatków: wiersze … w arkuszu” albo „w kolejce – trafią przy najbliższym przebiegu”.
-6. Wiersz z Arkusz = „Błąd” (powód w polu Błąd) pokazuj w przeglądzie dnia budowy jako sprawę czekającą; po poprawce pola
-   inwestor albo asystent ustawia znów „Do arkusza”.
+6. Wiersz z Arkusz = „Błąd” (powód w polu Błąd) wraca do inwestora jako pytanie we „📝 Wpisach” (sekcja E); po poprawce
+   pola inwestor albo asystent ustawia znów „Do arkusza”.
 7. Korekta wydatku już w arkuszu („zapłaciłem tę fakturę”, zła kwota) – popraw pola tej samej strony w Notion (np. Płatność
    = Zrealizowane, Data = dzień zapłaty) i ustaw Arkusz = „Do arkusza”: `sync` nadpisze jej wiersz (pola A:H, J:M), nie doda
    nowego. Inwestor może też poprawić wiersz w arkuszu ręcznie – wtedy nie wysyłaj tej strony ponownie, bo nadpisze jego
@@ -85,15 +88,32 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
    ilość plan); oferta dla materiału z grupą (Kosztorys kol. V, np. stal) działa dla wszystkich pozycji tej grupy.
 4. Ceny zapłaconej nie wpisuj jako wyceny – wynika z wydatku (Wydatki, Cena jedn.).
 
+## B3. Plan pozycji („planuję wydać…”, „szacowałem 300, wyszło 500”)
+
+Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odpowiedzi albo w szacunku AI):
+1. Strona w tej samej kolejce, **Rodzaj = Plan**: Wydatek („Plan: …”), Pozycja, Kwota = plan **całej pozycji brutto**,
+   Notatki (słowa inwestora), Arkusz = „Do arkusza”; data niepotrzebna. Plan i wydatek z jednego wpisu = dwie strony.
+   „Ok. / ponad 5 000” → 5 000; widełki → górna granica, widełki w Notatkach. Plan na kilka pozycji → pytanie z podziałem.
+2. `sync` wpisuje kwotę w Kosztorys „Plan ręczny” tej pozycji. Inny plan już tam stoi → Błąd i pytanie (sekcja E);
+   „nadpisz” → zaznacz „Nadpisz plan” i znów „Do arkusza”. Pozycja z wybraną ofertą liczy PLAN z oferty – plan ręczny jest
+   wtedy zapasowy (uwaga w polu Błąd przy „W arkuszu”).
+3. Cofnięcie: `python3 tools/wydatki.py wycofaj <id strony>` (czyści komórkę, jeśli stoi w niej kwota z tej strony) albo
+   nowy plan z „Nadpisz plan”.
+
 ## C. Zmiana w arkuszu (pozycja, kolumna, formuła)
 
 1. Opisz zmianę i jej wpływ (które arkusze i formuły) – przy większych poczekaj na „ok”.
 2. Nigdy nie proś o ponowny import pliku – arkusz żyje w Google. Prosta zmiana danych (nowa pozycja, kwota PLAN) →
    instrukcja krok po kroku dla inwestora; nowa pozycja trafi na listę w Notion przy wieczornym `wydatki.py pozycje`.
 3. Zmiana układu lub wyglądu (kolumny, formuły, kolory, listy) – w Claude Code, na żywym arkuszu, według
-   `docs/wydatki-arkusz.md`, sekcja 8: docelowy `.xlsx` sprawdzony lokalnie i porównany z kopią → plik zmian → `migruj`
-   → `pobierz` i kontrola (zero błędów formuł, te same sumy); cofanie – historia wersji arkusza. Formuły zgodne z Arkuszami Google
-   (SUMIFS, INDEX/MATCH, IF, MINIFS; bez formuł tablicowych). Poza Claude Code – opisz zmianę i odłóż do Claude Code.
+   `docs/wydatki-arkusz.md`, sekcja 8:
+   - **konektor Google Sheets** (szybciej): migawka zakresu przed zmianą (z formułami), zapis, odczyt kontrolny; formuły ze
+     „;” i przecinkiem dziesiętnym (polskie ustawienia); nie nadpisuj kolumn wpisywanych (Wydatki A–H, J–M, O; Kosztorys F,
+     U; Cennik A–F, H–J, L–N) i nie wstawiaj formuł IMPORT…/IMAGE/HYPERLINK;
+   - **bez konektora albo przy jego błędzie** → plik zmian i `wydatki.py migruj` (wolniej, ten sam wynik);
+   - potem kontrola: zero błędów formuł, sumy jak przed, „Kontrola powiązań” = 0; cofanie – historia wersji arkusza.
+   Formuły zgodne z Arkuszami Google (SUMIFS, INDEX/MATCH, IF, MINIFS; bez formuł tablicowych). Poza Claude Code – opisz
+   zmianę i odłóż do Claude Code.
 4. Szacunek AI (zakładka „Szacunek AI 10.2026”, pełna wycena z 10.2026): gdy dochodzi nowa pozycja albo etap (np. SSO),
    przypisz pasujące wiersze szacunku w kol. J (etap) i K (pozycja „Lp Nazwa”) – plik zmian z operacją `zakres` tylko na
    tych komórkach J:K; nie zmieniaj kwot szacunku. Wiersze niepasujące zostają bez przypisania (liczą się wg stanu).
@@ -113,8 +133,22 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
 4. „Ile potrzebuję w tym miesiącu”: wydatki „Do zapłaty” + transze, których odbiór wypada w miesiącu (Harmonogram) +
    zamówienia z `zakupy` z terminem w miesiącu; osobno zobowiązania bez daty.
 
+## E. Błąd kolejki → pytanie we „📝 Wpisach”
+
+Przebieg szybki (`przeglad-dnia`, A) czyta widok „⚠ Błędy do zgłoszenia” (`view://414f5982-09e7-8182-a74d-000c2bef9ffb`:
+Arkusz = Błąd, puste Zgłoszono). Dla każdej strony:
+1. We „Wpisach” akapit `💸 <wzmianka strony> – nie trafiło do arkusza` z okienkiem ❓ (`wpisy/references/pytania.md`, A):
+   pytanie wynikające z pola Błąd, z propozycją („Która pozycja – 01.5 Prąd budowlany?”), linia ✍️. W tej samej edycji
+   „Wpisów” co reszta przebiegu; potem jednym zapisem Zgłoszono = dziś na tych stronach.
+2. Odpowiedź → popraw pola strony (sekcje B, B2, B3), Arkusz = „Do arkusza”; wpis z okienkiem do „Przetworzone”
+   (`~~💸 …~~ → poprawione: <wzmianka>`). Okienko 💸 bez odpowiedzi, a strona nie jest już „Błąd” (inwestor poprawił sam)
+   → zamknij je tak samo z dopiskiem „naprawione w 💸”.
+3. `sync` czyści Zgłoszono przy każdym ponownym wysłaniu – nowy błąd tej samej strony da nowe pytanie.
+
 ## Zasady
 
+- Wydatków, wycen i planów nie zapisuj konektorem Google ani ręcznie w arkuszu za inwestora – tylko kolejka (walidacja,
+  brak dubli, działa bez Claude i bez konektora).
 - Kwoty wydatków = tyle, ile zapłacono (zwykle brutto). Oferty = netto + VAT.
 - Ceny rynkowe: z widełkami min–max i źródłem z datą; nie wymyślaj cen – wyszukaj.
 - Nie zmieniaj ilości ani cen PLAN bez wskazania źródła (przedmiar, zestawienie stali, oferta, umowa).

@@ -1,12 +1,14 @@
 # Wydatki → Arkusz Google – jak to działa (dla agentów i inwestora)
 
 Kosztorys budowy żyje w arkuszu Google „Kosztorys budowy” (prywatne konto inwestora). Arkusz jest **jedynym źródłem
-prawdy dla liczb**; Notion jest tylko kolejką, którą automat na Macu przenosi do arkusza. Wydatek albo wycena napisane
-we wpisie w Dzienniku lub w wiadomości do asystenta trafiają do arkusza bez ręcznego eksportu i importu.
+prawdy dla liczb**; Notion jest tylko kolejką, którą automat na Macu przenosi do arkusza. Wydatek, wycena albo plan kwoty
+napisane we wpisie w Dzienniku lub w wiadomości do asystenta trafiają do arkusza bez ręcznego eksportu i importu. Błąd
+wraca do inwestora jako pytanie we „📝 Wpisach”. Konektor Google Sheets przyspiesza odczyt i zmiany układu, ale nic od
+niego nie zależy – bez niego działa droga zapasowa (sekcje 4 i 8).
 
 Gdzie co jest opisane:
 - procedura dla agenta (co zapisać, kiedy pytać): `plugins/dom-budowa/skills/koszty/SKILL.md`, sekcje B (wydatek),
-  B2 (wycena), C (zmiana układu), D (transze);
+  B2 (wycena), B3 (plan pozycji), C (zmiana układu), D (transze), E (błąd → pytanie we Wpisach);
 - układ zakładek i kolumn: `plugins/dom-budowa/skills/koszty/references/arkusze.md`;
 - pola bazy 💸 Wydatki → arkusz: `plugins/dom-budowa/skills/notatka/references/notion-schematy.md`;
 - narzędzie: `tools/wydatki.py` (sam Python, biblioteka standardowa); kod Apps Script: sekcja 9 tego pliku.
@@ -21,9 +23,12 @@ wpis w 📓 Dzienniku  ·  wiadomość do asystenta  ·  zdjęcie faktury  ·  w
    │  tools/wydatki.py sync  – NOTION_TOKEN, bez AI
    ▼
 Apps Script przypięty do arkusza (aplikacja internetowa + sekret, @OnlyCurrentDoc)
-   │  Rodzaj Wydatek → zakładka Wydatki  ·  Rodzaj Wycena → zakładka Cennik
+   │  Rodzaj Wydatek → zakładka Wydatki  ·  Wycena → Cennik  ·  Plan → Kosztorys, kolumna „Plan ręczny”
    ▼
 Notion: Arkusz = „W arkuszu” + Wiersz arkusza   albo   „Błąd” + powód w polu Błąd
+   │  przebieg szybki: widok „⚠ Błędy do zgłoszenia” → okienko ❓ we „📝 Wpisach”, Zgłoszono = dziś
+   ▼
+odpowiedź inwestora → agent poprawia pola, „Do arkusza” → następny `sync`
 ```
 
 Kanały i kiedy wiersz trafia do arkusza:
@@ -49,6 +54,7 @@ wyłączony → strony czekają w Notion, nic nie ginie. GitHub Actions nie maj�
 | zła kwota / pozycja w wysłanym wydatku | popraw pola tej samej strony, Arkusz „Do arkusza” | jak wyżej; nadpisze ręczną zmianę inwestora w tym wierszu |
 | wydatek wysłany przez pomyłkę | – | `python3 tools/wydatki.py wycofaj <id strony>` (czyści wiersz, w Notion „Nie wysyłać”) |
 | oferta / cena dostawcy („X ma beton po … zł/m³ brutto”) | Rodzaj Wycena, Kwota = cena za jednostkę, Jedn., Cena podana Netto/Brutto, VAT % | idzie do Cennika, nie do Wydatków; wybór = Status wyceny „Wybrana” i ponowne wysłanie |
+| „planuję wydać ok. N”, „szacowałem N, wyszło M” | Rodzaj Plan, Kwota = plan całej pozycji brutto (+ osobno wydatek M) | `sync` wpisuje „Plan ręczny” pozycji; inny plan już jest → Błąd i pytanie, „Nadpisz plan” zastępuje |
 | „kupić X na budowę” (jeszcze nie kupione) | nic – to zakup, procedura `zakupy` | koszt powstaje dopiero przy zapłacie |
 
 Pola obowiązkowe wydatku: Data, Kwota (to, co zapłacono – zwykle brutto), Pozycja z listy (= pozycja Kosztorysu, z niej
@@ -85,8 +91,12 @@ Agent nie przelicza ręcznie niczego, co liczy arkusz – zmienia dane wejściow
 | Claude Code na Macu (rozmowa i `claude -p`) | MCP Notion | czyta i zapisuje kolejkę 💸 Wydatki |
 | `tools/wydatki.py` | `NOTION_TOKEN` + `ARKUSZ_URL` i `ARKUSZ_SEKRET` z `.dom/sekrety.env` | kolejka → arkusz, pola Arkusz/Błąd/Wiersz, lista Pozycja |
 | Apps Script | przypięty do jednego arkusza (`@OnlyCurrentDoc`) | dopisz / usuń / zmień układ – bez Dysku i innych plików |
-| Konektor Google Drive / Sheets (gdy włączony w sesji Claude) | konto Google inwestora | odczyt arkusza z formułami do analiz i przed zmianą układu; zapis tylko na wyraźne polecenie inwestora, nigdy dla wydatków (omija kolejkę i deduplikację); nie zakładaj, że działa w `claude -p` |
+| Konektor Google Drive / Sheets (gdy jest w sesji Claude: Claude Code, claude.ai, telefon) | konto Google inwestora (właściciel arkusza) | odczyt żywego arkusza z formułami – pierwsze źródło liczb; zmiany układu w Claude Code (sekcja 8); nigdy wydatki, wyceny ani plany (omija kolejkę i deduplikację); przebiegi `claude -p` na nim nie polegają |
 | GitHub Actions | brak dostępu do Notion i arkusza | – |
+
+**Kolejność źródeł liczb** (brak narzędzia albo błąd → następne, bez ponawiania): konektor (żywy arkusz) → kopia
+`Koszty/Kosztorys_google.json` w Claude Code (`pobierz` po świeżą) → eksport od inwestora na claude.ai. ID arkusza i e-mail
+właściciela nie trafiają do repo – plik znajdź po tytule wyszukiwarką Dysku.
 
 Sekretów (adres `/exec`, sekret, tokeny) nigdy nie wypisuj ani nie wklejaj poza `sekrety.env`. Wyciek → nowy sekret
 (sekcja 7, kroki 3 i 5). Komunikaty `wydatki.py` niosą tylko liczby, numery pozycji i statusy – bez kwot i opisów.
@@ -96,11 +106,11 @@ Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
 
 | Polecenie | Co robi | Kto woła |
 |---|---|---|
-| `sync` | kolejka „Do arkusza” (i puste Arkusz) → arkusz; strona już w arkuszu = korekta jej wiersza | automat po przebiegu; agent w Claude Code po zapisie |
+| `sync` | kolejka „Do arkusza” (i puste Arkusz) → arkusz; strona już w arkuszu = korekta jej wiersza; Plan → „Plan ręczny” w Kosztorysie (kolumna i wiersz po nagłówkach); czyści Zgłoszono | automat po przebiegu; agent w Claude Code po zapisie |
 | `sync --proba` | pokazuje, co by poszło; nic nie zapisuje | ręcznie |
 | `pozycje` | pozycje Kosztorysu → opcje pola Pozycja w Notion | przebieg wieczorny; po dodaniu pozycji w arkuszu |
 | `pobierz` | wartości wszystkich zakładek → `<hub>/Koszty/Kosztorys_google.json` | przebieg wieczorny; przed analizą liczb |
-| `wycofaj <id>…` | czyści wiersz w Wydatkach / Cenniku, w Notion „Nie wysyłać” | agent na prośbę |
+| `wycofaj <id>…` | czyści wiersz w Wydatkach / Cenniku albo „Plan ręczny” (gdy stoi tam kwota z tej strony), w Notion „Nie wysyłać” | agent na prośbę |
 | `sprawdz` | sekrety, dostęp do bazy i arkusza, wersja kodu | ręcznie, przy problemach |
 | `kod` | kod Apps Script z sekcji 9 (z `\| pbcopy` – do schowka) | przy aktualizacji kodu |
 | `migruj <zmiany.json>` | zmiana układu na żywym arkuszu (sekcja 8) | agent w Claude Code |
@@ -122,6 +132,8 @@ blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 | „zły sekret” | `ARKUSZ_SEKRET` ≠ właściwość `SEKRET` – sekcja 7, kroki 3 i 5 |
 | „pozycja … nie istnieje w Kosztorysie” | pozycję usunięto lub przenumerowano – wybierz inną; `pozycje` odświeży listę |
 | „materiał stanu zero bez ilości” | dopisz Ilość i Jedn., ustaw „Do arkusza” |
+| „pozycja … ma już inny plan ręczny” | inwestor decyduje: zaznacz „Nadpisz plan” i „Do arkusza” albo zostaw stary plan („Nie wysyłać”) |
+| „plany: timeout – strony zostają w kolejce” | odczyt Kosztorysu przekroczył czas – plany pójdą przy następnym `sync` |
 | „cena netto bez stawki” | wpisz VAT % (nie zgaduj – zapytaj inwestora) |
 | HTTP 404 / 403 z Notion | integracja bez dostępu do bazy (⋯ → Połączenia) albo bez prawa „Update content” |
 | data przesunięta o dzień | strefa arkusza ≠ Warsaw – Plik → Ustawienia |
@@ -147,9 +159,15 @@ Aktualizacja kodu: wklej nowy kod jak w kroku 2, potem Wdróż → Zarządzaj wd
 
 Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) – zawsze pracuj na aktualnym stanie.
 
-1. `wydatki.py pobierz` – aktualne wartości i nagłówki. Odwołania do innych zakładek buduj po **nagłówkach z JSON**, nie po
-   literach z `arkusze.md` (kolumny bywają przesunięte). Formuł JSON nie zawiera – gdy potrzebujesz formuł, czytaj je
-   konektorem Google Sheets, jeśli jest włączony.
+0. **Droga szybka – konektor Google Sheets** (gdy jest w sesji): migawka zmienianego zakresu z formułami
+   (`get_spreadsheet` z `userEnteredValue`) zapisana w `<hub>/.dom/wydatki/` → zapis (`update_formulas`, `update_values`,
+   `update_spreadsheet`) → odczyt kontrolny. Te same zasady co skrypt: formuły ze „;” i przecinkiem dziesiętnym
+   (sprawdzone 10.11.2026 – „,” daje liczbę dziesiętną), bez nadpisywania kolumn wpisywanych (Wydatki A–H, J–M, O;
+   Kosztorys F, U; Cennik A–F, H–J, L–N), bez IMPORT…/IMAGE/HYPERLINK, nie w trakcie `sync`. Reguły formatowania
+   warunkowego przez `update_spreadsheet` przetestuj najpierw na jednej regule. Konektora brak albo błąd → kroki 1–5 (wolniej,
+   ten sam wynik). Potem i tak krok 5 (kontrola).
+1. `wydatki.py pobierz` albo odczyt konektorem – aktualne wartości i nagłówki. Odwołania do innych zakładek buduj po
+   **nagłówkach żywego arkusza**, nie po literach z `arkusze.md` (kolumny bywają przesunięte).
 2. Plik zmian JSON (lista operacji akcji `zmien`: `zakres`, `wyczysc`, `walidacja`, `warunkowe`, `szerokosci`, `wysokosci`,
    `zamroz`, `siatka`, `ramka`) – ręcznie albo narzędziem `python3 ~/Documents/Dom/AI/automaty/arkusz_zmiany.py` (poza
    repo, openpyxl; z docelowego `.xlsx`). Zapisz go w `<hub>/.dom/wydatki/` z datą, obok migawkę „przed”.

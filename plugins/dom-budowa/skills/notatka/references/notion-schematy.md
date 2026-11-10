@@ -61,10 +61,10 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 
 | Pole | Typ | Wartości |
 |---|---|---|
-| Rodzaj | select | Wydatek (puste = Wydatek) → arkusz Wydatki; Wycena → arkusz Cennik |
+| Rodzaj | select | Wydatek (puste = Wydatek) → arkusz Wydatki; Wycena → arkusz Cennik; Plan → Kosztorys „Plan ręczny” pozycji (`koszty` B3) |
 | Wydatek | tytuł | co kupione / za co zapłacone (→ Opis w Wydatkach / Materiał w Cenniku) |
 | Data | data | data płatności |
-| Kwota | liczba | Wydatek: zł brutto, tyle ile zapłacono; Wycena: cena za jednostkę |
+| Kwota | liczba | Wydatek: zł brutto, tyle ile zapłacono; Wycena: cena za jednostkę; Plan: plan całej pozycji brutto |
 | Pozycja | select | pozycje arkusza Kosztorys „Lp Nazwa” (przecinki zamienione na „;”); listę odświeża `wydatki.py pozycje` |
 | Typ | select | Materiał, Robocizna, Sprzęt, Usługa, Formalności |
 | Ilość, Jedn. | liczba, select | przy materiale w etapach 02–08 obowiązkowo; Jedn.: kpl, m³, m², mb, kg, t, szt, h, dzień, mies., l |
@@ -72,7 +72,11 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 | Sposób | select | Przelew, Gotówka, Karta, BLIK |
 | Dostawca / nr FV, Notatki | tekst | |
 | Arkusz | select | Do arkusza albo puste (do wysłania), W arkuszu, Błąd, Nie wysyłać – „W arkuszu” i „Błąd” ustawia skrypt; strona „W arkuszu” przestawiona znów na „Do arkusza” = korekta jej wiersza (np. Do zapłaty → Zrealizowane) |
-| Błąd | tekst | powód odrzucenia; po poprawce pola ustaw Arkusz = „Do arkusza” |
+| Błąd | tekst | powód odrzucenia; po poprawce pola ustaw Arkusz = „Do arkusza” (przy „W arkuszu” – ewentualna uwaga, np. plan zapasowy) |
+| Nadpisz plan | checkbox | tylko Plan: ten plan zastępuje inny plan ręczny pozycji |
+| Zgłoszono | data | dzień pytania o błąd we „📝 Wpisach” (ustawia przebieg, `koszty` E; czyści `sync`) |
+
+Widok „⚠ Błędy do zgłoszenia” (`view://414f5982-09e7-8182-a74d-000c2bef9ffb`): Arkusz = Błąd i puste Zgłoszono – czyta go przebieg szybki.
 | Wiersz arkusza | liczba | numer wiersza w arkuszu Wydatki albo Cennik (ustawia skrypt) |
 | Status wyceny | select | tylko Wycena: Oferta, Wybrana, Odrzucona – zmiana + „Do arkusza” aktualizuje wiersz Cennika |
 | Cena podana | select | tylko Wycena: Brutto, Netto |

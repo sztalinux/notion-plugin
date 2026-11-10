@@ -25,7 +25,7 @@ Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje s
   [szacunek AI]) · M Klucz (formuła „Lp Pozycja” – źródło listy w Wydatkach i w Notion) · N Cena wybrana (Cennik kol. G)
   · O Najniższa oferta · P Ilość plan × cena wybrana (podpowiedź do PLAN) · Q–S Szacunek AI: materiał / robocizna / razem
   (razem także ze sprzętem i usługami) · T Kontrola (⚠ etap spoza Etapów, ⚠ brak typu) · U Plan ręczny (kwota PLAN, gdy brak wybranej oferty – wpisuje
-  inwestor) · V Materiał (grupa – wspólna oferta z Cennika dla kilku pozycji, np. stal płyty, ścian i stropu). Ceny N–O
+  inwestor albo `sync` z kolejki, Rodzaj Plan) · V Materiał (grupa – wspólna oferta z Cennika dla kilku pozycji, np. stal płyty, ścian i stropu). Ceny N–O
   są w jednostce pozycji (oferta za tonę → zł/kg przy pozycji w kg).
 - **Etapy!A:P** – A Etap · B Stan · C Umowa z ekipą (transza) · D–G PLAN: Materiał / Ekipa / Inne / razem · H–L WYDANE:
   Materiał / Ekipa / Inne / Bez typu / razem · M Pozostało · N Do zapłaty ekipie · O Uwagi / terminy · P–R Szacunek AI:

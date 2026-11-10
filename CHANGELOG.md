@@ -4,6 +4,20 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.10.0] – 2026-11-10
+
+- Plan pozycji z wpisów: Rodzaj „Plan” w kolejce 💸 (`koszty` B3) – `sync` wpisuje kwotę w Kosztorys „Plan ręczny”
+  (kolumna i wiersz po nagłówkach); cudzego planu nie nadpisuje bez „Nadpisz plan”; `wycofaj` czyści komórkę.
+- Błędy kolejki wracają do inwestora: widok „⚠ Błędy do zgłoszenia”, pytanie z okienkiem ❓ we „📝 Wpisach” zakładane
+  przez przebieg szybki (`koszty` E), pole Zgłoszono czyszczone przy ponownym wysłaniu.
+- Konektor Google Sheets jako szybsza droga z zapasem: liczby najpierw z żywego arkusza, potem z kopii JSON, potem eksport;
+  zmiany układu konektorem (zasady jak w skrypcie, formuły ze „;”), bez niego `migruj`. Wydatki, wyceny i plany – tylko kolejka.
+
+## ja [1.11.0] – 2026-11-10
+
+- `przeglad-dnia` A: piąty odczyt – błędy kolejki 💸 i okienka 💸 we „Wpisach”; plan kwoty podany przez inwestora idzie
+  do kolejki. `wpisy`: zamykanie okienek 💸.
+
 ## dom-budowa [3.9.1] – 2026-11-10
 
 - Płatności spójne z kolejką w całym harnessie: `oferta` (cena dostawcy → wycena w kolejce, kwota umowy ekipy → Etapy

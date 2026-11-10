@@ -21,7 +21,8 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
 - Nie ma kogo zapytać: niejasne → pytanie w Notion (okienko pod wpisem w „📝 Wpisy”; sprawy spoza wpisów – Dziennik „❓”,
   strona pomysłu), nie tylko w odpowiedzi.
 - Nie wybieraj ani nie zgaduj decyzji za inwestora; nie zmieniaj układu ani kwot planu w arkuszu kosztów ani terminów kroków
-  Harmonogramu budowy (wydatki i wyceny z wpisów zapisuj w kolejce „💸 Wydatki → arkusz” wg `koszty` B/B2 – to nie decyzja) – zostaw wpis z pytaniem i propozycją (`wpisy`, krok 4). Nowy obszar Dziennika tylko proponuj, nie dodawaj sam.
+  Harmonogramu budowy (wydatki, wyceny i plan kwoty, który inwestor sam podał we wpisie, zapisuj w kolejce „💸 Wydatki → arkusz” wg `koszty`
+  B/B2/B3 – to nie decyzja; własnych szacunków planu nie zapisuj) – zostaw wpis z pytaniem i propozycją (`wpisy`, krok 4). Nowy obszar Dziennika tylko proponuj, nie dodawaj sam.
 - Decyzję, którą inwestor **sam napisał** – wpis „SP-n: …” albo „decyzja: …”, pole Decyzja w Rejestrze sprzeczności –
   domknij ze wszystkimi skutkami (Status, data, Notatnik, wiedza, temat) wg `wiedza/references/sprzecznosci.md` (plugin
   dom-budowa), „Bez inwestora”; niejasna → pytanie, bez zmian w wierszu. Pole Decyzja sprawdza wieczór (krok 3).
@@ -31,17 +32,19 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
 
 ## A. Tryb szybki – ma być tani
 
-1. **Cztery odczyty – zawsze wszystkie, także gdy pierwszy coś dał:** Skrzynka – dokumenty Claude o tytule „📥 Skrzynka”,
+1. **Pięć odczytów – zawsze wszystkie, także gdy pierwszy coś dał:** Skrzynka – dokumenty Claude o tytule „📥 Skrzynka”,
    sekcja „Nowe” (`wpisy/references/skrzynka.md`; brak narzędzia Claude Docs → pomiń i napisz „Skrzynka – brak odczytu”), strona Dziennik
    (`3f8f5982-09e7-80c8-a154-c59aeb844e8f`), strona „📝 Wpisy” (`3faf5982-09e7-80b2-9b33-c48745d67a4f` – bloki w jej treści
    i lista podstron) i lista stron najwyższego poziomu Private (narzędzie listy stron prywatnych; porównaj ID z listą
-   stałych stron w `ja/references/notion-mapa.md`; 🔒 Prywatne nie otwieraj). Otwórz tylko strony spoza listy.
+   stałych stron w `ja/references/notion-mapa.md`; 🔒 Prywatne nie otwieraj). Otwórz tylko strony spoza listy. Piąty: widok
+   „⚠ Błędy do zgłoszenia” w „💸 Wydatki → arkusz” (tryb view, `koszty`, sekcja E) oraz stan stron z okienek 💸 we „Wpisach”.
    Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Brak narzędzia do listy stron prywatnych → to źródło pomiń
    i napisz „widget – brak odczytu” w odpowiedzi i w linii „🤖” (`wpisy`, krok 1).
 2. **Nic nowego → koniec.** Brak bloków na pierwszym poziomie Dziennika i w treści „Wpisów” (wpis z okienkiem ❓ bez
    odpowiedzi się nie liczy), podstron w „Wpisach” i nowych stron w Private (definicja w `wpisy`), brak pozycji w „Nowe”
    Skrzynki i brak odpowiedzi inwestora (tekst w okienku ❓ we „Wpisach”; w Dzienniku „❓” – dopisek albo zaznaczony
-   checkbox; `wpisy/references/pytania.md`) → odpowiedz jedną linią „Dziennik: nic nowego (<godzina>;
+   checkbox; `wpisy/references/pytania.md`), brak wierszy w widoku błędów i okienek 💸, których strona nie jest już
+   „Błąd” → odpowiedz jedną linią „Dziennik: nic nowego (<godzina>;
    widget: 0, Skrzynka: 0)”
    i zakończ. **Zero zapisów** – nie dopisuj linii „🤖”, nie zmieniaj strony.
 3. **Inwestor może jeszcze pisać – oceniaj każde źródło osobno** (treść Dziennika, treść „Wpisów”, każda podstrona,
@@ -50,7 +53,8 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
    brak kropki to nie urwanie (z telefonu inwestor pisze bez kropek). Tylko gdy pominąłeś wszystko, co nowe →
    „Dziennik: pomijam, świeże wpisy (<godzina>)” i zakończ. Pusta strona z widgetu starsza niż 15 minut → pominięta
    (`wpisy`, krok 6).
-4. **Są wpisy:** procedura `wpisy`, kroki 2–7, bez pytań w rozmowie (wyjątki z zasad wyżej). Linia „🤖” w bloku dnia –
+4. **Są wpisy:** procedura `wpisy`, kroki 2–7, bez pytań w rozmowie (wyjątki z zasad wyżej). Błędy kolejki 💸 –
+   `koszty`, sekcja E, w tej samej edycji „Wpisów”. Linia „🤖” w bloku dnia –
    krótka, z godziną: `🤖 11:00: przetworzono 2 (zadania 1, emocje 1), czeka na Ciebie 1, świeże pominięte 1`. Kolejne
    przebiegi tego dnia dopisują swoje linie pod spodem w tym samym bloku; tytuł bloku pokazuje sumę dnia. W odpowiedzi
    podaj nowe wpisy per źródło – „Dziennik n · Wpisy n · widget n · Skrzynka n” (albo „widget – brak odczytu”) – żeby było

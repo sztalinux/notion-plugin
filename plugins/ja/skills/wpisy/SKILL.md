@@ -135,6 +135,8 @@ z czatu bez Notion (`references/skrzynka.md`): te same kroki 3–7, ślad w Skrz
   albo linię „❓” przenieś do bloku dnia w „Przetworzone” jako `~~…~~ → rozwiązane w rozmowie (data): <wzmianka>`. Nie usuwaj.
 - **Wpis w „❓” Dziennika** (stary format albo pomyłka) → przy najbliższej edycji przenieś go do „Wpisów” z jednym okienkiem
   (scal pytania, dopisane odpowiedzi uwzględnij) – pytania o wpisy mają być tam, gdzie inwestor pisze.
+- **Okienko 💸** (błąd kolejki wydatków, zakłada je przebieg): odpowiedź i zamknięcie – `koszty`, sekcja E (plugin
+  dom-budowa); bez odpowiedzi sprawdź stan strony – nie jest już „Błąd” → zamknij jako naprawione.
 - Zdjęcia we wpisie: budowa → `dziennik` (plugin dom-budowa); inne – zostaw w treści docelowej strony.
 - Dziennik to skrzynka wejściowa, nie archiwum: wpis żyje w docelowym miejscu, „Przetworzone” to ślad na kilka dni.
 - Inwestor woli pisać niż wypełniać pola – nie proponuj zamiany Dziennika na bazę.

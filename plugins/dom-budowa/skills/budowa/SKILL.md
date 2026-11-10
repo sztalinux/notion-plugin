@@ -73,16 +73,16 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
    | wydatek, faktura, koszt | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
    | oferta, wycena | `oferta` | cena materiału od dostawcy → `koszty` (B2) |
+   | plan kwoty od inwestora („planuję wydać…”, „szacowałem…”) | `koszty` (B3) | Rodzaj Plan; wydatek z tego wpisu – osobna strona |
    | „dostałem plik” | `dokumenty` | gdzie indziej niż Claude Code – przypomnienie, żeby wrzucić do `_Przychodzące/` |
 
 ## Wieczorem (przegląd dnia budowy)
 
-Skill `przeglad-dnia` (plugin `ja`) wywołuje tę sekcję w trybie wieczornym; ręcznie: „przegląd dnia budowy”. Budowa ma
-własny przegląd, żeby nie zasłaniała spraw osobistych.
+`przeglad-dnia` (plugin `ja`) wywołuje tę sekcję wieczorem; ręcznie: „przegląd dnia budowy” (osobno od spraw osobistych).
 
 1. **Dziś** (odczyt): wpisy o budowie przetworzone dziś (blok dnia w „Przetworzone” w Dzienniku), Dziennik budowy z dzisiejszą
    datą, Notatnik i TASKS (Obszar Dom/puste) zamknięte lub dodane dziś, nowe decyzje czekające na inwestora (❓ o budowie, SP),
-   wiersze „💸 Wydatki → arkusz” z Arkusz = „Błąd” (powód z pola Błąd). **Najpierw domknij decyzje wpisane** w Rejestrze (widok
+   błędy kolejki 💸 zgłoszone we „Wpisach” (`koszty` E) – licznik, bez powtarzania pytań. **Najpierw domknij decyzje wpisane** w Rejestrze (widok
    „🤖 Decyzja wpisana – do domknięcia”) wg `wiedza/references/sprzecznosci.md`, „Bez inwestora” – jedyny zapis tego kroku.
 2. **Jutro** (odczyt): kroki Harmonogramu startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zadania), dostawy
    jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone), TASKS Dom z When = jutro, WAITING z terminem jutro lub po.

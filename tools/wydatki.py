@@ -16,7 +16,10 @@ z numerem wiersza albo „Błąd” z powodem. Ponowne wysłanie tej samej stron
 = notion:<id strony>). Strona już dopisana, która wróci do kolejki (zmienione pola + Arkusz = „Do arkusza”), poprawia swój
 wiersz (pola wpisywane A:H, J:M – np. „Do zapłaty” → „Zrealizowane”); korekta z Notion nadpisuje ręczne zmiany tego wiersza
 w arkuszu. Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;
-ponowne wysłanie tej samej strony aktualizuje jej wiersz (np. Status wyceny = Wybrana). Wyceny wymagają kodu Apps Script
+ponowne wysłanie tej samej strony aktualizuje jej wiersz (np. Status wyceny = Wybrana). Rodzaj „Plan” (plan całej pozycji
+brutto) nie idzie do Apps Script jako wiersz – `sync` wpisuje go w Kosztorys „Plan ręczny” (kolumna i wiersz po nagłówkach),
+inny plan nadpisuje tylko strona, która go ustawiła, albo z „Nadpisz plan”. Każde wysłanie czyści pole Zgłoszono (pytanie
+o błąd we Wpisach zakłada przebieg Claude, nie ten skrypt). Wyceny wymagają kodu Apps Script
 w wersji ≥ 2 i Cennika w nowym układzie (ping: cennik_ok) – inaczej czekają w kolejce.
 Zmiany układu arkusza (kolumny, formuły, kolory) idą bez ponownego importu: plik zmian JSON z operacjami
 (akcja „zmien” w Apps Script). Skrypt ma dostęp tylko do tego arkusza (@OnlyCurrentDoc) – bez kopii na Dysku; zmianę
@@ -44,6 +47,7 @@ ZRODLO = os.environ.get("WYDATKI_ZRODLO") or "72cff09c-609b-405d-a32c-263271b3b5
 DO_ARKUSZA, W_ARKUSZU, BLAD = "Do arkusza", "W arkuszu", "Błąd"
 ZASTEPCZA = "00.0"          # opcja-zaślepka Pozycji sprzed pierwszego `pozycje`
 LIMIT_ARKUSZA_S = 90        # Apps Script bywa wolny przy zimnym starcie
+PIERWSZY_WIERSZ = 5         # pierwszy wiersz danych w zakładkach (nagłówki w wierszu 4) – jak w Apps Script
 PACZKA = 25                 # wierszy w jednym żądaniu do arkusza
 WERSJA_WYCEN = 2            # minimalna wersja kodu Apps Script, która zapisuje wyceny do Cennika
 PLIK_KOPII = "Kosztorys_google.json"
@@ -163,10 +167,18 @@ def na_wiersz(strona: dict) -> dict:
         "opis": tekst(p.get("Wydatek") or {}),
         "dostawca": tekst(p.get("Dostawca / nr FV") or {}),
         "notatki": tekst(p.get("Notatki") or {}),
+        "nadpisz": bool((p.get("Nadpisz plan") or {}).get("checkbox")),
+        "wiersz_ark": (p.get("Wiersz arkusza") or {}).get("number"),
     }
 
 
 def blad_lokalny(w: dict) -> str:
+    if w["rodzaj"] == "Plan":
+        if not isinstance(w["kwota"], (int, float)) or w["kwota"] < 0:
+            return "plan bez kwoty (pole Kwota, zł brutto za całą pozycję)"
+        if not w["lp"] or w["lp"] == ZASTEPCZA:
+            return "plan bez pozycji – wybierz z listy Pozycja"
+        return ""
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", w["data"]):
         return "brak daty"
     if not isinstance(w["kwota"], (int, float)) or w["kwota"] <= 0:
@@ -190,7 +202,8 @@ def blad_lokalny(w: dict) -> str:
 
 def oznacz(k: dict, id_: str, stan: str, wiersz=None, blad: str = ""):
     wl = {"Arkusz": {"select": {"name": stan}},
-          "Błąd": {"rich_text": [{"type": "text", "text": {"content": blad[:300]}}] if blad else []}}
+          "Błąd": {"rich_text": [{"type": "text", "text": {"content": blad[:300]}}] if blad else []},
+          "Zgłoszono": {"date": None}}   # nowy wynik = nowe zgłoszenie we Wpisach, jeśli znów błąd
     if wiersz:
         wl["Wiersz arkusza"] = {"number": wiersz}
     W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{id_}", naglowki(k), {"properties": wl})
@@ -202,7 +215,7 @@ def sync(k: dict, proba: bool) -> tuple:
     """→ (liczniki, błędy krytyczne). Błąd pojedynczego wiersza trafia do Notion, nie przerywa reszty."""
     wymagaj(k, "token") if proba else wymagaj(k, "token", "url", "sekret")
     wiersze = [na_wiersz(s) for s in kolejka(k)]
-    licz = {"w_kolejce": len(wiersze), "dopisane": 0, "poprawione": 0, "wyceny": 0, "bledy": 0, "czekaja": 0}
+    licz = {"w_kolejce": len(wiersze), "dopisane": 0, "poprawione": 0, "wyceny": 0, "plany": 0, "bledy": 0, "czekaja": 0}
     bledy = []
     do_wyslania = []
     for w in wiersze:
@@ -219,6 +232,13 @@ def sync(k: dict, proba: bool) -> tuple:
         for w in do_wyslania:
             print(f"  → {w['id'][:8]} {w['rodzaj']} {w['data']} poz. {w['lp'] or '–'} {w['typ'] or w['status_wyceny'] or ''} – wysłałbym")
         return licz, bledy
+    plany = [w for w in do_wyslania if w["rodzaj"] == "Plan"]
+    do_wyslania = [w for w in do_wyslania if w["rodzaj"] != "Plan"]   # Apps Script wziąłby je za wydatki
+    if plany:
+        try:
+            wyslij_plany(k, plany, licz)
+        except BladArkusza as e:
+            bledy.append(f"plany: {e} – strony zostają w kolejce")
     if any(w["rodzaj"] == "Wycena" for w in do_wyslania):
         ping = arkusz(k, "ping")
         wersja = ping.get("wersja") or 1
@@ -279,12 +299,90 @@ def popraw_wiersz(k: dict, w: dict, wiersz: int, mapa: dict) -> str:
     return ""
 
 
+def kolumna_a1(nr: int) -> str:
+    """0 → A, 25 → Z, 26 → AA."""
+    s = ""
+    nr += 1
+    while nr:
+        nr, r = divmod(nr - 1, 26)
+        s = chr(65 + r) + s
+    return s
+
+
+def mapa_planu(k: dict) -> dict:
+    """Z żywego arkusza Kosztorys: kolumna „Plan ręczny…”, „Ilość plan × cena wybrana” (po nagłówkach, nie po literach)
+    i wiersz każdej pozycji (Lp) z bieżącą wartością planu ręcznego."""
+    dane = arkusz(k, "dane")["arkusze"]["Kosztorys"]
+    nag = [str(x).strip() for x in dane[PIERWSZY_WIERSZ - 2]]
+    def kol(poczatek):
+        return next((i for i, n in enumerate(nag) if n.startswith(poczatek)), None)
+    k_plan, k_lp, k_oferta = kol("Plan ręczny"), kol("Lp"), kol("Ilość plan × cena")
+    if k_plan is None or k_lp is None:
+        raise BladArkusza("Kosztorys bez kolumny „Plan ręczny” albo „Lp” w wierszu nagłówków")
+    pozycje_ = {}
+    for nr, w in enumerate(dane[PIERWSZY_WIERSZ - 1:], start=PIERWSZY_WIERSZ):
+        lp = str(w[k_lp] if k_lp < len(w) else "").strip()
+        if lp:
+            pozycje_[lp] = {"wiersz": nr, "plan": w[k_plan] if k_plan < len(w) else "",
+                            "oferta": w[k_oferta] if k_oferta is not None and k_oferta < len(w) else ""}
+    return {"kolumna": kolumna_a1(k_plan), "pozycje": pozycje_}
+
+
+def liczba(x):
+    return x if isinstance(x, (int, float)) and not isinstance(x, bool) else None
+
+
+def wyslij_plany(k: dict, plany: list, licz: dict):
+    """Rodzaj „Plan” → komórka „Plan ręczny” pozycji w Kosztorysie. Pusta albo równa – zapis; inna wartość – tylko gdy ta
+    strona już tę komórkę ustawiła (Wiersz arkusza) albo ma zaznaczone „Nadpisz plan”; inaczej Błąd z pytaniem."""
+    m = mapa_planu(k)
+    for w in plany:
+        p = m["pozycje"].get(w["lp"])
+        if not p:
+            licz["bledy"] += 1
+            oznacz(k, w["id"], BLAD, blad=f"pozycja {w['lp']} nie istnieje w Kosztorysie")
+            continue
+        obecny = liczba(p["plan"])
+        wlasny = w["wiersz_ark"] == p["wiersz"]
+        if obecny not in (None, 0) and obecny != w["kwota"] and not (wlasny or w["nadpisz"]):
+            licz["bledy"] += 1
+            oznacz(k, w["id"], BLAD, blad=f"pozycja {w['lp']} ma już inny plan ręczny – zaznacz „Nadpisz plan”, "
+                                          "jeśli ten ma go zastąpić")
+            continue
+        if obecny != w["kwota"]:
+            a1 = f"{m['kolumna']}{p['wiersz']}"
+            arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Kosztorys", "a1": a1, "wartosci": [[w["kwota"]]]}])
+        uwaga = ("uwaga: pozycja ma wybraną ofertę – PLAN liczy się z oferty × ilość, plan ręczny jest zapasowy"
+                 if (liczba(p["oferta"]) or 0) > 0 else "")
+        licz["plany"] += 1
+        oznacz(k, w["id"], W_ARKUSZU, wiersz=p["wiersz"], blad=uwaga)
+
+
+def strona(k: dict, id_: str) -> dict:
+    return W.zadanie_http("GET", f"{W.NOTION_API}/v1/pages/{id_}", naglowki(k))
+
+
 def wycofaj(k: dict, ids: list) -> dict:
     """Czyści wiersze tych stron w arkuszu (Wydatki i Cennik) i ustawia w Notion Arkusz = „Nie wysyłać”."""
     wymagaj(k, "token", "url", "sekret")
     ids = [i.strip() for i in ids if i.strip()]
-    wyniki = arkusz(k, "usun", ids=ids)["wyniki"]
-    licz = {"stron": len(ids), "wiersze_wydatkow": 0, "wiersze_cennika": 0}
+    licz = {"stron": len(ids), "wiersze_wydatkow": 0, "wiersze_cennika": 0, "plany": 0}
+    plany = [w for w in (na_wiersz(strona(k, i)) for i in ids) if w["rodzaj"] == "Plan"]
+    if plany:
+        # plan wycofany = pusta komórka „Plan ręczny”, ale tylko gdy nadal stoi tam kwota z tej strony
+        m = mapa_planu(k)
+        for w in plany:
+            p = m["pozycje"].get(w["lp"])
+            if p and liczba(p["plan"]) == w["kwota"]:
+                arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Kosztorys",
+                                              "a1": f"{m['kolumna']}{p['wiersz']}", "wartosci": [[""]]}])
+                licz["plany"] += 1
+        id_planow = {w["id"].replace("-", "") for w in plany}
+        ids = [i for i in ids if i.replace("-", "") not in id_planow]
+        for w in plany:
+            W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{w['id']}", naglowki(k),
+                           {"properties": {"Arkusz": {"select": {"name": "Nie wysyłać"}}, "Wiersz arkusza": {"number": None}}})
+    wyniki = arkusz(k, "usun", ids=ids)["wyniki"] if ids else []
     for r in wyniki:
         licz["wiersze_wydatkow"] += len(r.get("wydatki") or [])
         licz["wiersze_cennika"] += len(r.get("cennik") or [])
