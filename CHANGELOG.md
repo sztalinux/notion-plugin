@@ -4,6 +4,27 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.11.0] – 2026-11-10
+
+- POM-1 (etapy C–F, część harnessu): zdjęcia z budowy na Dysku Google w folderach kroków `Dom/Zdjęcia/<etap>/<krok>/`,
+  skrzynka `Zdjęcia/_nowe` z telefonu, dokumenty z telefonu (faktury, WZ, wpisy kierownika) i kopia dokumentów Mac → Dysk.
+  Nowy `docs/zdjecia-i-kopia.md`: zasady dla agentów (nic nie kasować, plan na sucho, dziennik ruchów, cofanie), układ,
+  pięć trybów pracy (aplikacja Dysku na Macu dziś nie działa – tryb konektora i paczek), tabela „co wolno w którym
+  kanale”, przepływy sześciu poleceń, przypadki brzegowe z testami.
+- Nowe narzędzia (biblioteka standardowa): `tools/zdjecia.py` (plan rozłożenia z listy konektora albo lokalnie; data
+  zrobienia z EXIF, nazwy pliku z telefonu albo daty wgrania z `~`; dopasowanie folderu do kroku, dokumentu albo tematu;
+  duplikaty, blokada, `zapisz-ruchy`, `cofnij`, `slad`, `wg-dni`) i `tools/kopia.py` (paczka do `_Na Dysk/<data>`,
+  `wgrane`, tryb aplikacji z archiwum starych wersji, kontrola Dysku); testy `tools/test_zdjecia.py`, `tools/test_kopia.py`
+  na zmyślonych plikach. `tools/dokumenty.py` pomija `_Na Dysk`, `_Kopie`, `_Archiwum`.
+- Notion: Dziennik budowy – „Krok harmonogramu” (relacja, zwrotna „Dziennik budowy” w Harmonogramie), „Ujęcia przed
+  zakryciem”, „Dokumenty z dnia”; pole „Zdjęcia” = `n zdjęć: krok (n) link; …` (liczba na początku – pulpit czyta ją
+  bez zmian); Harmonogram – „Zdjęcia” (adres folderu kroku); 🧱 Zakupy budowy – „Dokumenty” (link).
+- Procedury: `dziennik` (nowa sekcja E – rozkładanie i ślad), `dokumenty` (nowa sekcja D – dokumenty z telefonu i kopia;
+  odczyt dokumentu z Dysku konektorem przed prośbą), `etap` B (ujęcia do `przed zakryciem/`), `harmonogram` (folder nowego
+  kroku), `zakupy` C (WZ do `Dostawy/<etap>`), `budowa` (licznik `_nowe` wieczorem), `przeglad-tygodnia` („Zdjęcia
+  tygodnia”, zaległości, stan kopii); mapa Notion, `zrodla.md`, `AGENTS.md`, `CLAUDE.md` (pozycja startowa „Zdjęcia
+  i kopia”), README (struktura, tabela konektorów). Przebiegi automatyczne zdjęć nie rozkładają (do testu T9).
+
 ## dom-budowa [3.10.6] – 2026-11-10
 
 - Nowy `docs/decyzje-system-wiedzy.md`: rejestr 29 decyzji o systemie wiedzy (ADR) – kontekst, wybór, odrzucone warianty

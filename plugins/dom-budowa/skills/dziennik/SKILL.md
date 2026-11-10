@@ -9,8 +9,9 @@ Cel: każdy dzień na budowie zostawia ślad, który po roku pozwala odpowiedzie
 warunkach i gdzie są zdjęcia. To podstawa przy sporze z ekipą, gwarancji, rozliczeniu pracy własnej i przy
 przeglądzie tygodnia. Dziennik inwestora nie zastępuje dziennika budowy prowadzonego przez kierownika.
 
-Baza i pola: `references/notion-dziennik.md`. Zdjęcia: folder budowy `Zdjęcia/RRRR-MM-DD_<etap-krok>/`
-(skrypt dokumentów pomija ten folder – zdjęcia nie trafiają do paczki ani do indeksu).
+Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęcia/<etap>/<NN krok>/`, pliki
+`RRRR-MM-DD_<oryginał>`; inwestor wgrywa z telefonu do folderu kroku albo do `Zdjęcia/_nowe` – rozkładanie, tryby i reguły:
+`docs/zdjecia-i-kopia.md` (repo harnessu). W Dzienniku tylko link folderu i liczba – zdjęć nie wstawiaj do treści wpisu.
 
 ## A. Wpis z dnia / wizyty
 
@@ -30,10 +31,11 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: folder budowy `Zdjęcia/
    | koniec kroku / etapu, „jutro betonujemy” | `etap` – odbiór albo bramka; Harmonogram – Status kroku (W trakcie / Zrobione) |
    | przesunięcie, opóźnienie ekipy, nowy termin, „nie skończyliśmy – jutro kontynuujemy”, „nie robili (deszcz)” | `harmonogram`, sekcja C (pkt 4 – terminy kroków przesuwasz od razu) |
    | wiedza od wykonawcy („mówi, że…”) | `wiedza` (Rozmowy i źródła), jeśli to coś więcej niż ustalenie na dziś |
-3. **Zdjęcia:** podaj docelowy folder i nazwy (`RRRR-MM-DD_<krok>_<co>.jpg`); we wpisie zapisz ścieżkę folderu i listę
-   ujęć. Jeśli krok zakrywa coś na stałe (zbrojenie, izolacja, instalacje, trasy w zasypce) – sprawdź, czy są zdjęcia
-   z miarą; brak → przypomnij **zanim** będzie za późno (procedura `etap`, sekcja B). Pole „Przed zakryciem OK”
-   zaznacz tylko, gdy zdjęcia zakrywanych elementów są zrobione; inaczej zostaw odznaczone i wymień to w podsumowaniu.
+3. **Zdjęcia:** inwestor wysyła je w rozmowie albo pisze, że wgrał → wskaż folder kroku na Dysku (link z pola „Zdjęcia”
+   kroku w Harmonogramie) albo `Zdjęcia/_nowe` z folderem nazwanym, co na nich jest („zbrojenie z miarą”); zdjęcia
+   z rozmowy nie trafią na Dysk same. Pola wpisu wypełniasz po rozłożeniu (sekcja E). Jeśli krok zakrywa coś na stałe
+   (zbrojenie, izolacja, instalacje, trasy w zasypce) – sprawdź, czy są zdjęcia z miarą (`przed zakryciem/` w folderze
+   kroku); brak → przypomnij **zanim** będzie za późno (`etap`, sekcja B).
 4. **Zapisz wpis** jednym wywołaniem (pola wg `references/notion-dziennik.md`), potwierdź linkiem i podaj,
    co przekazano do innych procedur.
 
@@ -60,12 +62,24 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: folder budowy `Zdjęcia/
 Pobierz wpisy z okresu jednym zapytaniem; odpowiedz chronologicznie: dni pracy ekipy / własne, postęp per krok,
 dostawy i koszty gotówkowe, otwarte problemy, zdjęcia (foldery). Nie interpretuj ponad to, co w wpisach.
 
+## E. Zdjęcia na Dysku – „rozłóż zdjęcia”, ślad w Dzienniku
+
+Rozkładanie `Zdjęcia/_nowe` (konektor Dysku albo skrypt, plan na sucho, dziennik ruchów, cofanie) – wyłącznie wg
+`docs/zdjecia-i-kopia.md`, sekcja 8; tam też tryby bez aplikacji/konektora i przypadki brzegowe. Ślad (raport
+`python3 tools/zdjecia.py slad <plan>`), jednym wywołaniem na dzień zrobienia (nie wgrania):
+- wpis z tego dnia jest → uzupełnij; nie ma → wpis minimalny (Data, Etap, Krok, Zdjęcia); dwa wpisy → ten z pasującym krokiem;
+- „Zdjęcia” = `<łącznie> zdjęć: <NN Krok> (<n>) <link folderu>; …` – liczba zawsze na początku (czyta ją pulpit);
+- „Krok harmonogramu” = kroki, w których przybyły zdjęcia; „Dokumenty z dnia” = linki faktur, WZ, wpisów KB;
+- „Ujęcia przed zakryciem” = które ujęcia z listy `etap` B są w `przed zakryciem/`, których brakuje; „Przed zakryciem OK”
+  zaznacz tylko przy komplecie, inaczej wymień braki w podsumowaniu.
+Ślad dopiero po udanym ruchu pliku; nieudany zapis do Notion ponów przy następnym przebiegu.
+
 ## Wynik w rozmowie
 
 ```
 **Dziennik <data> – <etap / krok>**: ekipa <n> os. / ja <h> h | pogoda: … | dostawy: …
 Zrobione: … | Problemy: … | Ustalenia: …
-Zdjęcia: Zdjęcia/<folder>/ (<n> ujęć) – brakuje: …
+Zdjęcia: <n> zdjęć – <NN Krok> (link) | przed zakryciem: brakuje …
 Przekazane: koszty <n> wierszy | notatnik <n> | zadania <n> | etap: …
 ```
 
@@ -74,4 +88,4 @@ Przekazane: koszty <n> wierszy | notatnik <n> | zadania <n> | etap: …
 - Jeden dzień / jedna wizyta = jeden wpis; dopisek tego samego dnia → aktualizuj wpis, nie twórz drugiego.
 - Pisz, co widziałeś i co powiedziano – oceny techniczne oddzielnie (`[opinia]`) i tylko na prośbę.
 - Nie zapisuj kwot wyłącznie w dzienniku – każda zapłacona kwota idzie też do kolejki „💸 Wydatki → arkusz” (`koszty`, sekcja B).
-- Zdjęcia nigdy do repozytorium ani do paczki dla claude.ai.
+- Zdjęcia nigdy do repozytorium, paczki dla claude.ai, artefaktów ani treści wpisu; nie opisuj osób widocznych na zdjęciach.

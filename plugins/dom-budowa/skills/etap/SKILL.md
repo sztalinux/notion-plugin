@@ -59,7 +59,9 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 6. **Pogoda na dzień kroku:** temperatura (dzień i noc) i opady – widełki z `references/odbiory.md` `[opinia]`;
    jeśli prognoza nie pasuje, zaproponuj przesunięcie.
 7. **Zdjęcia przed zakryciem:** lista ujęć z miarą (od stałych punktów), które mają powstać zanim krok zakryje
-   instalacje, zbrojenie, izolację – to jedyna dokumentacja na lata (procedura `dziennik`).
+   instalacje, zbrojenie, izolację – to jedyna dokumentacja na lata. Inwestor wgrywa je do `przed zakryciem/` w folderze
+   kroku na Dysku (albo folder w `_nowe` ze słowami „z miarą”); ta lista jest wzorcem pola „Ujęcia przed zakryciem”
+   w Dzienniku budowy (`dziennik`, E).
 8. Po bramce: odhacz punkty na stronie Notion i w „✅ Checkliście budowy” (Zrobione, wynik w Uwagach), zamknij wpisy
    w Notatniku (status + dopisek), zapisz pominięcia jako Decyzje.
 

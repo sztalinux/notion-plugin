@@ -19,7 +19,7 @@ Zasady:
 - Ta sama treść w składni Notion: `.dom/przewodnik-notion.md` → strona „Przewodnik po dokumentach i Notion”
   (zapisuje ją agent w Claude Code; skrypt tylko zgłasza, że trzeba, i pamięta, co już zsynchronizowano).
 - Skrypt usuwa pliki wyłącznie w folderze paczki; plików w hubie nie przenosi i nie usuwa.
-- Foldery `Zdjęcia*` / `Foto*` (zdjęcia z budowy, procedura `dziennik`) są pomijane w całości.
+- Foldery `Zdjęcia*` / `Foto*` (zdjęcia z budowy, procedura `dziennik`), `_Na Dysk`, `_Kopie` i `_Archiwum` są pomijane w całości.
 - Lista „do wgrania” liczona jest względem ostatniego potwierdzenia „wgrane”, nie ostatniego uruchomienia.
 """
 import argparse
@@ -51,7 +51,8 @@ MAPY_NOTION = [
     (REPO / "plugins/dom-budowa/skills/budowa/references/notion-mapa.md", "Notion – budowa", "Pulpit **DOM**"),
     (REPO / "plugins/ja/skills/ja/references/notion-mapa.md", "Notion – sprawy osobiste", "Strona **📓 Dziennik**"),
 ]
-ZDJECIA = ("zdjęcia", "zdjecia", "foto", "photos")  # foldery ze zdjęciami z budowy – poza indeksem i paczką
+ZDJECIA = ("zdjęcia", "zdjecia", "foto", "photos",  # foldery ze zdjęciami z budowy – poza indeksem i paczką
+           "_na dysk", "_kopie", "_archiwum")  # paczki kopii na Dysk i archiwum (docs/zdjecia-i-kopia.md)
 POMIN_KATALOGI = {PACZKA, REPO.parent if REPO.parent != HUB else REPO}
 KONTAKT = re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+|(?<!\d)(\+48[\s-]?)?\d{3}[\s-]\d{3}[\s-]\d{3}(?!\d)")
 WRAZLIWE_PESEL = re.compile(r"PESEL\D{0,5}\d{11}", re.I)

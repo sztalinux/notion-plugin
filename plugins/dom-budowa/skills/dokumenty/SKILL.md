@@ -32,6 +32,8 @@ wymaga treści dokumentu, którego nie ma w rozmowie, napisz jawnie, czego potrz
 na komputerze, strona/arkusz i po co, np. „Potrzebuję projektu konstrukcji (`Projekt/Konstrukcja.pdf`, arkusz KT.03,
 s. 3) – sprawdzę otulinę zbrojenia płyty”. Do czasu załączenia nie odpowiadaj z pamięci ani z domysłów; możesz podać,
 co już wiadomo ze ściągi, z oznaczeniem źródła. W Claude Code nie proś – przeczytaj plik z folderu budowy.
+Masz konektor Dysku Google → najpierw spróbuj odczytać dokument z `Dom/<folder>` na Dysku (kopia z Maca, sekcja D);
+nie ma go albo tekst nieczytelny (rysunki) → poproś jak wyżej.
 
 ## A. Klasyfikacja nowych plików
 
@@ -83,11 +85,25 @@ i sprawy osobiste z `ja/references/notion-mapa.md`, plugin `ja`).
 2. Potem `python3 tools/dokumenty.py notion-ok`. Zgłoś jedną linią: „Przewodnik w Notion zaktualizowany”.
 3. Paczka `_Do claude.ai/` to tylko kopia awaryjna (np. gdy Notion jest niedostępny) – wgrywanie jest opcjonalne.
 
+## D. Dokumenty z telefonu i kopia na Dysku Google
+
+Pełne reguły, tryby bez aplikacji/konektora i przypadki brzegowe: `docs/zdjecia-i-kopia.md` (sekcje 4, 7, 9).
+- **Z telefonu** (faktura papierowa, WZ, wpis kierownika, protokół – zdjęcie w `Dom/Zdjęcia/_nowe`, najlepiej w folderze
+  „faktura …”, „WZ …”, „dziennik KB”): rozkłada go to samo „rozłóż zdjęcia” (`dziennik`, E). Faktury → `Faktury/RRRR/`
+  (`RRRR-MM-DD_sprzedawca_numer`), WZ / karty / deklaracje → `Dostawy/<Etap>/`, wpisy kierownika → `Dziennik budowy KB/`,
+  protokoły → `Umowy/Protokoły/`. Sprzedawcę, numer i datę odczytaj z pliku; niepewne → pytanie 🔔. **Zdjęcie faktury
+  nie tworzy wydatku** – wydatek tylko na wyraźną prośbę (`koszty`, B).
+- **Kopia Mac → Dysk** („zrób kopię dokumentów”, „wgrałem kopię”): `python3 tools/kopia.py stan` → `paczka` (na sucho) →
+  `paczka --wykonaj`; inwestor przeciąga `_Na Dysk/<data>` do `Dom/_Kopie` i mówi „wgrałem kopię” → `kopia.py wgrane`,
+  potem (z konektorem) rozłóż paczkę wg `docs/zdjecia-i-kopia.md`, 7. Działa aplikacja Dysku → `kopia.py aplikacja`.
+  Na Dysk nigdy: `.dom`, `AI`, `Wiedza…`, `_Przychodzące`, `_Do claude.ai`.
+- Nic nie kasuj ani nie nadpisuj – stare wersje i usunięte na Macu idą do `_Archiwum` na Dysku.
+
 ## Zasady
 
 - Paczka i folder budowy **nigdy** nie trafiają do repozytorium (repo jest publiczne) – dane osobowe są dozwolone
   w paczce, w repo nigdy.
 - Nie przepisuj treści dokumentów do harnessu – fakty idą do ściągi i Notion.
-- Zdjęcia z budowy leżą w `Zdjęcia/RRRR-MM-DD_<krok>/` (procedura `dziennik`); skrypt pomija foldery `Zdjęcia*`,
-  więc nie trafiają do indeksu ani do paczki. Rysunek czy skan jako obraz → do folderu tematycznego, nie do Zdjęć.
+- Zdjęcia z budowy leżą na Dysku w `Zdjęcia/<etap>/<krok>/` (`dziennik`, E); skrypt pomija foldery `Zdjęcia*`, `_Na Dysk`,
+  `_Kopie`, `_Archiwum`, więc nie trafiają do indeksu ani do paczki. Rysunek czy skan jako obraz → folder tematyczny.
 - Gdy nie wiesz, czy plik jest nowszą wersją – zapytaj inwestora jednym pytaniem, zamiast zgadywać.
