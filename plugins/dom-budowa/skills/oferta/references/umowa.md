@@ -56,7 +56,7 @@ Nie jest poradą prawną – przy dużej kwocie umowę powinien przejrzeć prawn
 
 ## Zakres do umowy – jak go przygotować z oferty
 
-1. Wiersze Oferty „Wybranej” z Excela → lista pozycji wg etapów (numer, nazwa, co w cenie, kwota netto + VAT).
+1. Wybrane oferty (arkusz kosztorysu: Cennik „Wybrana”, Etapy „Umowa z ekipą”, Kosztorys) → lista pozycji wg etapów (numer, nazwa, co w cenie, kwota netto + VAT).
 2. Braki z mapy zakresu (`oferta`, krok 3) → do listy „nie w cenie” albo do dopytania przed podpisaniem.
 3. Pytania z Notion „Wybór wykonawcy” (rundy 1–3, Umowa), na które nie ma jeszcze odpowiedzi → do wyjaśnienia na piśmie.
 4. Wynik: tabela zakresu + lista „nie w cenie” + lista pytań + proponowane transze powiązane z odbiorami (`etap`).

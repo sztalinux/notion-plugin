@@ -47,7 +47,7 @@ jest wykonawcą lub której fazy dotyczy oferta – zapytaj jednym pytaniem.
 
 ## Sam czy ekipa
 
-Gdy etap jest w Excelu oznaczony „Sam” albo inwestor pyta „czy robić to samemu”: zestaw ofertę z wykonaniem własnym –
+Gdy etap robi inwestor sam (Harmonogram, pole Kto) albo inwestor pyta „czy robić to samemu”: zestaw ofertę z wykonaniem własnym –
 materiał brutto (23%) + sprzęt (zakup/wynajem) + czas (dni × realne tempo, `[szacunek]`) + ryzyko jakości i brak gwarancji
 vs oferta brutto (8% z materiałem) + termin. Podaj różnicę w zł i w dniach pracy; nie decyduj – to wybór inwestora
 (zapisz jako Decyzja w Notatniku). Instrukcja wykonania → `analiza-techniczna`, „Praca własna”.

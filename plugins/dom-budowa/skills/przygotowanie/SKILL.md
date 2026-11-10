@@ -59,6 +59,6 @@ Krótko, do przeczytania na telefonie przed wejściem na spotkanie:
 - Konkretnie dla naszej budowy, nie podręcznik: każdy punkt karty ma odniesienie do etapu, projektu albo Notion.
   Wiedza ogólna tylko tam, gdzie u nas jej brakuje – wtedy z oznaczeniem `[opinia]` i propozycją źródła z Bazy wiedzy.
 - Sprawy konstrukcyjne bez potwierdzenia w projekcie → pytanie do konstruktora, nie rekomendacja.
-- Kwoty netto/brutto jawnie; liczby z Excela tylko z aktualnego pliku (procedura `koszty`).
+- Kwoty netto/brutto jawnie; liczby z arkusza kosztorysu tylko aktualne (procedura `koszty`, „Gdzie są liczby”).
 - Sytuacja, której nie ma w `references/sytuacje.md`, a może się powtórzyć → na końcu jedna linia:
   „Dopisać tę sytuację do harnessu (procedura `przygotowanie`)?” (procedura `rozwoj-harnessu`).

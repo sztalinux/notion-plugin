@@ -1,6 +1,6 @@
 # Etapy budowy (numeracja wspólna dla ofert, kosztorysu i Notion)
 
-Nazwy muszą być identyczne jak w Excelu (arkusz Etapy, kolumna A). Gdy inwestor zmieni listę w Excelu – zaktualizuj tę tabelę.
+Nazwy muszą być identyczne jak w arkuszu kosztorysu (zakładka Etapy, kolumna A). Gdy inwestor zmieni listę w arkuszu – zaktualizuj tę tabelę.
 
 | Nr | Etap | Stan |
 |---|---|---|
@@ -34,7 +34,7 @@ Nazwy muszą być identyczne jak w Excelu (arkusz Etapy, kolumna A). Gdy inwesto
 | 40–46 | Podłogi; łazienki; drzwi/gładzie; schody; kuchnia; elektryka-wykończenie; rolety | Wykończenie |
 | 50–53 | Przyłącza i zbiorniki; ogrodzenie; podjazd; teren i ogród | Teren |
 
-Pełne nazwy etapów 30–53: arkusz Etapy w Excelu.
+Pełne nazwy etapów 30–53: arkusz kosztorysu, zakładka Etapy (gdy już są), inaczej zakładka „Szacunek AI”.
 
 ## Punkty krytyczne projektu przy ocenie zgodności (stan zero)
 

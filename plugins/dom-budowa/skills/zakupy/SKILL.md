@@ -7,9 +7,9 @@ description: Zakupy na budowę – wszystko, co idzie na działkę albo do budyn
 
 Cel: na każdy etap, który inwestor robi sam (i na materiał kupowany przez inwestora dla ekip), jest lista
 z ilościami, zapasem, terminem zamówienia i najlepszą ofertą – bez przestoju „bo nie dojechało” i bez trzech
-dodatkowych kursów do składu. Liczby wchodzą do Excela (`koszty`), nie do Notion.
+dodatkowych kursów do składu. Liczby wchodzą do arkusza kosztorysu (`koszty`), nie do Notion.
 
-Wyprzedzenia zamówień: `references/wyprzedzenia.md`. Układ Excela: `koszty/references/arkusze.md`.
+Wyprzedzenia zamówień: `references/wyprzedzenia.md`. Układ arkusza kosztorysu: `koszty/references/arkusze.md`.
 
 **Granica z 🛒 Zakupy (plugin `ja`):** wszystko, co idzie na działkę albo do budynku – materiał, drobnica (taśma, kotwy,
 folia), narzędzia i sprzęt, wynajem, transport – nawet jedna rolka z marketu → baza **🧱 Zakupy budowy**
@@ -51,7 +51,7 @@ Zakupów budowy nie dubluj zadaniem w TASKS – termin trzyma pole „Zamówić 
 
 **Zapis listy:** pozycje do zamówienia → **🧱 Zakupy budowy**: Pozycja, Ilość, Rodzaj, Specyfikacja, Sposób zakupu,
 Etap, Krok (relacja do Harmonogramu), Zamówić do, Kto zamawia, Status „Do zapytania” (drobnica – „Do kupienia”) – jednym
-wywołaniem; kwoty tylko w Excelu. Terminy „Zamówić do” liczy procedura `harmonogram` (sekcja B), gdy krok ma datę.
+wywołaniem; kwoty tylko w arkuszu kosztorysu. Terminy „Zamówić do” liczy procedura `harmonogram` (sekcja B), gdy krok ma datę.
 
 ## B. Zapytanie i porównanie ofert dostawców
 

@@ -72,13 +72,16 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
    Repo harnessu jest publiczne – zero imion, treści wpisów i danych w plikach procedur, przykłady zmyślone.
 6. **Porządek statusami, nie usuwaniem.** Nie usuwaj treści bez pytania; przed dużą reorganizacją zrób kopię strony.
 7. **Pole tekstowe = jedno zdanie;** szczegóły, listy i dopiski z datą idą do treści strony (tak jak w procedurach budowy).
-8. **Harness i Notion mówią to samo.** Zmiana tego, gdzie coś leży albo jak trafia do asystenta (nowe wejście wpisów,
-   przeniesiona lub przemianowana strona/baza, nowy widok, nowa stała strona najwyższego poziomu), obejmuje w tej samej
-   pracy **wszystkie miejsca, które to opisują** – inaczej asystent i inwestor zaczną działać według różnych opisów:
-   - repo: każdy plik z nazwą **i** ID strony w obu pluginach (wyszukaj jedno i drugie), mapy `ja/references/notion-mapa.md`
-     i `budowa/references/notion-mapa.md`, README, CHANGELOG;
+8. **Harness i Notion mówią to samo.** Zmiana tego, gdzie coś leży, jak trafia do asystenta (nowe wejście wpisów,
+   przeniesiona lub przemianowana strona/baza, nowy widok, nowa stała strona najwyższego poziomu) **albo jak coś działa
+   dla inwestora** (narzędzie, kanał, automat, gdzie są liczby, co i gdzie ma wpisać, co dzieje się samo) obejmuje w tej
+   samej pracy **wszystkie miejsca, które to opisują** – inaczej asystent i inwestor zaczną działać według różnych opisów:
+   - repo: każdy plik z nazwą **i** ID strony w obu pluginach (wyszukaj jedno i drugie), a przy zmianie działania – każdy
+     plik ze starym określeniem (np. dawna nazwa narzędzia; wyszukaj w `plugins/`, `docs/`, `README.md`, `AGENTS.md`);
+     mapy `ja/references/notion-mapa.md` i `budowa/references/notion-mapa.md`, README, `docs/` (opisy dla człowieka), CHANGELOG;
    - Notion: w Dzienniku „Jak używać” i „🧭 Dla asystenta”; „🗺 Mapa Notion” (schemat, kroki, tabela struktury);
-     strona „🤖 Asystent AI” (jedyne miejsce z wersją pluginów); opis na stronie, której dotyczy zmiana; przewodnik (`dokumenty`, C).
+     strona „🤖 Asystent AI” (jedyne miejsce z wersją pluginów) i jej podstrony-instrukcje (np. „💸 Wydatki → arkusz
+     Google”); opis na stronie, której dotyczy zmiana; przewodnik (`dokumenty`, C).
    Strony Notion zmieniaj punktowo (zamiana fragmentu), nigdy całą treścią – mają osadzone bazy i bloki, których odczyt
    nie pokazuje. Wyjątek: generowany przewodnik – zastępujesz go w całości (`dokumenty`, C). W podsumowaniu wymień zaktualizowane miejsca. W drugą stronę: Notion rozjechał się z mapą (nieznana strona
    na najwyższym poziomie, przeniesiona lub przemianowana strona) → nie dopasowuj się po cichu; zaproponuj aktualizację

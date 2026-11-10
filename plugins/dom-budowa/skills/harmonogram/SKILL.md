@@ -6,14 +6,14 @@ description: Planowanie w czasie – harmonogram budowy (kroki z datami, kto, za
 # Harmonogram i terminy
 
 Cel: inwestor podaje daty raz, a asystent pilnuje wszystkiego, co z nich wynika – zamówień z wyprzedzeniem, bramek przed
-krokami „bez odwrotu”, obecności kierownika i geotechnika, terminów obiecanych przez innych. Excel trzyma pieniądze,
+krokami „bez odwrotu”, obecności kierownika i geotechnika, terminów obiecanych przez innych. Arkusz kosztorysu trzyma pieniądze,
 Notion trzyma czas.
 
 ## Gdzie co jest (Notion; ID i pola: `budowa/references/notion-mapa.md`)
 
 | Co | Baza | Klucz |
 |---|---|---|
-| Kroki budowy w czasie | **Harmonogram** `collection://d7a479ab-1e23-453f-8f59-55f4097f7d04` | Krok, Nr etapu (= Excel, arkusz Etapy), Termin (od–do), Kto, Status, Pewność terminu, Bez odwrotu, Zależy od / Blokuje |
+| Kroki budowy w czasie | **Harmonogram** `collection://d7a479ab-1e23-453f-8f59-55f4097f7d04` | Krok, Nr etapu (= arkusz kosztorysu, Etapy), Termin (od–do), Kto, Status, Pewność terminu, Bez odwrotu, Zależy od / Blokuje |
 | Moje zadania i cudze terminy | **TASKS** `collection://2a9f5982-09e7-81be-91e8-000b0e10a05e` (wspólna z pluginem `ja` – zawsze **Obszar = Dom**) | When, Status, **Kto**, Obszar, Harmonogram |
 | Materiał do zamówienia | **🧱 Zakupy budowy** `collection://a9854c6c-43ec-4bc1-8ef0-273fb02261c7` | Zamówić do, Dostawa, Status, Krok |
 | Umowa, w ramach której ekipa robi krok | **Umowy i gwarancje** `collection://60c06f30-7867-435d-8f2e-1e025a3daa5c` | Kroki |
@@ -22,7 +22,7 @@ Rzeczy bez daty (pytania, „pamiętać”) zostają w Notatniku – do TASKS tr
 
 ## A. Ułożenie harmonogramu („ułóż harmonogram stanu zero”, „ekipa wchodzi 3.11”)
 
-1. Kroki z Excela (arkusz Etapy: numer, nazwa, Ekipa/Sam) i z planu etapu (`etap`, sekcja A). Nie dziel na drobne –
+1. Kroki z arkusza kosztorysu (Etapy: numer, nazwa; kto robi – umowa z ekipą albo zapytaj) i z planu etapu (`etap`, sekcja A). Nie dziel na drobne –
    krok = coś, co ma swój termin i odbiór (wykop, chudziak, płyta, ściany piwnicy, izolacje, zasypka, strop…).
 2. Dla każdego kroku: Termin (od–do), Kto, Wykonawca, Zależy od, Bez odwrotu (betonowanie, zasypka, zakrycie instalacji),
    Pewność terminu (Szacunek / Uzgodnione ustnie / Potwierdzone na piśmie). Długości i przerwy technologiczne
@@ -51,6 +51,13 @@ Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kro
 2. Przelicz kroki, które od niego zależą (relacja Blokuje), i pokaż ich terminy pochodne (propozycja, sekcja B).
 3. Pokaż zestawienie „było → jest” i co trzeba **odwołać lub przesunąć u innych** (dostawa, kierownik, pompa) – to są
    istniejące zadania i zamówienia powiązane z krokiem – ich nowe terminy zapisz po „ok”; nowych zadań nie zakładaj.
+4. **Wpis z budowy o tempie prac** („nie skończyliśmy, jutro kontynuujemy”, „przez deszcz nie robili”, „skończyli dzień
+   wcześniej”) to fakt od inwestora, nie decyzja – także w przebiegu bez inwestora: przedłuż albo skróć koniec Terminu
+   kroku (Status „W trakcie”), a kroki zależne (Blokuje) przesuń tylko tyle, żeby zaczynały się najwcześniej dzień po
+   nowym końcu poprzednika (krok z zapasem zostaje); w Uwagach „+N dni – wpis z <data>”. Terminów u innych (dostawa,
+   pompa, kierownik, geotechnik) i kroków „Bez odwrotu” nie zmieniaj sam: w rozmowie – pytanie z propozycją; bez
+   inwestora – okienko pod wpisem, gdy termin wypada w ciągu 3 dni, inaczej linia w przeglądzie dnia budowy. Nie wiadomo,
+   którego kroku dotyczy, albo o ile → pytanie.
 
 ## D. Czekam na („geodeta tyczy w czwartek”, „ekipa ma przysłać wycenę do 15.10”)
 
@@ -69,5 +76,5 @@ zamówienia z „Zamówić do” i dostawy, bramki. Na górze: po terminie i dzi
 
 - Daty względne licz od daty podanej w rozmowie/wpisie (Dziennik: `@today`); brak daty przy terminie → zapytaj.
 - Terminów innych osób nie zmieniaj „na domysł” – tylko z ich informacji (inwestor relacjonuje) i z Pewnością terminu.
-- Kwoty nigdy w Harmonogramie ani Zakupach budowy – Excel (`koszty`).
+- Kwoty nigdy w Harmonogramie ani Zakupach budowy – arkusz kosztorysu (`koszty`).
 - Termin w Notatniku (pole Kiedy) i zadanie w TASKS dla tej samej sprawy → zadanie w TASKS, w Notatniku link; nie dubluj dat.

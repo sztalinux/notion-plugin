@@ -1,7 +1,7 @@
 # Źródła prawdy – gdzie co leży
 
 Zasada podziału: **harness = JAK pracujemy** (procedury, formaty, zasady) – to repozytorium.
-**Dane = CO wiemy** (fakty, decyzje, liczby, wiedza) – Notion i Excel. Nie kopiuj danych do harnessu –
+**Dane = CO wiemy** (fakty, decyzje, liczby, wiedza) – Notion i arkusz kosztorysu (Google). Nie kopiuj danych do harnessu –
 **repozytorium jest publiczne**.
 
 ## Mapa

@@ -28,7 +28,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: folder budowy `Zdjęcia/
    | usterka do poprawy, rzecz do zrobienia z terminem | `notatka` – TASKS (When), Do kogo = Ekipa |
    | „ekipa chce dopłatę za…” (roboty dodatkowe) | sekcja B |
    | koniec kroku / etapu, „jutro betonujemy” | `etap` – odbiór albo bramka; Harmonogram – Status kroku (W trakcie / Zrobione) |
-   | przesunięcie, opóźnienie ekipy, nowy termin | `harmonogram`, sekcja C |
+   | przesunięcie, opóźnienie ekipy, nowy termin, „nie skończyliśmy – jutro kontynuujemy”, „nie robili (deszcz)” | `harmonogram`, sekcja C (pkt 4 – terminy kroków przesuwasz od razu) |
    | wiedza od wykonawcy („mówi, że…”) | `wiedza` (Rozmowy i źródła), jeśli to coś więcej niż ustalenie na dziś |
 3. **Zdjęcia:** podaj docelowy folder i nazwy (`RRRR-MM-DD_<krok>_<co>.jpg`); we wpisie zapisz ścieżkę folderu i listę
    ujęć. Jeśli krok zakrywa coś na stałe (zbrojenie, izolacja, instalacje, trasy w zasypce) – sprawdź, czy są zdjęcia

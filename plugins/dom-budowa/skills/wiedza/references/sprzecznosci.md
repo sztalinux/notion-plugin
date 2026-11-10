@@ -39,7 +39,7 @@ dnia bez inwestora (szczegóły niżej, „Bez inwestora”).
    Konsekwencje (co zmieniono i gdzie). Jeśli źródłem rozstrzygnięcia jest rozmowa (np. z konstruktorem) – dodaj ją do Rozmów i źródeł i podepnij.
 4. Wiersze wiedzy: zwycięskie → „Przejrzane”; przegrane → „Nieaktualne” z dopiskiem w Szczegółach „odrzucone w SP-n”
    (jeśli przegrane jest poprawne w innych warunkach – zostaw „Przejrzane” i dopisz warunek).
-5. Skutki: decyzja dotycząca naszej budowy → wpis Typ „Decyzja” w Notatniku; zmiana zakresu/kosztu → uwaga do Excela
+5. Skutki: decyzja dotycząca naszej budowy → wpis Typ „Decyzja” w Notatniku; zmiana zakresu/kosztu → uwaga do arkusza kosztorysu (`koszty`)
    (procedura `koszty`); temat → aktualizacja „W skrócie” i sekcji „Sprzeczności i rozstrzygnięcia”.
 6. Nowy argument przeciw wcześniejszej decyzji → nowy wpis SP ze Stanowiskiem A = stara decyzja (SP-n), a stary dostaje
    Status „Zastąpione” dopiero po nowej decyzji inwestora.

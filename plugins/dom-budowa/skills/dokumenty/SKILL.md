@@ -13,7 +13,7 @@ i buduje folder `_Do claude.ai/` – paczkę do wgrania w wiedzy projektu „Dom
 **Przewodnik po dokumentach** (każdy aktualny dokument: co to jest, na jakie pytania odpowiada, gdzie leży, plus mapa
 Notion) generuje skrypt; Claude Code przepisuje go na stronę Notion (sekcja C), skąd czyta go asystent na claude.ai –
 bez wgrywania czegokolwiek. Pełne dokumenty nie zajmują kontekstu: gdy odpowiedź wymaga ich treści, asystent prosi
-inwestora o konkretny plik. Excel też nie leży w projekcie – kopia szybko się starzeje, inwestor załącza aktualny.
+inwestora o konkretny plik. Kosztorysu też nie ma w projekcie – żyje w arkuszu Google (`koszty`, „Gdzie są liczby”).
 Paczka (`00_SPIS.md` + ściąga) to tylko kopia awaryjna.
 
 Podział pracy: skrypt wykrywa nowe/zmienione/przeniesione pliki, duplikaty i dane wrażliwe oraz kopiuje pliki do paczki.
@@ -40,7 +40,7 @@ co już wiadomo ze ściągi, z oznaczeniem źródła. W Claude Code nie proś �
    nowszą wersją czegoś, co już jest w paczce.
 3. **Przewodnik (`--zawartosc`)** – każdy dokument przydatny agentom, w **jednej, najnowszej** wersji: projekty
    (architektura, konstrukcja, instalacje – najlepiej komplet w jednym PDF), opinie geotechniczne, warunki
-   i uzgodnienia, oferty i wyceny, umowy, karty techniczne produktów, kosztorys Excel. Przeczytaj dokument (duże PDF-y
+   i uzgodnienia, oferty i wyceny, umowy, karty techniczne produktów, stare kosztorysy Excel (dziś kosztorys żyje w arkuszu Google). Przeczytaj dokument (duże PDF-y
    przejrzyj: spis treści, nagłówki, arkusze) i zapisz 2–4 zdania (do ~500 znaków): **na jakie pytania odpowiada
    i gdzie w nim szukać** – sekcje/arkusze ze stronami, rodzaje parametrów, wersja i data. Nie przepisuj faktów ani kwot –
    te idą do ściągi i Notion; przewodnik ma być krótki, bo jest w kontekście każdej rozmowy.

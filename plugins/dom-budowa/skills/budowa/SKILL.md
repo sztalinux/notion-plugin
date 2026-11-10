@@ -8,7 +8,7 @@ description: Kontekst i zasady pracy przy budowie domu jednorodzinnego (dom z pi
 ## Kim jest użytkownik i czego oczekuje
 
 Inwestor – programista, buduje dom systemem mieszanym (część prac sam, część ekipy). Które etapy robi sam –
-Excel, arkusz Etapy (kolumna Wykonawca). Przy pracach własnych liczy się dla niego także czas, narzędzia i BHP,
+Harmonogram (pole Kto) i arkusz kosztorysu (Etapy, „Umowa z ekipą”). Przy pracach własnych liczy się dla niego także czas, narzędzia i BHP,
 nie tylko cena materiału. Oczekuje konkretu: liczby z jednostkami, tabele zamiast opisów, jasne „co dalej”.
 Nie potrzebuje wyjaśniania podstaw, chyba że zapyta. Komunikacja po polsku.
 
@@ -136,7 +136,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    nie umieszczaj ich w harnessie, Notion ani w dokumentach do udostępnienia.
 9. **Harness jest publiczny.** Do repozytorium (procedury, przykłady, changelog) nie trafiają żadne dane osobowe
    ani dane projektu: imiona i nazwiska, nazwy firm i wykonawców, adres, miejscowość, numery działek, PESEL,
-   numery kont, telefony, e-maile, kwoty ofert i wydatków, treść notatek. Te są w Notion, Excelu, ściądze projektu
+   numery kont, telefony, e-maile, kwoty ofert i wydatków, treść notatek. Te są w Notion, arkuszu kosztorysu, ściądze projektu
    i folderze budowy – w harnessie co najwyżej odnośnik. Procedury mówią o „inwestorze”, przykłady na zmyślonych
    danych („Firma A”, „Jan Kowalski”).
 10. **Kolejność szukania odpowiedzi** (pytania o naszą budowę i wiedzę budowlaną):

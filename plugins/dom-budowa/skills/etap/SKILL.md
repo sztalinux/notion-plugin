@@ -19,13 +19,13 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 | Otwarte sprawy etapu | Notatnik budowy: Etap = ten etap, Status Otwarte / Do omówienia **oraz** wszystkie wpisy Typ „Pamiętać” niezależnie od Statusu, poza „Odrzucone” (mają „Ustalone” – to rzeczy do przypilnowania na budowie, nie sprawy otwarte) |
 | Co i jak kontrolować | Baza wiedzy przez `wiedza/references/pytanie-do-bazy.md`: karta pytań kontroli i zamknięcia etapu (stan zero – trzy karty: `stan-zero-kontrola-zakrycie` przed betonowaniem i zakryciem, `stan-zero-kontrola-zasypka` izolacje, drenaż i zasypka, `stan-zero-zamkniecie` odbiór etapu; inny etap: karta `<etap>-kontrola`, gdy istnieje – wskaże ją `karty --do`, inaczej karty czynności etapu); także na telefonie, z kopii indeksu – Notatnik sam nie wystarcza; na Macu wolno też `etap --kontrola`; Rodzaj „Kontrola / odbiór”, „Błąd do uniknięcia”, „Kolejność prac”; `references/odbiory.md` |
 | Parametry projektu | ściąga projektu (`budowa/references/projekt.md`) – grubości, klasy, rzędne, zbrojenie |
-| Kto robi (Sam / Ekipa), ilości | Excel: arkusze Etapy i Kosztorys (`koszty/references/arkusze.md`) |
+| Kto robi (Sam / Ekipa), ilości | Harmonogram (pole Kto); umowa z ekipą i ilości – arkusz kosztorysu, Etapy i Kosztorys (`koszty/references/arkusze.md`) |
 | Zakres umowy z ekipą | arkusz kosztorysu: Etapy kol. „Umowa z ekipą” + umowa w folderze budowy (`dokumenty`) |
 | Formalności i obecność osób | `references/formalnosci.md` |
 
 ## A. Plan etapu („zaczynamy stan zero / SSO”, „ekipa wchodzi za 2 tygodnie”)
 
-1. Zbierz źródła z tabeli. Ustal, które kroki robi ekipa, a które inwestor sam (Excel → Etapy).
+1. Zbierz źródła z tabeli. Ustal, które kroki robi ekipa, a które inwestor sam (Harmonogram, pole Kto; etap z kwotą w Etapy „Umowa z ekipą” robi ekipa; brak danych – zapytaj).
 2. Wypisz **kolejność kroków z zależnościami**: co musi być skończone (przez kogo) zanim wejdzie następny –
    szczególnie styk praca własna → ekipa (np. „izolacja pozioma i pierwsza warstwa – sam, przed wejściem murarzy”).
 3. **Blokady:** otwarte decyzje i pytania z Notatnika, które muszą być zamknięte przed startem – z adresatem i terminem.

@@ -4,6 +4,19 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.10.2] – 2026-11-10
+
+- `harmonogram` C.4 i `dziennik`: wpis z budowy o tempie prac („nie skończyliśmy, jutro kontynuujemy”) przesuwa termin kroku
+  i kroki zależne od razu, także bez inwestora; terminy u innych i kroki „Bez odwrotu” – pytanie.
+- Porządki w opisach: arkusz Google zamiast Excela w procedurach (`etap`, `harmonogram`, `zakupy`, `oferta`, `dokumenty`,
+  `przygotowanie`, `budowa`), kto robi etap – Harmonogram (pole Kto), README (schemat z automatami na Macu, narzędzia, start).
+
+## ja [1.11.2] – 2026-11-10
+
+- `ja` zasada 8 i `rozwoj-harnessu` B.7: dokumentacja dla człowieka aktualizowana przy każdym wdrożeniu, także gdy zmienia
+  się sposób działania (nie tylko miejsce); w podsumowaniu linia „Dokumentacja: …”.
+- `przeglad-dnia`: wyjątek dla przesunięć Harmonogramu z relacji inwestora (`harmonogram` C.4).
+
 ## dom-budowa [3.10.1] – 2026-11-10
 
 - Kopia arkusza na Macu odporna na wolne Google: odczyt do 300 s, a przebieg szybki ponawia `pobierz --gdy-starsza 12`,

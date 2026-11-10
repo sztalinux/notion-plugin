@@ -1,7 +1,7 @@
 # Wyprzedzenia zamówień i czasy technologiczne – orientacyjnie
 
 Wartości typowe dla rynku polskiego `[opinia]`; zależą od sezonu, producenta i regionu – **potwierdź u dostawcy**
-przy pierwszym zapytaniu i wpisz rzeczywisty termin do Excela (arkusz Cennik, uwagi) lub do Bazy wiedzy
+przy pierwszym zapytaniu i wpisz rzeczywisty termin do arkusza kosztorysu (Cennik, Uwagi – przez wycenę w kolejce, `koszty` B2) lub do Bazy wiedzy
 (Rodzaj „Parametr / liczba”, „Wrażliwe na czas”).
 
 ## Zamówienia

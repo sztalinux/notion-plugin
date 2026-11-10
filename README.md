@@ -6,7 +6,7 @@ Procedury i zasady, według których asystenci AI (Claude, Gemini, Codex…) pra
   według bazy „🧭 Obszary Dziennika”, zadania, wieczorny przegląd dnia, rozwój harnessu;
 - **`dom-budowa`** – budowa domu: oferty, koszty, notatki, wiedza, dokumenty, etapy, dziennik budowy, harmonogram, zakupy.
 
-Repozytorium mówi tylko **jak** pracować. Dane są w Notion, liczby w Excelu, dokumenty w folderze budowy na komputerze.
+Repozytorium mówi tylko **jak** pracować. Dane są w Notion, liczby w arkuszu Google „Kosztorys budowy” (wydatki trafiają tam z Notion przez kolejkę – `docs/wydatki-arkusz.md`), dokumenty w folderze budowy na komputerze.
 
 > **Repo jest publiczne.** Nie trafiają tu żadne dane osobowe ani dane projektu (imiona domowników, nazwiska, firmy, adres,
 > działki, telefony, e-maile, kwoty, notatki, treść wpisów). Pilnują tego `tools/build.py` i hook `.githooks/pre-commit`
@@ -34,6 +34,8 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     tools/build.py                    ← walidacja (w tym dane osobowe) + dowiązania skilli + paczki dist/ (po jednej na plugin)
     tools/dokumenty.py                ← indeks folderu budowy i paczka dla claude.ai
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
+    tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google (docs/wydatki-arkusz.md)
+    docs/                             ← opisy systemów dla człowieka: wiedza (mapa, runbook), wydatki → arkusz
 ```
 
 ## Jak to działa
@@ -49,7 +51,11 @@ Claude Code (komputer; na starcie lista wyboru, domyślnie nic) ◄──┘
                                                                │ ręczne odświeżenie pluginów (claude-ai-projekt.md)
 claude.ai (telefon, czat, Cowork) ◄── pluginy ja + dom-budowa ─┘   (każda rozmowa, bez projektu)
    ├─ projekt „Dom” – tylko kontener dokumentów budowy (wgrywasz paczkę ręcznie, opcjonalnie)
-   └─ zaplanowane zadanie „Przegląd dnia” (poza projektem) ──► 📓 Dziennik w Notion
+   └─ bez Notion (blokada organizacji) → zapisy do „📥 Skrzynki” (Claude Docs)
+
+Mac (launchd, `AI/automaty/przeglad.py`, poza repo) ── co godzinę 8–22, wieczorem, w niedzielę:
+   ├─ `claude -p` + MCP Notion: Skrzynka i 📓 Dziennik → Notion (przegląd dnia, tygodnia)
+   └─ po przebiegu `tools/wydatki.py`: kolejka „💸 Wydatki → arkusz” → arkusz Google „Kosztorys budowy”
 ```
 
 ## Konektory i drogi zapasowe
@@ -76,8 +82,8 @@ z ⚠ i inwestor o tym wie.
 | `zadania` | „muszę…”, „zrobiłem X”, „co mam jutro” | wspólna TASKS z polem Obszar; zmiana statusu z Dziennika |
 | `dziecko` | obserwacja, „porozmawiać z nią o…”, prezent, zalecenie | strona dziecka w sekcjach |
 | `suple` | „kończy się…”, „kupiłem…”, przerwa | baza Suple: Buy, Status, Last break |
-| `przeglad-dnia` | co 1–2 h (tryb szybki) i wieczorem (zaplanowane) / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; wieczorny: podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan na jutro – osobiste pod Dziennikiem, budowa osobno na DOM (z odnośnikiem), analiza pomysłów |
-| `przeglad-tygodnia-osobisty` | raz w tygodniu (zaplanowane) / „przegląd tygodnia” | sprawy osobiste w liczbach, zaległe, najbliższy tydzień, porządki w Dzienniku; uruchamia przegląd budowy i linkuje do niego |
+| `przeglad-dnia` | co godzinę (tryb szybki) i wieczorem – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; wieczorny: podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan na jutro – osobiste pod Dziennikiem, budowa osobno na DOM (z odnośnikiem), analiza pomysłów |
+| `przeglad-tygodnia-osobisty` | raz w tygodniu – automat na Macu / „przegląd tygodnia” | sprawy osobiste w liczbach, zaległe, najbliższy tydzień, porządki w Dzienniku; uruchamia przegląd budowy i linkuje do niego |
 | `rozwoj-harnessu` | „zapamiętaj na przyszłość”, nowa procedura, „mam pomysł…”, „zrób POM-n” | skrzynka w Notion → wdrożenie do repo; pomysły → analiza → wdrożenie na polecenie |
 
 **Plugin `dom-budowa`**
@@ -86,7 +92,7 @@ z ⚠ i inwestor o tym wie.
 |---|---|---|
 | `budowa` | każda rozmowa o budowie | kontekst, zasady, mapa procedur, luźne wpisy o budowie, część budowlana przeglądu dnia |
 | `oferta` | oferta / wycena / rozmowa z ekipą | rozbicie, zakres 01–13, zgodność z projektem, porównanie, pytania; „sam czy ekipa”; zakres do umowy |
-| `koszty` | Excel, wydatek, faktura, „ile wydaliśmy” | plan / umówione / wydane, wiersze do wklejenia, płatności i transze |
+| `koszty` | wydatek, faktura, cena dostawcy, „planuję wydać…”, „ile wydaliśmy” | kolejka „💸 Wydatki → arkusz” → arkusz Google (wydatki, Cennik, plan pozycji); plan / umówione / wydane; błędy → pytanie we Wpisach; transze |
 | `notatka` | „zapisz”, „ustaliliśmy”, „decyzja” | Notatnik budowy, TASKS (Obszar Dom), „Do zamknięcia” |
 | `analiza-techniczna` | projekt, rysunek, umowa, pytanie techniczne, „jak to zrobić samemu” | [projekt]/[szacunek]/[opinia], pytania do projektanta, instrukcja pracy własnej |
 | `wiedza` | transkrypcja, artykuł, „dzwoniłem do…”, „SP-n: …”, „co wiemy o…” | Baza wiedzy, sprzeczności (ADR), odczyt stanu wiedzy; szukanie i duplikaty przez indeks `tools/wiedza.py` |
@@ -156,13 +162,11 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
 4. claude.ai → Customize → Plugins → Add marketplace → `sztalinux/notion-plugin` → zainstaluj `ja` i `dom-budowa`,
    włącz „Sync automatically” (jeśli organizacja na to pozwala). Bez synchronizacji – jak pobrać nową wersję:
    `plugins/ja/skills/rozwoj-harnessu/references/claude-ai-projekt.md`.
-5. claude.ai → trzy zaplanowane zadania **poza projektem** (trzecie: raz w tygodniu „Przegląd tygodnia (skill
-   przeglad-tygodnia-osobisty z pluginu ja)”): co 1–2 h w ciągu dnia „Dziennik – szybki przebieg (skill
-   przeglad-dnia z pluginu ja, tryb szybki)” i raz wieczorem „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)”.
-   Gdy konektor Notion na claude.ai nie działa (blokada organizacji), te same przebiegi uruchamia launchd na Macu przez
-   `claude -p` z lokalnym serwerem MCP Notion (`claude mcp add --transport http --scope user notion https://mcp.notion.com/mcp`;
-   skrypt i pliki launchd poza repo), a zapisy z telefonu idą przez dokument Claude „📥 Skrzynka” (plugin `ja`,
-   `wpisy/references/skrzynka.md`).
+5. Przeglądy (szybki co godzinę, wieczorny, tygodniowy) uruchamia **launchd na Macu** przez `claude -p` z lokalnym serwerem
+   MCP Notion (`claude mcp add --transport http --scope user notion https://mcp.notion.com/mcp`, logowanie `/mcp`) –
+   instalacja i godziny: README w katalogu automatów (`AI/automaty/`, poza repo). Konektor Notion na claude.ai jest
+   zablokowany przez organizację, dlatego zaplanowane zadania na claude.ai nie są używane; zapisy z telefonu idą przez
+   dokument Claude „📥 Skrzynka” (plugin `ja`, `wpisy/references/skrzynka.md`). Kosztorys: `docs/wydatki-arkusz.md`, sekcja 7.
 6. claude.ai → projekt „Dom” (tylko dokumenty budowy):
    - **Instructions:** `python3 tools/build.py` i wklej `dist/claude-ai-projekt/instrukcje.md` – dzięki temu każda
      wiadomość w projekcie korzysta z harnessu i Notion bez wpisywania „/” (opis:
@@ -182,7 +186,7 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
   Dziennika”, a pod niejasnymi wpisami w „📝 Wpisy” doda krótkie okienko z pytaniem – odpowiedź wpisujesz w nim, przerobi ją następny przebieg. Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
   Ręcznie: „przerób dziennik”.
 - Poprawki „na przyszłość” z telefonu trafiają do skrzynki w Notion; Claude Code wdroży je po zaznaczeniu „Skrzynka zmian” na starcie sesji.
-- Dzień na budowie → powiedz asystentowi, co się działo (telefon wystarczy) – trafi do Dziennika budowy; zdjęcia wrzuć do `Dom/Zdjęcia/RRRR-MM-DD_<krok>/`.
+- Dzień na budowie → powiedz asystentowi, co się działo (telefon wystarczy) – trafi do Dziennika budowy, a „nie skończyliśmy, jutro kontynuujemy” przesunie kroki Harmonogramu; zdjęcia wrzuć do `Dom/Zdjęcia/RRRR-MM-DD_<krok>/`.
 - Przed krokiem „bez odwrotu” (beton, zasypka, tynki) zapytaj „co sprawdzić przed …” – dostaniesz bramkę z listą zdjęć do zrobienia.
 - Każda zmiana w repo = podbita wersja zmienionego pluginu w `plugins/<plugin>/.claude-plugin/plugin.json` (inaczej claude.ai
   jej nie pobierze). Po pushu odśwież pluginy na claude.ai (o ile nie działa synchronizacja) – `rozwoj-harnessu/references/claude-ai-projekt.md`.

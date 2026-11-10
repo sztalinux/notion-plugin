@@ -21,7 +21,7 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
 - Nie ma kogo zapytać: niejasne → pytanie w Notion (okienko pod wpisem w „📝 Wpisy”; sprawy spoza wpisów – Dziennik „❓”,
   strona pomysłu), nie tylko w odpowiedzi.
 - Nie wybieraj ani nie zgaduj decyzji za inwestora; nie zmieniaj układu ani kwot planu w arkuszu kosztów ani terminów kroków
-  Harmonogramu budowy (wydatki, wyceny i plan kwoty, który inwestor sam podał we wpisie, zapisuj w kolejce „💸 Wydatki → arkusz” wg `koszty`
+  Harmonogramu budowy (wyjątek: przesunięcie z relacji inwestora o tempie prac – `harmonogram` C.4) (wydatki, wyceny i plan kwoty, który inwestor sam podał we wpisie, zapisuj w kolejce „💸 Wydatki → arkusz” wg `koszty`
   B/B2/B3 – to nie decyzja; własnych szacunków planu nie zapisuj) – zostaw wpis z pytaniem i propozycją (`wpisy`, krok 4). Nowy obszar Dziennika tylko proponuj, nie dodawaj sam.
 - Decyzję, którą inwestor **sam napisał** – wpis „SP-n: …” albo „decyzja: …”, pole Decyzja w Rejestrze sprzeczności –
   domknij ze wszystkimi skutkami (Status, data, Notatnik, wiedza, temat) wg `wiedza/references/sprzecznosci.md` (plugin
