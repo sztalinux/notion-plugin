@@ -20,6 +20,6 @@ Uwagi:
   i tryb dewelopera Windows).
 - Gemini (CLI i Gem) dostaje na razie tylko `dom-budowa` (`gemini-extension.json`, `dist/gemini-gem/`); plugin `ja` działa
   w Claude i w narzędziach czytających `AGENTS.md` + `.agents/skills`.
-- Dane (Notion, Excel, dokumenty) nie są częścią pluginu. Pliki leżą w folderze budowy na komputerze (poza repo).
+- Dane (Notion, arkusz kosztorysu, dokumenty) nie są częścią pluginu. Pliki leżą w folderze budowy na komputerze (poza repo).
 - W Claude Code w repo synchronizacja pluginów z claude.ai jest wyłączona lokalnie (`.claude/settings.local.json`,
   `syncClaudeAiPlugins: false`) – inaczej wersja z konta dublowałaby procedury z dysku.

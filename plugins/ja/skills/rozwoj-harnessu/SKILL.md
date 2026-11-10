@@ -1,6 +1,6 @@
 ---
 name: rozwoj-harnessu
-description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez skrzynkę „Zmiany do harnessu” w Notion oraz analiza pomysłów na rozwój setupu (baza „Pomysły na rozwój”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/Excela, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, „zrób ZP-2”, „znane problemy”, albo pyta o przeniesienie harnessu do innego AI.
+description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez skrzynkę „Zmiany do harnessu” w Notion oraz analiza pomysłów na rozwój setupu (baza „Pomysły na rozwój”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/arkusza, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, „zrób ZP-2”, „znane problemy”, albo pyta o przeniesienie harnessu do innego AI.
 ---
 
 # Rozwój harnessu
@@ -15,7 +15,7 @@ Konfiguracja projektu „Dom” na claude.ai (instrukcje, wiedza): `references/c
 |---|---|
 | Czat, telefon, Cowork, inne AI (bez repo) | **Zgłoszenie** do skrzynki w Notion – sekcja A |
 | Claude Code w folderze repo | **Wdrożenie** skrzynki do plików + push – sekcja B (na starcie sesji tylko po zaznaczeniu „Skrzynka zmian” na liście startowej, `CLAUDE.md`) |
-| Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, Excel) | **Pomysł** do bazy „Pomysły na rozwój” → analiza → wdrożenie na polecenie – sekcja C |
+| Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, arkusz kosztorysu) | **Pomysł** do bazy „Pomysły na rozwój” → analiza → wdrożenie na polecenie – sekcja C |
 | Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Znany problem** w bazie „🧯 Znane problemy” → naprawa w Claude Code – sekcja D |
 
 Skrzynka = konkretna reguła, wchodzi od razu. Pomysł = coś do przemyślenia; nic nie wchodzi samo, decyduje inwestor.
@@ -30,7 +30,7 @@ Usunięcie), Treść do wdrożenia, Dlaczego, Wdrożono w wersji, Data wdrożeni
 Gdy inwestor w rozmowie:
 - poprawia wynik w sposób, który powtórzy się w przyszłości (format, pole, zasada),
 - dwa razy prosi o to samo dodatkowe działanie,
-- zmienia strukturę danych (nowe pole w Notion, nowa kolumna w Excelu, nowy etap),
+- zmienia strukturę danych (nowe pole w Notion, nowa kolumna w arkuszu kosztorysu, nowy etap),
 - mówi wprost „zapamiętaj to na przyszłość”,
 
 zaproponuj na końcu odpowiedzi jedną linię: „Dopisać to do harnessu (procedura `<nazwa>`)?”.
@@ -94,7 +94,7 @@ Pola: Pomysł (tytuł), Status (Nowy / Pytania do mnie / Przeanalizowany / Do zr
 **pusty = Nowy**), Obszar, Nakład (S/M/L), Wymaga ode mnie, Przeanalizowano, Zrobiono w wersji, ID (POM-n).
 Treść strony: pomysł inwestora (nie zmieniaj), pod nim sekcja „Analiza” pisana przez asystenta.
 
-**Zapis pomysłu** („mam pomysł…”, wpis w Dzienniku „pomysł: …” o asystencie, Notion, Excelu, plikach, automatyzacji):
+**Zapis pomysłu** („mam pomysł…”, wpis w Dzienniku „pomysł: …” o asystencie, Notion, arkuszu kosztorysu, plikach, automatyzacji):
 sprawdź, czy podobny już jest (uzupełnij zamiast dublować); nowy wiersz – tytuł, Obszar, w treści „## Pomysł (kto, data)”
 i słowa inwestora. Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to nie pomysł – sekcja A.
 
@@ -109,7 +109,7 @@ i słowa inwestora. Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to
    ## Analiza (asystent, data)
    **Co rozumiem:** 1–2 zdania.
    **Co już jest:** procedury / bazy / pola, które to częściowo robią; czego brakuje.
-   **Co trzeba zrobić:** Harness (pliki procedur) · Notion (bazy, pola, widoki) · Excel · narzędzia w repo · Ty (decyzje,
+   **Co trzeba zrobić:** Harness (pliki procedur) · Notion (bazy, pola, widoki) · arkusz kosztorysu · narzędzia w repo · Ty (decyzje,
      aplikacje, konta) – lista numerowana, kolejność wdrożenia dla Claude Code.
    **Ograniczenia:** czego się nie da / co wymaga zgody (np. connector do nowej usługi → najpierw zgłoszenie IT
      w organizacji inwestora; nie proponuj obejść), koszty usług, prywatność (repo publiczne).

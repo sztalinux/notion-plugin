@@ -23,7 +23,7 @@ używasz na co dzień („wkleja ofertę”, „ile wydaliśmy”), nie ogólnik
 - Bez nazw narzędzi konkretnego dostawcy („użyj notion-create-pages”) – opisuj działanie
   („utwórz wiersze w bazie Notatnik budowy jednym wywołaniem”). Agent sam dobierze narzędzie.
 - Repo jest publiczne: bez danych osobowych i projektowych (nazwiska, firmy, adresy, działki, kontakty, kwoty).
-  Przykłady na zmyślonych danych. Bez danych zmiennych (kwoty ofert, statusy) – te są w Notion/Excelu. Harness zawiera procedury,
+  Przykłady na zmyślonych danych. Bez danych zmiennych (kwoty ofert, statusy) – te są w Notion i w arkuszu kosztorysu. Harness zawiera procedury,
   identyfikatory i schematy.
 - Każda reguła ma powód, jeśli nie jest oczywisty („…bo zatwierdzeń Notion nie da się pominąć”).
 
