@@ -74,6 +74,7 @@ z ⚠ i inwestor o tym wie.
 | Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
 | Google Sheets / Drive | liczby z żywego arkusza, zmiany układu | kopia `Kosztorys_google.json` (Apps Script z sekretem), eksport od inwestora, `wydatki.py migruj` (`docs/wydatki-arkusz.md`) |
 | Google Drive (zdjęcia, dokumenty z telefonu, kopia) | rozkładanie `Zdjęcia/_nowe`, odczyt dokumentów z Dysku na czacie | skrypt lokalnie (z aplikacją Dysku albo po pobraniu `_nowe` / AirDropie), kopia paczką przez przeglądarkę, „prośba o dokument” jak dotąd; wgrywanie z telefonu działa zawsze (`docs/zdjecia-i-kopia.md`, 5) |
+| Artifact / ArtifactData (pulpit budowy, Claude Code) | publikacja pulpitu, odczyt zaznaczeń inwestora (procedura `pulpit`) | ⚠ brak zapasu dla samej strony pulpitu: nie odświeża się, a nowych zaznaczeń nie da się odczytać; nic nie ginie – źródłem prawdy jest Notion (Notatnik, Harmonogram, Checklista), decyzje wpisuje się tam wprost |
 
 ## Procedury
 
