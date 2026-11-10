@@ -66,7 +66,7 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
 5. Wysyłka zależy od kanału:
    - **Claude Code z inwestorem:** po zapisie `python3 tools/wydatki.py sync` – od razu w arkuszu; podaj wiersz.
    - **Przebieg bez inwestora (`claude -p`):** tylko kolejka – `sync` uruchamia automat po przebiegu.
-   - **claude.ai / telefon bez Notion:** Skrzynka (`budowa`, zasada 13) ze wszystkimi polami z kroku 1; Mac przeniesie.
+   - **claude.ai / telefon bez Notion:** Skrzynka (`budowa`, zasada 13) ze wszystkimi danymi z kroku 1 – słowami, bez nazw pól (`wpisy/references/skrzynka.md`); Mac przeniesie.
    Potwierdź jedną linią: „N wydatków: wiersze … w arkuszu” albo „w kolejce – trafią przy najbliższym przebiegu”.
 6. Wiersz z Arkusz = „Błąd” (powód w polu Błąd) wraca do inwestora jako pytanie we „📝 Wpisach” (sekcja E); po poprawce
    pola inwestor albo asystent ustawia znów „Do arkusza”.

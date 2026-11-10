@@ -181,7 +181,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
 
 13. **Notion niedostępny w tym kanale → Skrzynka, nie odmowa.** Bez narzędzi Notion w rozmowie: wiedza z indeksu, Notatnik
     i zadania z migawki (`wiedza/references/indeks.md`, sekcja czatu; `pytanie-do-bazy.md`, pkt 5), a każdy zapis (notatka,
-    dziennik, zadanie, wiedza) do dokumentu Claude „📥 Skrzynka” słowami, bez pól Notion – plugin `ja`,
+    dziennik, zadanie, wiedza, wydatek) do dokumentu Claude „📥 Skrzynka” słowami, bez pól Notion – plugin `ja`,
     `wpisy/references/skrzynka.md`; Mac przenosi go do Notion w ciągu godziny. Zdjęcia – `dziennik`.
 14. **„📚 Na czym się opieram” na końcu każdej odpowiedzi merytorycznej o budowie** (wiedza, analiza techniczna, doradca,
     przygotowanie, etap, zakupy; każdy kanał, także telefon) – przed blokami domknięcia, do ok. 8–10 linii: tezy WI, źródła ZRD,

@@ -64,7 +64,7 @@ wywołaniem; kwoty tylko w arkuszu kosztorysu. Terminy „Zamówić do” liczy 
 3. Zamienniki (inny producent, gęstość, klasa) tylko z zaznaczeniem i „do potwierdzenia z konstruktorem”, jeśli dotyczą
    konstrukcji lub izolacji przeciwwodnej (`analiza-techniczna`, Granice).
 4. Każda oferta → wycena w kolejce (`koszty`, sekcja B2), trafia do arkusza Cennik; wybrana oferta → Status wyceny
-   „Wybrana”, pozostałe „Odrzucona”, i propozycja nowego PLAN pozycji; zapłata albo faktura → wydatek (`koszty`, sekcja B).
+   „Wybrana”, pozostałe „Odrzucona”, wszystkie zmienione znów „Do arkusza” (PLAN pozycji przelicza się sam – `koszty` B2, krok 3); zapłata albo faktura → wydatek (`koszty`, sekcja B).
 
 ## C. Dostawa („przyjechało”, „brakuje”)
 
@@ -72,7 +72,7 @@ Aktualizuj wiersz w Zakupach budowy: Status (Zamówione → Potwierdzone → Dos
 
 1. Sprawdź z zamówieniem: ilość, asortyment, uszkodzenia, dokumenty (WZ, deklaracja właściwości). Zdjęcie WZ z telefonu →
    `Dostawy/<Etap>/` (`dokumenty`, D); są w folderze → zaznacz „Dokumenty dostawy” i wpisz link pliku w pole „Dokumenty”.
-2. Wydatek → `koszty`, sekcja B (Zrealizowane, nr FV); wpis w `dziennik` (dostawy).
+2. Wydatek → `koszty`, sekcja B (nr FV; Płatność „Zrealizowane” tylko po zapłacie – faktura z terminem = „Do zapłaty”, `koszty` D); wpis w `dziennik` (dostawy).
 3. Braki / nadwyżki: co dokupić → nowy wiersz w Zakupach budowy (z „Zamówić do”); co zwrócić → Uwagi
    w wierszu dostawy.
 
