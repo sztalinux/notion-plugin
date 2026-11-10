@@ -41,7 +41,7 @@ def glowna_kopia(root: Path) -> Path:
     if g.is_file():
         t = g.read_text(encoding="utf-8").strip()
         if t.startswith("gitdir:"):
-            return Path(t[7:].strip()).resolve().parent.parent.parent
+            return (g.parent / t[7:].strip()).resolve().parent.parent.parent  # ścieżka bywa względna
     return root
 
 
@@ -154,8 +154,8 @@ WZORCE = [
     (re.compile(r"PESEL\D{0,5}\d{11}", re.I), "PESEL"),
     (re.compile(r"(?<![\w.-])\d{11}(?![\w.-])"), "PESEL (11 cyfr)"),
     (re.compile(r"\b\d{2}(?:[ ]?\d{4}){6}\b"), "numer konta"),
-    # pozostałe prefiksy tokenów (Notion, GitHub PAT) łapie lista zakazanych słów spoza repo
-    (re.compile(r"\b(ghp_|gho_|ghs_|sk-ant-|xox[bp]-)[A-Za-z0-9_-]{16,}"), "token / klucz API"),
+    (re.compile(r"\b(secre[t]_|n[t]n_|ghp_|gho_|ghs_|github_pa[t]_|sk-ant-|xox[bp]-)[A-Za-z0-9_-]{16,}"),
+     "token / klucz API"),
 ]
 DOZWOLONE = [re.compile(r"noreply@anthropic\.com"),            # stopka Co-Authored-By
              re.compile(r"[\w.+-]+@users\.noreply\.github\.com")]  # anonimowy adres GitHuba
