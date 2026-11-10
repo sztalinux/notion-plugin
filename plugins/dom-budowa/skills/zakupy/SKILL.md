@@ -31,7 +31,7 @@ Zakupów budowy nie dubluj zadaniem w TASKS – termin trzyma pole „Zamówić 
 
 ## A. Lista zakupów na etap („co kupić na ściany parteru”)
 
-1. Wczytaj z aktualnego Excela (`koszty`, „Gdzie jest plik”) pozycje Kosztorysu dla etapu: ilość, jednostka, cena,
+1. Wczytaj z kopii arkusza kosztorysu (`koszty`, „Gdzie są liczby”) pozycje Kosztorysu dla etapu: ilość, jednostka, cena,
    kto wykonuje (Sam/Ekipa), cennik. Dla pozycji „Ekipa” sprawdź w ofercie „Wybranej”, czy materiał jest w cenie –
    kupujesz tylko to, co nie jest. Brak pliku → poproś o niego i wypisz, co policzysz po otrzymaniu (pozycje etapu,
    ilości, zapas, terminy zamówień).

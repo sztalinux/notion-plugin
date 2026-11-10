@@ -15,10 +15,10 @@ jest wykonawcą lub której fazy dotyczy oferta – zapytaj jednym pytaniem.
 
 ## Procedura
 
-1. **Wczytaj stan:** arkusze Oferty i Wykonawcy z aktualnego Excela (jeśli nie załączono – poproś;
-   bez pliku porównuj tylko z kartami w Notion „Porównanie wykonawców” i zaznacz to w odpowiedzi).
+1. **Wczytaj stan:** karty w Notion „Porównanie wykonawców”, a liczby – Kosztorys, Etapy i Cennik z kopii arkusza
+   (`koszty`, „Gdzie są liczby”; bez kopii porównuj tylko z kartami i zaznacz to w odpowiedzi).
    Sprawdź, czy wykonawca już istnieje (porównuj nazwy bez wielkości liter i form prawnych).
-2. **Rozbij ofertę na pozycje** w kolumnach arkusza Oferty (`koszty/references/arkusze.md`):
+2. **Rozbij ofertę na pozycje** Kosztorysu (`koszty/references/arkusze.md`):
    - robocizna i materiał tej samej firmy = osobne wiersze (Materiał w cenie?: „Nie” / „Tylko materiał”),
    - kwoty netto + stawka VAT; jeśli podano tylko brutto – wpisz brutto i VAT 0%, zaznacz w Uwagach,
    - Obejmuje etapy = numery etapów z `references/etapy.md`, które pozycja pokrywa,
@@ -37,8 +37,9 @@ jest wykonawcą lub której fazy dotyczy oferta – zapytaj jednym pytaniem.
 5. **Przygotuj pytania do wykonawcy** – tylko te, na które oferta nie odpowiada.
    Źródło pytań: Notion „Wybór wykonawcy – stan zero” (Rundy 1–3, Umowa). Maksymalnie 10, od najważniejszych.
 6. **Zapisz:**
-   - Excel: podaj gotowe wiersze do arkuszy Oferty (i Wykonawcy, jeśli nowa firma) do wklejenia;
-     dopisz do pliku tylko na prośbę (procedura `koszty`, sekcja B),
+   - arkusz: cena materiału od dostawcy (zł za jednostkę) → wycena w kolejce „💸 Wydatki → arkusz” (`koszty` B2) –
+     trafi do Cennika; oferta ekipy (robocizna, transze) nie idzie do Cennika – kwota umowy wchodzi do Etapy
+     „Umowa z ekipą” dopiero po podpisaniu (`koszty` C i D); wierszy do wklejania nie podawaj,
    - Notion → baza „Porównanie wykonawców – stan zero”: utwórz/zaktualizuj kartę
      (pola i wartości: `notatka/references/notion-schematy.md`),
    - aktualizuj sekcję „Co już wiem z rozmów i ofert” na stronie „Wybór wykonawcy” jednym wpisem.
@@ -60,8 +61,8 @@ Status „Wybrana” (decyzja inwestora) → przygotuj zakres do umowy wg `refer
 pozycje w cenie, „nie w cenie”, pytania na piśmie, transze powiązane z odbiorami (`etap`). Projekt umowy od wykonawcy
 sprawdza `analiza-techniczna`, sekcja „Umowy”.
 Po podpisaniu → wiersz w Notion **Umowy i gwarancje** (`collection://60c06f30-7867-435d-8f2e-1e025a3daa5c`): Rodzaj, Strona, Zakres,
-Etap, Podpisano, Status „Podpisana”, Dokument (plik w folderze budowy), relacja Kroki (Harmonogram); kwoty i transze – Excel
-(arkusz Płatności, `koszty` D); terminy z umowy → `harmonogram`.
+Etap, Podpisano, Status „Podpisana”, Dokument (plik w folderze budowy), relacja Kroki (Harmonogram); kwoty i transze – arkusz
+(Etapy „Umowa z ekipą”, zapłacone transze jako wydatki – `koszty` D); terminy z umowy → `harmonogram`.
 
 ## Wynik w rozmowie
 

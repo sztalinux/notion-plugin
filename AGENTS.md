@@ -16,7 +16,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 | Zadanie | Procedura |
 |---|---|
 | Oferta / wycena / rozmowa z wykonawcą | `plugins/dom-budowa/skills/oferta/SKILL.md` |
-| Excel z kosztorysem, wydatek, faktura, budżet | `plugins/dom-budowa/skills/koszty/SKILL.md` |
+| Arkusz kosztorysu (Google), wydatek, płatność, faktura, wycena dostawcy, budżet | `plugins/dom-budowa/skills/koszty/SKILL.md` |
 | Notatka, ustalenie, decyzja, zadanie → Notion | `plugins/dom-budowa/skills/notatka/SKILL.md` |
 | Projekt, rysunki, umowa, norma, pytanie techniczne | `plugins/dom-budowa/skills/analiza-techniczna/SKILL.md` |
 | Transkrypcja filmu, artykuł, relacja z rozmowy, sprzeczności „SP-n” | `plugins/dom-budowa/skills/wiedza/SKILL.md` |

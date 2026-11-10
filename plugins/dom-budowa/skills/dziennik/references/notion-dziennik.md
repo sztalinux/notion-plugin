@@ -15,7 +15,7 @@ Stan: obowiązuje od 1.0.0. Baza pod stroną DOM.
 | Godziny własne | liczba | praca inwestora tego dnia |
 | Pogoda | tekst | temperatura, opady, wiatr – ważne przy betonie, murowaniu, zasypce |
 | Zrobione | tekst | konkretnie, z miejscem (oś, ściana, kondygnacja) |
-| Dostawy | tekst | co, ile, od kogo, nr WZ; kwoty idą do Excela |
+| Dostawy | tekst | co, ile, od kogo, nr WZ; kwoty idą do kolejki „💸 Wydatki → arkusz” (`koszty` B) |
 | Problemy / usterki | tekst | co, gdzie, zdjęcie, ustalona reakcja |
 | Ustalenia z ekipą | tekst | kto, co, do kiedy – jeśli trwałe → Notatnik |
 | Roboty dodatkowe | tekst | co, cena netto/brutto, czy uzgodnione na piśmie |
@@ -37,4 +37,4 @@ Stan: obowiązuje od 1.0.0. Baza pod stroną DOM.
 1. Dziennik – jedno wywołanie (wpis z relacjami ustawianymi od strony dziennika).
 2. Notatnik – jedno wywołanie ze wszystkimi ustaleniami/pytaniami/ryzykami dnia.
 3. TASKS – jedno wywołanie z usterkami i terminami.
-Kwoty: wiersze do Excela w odpowiedzi (`koszty`, sekcja B) – inwestor wkleja.
+Kwoty: strony w kolejce „💸 Wydatki → arkusz” (`koszty`, sekcja B) – do arkusza dopisuje je automat; inwestor niczego nie wkleja.

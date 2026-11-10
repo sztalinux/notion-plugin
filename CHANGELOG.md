@@ -4,6 +4,12 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.9.1] – 2026-11-10
+
+- Płatności spójne z kolejką w całym harnessie: `oferta` (cena dostawcy → wycena w kolejce, kwota umowy ekipy → Etapy
+  po podpisaniu; bez nieistniejących arkuszy Oferty i Płatności), opis Dziennika budowy (kwoty → kolejka, nie wklejanie
+  do Excela), `zakupy` (odsyłacz do „Gdzie są liczby”), tabela procedur w `AGENTS.md`.
+
 ## dom-budowa [3.9.0] – 2026-11-10
 
 - Korekta wydatku już wysłanego: strona „W arkuszu” przestawiona znów na „Do arkusza” poprawia swój wiersz w Wydatkach
