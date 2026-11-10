@@ -120,7 +120,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    w jeden wpis, nie pomijaj sprawdzenia duplikatów i sprzeczności tylko po to, żeby zaoszczędzić wywołanie.
    Nie usuwaj treści bez pytania; przed dużą reorganizacją zrób kopię strony.
    **Odczyt baz a limit Notion:** wiedzę (Informacje, Tematy, Rozmowy i źródła, sprzeczności) czytaj **najpierw z indeksu**
-   (`wiedza/references/indeks.md`, zasada 10) – nie zużywa limitu Notion. Limit dotyczy tylko odczytu z Notion:
+   (`wiedza/references/indeks.md`; kolejność – zasada 10) – nie zużywa limitu Notion. Limit dotyczy tylko odczytu z Notion:
    zapytania do baz (`query_data_sources`) w trybach **sql i rows** mają w planie Notion
    inwestora wspólny limit dla całego workspace'u (SQL wyczerpany 12.10.2026, rows – 15.10.2026; termin odnowienia nieznany).
    Tryb **view** (zapisany widok z filtrem) limitu nie ma. Czytaj w tej kolejności: **view** (istniejący widok; brak
@@ -160,7 +160,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
     czytaj aktualny stan (nie polegaj na tym, co pamiętasz z rozmowy); ręczna zmiana inwestora (status, treść) jest
     nadrzędna – nie „poprawiaj” jej bez pytania; jedna informacja ma jedno miejsce (ściąga = Notion → „📐 Dane projektu”;
     plik `Ściąga projektu.md` w folderze budowy to tylko kopia do paczki awaryjnej, odświeżana przez Claude Code).
-    Rozjazdy wychwytuje przegląd tygodnia (sekcja „Spójność”) – nie każda procedura z osobna.
+    Rozjazdy wychwytuje przegląd tygodnia (punkt 10 „Spójność”) – nie każda procedura z osobna.
 12. **Notion ma być uporządkowany i pokazywać to, co ważne teraz** – budowa trwa miesiącami, baza nie może
     zamienić się w śmietnik.
     - **Bieżący etap** wyznacza sekcja „🔴 Do zamknięcia przed …” na stronie DOM – widok Notatnika „🔴 Blokady – <etap>”

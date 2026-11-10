@@ -131,7 +131,7 @@ Wydatki z Notion do arkusza Google z kosztorysem (jak działa, konfiguracja krok
 Zdjęcia z budowy, dokumenty z telefonu i kopia dokumentów na Dysk Google (reguły, tryby, przypadki brzegowe): `docs/zdjecia-i-kopia.md`.
 `tools/wiedza_jakosc.py` obserwuje jakość wyszukiwania (log zapytań `szukaj`, zbiory oceny, raport tygodniowy z alarmami,
 ocena ręczna, miesięczne porównanie z Notion; pytania wymyślone: `tools/wiedza_jakosc_pytania.json`) – dane w `.dom/wiedza/`; opis: `plugins/dom-budowa/skills/wiedza/references/indeks-jakosc.md`.
-`tools/wiedza_sedzia.py` (polecenie `wiedza_jakosc.py sedzia`, na sucho bez `--wyslij`) – sędzia LLM trafności wyników przez `claude -p` (kanarek izolacji; bez filtra danych osobowych – zasada 6); opis: `plugins/dom-budowa/skills/wiedza/references/indeks-sedzia.md`.
+`tools/wiedza_sedzia.py` (polecenie `wiedza_jakosc.py sedzia`, na sucho bez `--wyslij`) – sędzia LLM trafności wyników przez `claude -p` (kanarek izolacji; bez filtra danych osobowych – sekcja „Zgoda i granice” opisu); opis: `plugins/dom-budowa/skills/wiedza/references/indeks-sedzia.md`.
 `tools/wiedza_porownanie.py` (polecenie `wiedza_jakosc.py pokaz`) – lokalny plik HTML do ręcznego porównania wyników indeksu i Notion (API, tylko odczyt) z ocenami sędziego; wyjście: same liczby i ścieżka pliku.
 
 ### Karty wiedzy

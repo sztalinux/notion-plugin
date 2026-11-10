@@ -31,7 +31,7 @@ Narzędzie: `python3 tools/wiedza_jakosc.py` – tylko Claude Code na Macu (na c
 - `raport [--dni 7]` – raport tygodniowy (opis niżej); `--json` dla agenta. Raport potwierdza pokazane alarmy.
 - `reczna [--n 30]` – ocena ręczna (sekcja niżej); `notion [--budzet 300]` – porównanie z Notion, tylko odczyt;
   `pokaz [--pytania 30]` – lokalny HTML: pytanie → indeks → Notion (opis w `indeks-sedzia.md`).
-- `przypomnij --cicho` – hook startu sesji: jedna linia, gdy raport tygodniowy czeka, są niepotwierdzone alarmy
+- `przypomnij --cicho` – lista startowa sesji (`CLAUDE.md`, „Indeks wiedzy”): jedna linia, gdy raport tygodniowy czeka, są niepotwierdzone alarmy
   albo obserwator nie działa („obserwator nie działa: Typ” – najwyżej raz w tygodniu). Raz w tygodniu sam robi
   przebieg `zloty`; przebieg odrzucony przez równoległy sync albo dłuższy niż 10 s – kolejna próba po dobie.
 
@@ -73,4 +73,4 @@ Wynik („trafne %”) widać w `raport`, zgodność z sędzią (y ↔ ocena 2) 
 
 `sedzia` – model ocenia 0/1/2 pierwsze 12 wyników pytań wymyślonych (bez filtra danych osobowych – decyzja inwestora
 z 26.10.2026). Domyślnie na sucho; wysyłka tylko `--wyslij` po zgodzie inwestora. Co idzie do modelu, jak czytać
-wynik: `references/indeks-sedzia.md`. Hook startu nigdy go nie woła.
+wynik: `references/indeks-sedzia.md`. Lista startowa (`przypomnij`) nigdy go nie woła.

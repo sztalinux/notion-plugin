@@ -58,7 +58,7 @@ każde pytanie jest ocenione; inaczej „uruchom ponownie” (pamięć: tylko br
 ## Czego nie robić
 
 - Nie uruchamiaj `--wyslij` bez zgody inwestora na ten przebieg; nie wysyłaj zapytań z logu ani przypadków `dodaj`.
-- Hook startu (`przypomnij`) ani zaplanowane zadania nigdy nie wołają sędziego – tak ma zostać.
+- Lista startowa sesji (`przypomnij`) ani zaplanowane zadania nigdy nie wołają sędziego – tak ma zostać.
 - Nie wypisuj do rozmowy treści wierszy ani odpowiedzi modelu – nie ma ich w wyjściu, nie szukaj ich w plikach.
 
 ## Porównanie z Notion do przejrzenia (`pokaz`)
