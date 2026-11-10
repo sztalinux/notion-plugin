@@ -51,10 +51,13 @@ przeglad-tygodnia-osobisty z pluginu ja)”. Ręcznie: „przegląd tygodnia”.
    **Dziecko:** n nowych tematów do przegadania, n pomysłów na prezent
    **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia, POM-x z pytaniami
    **🏗 Budowa:** <linia skrótu> → <wzmianka przeglądu budowy z tego tygodnia>
-   **Porządki (n):** propozycje z sekcji D – do zatwierdzenia jednym „tak”
+   **Porządki (n):** propozycje z sekcji D – do zatwierdzenia jednym „tak” · archiwum: przeniesiono n dni (dd.mm–dd.mm)
    ```
    Pusty tydzień → krótki wpis „spokojny tydzień” z linią budowy. Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
-5. **Porządki** (sekcja D) i **odpowiedź** (log): link do wpisu + liczby; bez treści emocji.
+5. **Porządki bez pytania** (sekcja D, pierwsza lista) – **zawsze, także w zaplanowanym przebiegu**: bloki dni starsze
+   niż 14 dni do archiwum; liczbę i zakres dni dopisz w linii „Porządki” wpisu (brak takich dni → „archiwum: nic”).
+   Pozostałe porządki tylko proponujesz (linia „Porządki” wyżej).
+6. **Odpowiedź** (log): link do wpisu + liczby, w tym „archiwum: n dni”; bez treści emocji.
 
 ## D. Porządki w Dzienniku
 
