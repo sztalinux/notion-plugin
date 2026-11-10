@@ -52,6 +52,18 @@ claude.ai (telefon, czat, Cowork) ◄── pluginy ja + dom-budowa ─┘   (ka
    └─ zaplanowane zadanie „Przegląd dnia” (poza projektem) ──► 📓 Dziennik w Notion
 ```
 
+## Konektory i drogi zapasowe
+
+Zasada (`AGENTS.md`): rozwiązanie oparte na konektorze działa dalej bez niego, choćby wolniej; gdy się nie da – stoi tu
+z ⚠ i inwestor o tym wie.
+
+| Konektor | Do czego | Gdy go zabraknie |
+|---|---|---|
+| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają w Dzienniku i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania”; skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
+| Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
+| Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
+| Google Sheets / Drive | liczby z żywego arkusza, zmiany układu | kopia `Kosztorys_google.json` (Apps Script z sekretem), eksport od inwestora, `wydatki.py migruj` (`docs/wydatki-arkusz.md`) |
+
 ## Procedury
 
 **Plugin `ja`**

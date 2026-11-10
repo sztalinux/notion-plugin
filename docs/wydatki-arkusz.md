@@ -41,7 +41,8 @@ Kanały i kiedy wiersz trafia do arkusza:
 | Inwestor ręcznie w Notion | inwestor (pole Arkusz puste albo „Do arkusza”) | najbliższy przebieg (co godzinę 8:05–22:05 i 22:30) |
 | Inwestor ręcznie w arkuszu | – (z pominięciem kolejki) | od razu; tej płatności nie wolno już zapisywać w Notion |
 
-Harmonogram automatu: przebieg szybki → `sync`; wieczorny → `sync`, `pozycje`, `pobierz`; tygodniowy → `sync`. Mac
+Harmonogram automatu: przebieg szybki → `sync` i `pobierz --gdy-starsza 12` (ponawia kopię, gdy wieczorna się nie
+udała); wieczorny → `sync`, `pozycje`, `pobierz`; tygodniowy → `sync`. Mac
 wyłączony → strony czekają w Notion, nic nie ginie. GitHub Actions nie mają dostępu do Notion – całość działa na Macu.
 
 ## 2. Obsługa płatności przez agenta (skrót – pełne reguły w `koszty` B/B2/D)
@@ -109,7 +110,7 @@ Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
 | `sync` | kolejka „Do arkusza” (i puste Arkusz) → arkusz; strona już w arkuszu = korekta jej wiersza; Plan → „Plan ręczny” w Kosztorysie (kolumna i wiersz po nagłówkach); czyści Zgłoszono | automat po przebiegu; agent w Claude Code po zapisie |
 | `sync --proba` | pokazuje, co by poszło; nic nie zapisuje | ręcznie |
 | `pozycje` | pozycje Kosztorysu → opcje pola Pozycja w Notion | przebieg wieczorny; po dodaniu pozycji w arkuszu |
-| `pobierz` | wartości wszystkich zakładek → `<hub>/Koszty/Kosztorys_google.json` | przebieg wieczorny; przed analizą liczb |
+| `pobierz [--gdy-starsza H]` | wartości wszystkich zakładek → `<hub>/Koszty/Kosztorys_google.json` (limit odczytu 300 s); z `--gdy-starsza` tylko, gdy kopia jest starsza niż H godzin | przebieg wieczorny, szybki (ponowienie); przed analizą liczb |
 | `wycofaj <id>…` | czyści wiersz w Wydatkach / Cenniku albo „Plan ręczny” (gdy stoi tam kwota z tej strony), w Notion „Nie wysyłać” | agent na prośbę |
 | `sprawdz` | sekrety, dostęp do bazy i arkusza, wersja kodu | ręcznie, przy problemach |
 | `kod` | kod Apps Script z sekcji 9 (z `\| pbcopy` – do schowka) | przy aktualizacji kodu |

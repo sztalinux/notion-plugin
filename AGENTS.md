@@ -47,6 +47,10 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 - **To repozytorium jest publiczne.** Nigdy nie zapisuj w nim danych osobowych ani danych projektu
   (imiona domowników, nazwiska, firmy, adresy, działki, PESEL, konta, telefony, e-maile, kwoty, notatki, treść wpisów
   Dziennika) – te są w Notion, Excelu i folderze budowy.
+- **Każde rozwiązanie oparte na konektorze ma drogę zapasową** (Notion MCP, Google, Claude Docs i każdy nowy): gdy
+  inwestor straci dostęp, działa dalej – wolniej albo inaczej (skrypt z tokenem, kopia, Skrzynka, ręczny krok). Zapasu
+  nie da się zrobić → powiedz to inwestorowi wprost przed wdrożeniem i dopisz do tabeli „Konektory i drogi zapasowe”
+  w `README.md`.
 - Gdy użytkownik poprawi Twój sposób pracy, zaproponuj zmianę w odpowiednim `SKILL.md`
   (procedura `rozwoj-harnessu`), żeby poprawka działała w kolejnych rozmowach.
 - **Format odpowiedzi po pracy, która coś zmieniła** – inwestor pracuje w kilku sesjach naraz i gubi, co jest zrobione.

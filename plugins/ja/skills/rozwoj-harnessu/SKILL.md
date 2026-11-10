@@ -109,6 +109,7 @@ i słowa inwestora. Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to
      aplikacje, konta) – lista numerowana, kolejność wdrożenia dla Claude Code.
    **Ograniczenia:** czego się nie da / co wymaga zgody (np. connector do nowej usługi → najpierw zgłoszenie IT
      w organizacji inwestora; nie proponuj obejść), koszty usług, prywatność (repo publiczne).
+   **Bez konektora:** droga zapasowa, gdy inwestor straci dostęp (`AGENTS.md`), albo wprost „brak zapasu – …”.
    **Nakład:** S (jedna sesja) / M (kilka) / L (projekt). **Zależności:** POM-n.
    **Do decyzji przed startem:** … **Rekomendacja:** zrobić teraz / przed <etapem> / odłożyć – dlaczego.
    ```

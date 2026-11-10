@@ -3,7 +3,7 @@
 
     python3 tools/wydatki.py sync [--proba] [--cicho]   # wiersze „Do arkusza” (i z pustym Arkusz) → Wydatki / Cennik
     python3 tools/wydatki.py pozycje [--cicho]          # lista pozycji z arkusza Kosztorys → opcje pola Pozycja w Notion
-    python3 tools/wydatki.py pobierz [--cicho]          # wartości arkusza (JSON) do <hub>/Koszty/Kosztorys_google.json
+    python3 tools/wydatki.py pobierz [--cicho] [--gdy-starsza H]   # wartości arkusza (JSON) do <hub>/Koszty/Kosztorys_google.json
     python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (i Cennika), w Notion „Nie wysyłać”
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
     python3 tools/wydatki.py kod | pbcopy               # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
@@ -47,6 +47,7 @@ ZRODLO = os.environ.get("WYDATKI_ZRODLO") or "72cff09c-609b-405d-a32c-263271b3b5
 DO_ARKUSZA, W_ARKUSZU, BLAD = "Do arkusza", "W arkuszu", "Błąd"
 ZASTEPCZA = "00.0"          # opcja-zaślepka Pozycji sprzed pierwszego `pozycje`
 LIMIT_ARKUSZA_S = 90        # Apps Script bywa wolny przy zimnym starcie
+LIMIT_ODCZYTU_S = 300       # „dane” (cały arkusz) – Google bywa wolny godzinami; Apps Script i tak kończy po 6 min
 PIERWSZY_WIERSZ = 5         # pierwszy wiersz danych w zakładkach (nagłówki w wierszu 4) – jak w Apps Script
 PACZKA = 25                 # wierszy w jednym żądaniu do arkusza
 WERSJA_WYCEN = 2            # minimalna wersja kodu Apps Script, która zapisuje wyceny do Cennika
@@ -83,13 +84,13 @@ def wymagaj(k: dict, *pola):
 
 # ---------------------------------------------------------------- arkusz (Apps Script)
 
-def arkusz(k: dict, akcja: str, **dane) -> dict:
+def arkusz(k: dict, akcja: str, limit: int = 0, **dane) -> dict:
     """POST do aplikacji Apps Script. Google odpowiada przekierowaniem 302 na wynik – domyślny urllib idzie za nim
     GET-em bez ciała, czyli tak, jak wymaga Apps Script; nagłówka Authorization nie ma, więc nic nie wycieka."""
     cialo = json.dumps(dict(dane, sekret=k["sekret"], akcja=akcja)).encode("utf-8")
     zadanie = urllib.request.Request(k["url"], data=cialo, headers={"Content-Type": "application/json"}, method="POST")
     try:
-        with urllib.request.urlopen(zadanie, timeout=LIMIT_ARKUSZA_S) as odp:
+        with urllib.request.urlopen(zadanie, timeout=limit or LIMIT_ARKUSZA_S) as odp:
             tresc = odp.read().decode("utf-8", "replace")
     except urllib.error.HTTPError as e:
         raise BladArkusza(f"HTTP {e.code}") from None
@@ -312,7 +313,7 @@ def kolumna_a1(nr: int) -> str:
 def mapa_planu(k: dict) -> dict:
     """Z żywego arkusza Kosztorys: kolumna „Plan ręczny…”, „Ilość plan × cena wybrana” (po nagłówkach, nie po literach)
     i wiersz każdej pozycji (Lp) z bieżącą wartością planu ręcznego."""
-    dane = arkusz(k, "dane")["arkusze"]["Kosztorys"]
+    dane = arkusz(k, "dane", limit=LIMIT_ODCZYTU_S)["arkusze"]["Kosztorys"]
     nag = [str(x).strip() for x in dane[PIERWSZY_WIERSZ - 2]]
     def kol(poczatek):
         return next((i for i, n in enumerate(nag) if n.startswith(poczatek)), None)
@@ -431,10 +432,14 @@ def pozycje(k: dict) -> dict:
     return {"pozycje": len(lista), "nowe_opcje": nowe}
 
 
-def pobierz(k: dict) -> Path:
-    wymagaj(k, "url", "sekret")
-    wynik = arkusz(k, "dane")
+def pobierz(k: dict, gdy_starsza_h: float = 0) -> Path:
+    """Kopia wartości arkusza. gdy_starsza_h > 0 – tylko gdy kopia jest starsza (ponowienie po nieudanym odczycie
+    wieczornym w szybkich przebiegach)."""
     cel = W.HUB / "Koszty" / PLIK_KOPII
+    if gdy_starsza_h and cel.exists() and time.time() - cel.stat().st_mtime < gdy_starsza_h * 3600:
+        return cel
+    wymagaj(k, "url", "sekret")
+    wynik = arkusz(k, "dane", limit=LIMIT_ODCZYTU_S)
     tymczasowy = cel.with_suffix(".tmp")
     tymczasowy.write_text(json.dumps({"nazwa": wynik.get("nazwa"), "pobrano": time.strftime("%Y-%m-%d %H:%M"),
                                       "arkusze": wynik["arkusze"]}, ensure_ascii=False), encoding="utf-8")
@@ -469,6 +474,8 @@ def main(argv=None) -> int:
     ap.add_argument("ids", nargs="*", help="wycofaj: id stron Notion; migruj: plik zmian JSON")
     ap.add_argument("--proba", action="store_true", help="sync: tylko pokaż, co poszłoby do arkusza (bez zapisu)")
     ap.add_argument("--cicho", action="store_true", help="jedna linia wyniku (dla automatów)")
+    ap.add_argument("--gdy-starsza", type=float, default=0, metavar="H",
+                    help="pobierz: tylko gdy kopia jest starsza niż H godzin")
     a = ap.parse_args(argv)
     if a.polecenie == "kod":
         m = re.search(r"```javascript\n(.*?)```", DOKUMENTACJA.read_text(encoding="utf-8"), re.S)
@@ -500,8 +507,10 @@ def main(argv=None) -> int:
             w = pozycje(k)
             linia = f"pozycje: {w['pozycje']} w arkuszu, nowe opcje w Notion {w['nowe_opcje']}"
         else:
-            cel = pobierz(k)
-            linia = f"pobierz: zapisano {cel.name} ({cel.stat().st_size // 1024} KB)"
+            cel = pobierz(k, a.gdy_starsza)
+            wiek_h = (time.time() - cel.stat().st_mtime) / 3600
+            linia = (f"pobierz: zapisano {cel.name} ({cel.stat().st_size // 1024} KB)" if wiek_h < 0.1
+                     else f"pobierz: kopia świeża ({wiek_h:.0f} h), pominięto")
     except BladKonfiguracji as e:
         print(f"[wydatki] nieskonfigurowane – {e} (docs/wydatki-arkusz.md)")
         return 2

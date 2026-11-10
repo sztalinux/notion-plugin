@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.10.1] – 2026-11-10
+
+- Kopia arkusza na Macu odporna na wolne Google: odczyt do 300 s, a przebieg szybki ponawia `pobierz --gdy-starsza 12`,
+  gdy wieczorna kopia się nie udała (9–10.11 dwa razy timeout, kopia miała 2 dni).
+- Zasada w `AGENTS.md`: każde rozwiązanie oparte na konektorze ma drogę zapasową, a brak zapasu jest zgłaszany
+  inwestorowi; spis w `README.md`, „Konektory i drogi zapasowe”.
+
+## ja [1.11.1] – 2026-11-10
+
+- `rozwoj-harnessu`: analiza pomysłu ma punkt „Bez konektora” (droga zapasowa albo jawny brak zapasu).
+
 ## dom-budowa [3.10.0] – 2026-11-10
 
 - Plan pozycji z wpisów: Rodzaj „Plan” w kolejce 💸 (`koszty` B3) – `sync` wpisuje kwotę w Kosztorys „Plan ręczny”
