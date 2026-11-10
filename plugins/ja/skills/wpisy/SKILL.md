@@ -107,7 +107,7 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    „Wpisów” (punktowa, podstron nie ruszaj) zdejmuje przetworzone bloki z ich okienkami, dodaje okienka pod niejasnymi
    i przenosi tu niejasne z Dziennika – po niej treść „Wpisów” to tylko nagłówek 🔔 z komunikatami, wpisy z okienkami ❓, podstrony i 1 pusta linia
    (zmiany w 🔔 idą w tej samej edycji).
-   Po edycji Dziennika **pierwszy poziom jest pusty** – poza „Jak używać”, trzema nagłówkami, dwiema stałymi podstronami i 1–2 pustymi
+   Po edycji Dziennika **pierwszy poziom jest pusty** – poza „Jak używać”, trzema nagłówkami, pięcioma stałymi podstronami (lista wyżej) i 1–2 pustymi
    liniami do pisania. Linia „🤖” idzie na górę bloku dnia:
    ```
    🤖 15.10 wieczór: dziennik – przetworzono 5 (budowa 2, emocje 1, zadania 2), czeka na Ciebie 1 · pomysły – 1 · jutro: 3
