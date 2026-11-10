@@ -12,6 +12,11 @@ dane/
 *.doc
 *.docx
 *.zip
+# zdjęcia (z budowy, skany) – hook pre-commit i walidator i tak je blokują
+*.jpg
+*.jpeg
+*.png
+*.heic
 # ustawienia lokalne Claude Code (prywatne dla danego komputera) i kopie robocze sesji równoległych
 .claude/settings.local.json
 .claude/worktrees/
