@@ -114,6 +114,16 @@ def skanuj() -> dict:
     return out
 
 
+def wspolny_koniec(a: str, b: str) -> int:
+    """Ile końcowych członów ścieżki jest wspólnych (nazwa pliku, katalog nadrzędny…)."""
+    n = 0
+    for x, y in zip(reversed(a.split("/")), reversed(b.split("/"))):
+        if x != y:
+            break
+        n += 1
+    return n
+
+
 def aktualizuj_indeks(ind: dict) -> dict:
     """Synchronizuje indeks z dyskiem. Zwraca zdarzenia do raportu."""
     pliki = ind.setdefault("pliki", {})
@@ -134,16 +144,25 @@ def aktualizuj_indeks(ind: dict) -> dict:
         pliki[sciezka] = {"sha1": h, "rozmiar": rozm, "mtime": mt, "status": "nowy",
                           "dodano": dt.date.today().isoformat()}
 
-    # przeniesienia i usunięcia: wpis bez pliku na dysku
-    for sciezka in [s for s in pliki if s not in dysk]:
-        stary = pliki.pop(sciezka)
-        cel = next((s for s, w in pliki.items() if w["status"] == "nowy" and w["sha1"] == stary["sha1"]), None)
-        if cel:
-            nowy = pliki[cel]
-            pliki[cel] = {**stary, "sha1": nowy["sha1"], "rozmiar": nowy["rozmiar"], "mtime": nowy["mtime"]}
-            zd["przeniesione"].append(f"{sciezka} → {cel}")
-        else:
-            zd["usuniete"].append(sciezka)
+    # przeniesienia i usunięcia: wpis bez pliku na dysku. Kilka plików o tej samej treści (np. projekt i jego kopia
+    # przeniesione razem) → najpierw pary o najdłuższej wspólnej końcówce ścieżki (nazwa, katalog nadrzędny…),
+    # żeby opis głównego egzemplarza nie przeszedł na kopię.
+    znikniete = {s: pliki.pop(s) for s in [s for s in pliki if s not in dysk]}
+    pary = sorted(((wspolny_koniec(s, c), s, c) for s, st in znikniete.items() for c, w in pliki.items()
+                   if w["status"] == "nowy" and w["sha1"] == st["sha1"]), key=lambda x: -x[0])
+    przeniesienia = {}
+    for _, sciezka, cel in pary:
+        if sciezka in przeniesienia or cel in przeniesienia.values():
+            continue
+        nowy = pliki[cel]
+        pliki[cel] = {**znikniete[sciezka], "sha1": nowy["sha1"], "rozmiar": nowy["rozmiar"], "mtime": nowy["mtime"]}
+        przeniesienia[sciezka] = cel
+        zd["przeniesione"].append(f"{sciezka} → {cel}")
+    zd["usuniete"] += [s for s in znikniete if s not in przeniesienia]
+    for w in pliki.values():  # „duplikat: <ścieżka oryginału>” idzie za przeniesionym oryginałem
+        org = (w.get("opis") or "")[len("duplikat: "):] if (w.get("opis") or "").startswith("duplikat: ") else None
+        if org in przeniesienia:
+            w["opis"] = f"duplikat: {przeniesienia[org]}"
 
     # nowe pliki identyczne z już znanym → duplikat, bez eksportu
     for sciezka, w in pliki.items():
