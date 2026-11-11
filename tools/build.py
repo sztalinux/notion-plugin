@@ -260,8 +260,9 @@ def kontrola_tozsamosci() -> list:
 
 
 def kontrola_wiadomosci(plik: str) -> list:
-    """Treść wiadomości commita (commit-msg); linie komentarza git pomijane."""
-    tekst = "\n".join(l for l in Path(plik).read_text(encoding="utf-8").splitlines() if not l.startswith("#"))
+    """Treść wiadomości commita (commit-msg). Linie z „#” też: przy `-m` i `-F` git je zostawia w wiadomości;
+    pomijany jest tylko podgląd zmian `commit -v` (pod linią nożyczek)."""
+    tekst = Path(plik).read_text(encoding="utf-8").split("# ------------------------ >8 ------------------------")[0]
     return sprawdz_tekst("wiadomość commita", tekst, zakazane_slowa())
 
 
