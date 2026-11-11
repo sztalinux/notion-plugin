@@ -143,6 +143,9 @@ brak → paczka. Czat i telefon bez konektora nie czytają dokumentów z Dysku �
 
 ## 7. Kopia dokumentów Mac → Dysk – `tools/kopia.py`
 
+To jedna z pozycji planu kopii zapasowych – całość (dysk zewnętrzny, eksport Notion, repozytoria, kontrola
+`tools/kopie.py`): `docs/kopie-zapasowe.md`.
+
 - Lista dozwolona: Projekty, Dokumenty, Umowy, Faktury, Wyceny, Materiały, Koszty, Media, Dostawy, Dziennik budowy KB.
   Nigdy: `.dom`, `AI`, `Wiedza…`, `_Przychodzące`, `_Do claude.ai`, `_Na Dysk`, `Zdjęcia`, pliki ukryte, tymczasowe,
   blokady biurowe, `Kosztorys_google.json` (kopia żywego arkusza, nadpisywana co wieczór).

@@ -124,6 +124,18 @@ POM-4 „Teczka transzy / do banku jednym poleceniem” (gałąź `pom/2026-11-1
   potwierdzenia z umową kredytową); `koszty` D.3 odsyła do niej; `AGENTS.md` i `budowa` – nowe frazy kierowania.
 - `tools/dokumenty.py`: folder `Teczki/` poza indeksem (kopie, nie nowe dokumenty); `Teczki/` poza kopią na Dysk;
   README i `docs/zdjecia-i-kopia.md` – opis folderu i narzędzia.
+## ja [1.13.0] – 2026-11-11 (POM-21)
+
+POM-21 „Kopie zapasowe – plan i kontrola” (gałąź `pom/2026-11-11-POM-21`):
+- Nowy plan kopii `docs/kopie-zapasowe.md`: trzy warstwy (dysk zewnętrzny, chmura, eksport usług), pozycje z terminami,
+  rytm inwestora, odtworzenie, decyzje przyjęte do potwierdzenia (`.dom` tylko na zaszyfrowanym dysku zewnętrznym, bez Time Machine
+  na nieprywatnym Macu, terminy 7/30/90 dni).
+- Nowe narzędzie `tools/kopie.py` (`stan [--cicho|--json]`, `potwierdz <pozycja> [data]`) – kontrola tylko do odczytu:
+  kopia dokumentów, repozytoria `AI/*` (zdalne, niewypchnięte, niezacommitowane – bez `fetch`), kopia wartości arkusza,
+  rejestr kopii ręcznych, Time Machine i wolne miejsce; testy `tools/test_kopie.py`.
+- `przeglad-tygodnia-osobisty`: linia „Kopie” we wpisie tygodnia, pozycje ⚠/✗ jako komunikat 🔔 `kopie-zapasowe`
+  (`wpisy/references/pytania.md`, C); `ja`: wiersz mapy „stan kopii”, „zrobiłem kopię na dysk”.
+- `CLAUDE.md` (opcja startowa „Zdjęcia i kopia”), README, `docs/zdjecia-i-kopia.md` – odnośniki do planu.
 
 ## ja [1.12.3] – 2026-11-11
 

@@ -39,6 +39,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     tools/dokumenty.py                ← indeks folderu budowy i paczka dla claude.ai
     tools/teczka.py                   ← teczka etapu / transzy do banku: składa dokumenty etapu w Teczki/<Etap>/ ze spisem braków (etap D; testy test_teczka.py)
     tools/zdjecia.py, tools/kopia.py  ← rozkładanie zdjęć i dokumentów z telefonu, kopia dokumentów Mac → Dysk (docs/zdjecia-i-kopia.md; testy test_*.py)
+    tools/kopie.py                    ← kontrola kopii zapasowych: co ma kopię, gdzie i z kiedy, tylko odczyt (docs/kopie-zapasowe.md; test_kopie.py)
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
     tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google, gotówka po miesiącach (docs/wydatki-arkusz.md)
     docs/                             ← opisy systemów dla człowieka: wiedza (mapa, runbook, rejestr decyzji), wydatki → arkusz
@@ -136,6 +137,7 @@ Trzy kanały użycia i ograniczenia: `plugins/dom-budowa/skills/wiedza/reference
 Całość systemu wiedzy (części, kto co uruchamia, pomiary, decyzje): `docs/system-wiedzy.md`; instrukcja odtworzenia i naprawy (automaty, konektor Notion, rozjechany indeks, tokeny): `docs/wiedza-runbook.md`; rejestr decyzji – co wybrano, co sprawdzono i odrzucono, z liczbami z pomiarów: `docs/decyzje-system-wiedzy.md`.
 Wydatki z Notion do arkusza Google z kosztorysem (jak działa, konfiguracja krok po kroku, kod Apps Script): `docs/wydatki-arkusz.md`.
 Zdjęcia z budowy, dokumenty z telefonu i kopia dokumentów na Dysk Google (reguły, tryby, przypadki brzegowe): `docs/zdjecia-i-kopia.md`.
+Kopie zapasowe wszystkiego (Mac, Dysk, Notion, repozytoria, dane asystenta) – plan, rytm, kontrola `tools/kopie.py`, odtworzenie: `docs/kopie-zapasowe.md`.
 `tools/wiedza_jakosc.py` obserwuje jakość wyszukiwania (log zapytań `szukaj`, zbiory oceny, raport tygodniowy z alarmami,
 ocena ręczna, miesięczne porównanie z Notion; pytania wymyślone: `tools/wiedza_jakosc_pytania.json`) – dane w `.dom/wiedza/`; opis: `plugins/dom-budowa/skills/wiedza/references/indeks-jakosc.md`.
 `tools/wiedza_sedzia.py` (polecenie `wiedza_jakosc.py sedzia`, na sucho bez `--wyslij`) – sędzia LLM trafności wyników przez `claude -p` (kanarek izolacji; bez filtra danych osobowych – sekcja „Zgoda i granice” opisu); opis: `plugins/dom-budowa/skills/wiedza/references/indeks-sedzia.md`.

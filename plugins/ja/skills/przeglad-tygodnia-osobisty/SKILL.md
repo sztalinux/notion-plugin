@@ -50,6 +50,11 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    w miesiącu (dzień ≤ 7): strona „📘 Instrukcja obsługi” (ID w `ja/references/notion-mapa.md`) – sekcje z linią „Stan:”
    starszą niż 60 dni wymień w „Czeka na Ciebie” („Instrukcja: n sekcji do sprawdzenia – …”); tokeny z datą ważności
    w sekcji „Utrzymanie” wygasające w 30 dni – też tam.
+   **Kopie zapasowe:** `python3 tools/kopie.py stan --cicho` (tylko odczyt; brak wyjścia = wszystko aktualne; polecenie
+   niedostępne → „niesprawdzone”). Pozycje ⚠/✗ → jeden komunikat 🔔 z kluczem `kopie-zapasowe` we „Wpisach”
+   (`wpisy/references/pytania.md`, C; kolejny tydzień – aktualizacja bloku, wszystko ✓ → „ustąpiło”), w okienku
+   „Co możesz zrobić”: najpilniejsza pozycja i czynność z `docs/kopie-zapasowe.md`, 4 (repo harnessu), a po kopii
+   „powiedz w Claude Code na Macu »zrobiłem …«” – przebieg nie wpisze potwierdzenia (`kopie.py potwierdz` tylko tam).
 4. **Wpis w „📅 Przeglądy tygodniowe”** na górze strony, zwijany nagłówek h2 „Tydzień <RRRR-Www> (<data od–do>)”, zapisany wg
    `przeglad-dnia/references/uklad-wpisu.md`, sekcje A–B (`<toggle heading="h2">`; każda etykieta niżej to pogrubiony akapit
    z punktami; najpierw zaległe i czekające; nieudane odczyty jedną linią na końcu):
@@ -60,6 +65,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    **Najbliższy tydzień:** zadania z terminem wg dni, wesele (30 dni), „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Emocje i praca (liczby):** n wpisów emocji, najczęściej: …, śr. intensywność x; praca: n dni, śr. ocena y; wzorzec: …
    **Dziecko:** n nowych tematów do przegadania, n pomysłów na prezent
+   **Kopie:** aktualne / ⚠ n (…) · ✗ n (…) / niesprawdzone
    **🏗 Budowa:** <linia skrótu> → <wzmianka przeglądu budowy z tego tygodnia>
    **Porządki (n):** propozycje z sekcji D – do zatwierdzenia jednym „tak” · archiwum: przeniesiono n dni (dd.mm–dd.mm) ·
    naprawione nagłówki: n
