@@ -183,7 +183,8 @@ def przelicz_podobne(conn: sqlite3.Connection, cw: sqlite3.Connection, k: dict, 
     gotowe = {wi for (wi,) in cw.execute("SELECT wi FROM wektory WHERE lista = 1 AND model = ?", (k["model"],))
               if wi in wektory}
     model_listy = dict(conn.execute("SELECT klucz, wartosc FROM meta")).get("podobne_model")
-    if model_listy and model_listy != k["model"]:
+    if model_listy != k["model"]:
+        # inny model albo brak meta (indeks przebudowany od nowa: tabela podobne pusta, a odciski mają lista = 1)
         gotowe = set()
     listy = {}
     for wi, p, s in conn.execute("SELECT wi, wi_podobne, podobienstwo FROM podobne"):
