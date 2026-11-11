@@ -22,6 +22,7 @@ import re
 import shutil
 import subprocess
 import sys
+import unicodedata
 import zipfile
 from pathlib import Path
 
@@ -47,7 +48,6 @@ def glowna_kopia(root: Path) -> Path:
 
 HUB = Path(os.environ.get("DOM_HUB", glowna_kopia(ROOT).parent.parent)).expanduser()
 ZAKAZANE = HUB / ".dom" / "zakazane-w-repo.txt"  # poza repo: sama lista byłaby wyciekiem
-TEKSTOWE = {".md", ".json", ".py", ".txt", ".toml", ".yml", ".yaml", ""}
 
 
 def frontmatter(path: Path) -> dict:
@@ -153,8 +153,11 @@ WZORCE = [
     (re.compile(r"\b(ul\.|ulica)\s+[A-ZĄĆĘŁŃÓŚŹŻ]", re.U), "adres"),
     (re.compile(r"PESEL\D{0,5}\d{11}", re.I), "PESEL"),
     (re.compile(r"(?<![\w.-])\d{11}(?![\w.-])"), "PESEL (11 cyfr)"),
-    (re.compile(r"\b\d{2}(?:[ ]?\d{4}){6}\b"), "numer konta"),
-    (re.compile(r"\b(secre[t]_|n[t]n_|ghp_|gho_|ghs_|github_pa[t]_|sk-ant-|xox[bp]-)[A-Za-z0-9_-]{16,}"),
+    (re.compile(r"(?<!\w)(?:PL ?)?\d{2}(?:[ ]?\d{4}){6}(?!\w)"), "numer konta"),
+    (re.compile(r"\bNIP\D{0,5}\d{3}-?\d{2,3}-?\d{2}-?\d{2,3}\b|(?<![\w-])\d{3}-\d{3}-\d{2}-\d{2}(?![\w-])"), "NIP"),
+    (re.compile(r"\b[A-Z]{2}\d[A-Z]/\d{8}/\d\b"), "numer księgi wieczystej"),
+    (re.compile(r"\b(secre[t]_|n[t]n_|gh[pousr]_|github_pa[t]_|sk-ant-|xox[bp]-)[A-Za-z0-9_-]{16,}"
+                r"|\bAIza[0-9A-Za-z_-]{35}|-----BEGIN [A-Z ]*PRIVATE KEY-----"),
      "token / klucz API"),
     # kwoty z „zł” albo „PLN” (z odstępami tysięcy i groszami); przykłady w procedurach pisz „N zł”
     (re.compile(r"(?<![\w.,])\d(?:[\d \u00a0.,]*\d)?\s?(?:zł|PLN)(?!\w)|\bPLN\s?\d"), "kwota"),
@@ -162,6 +165,8 @@ WZORCE = [
 DOZWOLONE = [re.compile(r"noreply@anthropic\.com"),            # stopka Co-Authored-By
              re.compile(r"[\w.+-]+@users\.noreply\.github\.com")]  # anonimowy adres GitHuba
 BINARNE = {".xlsx", ".xls", ".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png", ".heic", ".zip",
+           ".csv", ".tsv", ".ods", ".odt", ".rtf", ".pages", ".numbers", ".eml", ".msg",
+           ".webp", ".gif", ".tif", ".tiff", ".mp4", ".mov", ".m4a", ".mp3", ".wav",
            ".sqlite", ".sqlite3", ".db", ".sqlite-wal", ".sqlite-shm", ".sqlite-journal",
            ".sqlite3-wal", ".sqlite3-shm", ".sqlite3-journal", ".db-wal", ".db-shm", ".db-journal"}
 # dane obserwatora jakości wyszukiwania (tools/wiedza_jakosc.py): słowa wierszy indeksu i zapytania inwestora
@@ -175,15 +180,26 @@ def zakazane_slowa() -> list:
     out = []
     for lista in (ZAKAZANE, ROOT / "dane" / "prywatne.txt"):
         if lista.exists():
-            out += [w.strip().lower() for w in lista.read_text(encoding="utf-8").splitlines()
+            out += [unicodedata.normalize("NFC", w.strip()).lower() for w in lista.read_text(encoding="utf-8").splitlines()
                     if w.strip() and not w.strip().startswith("#")]
     if not out:
-        print(f"UWAGA: brak listy {ZAKAZANE} – sprawdzam tylko wzorce (telefon, e-mail, działka, kod, adres, PESEL, konto, token, kwota)")
+        print(f"UWAGA: brak listy {ZAKAZANE} – sprawdzam tylko wzorce (telefon, e-mail, działka, kod, adres, PESEL, konto, NIP, KW, token, kwota)")
     return out
+
+
+def jako_tekst(dane: bytes):
+    """Treść pliku do sprawdzenia bez względu na rozszerzenie (.csv, .html, .sh, .bak-* też); binarny → None."""
+    if b"\0" in dane:
+        return None
+    try:
+        return dane.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
 
 
 def sprawdz_tekst(etykieta: str, tekst: str, zakazane: list) -> list:
     bledy = []
+    tekst = unicodedata.normalize("NFC", tekst)  # nazwy skopiowane z Findera bywają w NFD – lista jest w NFC
     for rx in DOZWOLONE:
         tekst = rx.sub("", tekst)
     for nr, linia in enumerate(tekst.splitlines(), 1):
@@ -207,12 +223,9 @@ def kontrola_prywatnosci() -> list:
         if f.suffix.lower() in BINARNE or DANE_OBSERWATORA.search(rel.as_posix()):
             bledy.append(f"{rel}: plik z danymi w repo – dokumenty trzymaj w folderze budowy")
             continue
-        if f.suffix.lower() not in TEKSTOWE:
-            continue
-        try:
-            bledy += sprawdz_tekst(str(rel), f.read_text(encoding="utf-8"), zakazane)
-        except UnicodeDecodeError:
-            continue
+        tekst = jako_tekst(f.read_bytes())
+        if tekst is not None:
+            bledy += sprawdz_tekst(str(rel), tekst, zakazane)
     return bledy
 
 
@@ -255,18 +268,17 @@ def kontrola_commitow(zakres: list) -> list:
         an, ae, cn, ce = git("show", "-s", "--format=%an%n%ae%n%cn%n%ce", sha).splitlines()[:4]
         bledy += sprawdz_osobe(f"{k} autor", an, ae, zakazane) + sprawdz_osobe(f"{k} commiter", cn, ce, zakazane)
         bledy += sprawdz_tekst(f"{k} wiadomość", git("show", "-s", "--format=%B", sha), zakazane)
-        for sciezka in git("diff-tree", "--no-commit-id", "-r", "--root", "--name-only",
-                           "--diff-filter=AMR", sha).splitlines():
-            if Path(sciezka).suffix.lower() in BINARNE or DANE_OBSERWATORA.search(sciezka):
+        # -z: ścieżki z polskimi znakami bez cudzysłowów i ósemkowych kodów (inaczej plik byłby pominięty)
+        for sciezka in filter(None, git("diff-tree", "-z", "--no-commit-id", "-r", "--root", "--name-only",
+                                        "--diff-filter=AMR", sha).split("\0")):
+            if (Path(sciezka).suffix.lower() in BINARNE or DANE_OBSERWATORA.search(sciezka)
+                    or sciezka.startswith("dane/")):
                 bledy.append(f"{k} {sciezka}: plik z danymi w commicie")
                 continue
-            if Path(sciezka).suffix.lower() not in TEKSTOWE:
-                continue
-            try:
-                tresc = git("show", f"{sha}:{sciezka}")
-            except (subprocess.CalledProcessError, UnicodeDecodeError):
-                continue
-            bledy += sprawdz_tekst(f"{k} {sciezka}", tresc, zakazane)
+            r = subprocess.run(["git", "show", f"{sha}:{sciezka}"], cwd=ROOT, capture_output=True)
+            tresc = jako_tekst(r.stdout) if r.returncode == 0 else None
+            if tresc is not None:
+                bledy += sprawdz_tekst(f"{k} {sciezka}", tresc, zakazane)
     return bledy
 
 

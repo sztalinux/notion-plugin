@@ -17,6 +17,25 @@ dane/
 *.jpeg
 *.png
 *.heic
+# eksporty danych, multimedia i poczta – walidator (tools/build.py, BINARNE) też je blokuje
+*.csv
+*.tsv
+*.ods
+*.odt
+*.rtf
+*.pages
+*.numbers
+*.eml
+*.msg
+*.webp
+*.gif
+*.tif
+*.tiff
+*.mp4
+*.mov
+*.m4a
+*.mp3
+*.wav
 # ustawienia lokalne Claude Code (prywatne dla danego komputera) i kopie robocze sesji równoległych
 .claude/settings.local.json
 .claude/worktrees/
