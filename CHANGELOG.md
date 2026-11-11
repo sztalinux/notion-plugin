@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.12.6] – 2026-11-11 (POM-12)
+
+POM-12 – kontrola spójności: zadanie „Porozmawiać z…” ↔ temat w „💬 Do przegadania”:
+- `przeglad-dnia`: nowy krok 5c (wieczorem) – grupa **R** serii „Kontrola spójności”, nowy
+  `references/kontrola-spojnosci-rozmowy.md` (klucze `KS-R…`). Zadanie „Porozmawiać z…” DONE, a temat nadal na liście osoby →
+  tylko pytanie „❓” (max 3 odczyty stron osób na przebieg, dopasowanie po dacie When − 3 dni i słowach kluczowych, bez
+  jednoznacznego kandydata – bez flagi); po ☑ pod tematem zagnieżdżony punkt „✅ przegadane”, nic się nie przenosi
+  (🗄 Archiwum nie przyjmuje wpisów, „💞 Relacja” go nie ma). ARCHIVED nie jest flagowane; treści tematów nie ma w logu.
+- `przeglad-tygodnia-osobisty` (pełny przebieg tygodniowy), `ja` zasada 9, `dziecko` pkt 4, README: odesłania do kroku 5c.
+- Wersja 1.12.6 (POM-11 ma 1.12.5, POM-13 1.12.4) – integrator scala wersje.
+
 ## ja [1.12.4] – 2026-11-11 (POM-13)
 
 POM-13 – kontrola spójności: zadanie budowy ↔ krok Harmonogramu (flagi, bez zmiany dat):
