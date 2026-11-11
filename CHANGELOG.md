@@ -4,6 +4,39 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.12.3] – 2026-11-11
+
+Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:
+- Przeglądy dnia i tygodnia uruchamia wyłącznie launchd na Macu (`przeglad-dnia`, `przeglad-tygodnia-osobisty`,
+  `claude-ai-projekt.md`, `AGENTS.md`) – zaplanowanych zadań na claude.ai nie używamy.
+- `przeglad-tygodnia-osobisty`: archiwum „Przetworzone” jako obowiązkowy krok; „co mnie czeka w tym / przyszłym tygodniu”
+  o sprawy prywatne.
+- `przeglad-dnia`: jedna edycja Dziennika na końcu przebiegu (linia „🤖” z kompletem liczb), widok dla zadań po terminie.
+- `zadania`: „zrobiłem” przy zadaniu zakupu zamyka też pozycję w 🛒 Zakupach; termin względny bez daty wpisu liczony od daty
+  przetwarzania – tak samo w `ja`, zasada 4 (zgodnie z `wpisy`).
+- `rozwoj-harnessu/references/dostawcy.md`: Gemini CLI ma oba pluginy, Gem tylko `dom-budowa`.
+
+## dom-budowa [3.12.1] – 2026-11-11
+
+Wdrożenie po nocnej samonaprawie 10.11 (gałęzie `noc/2026-11-10-*` po przeglądzie) i decyzje inwestora:
+- Walidator `tools/build.py`: w kopii roboczej (`.claude/worktrees`) lista zakazanych liczona od głównej kopii; nowe wzorce –
+  PESEL bez słowa, numer konta, tokeny i klucze API (prefiksy Notion, GitHub, Anthropic, Slack) i kwoty („zł”, „PLN”);
+  przykładowe kwoty w `koszty` i `docs/wydatki-arkusz.md` jako „N zł”.
+- `tools/wiedza.py publikuj --reset`: nowa historia zachowuje pozostałe pliki repo kopii (tryb głęboki, migawka).
+- `tools/wydatki.py`: materiał 02–08 wymaga Ilości i Jedn. (komunikat „bez ilości albo jednostki”).
+- `tools/dokumenty.py`: przeniesione pliki o tej samej treści zachowują swoje opisy; raport startowy pokazuje `_Przychodzące/`
+  jedną linią; przewodnik bez odwołania do pliku ściągi.
+- Ściąga projektu tylko w Notion („📐 Dane projektu”) – bez pliku `Ściąga projektu.md` (`dokumenty`, `budowa`, README).
+- `koszty`: pytania o błędy 💸 pod wpisem (otwarty blok aktualizowany, zamknięty → nowe pytanie), plan dopłaty przez kolejkę
+  (B3), Skrzynka słowami; `zakupy`: wybór oferty → wyceny znów „Do arkusza”, Płatność wg zapłaty.
+- `dziennik` A: dostawa także w 🧱 Zakupach budowy (wydatek raz), relacja „Krok harmonogramu”, puste „Zdjęcia” bez zdjęć;
+  roboty dodatkowe przez `dziennik` B (dopłata nie jest wydatkiem).
+- `etap`: terminy jako propozycja (`harmonogram` B), usterki z terminem tylko w TASKS.
+- 🧱 Zakupy budowy: Status „Nieaktualne” opisany w mapie Notion; przeglądy nie liczą go „po terminie”.
+- „Co mnie czeka” o budowę → `harmonogram` E (przegląd tygodnia budowy już nie); README – wiersz pulpitu w tabeli
+  konektorów, odesłania do importu wiedzy i nocnej samonaprawy; runbook – `NOTION_TOKEN` z Update content dla 💸 Wydatki.
+- Gem: instrukcje mówią wprost, że nie ma procedur `ja`.
+
 ## dom-budowa [3.12.0] – 2026-11-11
 
 Zwroty i VAT w Wydatkach:
