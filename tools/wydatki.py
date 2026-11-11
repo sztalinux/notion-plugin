@@ -16,7 +16,7 @@ wiersze do aplikacji Apps Script przypiętej do arkusza (kod i instrukcja: docs/
 w pierwszym wolnym wierszu arkusza Wydatki (bez nadpisywania kolumn z formułami). Wynik wraca do Notion: „W arkuszu”
 z numerem wiersza albo „Błąd” z powodem. Ponowne wysłanie tej samej strony nie dubluje wiersza (kolumna Źródło
 = notion:<id strony>). Strona już dopisana, która wróci do kolejki (zmienione pola + Arkusz = „Do arkusza”), poprawia swój
-wiersz (pola wpisywane A:H, J:M – np. „Do zapłaty” → „Zrealizowane”); korekta z Notion nadpisuje ręczne zmiany tego wiersza
+wiersz (pola wpisywane A:H, J:M i VAT % w P – np. „Do zapłaty” → „Zrealizowane”); korekta z Notion nadpisuje ręczne zmiany tego wiersza
 w arkuszu. Rodzaj „Zwrot” (pieniądze oddane – różnica VAT, zwrot towaru) to wiersz Wydatków z kwotą ujemną i bez ilości
 (kod Apps Script ≥ 4, inaczej czeka w kolejce); VAT % strony wydatku trafia do kolumny P (zapis akcją „zmien”).
 Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;

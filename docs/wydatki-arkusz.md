@@ -51,7 +51,7 @@ wyłączony → strony czekają w Notion, nic nie ginie. GitHub Actions nie maj�
 |---|---|---|
 | „zapłaciłem / wydałem / kupiłem za …” | Rodzaj Wydatek, Płatność „Zrealizowane” | kilka płatności w jednej wiadomości = kilka stron |
 | faktura albo transza czeka na zapłatę | Płatność „Do zapłaty” | liczy się do zobowiązań, nie do WYDANE |
-| „zapłaciłem tę fakturę” (strona już w arkuszu) | ta sama strona: Płatność „Zrealizowane”, Data = dzień zapłaty, Arkusz „Do arkusza” | `sync` poprawia jej wiersz (A:H, J:M), nie dodaje nowego |
+| „zapłaciłem tę fakturę” (strona już w arkuszu) | ta sama strona: Płatność „Zrealizowane”, Data = dzień zapłaty, Arkusz „Do arkusza” | `sync` poprawia jej wiersz (A:H, J:M, P), nie dodaje nowego |
 | zła kwota / pozycja w wysłanym wydatku | popraw pola tej samej strony, Arkusz „Do arkusza” | jak wyżej; nadpisze ręczną zmianę inwestora w tym wierszu |
 | zwrot pieniędzy (różnica VAT od wykonawcy, zwrot towaru) | nowa strona: Rodzaj Zwrot, Kwota dodatnia, ta sama Pozycja i Typ co wydatek, bez Ilości; „Do zapłaty” = oczekiwany | arkusz: osobny wiersz z minusem (kod Apps Script ≥ 4); wydatek zostaje bez zmian, WYDANE = suma |
 | wydatek wysłany przez pomyłkę | – | `python3 tools/wydatki.py wycofaj <id strony>` (czyści wiersz, w Notion „Nie wysyłać”) |

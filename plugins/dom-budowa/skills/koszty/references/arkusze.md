@@ -18,7 +18,7 @@ Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje s
 - **Wydatki!A:Q** ⚙ – A Data · B Status (Zrealizowane / Do zapłaty) · C Kwota brutto (zwrot – z minusem) · D Etap (lista z Etapy!A) · E Pozycja
   (lista „Lp Nazwa” z Kosztorys!M) · F Typ (Materiał / Robocizna / Sprzęt / Usługa / Formalności) · G Ilość · H Jedn. ·
   I Cena jedn. (formuła – nie nadpisuj) · J Sposób · K Opis · L Dostawca / nr FV · M Notatki · N Kontrola (formuła ⚠ –
-  nie nadpisuj) · O Źródło (`notion:<id>` = dopisane z kolejki 💸 Wydatki – ponowne wysłanie tej strony poprawia ten wiersz, A:H i J:M; stare wiersze – opis z dawnego arkusza Google) · P VAT % (wpisuje `sync`
+  nie nadpisuj) · O Źródło (`notion:<id>` = dopisane z kolejki 💸 Wydatki – ponowne wysłanie tej strony poprawia ten wiersz, A:H, J:M i P; stare wiersze – opis z dawnego arkusza Google) · P VAT % (wpisuje `sync`
   z pola VAT %, ułamek w formacie %) · Q Netto (formuła – nie nadpisuj). Kontrola N nie żąda ilości przy kwocie ujemnej (zwrot).
 - **Kosztorys!A:V** ⚙ – A Etap (formuła: wiersz etapu `=Etapy!A<n>`, pozycje `=$A$<wiersz etapu>` – nazwa i stan idą z Etapów;
   nagłówek etapu w C pokazuje „NAZWA · stan”) · B Lp (np. 03.5) · C Pozycja · D Typ · E Jedn. · F Ilość plan · **G PLAN (zł)** – formuła: wybrana
