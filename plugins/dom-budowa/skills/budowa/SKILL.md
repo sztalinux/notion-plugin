@@ -32,7 +32,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | wkleja ofertę, wycenę, notatkę z rozmowy z wykonawcą; „porównaj oferty” | `oferta` |
 | wpis z Dziennika o budowie (przekazany przez `wpisy`), kilka luźnych notatek o budowie naraz | sekcja „Luźny wpis z Dziennika” niżej |
 | ma spotkanie, rozmowę lub decyzję: „jutro spotkanie z kierownikiem”, „o co zapytać”, „przygotuj mnie”, „kogo wybrać z kilku” | `przygotowanie` (liczby z `oferta`) |
-| podaje wydatek, fakturę, paragon; prosi o kosztorys, arkusz, „ile wydaliśmy”, „ile gotówki potrzebuję w …” | `koszty` |
+| podaje wydatek, fakturę, paragon, zwrot pieniędzy; prosi o kosztorys, arkusz, „ile wydaliśmy”, „ile gotówki potrzebuję w …” | `koszty` |
 | dyktuje notatkę, ustalenie, decyzję, zadanie; „zapisz”, „dodaj do Notion” | `notatka` |
 | pyta o projekt, rysunek, umowę, normę, technologię, „czy to dobrze” | `analiza-techniczna` |
 | wkleja transkrypcję filmu/artykuł; relacjonuje rozmowę („dzwoniłem do konstruktora…”); odpowiada „SP-n: …” | `wiedza` |
@@ -72,7 +72,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia) | `zakupy` (0) | 🧱 Zakupy budowy; zadanie w TASKS tylko przy zakupie „na już” |
    | relacja z budowy, dostawa, usterka, godziny własne, roboty dodatkowe („ekipa chce dopłatę za…”) | `dziennik` (dopłata – B) | dopłata to nie wydatek: do 💸 dopiero uzgodniona kwota jako plan (`koszty` B3), zapłata jako wydatek (`koszty` B); położenie z miarą („zapisz w książce…”, „zawór 1,2 m od narożnika”) → także `ksiazka-domu` B |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
-   | wydatek, faktura do zapłaty / zapłacona, koszt (samo zdjęcie faktury na Dysku – `dokumenty` D) | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
+   | wydatek, faktura do zapłaty / zapłacona, koszt, zwrot pieniędzy (różnica VAT, zwrot towaru) (samo zdjęcie faktury na Dysku – `dokumenty` D) | `koszty` (B; zwrot – B.7a) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
    | prośba o rozkminkę: „przygotuj mi pytania na…”, „przemyśl…”, „porównaj…” | bez inwestora: ślad `→ 🧠 rozkminka wieczorem` (`wpisy`, krok 5); w rozmowie: `przygotowanie` / `analiza-techniczna` / `oferta` | wykonuje ją wieczorem `przeglad-dnia` (B.2a), wynik w przeglądzie dnia budowy |
    | oferta, wycena | `oferta` | cena materiału od dostawcy → `koszty` (B2) |
    | plan kwoty od inwestora („planuję wydać…”, „szacowałem…”) | `koszty` (B3) | Rodzaj Plan; wydatek z tego wpisu – osobna strona |

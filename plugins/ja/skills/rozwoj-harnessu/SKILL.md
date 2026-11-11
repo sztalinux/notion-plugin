@@ -88,7 +88,9 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
 8. Podsumuj w blokach z `ja` („Domknięcie rozmowy”), w 2–4 liniach: ✅ wersje i co weszło, ⏳ co odrzucone lub odłożone i dlaczego
    oraz czynności po stronie inwestora (to nie pytania – nie wpisuj ich do 🛑): „odśwież plugin(y) na claude.ai
    (`references/claude-ai-projekt.md`, sekcja „Aktualizacja pluginów”)”; jeśli zmienił się tekst instrukcji
-   w `references/claude-ai-projekt.md` – także „wklej na nowo `dist/claude-ai-projekt/instrukcje.md` w projekt »Dom«”.
+   w `references/claude-ai-projekt.md` – także „wklej na nowo `dist/claude-ai-projekt/instrukcje.md` w projekt »Dom«”;
+   jeśli zmienił się kod Apps Script (`docs/wydatki-arkusz.md`, sekcja 9) – „zaktualizuj kod arkusza do wersji N (sekcja 7,
+   »Aktualizacja kodu«); do tego czasu `wydatki.py sync` odkłada to, co wymaga nowej wersji” (to samo w CHANGELOG).
 
 Zmiany, o które inwestor prosi bezpośrednio w Claude Code, wdrażasz od razu tymi samymi krokami 2–8 (bez skrzynki).
 
