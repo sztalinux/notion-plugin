@@ -145,7 +145,7 @@ blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 | „cena netto bez stawki” | wpisz VAT % (nie zgaduj – zapytaj inwestora) |
 | HTTP 404 / 403 z Notion | integracja bez dostępu do bazy (⋯ → Połączenia) albo bez prawa „Update content” |
 | data przesunięta o dzień | strefa arkusza ≠ Warsaw – Plik → Ustawienia |
-| „wyceny czekają: kod w wersji …” / „Cennik w starym układzie” | starszy kod (sekcja 7) albo brak zmiany układu (sekcja 8) |
+| „N wycen czeka: arkusz ma kod w wersji …” / „N wycen czeka: Cennik w starym układzie …” / „N zwrotów czeka: arkusz ma kod w wersji …” | starszy kod (sekcja 7, aktualizacja kodu; `sprawdz` pokaże wersję) albo brak zmiany układu (sekcja 8); strony czekają „Do arkusza”, `sync` kończy się kodem 1 |
 | #ERROR! / dziwne liczby po zmianie układu | formuła z „,” zamiast „;” (arkusz ma polskie ustawienia) – sekcja 8, pułapki |
 
 ## 7. Konfiguracja od zera (już zrobiona – tylko przy odtwarzaniu)
