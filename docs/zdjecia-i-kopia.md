@@ -238,7 +238,7 @@ z dowiązaniami.
     „Przed zakryciem OK” – tylko przy komplecie;
   - „Dokumenty z dnia” = linki plików z sekcji 4.
 - **Harmonogram**: pole „Zdjęcia” (adres folderu kroku) – ustawiane przy tworzeniu folderu.
-- **🧱 Zakupy budowy**: „Dokumenty dostawy” = link WZ / karty.
+- **🧱 Zakupy budowy**: „Dokumenty” = link WZ / karty (pole url); „Dokumenty dostawy” = zaznaczone (checkbox).
 
 ## 11. Przypadki brzegowe – jak są obsłużone
 
