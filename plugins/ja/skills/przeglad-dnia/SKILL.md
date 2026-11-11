@@ -118,7 +118,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.
    Tylko pytania w „❓” (max 5), żadnych zmian bez ☑ inwestora; licznik „rozjazdy” idzie do kroku 8 i linii „🤖”.
    **5b. Kontrola spójności zakupów** – `references/kontrola-spojnosci-zakupy.md`: zakup Kupione / Odpuszczone ↔ zadanie „Kupić X”
-   (flagi „❓” z kluczem `KS-Z…`, max 5, zmiana statusu dopiero po ☑ inwestora) oraz bezpieczne uzupełnienia „Kupione dnia”
+   (flagi „❓” z kluczem `KS-Z…`, wspólny limit 5 z 5a, zmiana statusu dopiero po ☑ inwestora) oraz bezpieczne uzupełnienia „Kupione dnia”
    i researchu Zamknięty. Liczniki „rozjazdy” i „zakupy” idą do kroku 8 i linii „🤖”.
    **5c. Kontrola spójności: rozmowy** – `references/kontrola-spojnosci-rozmowy.md`: zadanie „Porozmawiać z…” DONE (wiersze kroku 5)
    ↔ temat w „💬 Do przegadania” na stronie osoby. Tylko pytanie „❓” z kluczem `KS-R…` (wspólny limit 5 z 5a); po ☑ dopisek

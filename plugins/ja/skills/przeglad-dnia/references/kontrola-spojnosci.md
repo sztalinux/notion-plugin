@@ -43,7 +43,7 @@ wszystkich otwartych zadań.
    → nic nie zmieniaj. Każdy rozpatrzony punkt idzie do „Przetworzone” z dopiskiem „→ KS: <wykonano | zostaje>” i kluczem.
 2. **Znajdź nowe rozjazdy** wg tabeli. Klucz flagi: `KS-<grupa>-<ostatnie 6 znaków ID zadania>` (np. `KS-H2-a1b2c3`).
    Pomiń parę, której klucz jest już w „❓” (czeka) albo w „Przetworzone” (rozpatrzona – wyciszenie trwa, dopóki wpis tam jest;
-   przegląd tygodnia archiwizuje po 14 dniach). Max 5 nowych flag na przebieg, reszta „+k” w linii „🤖” – bez zalewu pytań.
+   przegląd tygodnia archiwizuje po 14 dniach). Max 5 nowych flag na przebieg łącznie dla wszystkich grup (H, Z, R, S1, P), reszta „+k” w linii „🤖” – bez zalewu pytań.
 3. **Dopisz flagi** do Dziennika „❓ Czeka na Twoją odpowiedź” (format B, `wpisy/references/pytania.md`; to jedna edycja
    razem z resztą zapisów przeglądu – `SKILL.md`, krok 9). Jedno pytanie = jeden to-do, do ok. 12 słów, z kluczem na końcu:
    `- [ ] Krok „<krok>” → Zrobione? (zadanie „<nazwa>” zamknięte) KS-H1-a1b2c3`. Powód i skutek ☑ – w „Szczegóły”

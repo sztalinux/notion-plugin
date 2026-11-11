@@ -86,7 +86,7 @@ Wspólne wydanie pomysłów z gałęzi `pom/2026-11-11-*` (scalone na `pom/2026-
   bezpośrednio.
 
 **Integracja:** `kontrola-spojnosci.md` (5a) wymienia wszystkie grupy serii (Z, R, S1, P) i ich pliki; linia „🤖” i „Czeka
-na Ciebie” mają liczniki wszystkich grup; kolejność wieczoru: 1–2a, 5, 5a–5c, potem 3, 4, 6–10.
+na Ciebie” mają liczniki wszystkich grup; limit 5 nowych flag `KS-…` na przebieg jest wspólny dla wszystkich grup; kolejność wieczoru: 1–2a, 5, 5a–5c, potem 3, 4, 6–10.
 
 ## dom-budowa [3.13.0] – 2026-11-11 (POM-13, POM-3, POM-16, POM-7, POM-5, POM-2, POM-4)
 
