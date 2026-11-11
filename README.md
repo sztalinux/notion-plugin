@@ -143,7 +143,7 @@ Opis lokalny (ścieżki, dane kolejki): `AI/import-wiedzy/docs/README-lokalne.md
 Czat na telefonie nie szuka tez sam, tylko czyta **karty** – gotowe wybory tez do typowych pytań. Wybór robi Mac, offline, mocnym modelem
 czytającym całą bazę w małych porcjach; wynik leży w tym samym pliku `wiedza.sqlite`, który telefon już pobiera. Po co: sam czat widzi
 przy pytaniach szerokich ok. 60% trafnych tez, a poziom „cały etap” (330–390 tys. znaków) przerasta okno rozmowy (test 28.10.2026: w całości
-czyta 3 z 16 części). Dwa rodzaje: ok. 15 kart pytań (100–200 tez, pokrycie zmierzone wobec wzorca i pokazane w nagłówku karty) oraz
+czyta 3 z 16 części). Dwa rodzaje: ok. 17 kart pytań (100–200 tez, pokrycie zmierzone wobec wzorca i pokazane w nagłówku karty) oraz
 68 kart czynności (małe, tezy otagowane czynnością, pokrycie niemierzone).
 - Czat i Claude Code: `python3 tools/wiedza.py karty [--do "A" "B" "C"]` (spis kart; z `--do` dopasowanie do pytania) i
   `karta KOD … --pytanie "A" "B" "C" --czesc k` (treść w częściach, z dopełnieniem z szukania). Karta drukuje tezy bez źródeł –

@@ -8,7 +8,7 @@ Jak czat korzysta z kart: `pytanie-do-bazy.md`, pkt 2; polecenia `karty` i `kart
 
 ## Dwa rodzaje kart
 
-- **Karta pytań** (dziś ok. 15) – rodzina pytań, np. „Betonowanie”, „Materiały na stan zero”, „Kontrola robót i zamknięcie stanu zero”.
+- **Karta pytań** (dziś ok. 17) – rodzina pytań, np. „Betonowanie”, „Materiały na stan zero”, „Kontrola robót i zamknięcie stanu zero”.
   Rdzeń 150–270 tez (50–90 tys. znaków, 2–4 części) i rozszerzenie – tezy pokrewne (`karta KOD --wiecej`). Tezy wybrał model na Macu
   w dwóch krokach: wybór inkluzywny (cała baza, porcje po ok. 160 tez, dwa przebiegi w różnej kolejności, suma – 300–1000 tez) i ocena
   ścisła każdej z nich (2 = konieczna, 1 = pokrewna, 0 = nie dotyczy): rdzeń = ocena 2 plus najlepsze z oceny 1 wg trafień szukania, do
