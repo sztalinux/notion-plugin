@@ -73,7 +73,8 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    ```
    Pusty tydzień → krótki wpis „spokojny tydzień” z linią budowy. Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
 5. **Porządki bez pytania** (sekcja D, pierwsza lista) – **zawsze, także w zaplanowanym przebiegu**: bloki dni starsze
-   niż 14 dni do archiwum; liczbę i zakres dni dopisz w linii „Porządki” wpisu (brak takich dni → „archiwum: nic”).
+   niż 14 dni do archiwum – zrób to **przed zapisem wpisu z kroku 4**, żeby wpis od razu miał liczbę i zakres dni w linii
+   „Porządki” (jedna edycja strony – `ja`, zasada 2; brak takich dni → „archiwum: nic”, także w pustym tygodniu).
    Pozostałe porządki tylko proponujesz: jeden punkt w „❓” Dziennika w formacie B (`wpisy/references/pytania.md`;
    `❓ asystent (data) · porządki tygodnia <RRRR-Www> – ☑ = tak`, jedno to-do na porządek), w tej samej edycji Dziennika
    co archiwum; we wpisie tylko liczba (linia „Porządki”). Ta sama propozycja już czeka w „❓” → nie dubluj.
