@@ -131,7 +131,11 @@ def blokada():
     if not CONF.is_dir():
         return None
     f = open(CONF / "indeks.lock", "w")
-    fcntl.flock(f, fcntl.LOCK_EX)
+    try:
+        fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        print("[dokumenty] Czekam, aż skończy się przebieg w innej sesji…", flush=True)
+        fcntl.flock(f, fcntl.LOCK_EX)
     return f
 
 
