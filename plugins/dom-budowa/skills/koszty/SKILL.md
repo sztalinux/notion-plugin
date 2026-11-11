@@ -138,7 +138,8 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
    „Do zapłaty”.
 2. Zaliczka, zatrzymanie, kary – zasady z umowy (`oferta/references/umowa.md`); kwoty zapisuj jako wydatki tej samej transzy.
 3. Kredyt w transzach po etapach – na „co do banku” zestaw: etap, stan wg arkusza (Podsumowanie), dokumenty (faktury,
-   zdjęcia, wpisy kierownika), termin kontroli. Wymagania banku są w umowie kredytowej (folder budowy) – nie zgaduj ich.
+   zdjęcia, wpisy kierownika), termin kontroli. Dokumenty składa teczka etapu (`etap`, sekcja D). Wymagania banku są
+   w umowie kredytowej (folder budowy) – nie zgaduj ich.
 4. **Gotówka w czasie** („ile gotówki potrzebuję w grudniu”, „ile na ten / następny miesiąc”) – widok miesięczny:
    „Do zapłaty” wg Daty + transze w miesiącu końca etapu i materiał w miesiącu startu etapu (Harmonogram); osobno „bez daty”
    i kolumna z rezerwą. W Claude Code `python3 tools/wydatki.py gotowka`; reguły, drogi zapasowe i format odpowiedzi:

@@ -21,7 +21,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 | Projekt, rysunki, umowa, norma, pytanie techniczne | `plugins/dom-budowa/skills/analiza-techniczna/SKILL.md` |
 | Transkrypcja filmu, artykuł, relacja z rozmowy, sprzeczności „SP-n” | `plugins/dom-budowa/skills/wiedza/SKILL.md` |
 | Nowe pliki od projektanta/wykonawcy, paczka dokumentów dla claude.ai, dokumenty z telefonu („wgrałem fakturę / WZ”), kopia dokumentów na Dysk, „aplikacja Dysku nie działa” | `plugins/dom-budowa/skills/dokumenty/SKILL.md` |
-| Start etapu, „co sprawdzić przed betonowaniem”, odbiór, usterki | `plugins/dom-budowa/skills/etap/SKILL.md` |
+| Start etapu, „co sprawdzić przed betonowaniem”, odbiór, usterki, teczka etapu / transzy do banku | `plugins/dom-budowa/skills/etap/SKILL.md` |
 | Książka domu: rozdział po odbiorze etapu, „zapisz w książce domu…”, „gdzie biegnie rura / kabel”, „gdzie nie wiercić”, gwarancje i przeglądy domu | `plugins/dom-budowa/skills/ksiazka-domu/SKILL.md` |
 | Relacja z dnia na budowie, zdjęcia („rozłóż zdjęcia”, „gdzie są zdjęcia…”, „cofnij rozłożenie”), godziny własne, roboty dodatkowe | `plugins/dom-budowa/skills/dziennik/SKILL.md` |
 | Harmonogram, terminy, przesunięcia, „czekam na”, „co mnie czeka” (budowa) | `plugins/dom-budowa/skills/harmonogram/SKILL.md` |

@@ -1,6 +1,6 @@
 ---
 name: etap
-description: Plan, bramki „bez odwrotu” i odbiór etapu budowy (stan zero, SSO, instalacje, wykończenie) – także przy pracach własnych. Używaj, gdy użytkownik mówi „zaczynamy etap”, „ekipa wchodzi w poniedziałek”, „jutro betonowanie / zasypka / tynki”, „co muszę mieć gotowe przed…”, „co sprawdzić zanim…”, „ekipa skończyła, co sprawdzić”, „odbiór”, „usterki”, „zmieniamy etap na SSO”, albo gdy inna procedura (dziennik, oferta, zakupy) sygnalizuje początek lub koniec etapu.
+description: Plan, bramki „bez odwrotu” i odbiór etapu budowy (stan zero, SSO, instalacje, wykończenie) – także przy pracach własnych. Używaj, gdy użytkownik mówi „zaczynamy etap”, „ekipa wchodzi w poniedziałek”, „jutro betonowanie / zasypka / tynki”, „co muszę mieć gotowe przed…”, „co sprawdzić zanim…”, „ekipa skończyła, co sprawdzić”, „odbiór”, „usterki”, „zmieniamy etap na SSO”, „teczka stanu zero”, „teczka do banku”, „rozliczenie transzy”, „co do banku”, albo gdy inna procedura (dziennik, oferta, zakupy) sygnalizuje początek lub koniec etapu.
 ---
 
 # Etap budowy – plan, bramki, odbiór
@@ -88,6 +88,23 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
    biegnie” wg `ksiazka-domu`, sekcja A – w tym samym przebiegu albo jako propozycja na koniec odpowiedzi, gdy rozmowa
    dotyczy tylko usterek. Odbiór pojedynczego kroku rozdziału nie tworzy.
 
+## D. Teczka etapu („teczka stanu zero”, „teczka do banku”, „co do banku po etapie”, „rozliczenie transzy”)
+
+Cel: po odbiorze jednym poleceniem zebrać dokumenty etapu (protokoły, faktury, wpisy kierownika, dostawy, linki do zdjęć)
+w folderze ze spisem i pokazać braki – do wniosku o transzę kredytu albo rozliczenia z ekipą. Składniki, typowe wymagania
+banku i forma: `references/teczka.md`. **Wymagań banku nie zgaduj** – lista jest typowa, do potwierdzenia z umową kredytową
+(folder budowy); umowy kredytowej nie ma w repo ani w teczce.
+1. Ustal etap i okres: daty pierwszego i ostatniego kroku etapu z Harmonogramu (`harmonogram`); brak dat → zapytaj albo
+   przyjmij daty protokołu odbioru i dnia startu i zapisz to w wyniku.
+2. Zbierz linki folderów zdjęć kroków (pole „Zdjęcia” w Harmonogramie, folder `przed zakryciem/`) i sprawdź protokół
+   odbioru etapu (sekcja C). Bez protokołu powiedz wprost: bez niego nie ma podstawy do transzy ani do płatności dla ekipy.
+3. Claude Code z folderem budowy: `python3 tools/teczka.py zbierz --etap "<Etap>" --od … --do … --zdjecia "<krok>=<link>"`
+   (na sucho) → pokaż inwestorowi składniki i braki → po „ok” to samo z `--wykonaj`. Pliki spoza okresu albo bez daty
+   w nazwie skrypt pomija i wypisuje – nie dopasowuj ich na własną rękę. Czat bez folderu: wypisz braki słowami wg
+   `references/teczka.md` i powiedz, że teczkę złoży Claude Code.
+4. Braki zapisz jako zadania tylko na „dodaj” (`notatka`); wpis „Bank wymaga: …” po uzgodnieniu z umową – Decyzja w Notatniku.
+5. W Umowach i gwarancjach przy odbiorze możesz zapisać ścieżkę teczki – tylko gdy inwestor o to poprosi.
+
 ## Wynik w rozmowie
 
 ```
@@ -96,11 +113,13 @@ Blokady ❌ (n): … – kto, do kiedy
 Do sprawdzenia na budowie: 1. … (jak, kto)  2. …
 Zdjęcia przed zakryciem: …
 Ludzie / dostawy do umówienia: …
+Teczka (tryb D): składniki n/n, ⚠ braki, folder … |
 Zapisane: Notion … | 🛑 Czeka na Twoją odpowiedź: … (tylko gdy coś stoi)
 ```
 
 ## Czego nie robić
 
 - Nie odbieraj za kierownika budowy ani nie zatwierdzaj zmian konstrukcyjnych (`analiza-techniczna`, Granice).
+- Nie podawaj wymagań banku jako faktu ani nie wysyłaj teczki do banku za inwestora – teczka to zestaw roboczy.
 - Nie skracaj bramki, żeby „zdążyć przed betonem” – lepiej przesunąć betonowanie niż kuć płytę.
 - Nie wymyślaj tolerancji i wymagań – podawaj źródło albo oznacz `[opinia]` i „do potwierdzenia z kierownikiem”.

@@ -37,6 +37,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     .githooks/                        ← pre-commit (pliki, autor), commit-msg (wiadomość), pre-push (każdy wysyłany commit)
     tools/build.py                    ← walidacja (w tym dane osobowe) + dowiązania skilli + paczki dist/ (po jednej na plugin)
     tools/dokumenty.py                ← indeks folderu budowy i paczka dla claude.ai
+    tools/teczka.py                   ← teczka etapu / transzy do banku: składa dokumenty etapu w Teczki/<Etap>/ ze spisem braków (etap D; testy test_teczka.py)
     tools/zdjecia.py, tools/kopia.py  ← rozkładanie zdjęć i dokumentów z telefonu, kopia dokumentów Mac → Dysk (docs/zdjecia-i-kopia.md; testy test_*.py)
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
     tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google, gotówka po miesiącach (docs/wydatki-arkusz.md)

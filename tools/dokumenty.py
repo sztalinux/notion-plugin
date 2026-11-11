@@ -52,7 +52,8 @@ MAPY_NOTION = [
     (REPO / "plugins/ja/skills/ja/references/notion-mapa.md", "Notion – sprawy osobiste", "Strona **📓 Dziennik**"),
 ]
 ZDJECIA = ("zdjęcia", "zdjecia", "foto", "photos",  # foldery ze zdjęciami z budowy – poza indeksem i paczką
-           "_na dysk", "_kopie", "_archiwum")  # paczki kopii na Dysk i archiwum (docs/zdjecia-i-kopia.md)
+           "_na dysk", "_kopie", "_archiwum",  # paczki kopii na Dysk i archiwum (docs/zdjecia-i-kopia.md)
+           "teczki")  # teczki etapów (tools/teczka.py) – kopie dokumentów z innych folderów, nie nowe dokumenty
 try:  # katalog folderu budowy z repozytorium (…/Dom/AI) – także gdy skrypt działa z kopii roboczej w .claude/worktrees
     KATALOG_REPO = HUB / REPO.relative_to(HUB).parts[0]
 except (ValueError, IndexError):
