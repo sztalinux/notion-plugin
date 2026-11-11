@@ -60,7 +60,8 @@ Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia”
    błędy kolejki 💸 – `koszty`, E, odpowiedzi pod 🔔) – `wpisy/references/pytania.md`, C, w tej samej edycji „Wpisów”. Linia „🤖” w bloku dnia –
    krótka, z godziną, bez wyliczania zapisów (te są w podpunktach wpisów, `wpisy` krok 6): `🤖 11:00: przetworzono 2
    (zadania 1, emocje 1), czeka na Ciebie 1, świeże pominięte 1`; liczby per źródło – tylko w odpowiedzi (log). Kolejne
-   przebiegi tego dnia dopisują swoje linie pod spodem w tym samym bloku; tytuł bloku pokazuje sumę dnia. W odpowiedzi
+   przebiegi tego dnia dopisują swoje linie (każdą z jej śladem) na górze tego samego bloku, nad wcześniejszymi
+   (`wpisy` krok 7); tytuł bloku pokazuje sumę dnia. W odpowiedzi
    podaj nowe wpisy per źródło – „Dziennik n · Wpisy n · widget n · Skrzynka n” (albo „widget – brak odczytu”) – żeby było
    widać, że przebieg sprawdził wszystkie cztery.
 5. Bez analizy pomysłów, bez „jutra”, bez wpisów w przeglądach – to robi wieczór.
