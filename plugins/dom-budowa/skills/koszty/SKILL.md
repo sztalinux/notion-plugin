@@ -17,7 +17,7 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
 ## Gdzie są liczby (od najszybszego; brak narzędzia albo błąd → następne źródło, bez ponawiania)
 
 - **Konektor Google Sheets** (gdy jest w sesji – Claude Code, claude.ai, telefon): żywy arkusz „Kosztorys budowy” (plik
-  znajdź po tytule wyszukiwarką Dysku; ID nie zapisuj w repo). Liczby bierz z wartości komórek, nie z tekstu „12 345 zł”.
+  znajdź po tytule wyszukiwarką Dysku; ID nie zapisuj w repo). Liczby bierz z wartości komórek, nie z tekstu „N zł”.
   Przebiegi bez inwestora (`claude -p`) nigdy na nim nie polegają.
 - **Claude Code:** `Koszty/Kosztorys_google.json` w folderze budowy – wartości wszystkich zakładek, odświeżane co wieczór; świeże
   pobierzesz poleceniem `python3 tools/wydatki.py pobierz`. Nie ma jej (arkusz jeszcze nieskonfigurowany, kod 2) →
@@ -40,7 +40,7 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
 ## B. Wydatek (Dziennik, rozmowa, faktura, paragon, przelew)
 
 Źródło bywa różne – wpis w 📓 Dzienniku (przebieg bez inwestora, `wpisy` → `budowa`), wiadomość do asystenta („dopisz
-wydatki: 150 zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to samo; kilka płatności w jednej wiadomości = kilka wierszy.
+wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to samo; kilka płatności w jednej wiadomości = kilka wierszy.
 
 1. Wyciągnij: datę, kwotę **brutto** (tyle, ile zapłacono), na co, przy materiale ilość i jednostkę, typ (Materiał /
    Robocizna / Sprzęt / Usługa / Formalności – zawsze, także poza stanem zero), sposób (Przelew / Gotówka / Karta / BLIK), płatność (Zrealizowane =
@@ -90,7 +90,7 @@ Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten
 1. Jedna oferta jednego dostawcy na jedną rzecz = jeden wiersz w tej samej kolejce, **Rodzaj = Wycena**: Wydatek (co,
    np. „Beton C25/30 W8 (płyta)”), Data, Kwota = **cena za jednostkę**, Jedn., Cena podana (Netto / Brutto – nie zgaduj,
    zapytaj), przy netto **VAT %** (stawka od inwestora albo z oferty), Dostawca, Pozycja (gdy pasuje), Status wyceny = Oferta, Ważna do, Notatki (transport, minimum, z czego
-   wyliczona cena – np. „28 930 zł za 8 t”), Arkusz = „Do arkusza”. Cena za całość → przelicz na jednostkę i zapisz w Notatkach.
+   wyliczona cena – np. „N zł za 8 t”), Arkusz = „Do arkusza”. Cena za całość → przelicz na jednostkę i zapisz w Notatkach.
 2. Kilka ofert na to samo = kilka wierszy z tą samą Pozycją; arkusz oznacza najtańszą (★, porównanie brutto).
 3. Decyzja („biorę z X”) → w wierszu X Status wyceny = Wybrana, w pozostałych ofertach tej pozycji = Odrzucona; wszystkie
    zmienione znów „Do arkusza” (arkusz zaktualizuje te same wiersze). PLAN pozycji przelicza się wtedy sam (wybrana oferta ×

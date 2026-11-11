@@ -157,7 +157,7 @@ blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 4. Wdróż → Nowe wdrożenie → Aplikacja internetowa, Wykonaj jako **Ja**, dostęp **Każdy** (bez sekretu odpowiedź „zły
    sekret”). Autoryzuj (skrypt prosi tylko o ten arkusz). Skopiuj adres `/exec`.
 5. `<hub>/.dom/sekrety.env`: `ARKUSZ_URL=<adres>`, `ARKUSZ_SEKRET=<sekret>`.
-6. `wydatki.py sprawdz`, `pozycje`, `pobierz`; próba: strona testowa 1 zł → `sync` → sprawdź datę i kwotę w arkuszu →
+6. `wydatki.py sprawdz`, `pozycje`, `pobierz`; próba: strona testowa N zł → `sync` → sprawdź datę i kwotę w arkuszu →
    `wycofaj <id>` i strona do kosza.
 
 Aktualizacja kodu: wklej nowy kod jak w kroku 2, potem Wdróż → Zarządzaj wdrożeniami → ołówek → Wersja: **Nowa** → Wdróż
