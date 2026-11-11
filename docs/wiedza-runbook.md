@@ -46,7 +46,8 @@ dane indeksu, definicje kart, zbiory oceny, prywatne repo kopii, automaty launch
    - `GITHUB_REPO` – `właściciel/repo` prywatnego repo kopii (nazwa, nie sekret);
    - `GITHUB_TOKEN_SYNC` – zapis kopii; używa go tylko Mac;
    - `GITHUB_TOKEN_SEARCH` – odczyt kopii w czacie na telefonie;
-   - `GITHUB_TOKEN_PYTANIA` – zapis pytań trybu głębokiego z telefonu (tylko ta ścieżka repo; w pliku dostępu, sekcja „Tryb głęboki”).
+   - `GITHUB_TOKEN_PYTANIA` – zapis pytań trybu głębokiego z telefonu (tylko ta ścieżka repo; w pliku dostępu, sekcja „Tryb głęboki”);
+   - `ARKUSZ_URL`, `ARKUSZ_SEKRET` – wydatki → arkusz Google (`tools/wydatki.py`; `docs/wydatki-arkusz.md`, 7).
    Najmniejsze możliwe uprawnienia: tokeny GitHub drobnoziarniste, jedno repo (kopii), odczyt (`SEARCH`) albo zapis zawartości (`SYNC`, `PYTANIA`).
 4. **Prywatne repo kopii.** Załóż **prywatne** repo (program odmówi publikacji do publicznego), wpisz je w `GITHUB_REPO`. Wgraj do niego workflow
    trybu głębokiego i runner (pliki z katalogu automatów – lokalizacja w `README-lokalne.md`), dodaj sekret repo `CLAUDE_CODE_OAUTH_TOKEN`
