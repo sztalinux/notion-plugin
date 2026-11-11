@@ -79,4 +79,7 @@ zamówienia z „Zamówić do” i dostawy, bramki. Na górze: po terminie i dzi
 - Daty względne licz od daty podanej w rozmowie/wpisie (Dziennik: `@today`); brak daty przy terminie → zapytaj.
 - Terminów innych osób nie zmieniaj „na domysł” – tylko z ich informacji (inwestor relacjonuje) i z Pewnością terminu.
 - Kwoty nigdy w Harmonogramie ani Zakupach budowy – arkusz kosztorysu (`koszty`).
+- Zadanie z relacją do kroku i sam krok rozjeżdżają się przy ręcznych zmianach (zadanie DONE, krok nie; krok „Zrobione”, zadanie
+  otwarte; zadanie po końcu kroku; „czekam na” ze starym terminem po przesunięciu). Rozjazdy wychwytuje kontrola spójności
+  (`ja/skills/przeglad-dnia/references/kontrola-spojnosci.md`) – pytaniem w „❓”; relację do kroku ustawiaj więc zawsze, gdy zadanie z niego wynika.
 - Termin w Notatniku (pole Kiedy) i zadanie w TASKS dla tej samej sprawy → zadanie w TASKS, w Notatniku link; nie dubluj dat.
