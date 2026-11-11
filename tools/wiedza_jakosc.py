@@ -1371,7 +1371,7 @@ def zbuduj_parser() -> argparse.ArgumentParser:
     p.add_argument("--rownolegle", type=int, default=3, help="wywołań naraz, 1–6 (domyślnie 3)")
     p.add_argument("--pola", help="dodatkowe pola: dla_naszej_budowy,komentarz (Kto, Z kim, źródła nigdy)")
     p = sub.add_parser("pokaz", parents=[wspolne], help="lokalny HTML do porównania: pytanie → indeks → Notion")
-    p.add_argument("--pytania", type=int, default=30, help="próbka tylu pytań wymyślonych (domyślnie 30, jak sedzia)")
+    p.add_argument("--pytania", type=int, default=30, help="próbka tylu pytań wymyślonych (domyślnie 30; sedzia – wszystkie)")
     p.add_argument("--top", type=int, default=TOP, help=f"wierszy na listę, 1–{TOP} (domyślnie {TOP})")
     p.add_argument("--model", default="sonnet", help="model, którego oceny pokazać (domyślnie sonnet)")
     p.add_argument("--budzet", type=int, default=150, help="najwyżej tyle żądań do Notion (domyślnie 150)")
