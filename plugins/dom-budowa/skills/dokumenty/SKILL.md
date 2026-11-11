@@ -29,7 +29,7 @@ Ty decydujesz, co to za dokument, czy trafia do paczki i co zastępuje. Bez Twoj
 
 **Prośba o dokument** (claude.ai, telefon, Cowork – wszędzie, gdzie nie ma dostępu do folderu budowy): gdy odpowiedź
 wymaga treści dokumentu, którego nie ma w rozmowie, napisz jawnie, czego potrzebujesz – nazwa z przewodnika, ścieżka
-na komputerze, strona/arkusz i po co, np. „Potrzebuję projektu konstrukcji (`Projekt/Konstrukcja.pdf`, arkusz KT.03,
+na komputerze, strona/arkusz i po co, np. „Potrzebuję projektu konstrukcji (`Projekty/Konstrukcja/Konstrukcja.pdf`, arkusz KT.03,
 s. 3) – sprawdzę otulinę zbrojenia płyty”. Do czasu załączenia nie odpowiadaj z pamięci ani z domysłów; możesz podać,
 co już wiadomo ze ściągi, z oznaczeniem źródła. W Claude Code nie proś – przeczytaj plik z folderu budowy.
 Masz konektor Dysku Google → najpierw spróbuj odczytać dokument z `Dom/<folder>` na Dysku (kopia z Maca, sekcja D);
