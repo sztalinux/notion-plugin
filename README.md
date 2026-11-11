@@ -17,10 +17,9 @@ Repozytorium mówi tylko **jak** pracować. Dane są w Notion, liczby w arkuszu 
 ```
 Dom/                              ← folder budowy (centrum dokumentów, poza gitem)
   _Przychodzące/                  ← tu wrzucasz nowe pliki od projektantów i wykonawców
-  _Do claude.ai/                  ← paczka (generowana): przewodnik po dokumentach + ściąga → wiedza projektu „Dom” na claude.ai
+  _Do claude.ai/                  ← paczka (generowana): przewodnik po dokumentach → wiedza projektu „Dom” na claude.ai (kopia awaryjna)
   Zdjęcia/                        ← zdjęcia z budowy – źródłem jest Dysk Google (Dom/Zdjęcia/<etap>/<krok>/), docs/zdjecia-i-kopia.md
   _Na Dysk/                       ← paczki kopii dokumentów do wgrania na Dysk (tools/kopia.py)
-  Ściąga projektu.md              ← kopia ściągi z Notion („📐 Dane projektu”) do paczki awaryjnej
   .dom/                           ← indeks dokumentów, stan wgrania, lista słów zakazanych w repo
     wiedza/                       ← dane indeksu wiedzy (.dom/wiedza/) – poza repo, nigdy w git
   … foldery tematyczne (projekt, konstrukcja, instalacje, wyceny…)
@@ -135,6 +134,10 @@ ocena ręczna, miesięczne porównanie z Notion; pytania wymyślone: `tools/wied
 `tools/wiedza_sedzia.py` (polecenie `wiedza_jakosc.py sedzia`, na sucho bez `--wyslij`) – sędzia LLM trafności wyników przez `claude -p` (kanarek izolacji; bez filtra danych osobowych – sekcja „Zgoda i granice” opisu); opis: `plugins/dom-budowa/skills/wiedza/references/indeks-sedzia.md`.
 `tools/wiedza_porownanie.py` (polecenie `wiedza_jakosc.py pokaz`) – lokalny plik HTML do ręcznego porównania wyników indeksu i Notion (API, tylko odczyt) z ocenami sędziego; wyjście: same liczby i ścieżka pliku.
 
+Źródła do Bazy wiedzy (filmy, playlisty, artykuły) dopisuje nocna kolejka z katalogu `AI/import-wiedzy/` (poza repo;
+do 10.11.2026 `kurs-do-notion`): strona „Kolejka wiedzy” uruchamiana z `Kolejka.command`, zapis przez lokalny MCP `notion`.
+Opis lokalny (ścieżki, dane kolejki): `AI/import-wiedzy/docs/README-lokalne.md`, sekcja 3; awarie – `docs/wiedza-runbook.md`, 5.9.
+
 ### Karty wiedzy
 
 Czat na telefonie nie szuka tez sam, tylko czyta **karty** – gotowe wybory tez do typowych pytań. Wybór robi Mac, offline, mocnym modelem
@@ -174,6 +177,8 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
    instalacja i godziny: README w katalogu automatów (`AI/automaty/`, poza repo). Konektor Notion na claude.ai jest
    zablokowany przez organizację, dlatego zaplanowane zadania na claude.ai nie są używane; zapisy z telefonu idą przez
    dokument Claude „📥 Skrzynka” (plugin `ja`, `wpisy/references/skrzynka.md`). Kosztorys: `docs/wydatki-arkusz.md`, sekcja 7.
+   Nocą (bez inwestora) harness i opisy sprawdza pętla samonaprawy z katalogu `AI/samonaprawa/` (poza repo, opis w jej
+   README): poprawki pewne idą przez gałęzie `noc/…` i recenzję, reszta czeka w raporcie kampanii w `.dom/noc/<data>/`.
 6. claude.ai → projekt „Dom” (tylko dokumenty budowy):
    - **Instructions:** `python3 tools/build.py` i wklej `dist/claude-ai-projekt/instrukcje.md` – dzięki temu każda
      wiadomość w projekcie korzysta z harnessu i Notion bez wpisywania „/” (opis:

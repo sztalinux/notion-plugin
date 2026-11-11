@@ -7,7 +7,7 @@ Fakty o budynku, działce, gruncie, konstrukcji, instalacjach i zespole projekto
 | Gdzie pracujesz | Źródło |
 |---|---|
 | wszędzie z dostępem do Notion | strona **DOM** (`24af5982-09e7-806b-821a-e157ff33be42`) → sekcja „🤖 Dla asystenta” → **„📐 Dane projektu (ściąga)”**; otwarte sprawy krytyczne → **„🔴 Do zamknięcia przed stanem zero”** |
-| Claude Code | to samo w Notion (jedyne źródło ściągi) + oryginalne dokumenty z folderu budowy (procedura `dokumenty`); `Ściąga projektu.md` w folderze to tylko kopia |
+| Claude Code | to samo w Notion (jedyne źródło ściągi) + oryginalne dokumenty z folderu budowy (procedura `dokumenty`) |
 | claude.ai, projekt „Dom” | strona DOM → „🤖 Dla asystenta” → „📐 Dane projektu” i strona Notion „📑 Przewodnik po dokumentach i Notion” (`3f6f5982-09e7-81f5-bade-ec877d8d936a`); pełny dokument – poproś inwestora (procedura `dokumenty`, „Prośba o dokument”) |
 
 Pobierz je, gdy procedura potrzebuje szczegółów projektu (ocena zgodności oferty, „dotyczy nas”, analiza techniczna).

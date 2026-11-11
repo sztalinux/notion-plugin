@@ -43,7 +43,7 @@ Podział wpisów na obszary **nie jest w harnessie** – jest w bazie Notion „
 | mówi o dziecku: obserwacja, „porozmawiać z nią o…”, prezent, zabawa, zalecenie specjalisty | `dziecko` |
 | „kończy się X”, „kupiłem X”, „zaczynam / przerwa od” (suplement) | `suple` |
 | „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` |
-| „przegląd tygodnia”, „podsumuj tydzień”, tygodniowe zaplanowane zadanie, „posprzątaj dziennik” | `przeglad-tygodnia-osobisty` (uruchamia też przegląd budowy) |
+| „przegląd tygodnia”, „podsumuj tydzień”, tygodniowe zaplanowane zadanie, „posprzątaj dziennik”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – `harmonogram`) | `przeglad-tygodnia-osobisty` (uruchamia też przegląd budowy) |
 | poprawia sposób pracy asystenta, „zapamiętaj na przyszłość”, „mam pomysł na…”, „zrób POM-n”, „zrób ZP-n”, nowa procedura | `rozwoj-harnessu` |
 | budowa domu: ekipa, projekt, kosztorys, działka, wiedza budowlana, dokumenty budowy | `budowa` (plugin `dom-budowa`) |
 
@@ -60,7 +60,8 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
    (zapisany widok) limitu nie ma. Kolejność: widok (brak pasującego → utwórz go z filtrem) → wyszukiwarka z parametrem bazy
    (duplikaty, pojedyncze wiersze) → rows → SQL. Błąd „usage limit” → bez ponawiania, przejdź na widok/wyszukiwarkę.
 4. **Nie zgaduj:** niejasny wpis, brak daty przy terminie, nie wiadomo czego dotyczy → pytanie (okienko pod wpisem w „📝 Wpisy”,
-   w rozmowie wprost). Słowa względne („wczoraj”, „w piątek”) licz od daty we wpisie, nie od daty przetwarzania. Każde pytanie
+   w rozmowie wprost). Słowa względne („wczoraj”, „w piątek”) licz od daty we wpisie; wpis bez daty – od daty przetwarzania, bez pytania
+   (`wpisy`, krok 3 – „Data zdarzenia”, z wyjątkiem pierwszego przebiegu dnia). Każde pytanie
    do inwestora zapisane w Notion ma format z `wpisy/references/pytania.md`: o wpis – krótkie okienko ❓ z linią `✍️` pod
    wpisem (A); poza wpisami (Dziennik „❓”, strony RES-n, pomysłów) – checkbox na pytanie, kontekst w „Szczegółach” (B).
 5. **Prywatność:** strona **„🔒 Prywatne”** (`3faf5982-09e7-816b-92ab-d8b79c61ad92`) i wszystko pod nią jest poza zasięgiem

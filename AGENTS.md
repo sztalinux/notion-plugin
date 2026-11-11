@@ -23,7 +23,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 | Nowe pliki od projektanta/wykonawcy, paczka dokumentów dla claude.ai, dokumenty z telefonu („wgrałem fakturę / WZ”), kopia dokumentów na Dysk, „aplikacja Dysku nie działa” | `plugins/dom-budowa/skills/dokumenty/SKILL.md` |
 | Start etapu, „co sprawdzić przed betonowaniem”, odbiór, usterki | `plugins/dom-budowa/skills/etap/SKILL.md` |
 | Relacja z dnia na budowie, zdjęcia („rozłóż zdjęcia”, „gdzie są zdjęcia…”, „cofnij rozłożenie”), godziny własne, roboty dodatkowe | `plugins/dom-budowa/skills/dziennik/SKILL.md` |
-| Harmonogram, terminy, przesunięcia, „czekam na”, „co mnie czeka” | `plugins/dom-budowa/skills/harmonogram/SKILL.md` |
+| Harmonogram, terminy, przesunięcia, „czekam na”, „co mnie czeka” (budowa) | `plugins/dom-budowa/skills/harmonogram/SKILL.md` |
 | Pulpit budowy: „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło”, decyzje z pulpitu do Notion | `plugins/dom-budowa/skills/pulpit/SKILL.md` |
 | Lista zakupów na etap, oferty hurtowni, kiedy zamawiać, dostawa | `plugins/dom-budowa/skills/zakupy/SKILL.md` |
 | Luźne wpisy ze strony „📓 Dziennik”: „przerób dziennik”, kilka notatek naraz | `plugins/ja/skills/wpisy/SKILL.md` |
@@ -32,9 +32,9 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 | Dziecko: obserwacje, do przegadania, prezenty, zalecenia | `plugins/ja/skills/dziecko/SKILL.md` |
 | Suplementy: „kończy się”, „kupiłem”, przerwa | `plugins/ja/skills/suple/SKILL.md` |
 | Spotkanie, rozmowa, decyzja: „jutro mam spotkanie z…”, „o co zapytać”, „jak wybrać z kilku” | `plugins/dom-budowa/skills/przygotowanie/SKILL.md` |
-| Przegląd tygodnia, „co nowego”, „co czeka na mnie” | `plugins/dom-budowa/skills/przeglad-tygodnia/SKILL.md` |
-| Przegląd dnia (wieczorne zaplanowane zadanie): Dziennik, zmiany w zadaniach, pomysły, jutro | `plugins/ja/skills/przeglad-dnia/SKILL.md` |
-| Przegląd tygodnia – sprawy osobiste (z odnośnikiem do przeglądu budowy), porządki w Dzienniku | `plugins/ja/skills/przeglad-tygodnia-osobisty/SKILL.md` |
+| Przegląd tygodnia budowy, „co nowego” | `plugins/dom-budowa/skills/przeglad-tygodnia/SKILL.md` |
+| Przegląd dnia (automat launchd na Macu – szybki i wieczorny; jedyna droga): Dziennik, zmiany w zadaniach, pomysły, jutro | `plugins/ja/skills/przeglad-dnia/SKILL.md` |
+| Przegląd tygodnia – sprawy osobiste (z odnośnikiem do przeglądu budowy), porządki w Dzienniku, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne) | `plugins/ja/skills/przeglad-tygodnia-osobisty/SKILL.md` |
 | Zmiana samego harnessu (nowa procedura, poprawka), pomysł na rozwój setupu, „zrób POM-n”, znany problem „zrób ZP-n” | `plugins/ja/skills/rozwoj-harnessu/SKILL.md` |
 
 ## Zasady, które obowiązują zawsze

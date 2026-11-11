@@ -294,8 +294,8 @@ def pisz_spis(ind: dict, plan: dict):
                   f"- **Zawiera:** {w.get('zawartosc') or '— brak opisu zawartości (procedura `dokumenty`, sekcja A)'}",
                   f"- **Gdzie:** {gdzie}"]
     naglowek = ["# Przewodnik po dokumentach budowy", "",
-                "Każdy aktualny dokument budowy: co zawiera i gdzie jest. Najważniejsze liczby i decyzje są w "
-                "`01_Sciaga-projektu.md` i na stronie DOM w Notion (📐 Dane projektu). Gdy odpowiedź wymaga treści "
+                "Każdy aktualny dokument budowy: co zawiera i gdzie jest. Najważniejsze liczby i decyzje są "
+                "na stronie DOM w Notion (📐 Dane projektu – jedyne źródło ściągi). Gdy odpowiedź wymaga treści "
                 "dokumentu, którego nie ma w rozmowie – poproś inwestora o ten konkretny plik (nazwa, ścieżka, potrzebna strona/arkusz) "
                 "i nie odpowiadaj z pamięci ani z domysłów. Starsze wersje i pliki robocze zostają lokalnie."]
     for plik_mapy, tytul, poczatek in MAPY_NOTION:  # bez nagłówka H1 i akapitu o utrzymaniu pliku
@@ -373,10 +373,15 @@ def cmd_sprawdz(a):
     bez = sum(1 for w in przew if not w.get("zawartosc"))
     if bez:
         r.append(f"  Bez opisu zawartości w przewodniku: {bez} (`lista`, procedura `dokumenty`, sekcja A).")
-    if zd["nowe"]:
-        r.append(f"  Nowe pliki do sklasyfikowania ({len(zd['nowe'])}) – procedura `dokumenty`:")
-        r += lista(zd["nowe"])
-    else:
+    # skrzynka _Przychodzące/ jedną linią – setki plików do rozłożenia nie zasłaniają nowych dokumentów
+    przych = [s for s in zd["nowe"] if s.startswith(PRZYCHODZACE.name + "/")]
+    nowe = [s for s in zd["nowe"] if s not in przych]
+    if nowe:
+        r.append(f"  Nowe pliki do sklasyfikowania ({len(nowe)}) – procedura `dokumenty`:")
+        r += lista(nowe)
+    if przych:
+        r.append(f"  {PRZYCHODZACE.name}: {len(przych)} plików do rozłożenia (procedura `dokumenty`).")
+    if not zd["nowe"]:
         oczek = [s for s, w in ind["pliki"].items() if w["status"] == "nowy"]
         if oczek:
             r.append(f"  Czeka na klasyfikację: {len(oczek)} (procedura `dokumenty`).")

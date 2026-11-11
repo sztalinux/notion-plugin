@@ -14,7 +14,7 @@ i buduje folder `_Do claude.ai/` – paczkę do wgrania w wiedzy projektu „Dom
 Notion) generuje skrypt; Claude Code przepisuje go na stronę Notion (sekcja C), skąd czyta go asystent na claude.ai –
 bez wgrywania czegokolwiek. Pełne dokumenty nie zajmują kontekstu: gdy odpowiedź wymaga ich treści, asystent prosi
 inwestora o konkretny plik. Kosztorysu też nie ma w projekcie – żyje w arkuszu Google (`koszty`, „Gdzie są liczby”).
-Paczka (`00_SPIS.md` + ściąga) to tylko kopia awaryjna.
+Paczka (`00_SPIS.md`) to tylko kopia awaryjna; ściąga jest wyłącznie w Notion („📐 Dane projektu”), bez kopii w pliku.
 
 Podział pracy: skrypt wykrywa nowe/zmienione/przeniesione pliki, duplikaty i dane wrażliwe oraz kopiuje pliki do paczki.
 Ty decydujesz, co to za dokument, czy trafia do paczki i co zastępuje. Bez Twojej decyzji nowy plik do paczki nie trafi.
@@ -48,7 +48,7 @@ nie ma go albo tekst nieczytelny (rysunki) → poproś jak wyżej.
    te idą do ściągi i Notion; przewodnik ma być krótki, bo jest w kontekście każdej rozmowy.
    Poza przewodnikiem (bez `--zawartosc`, `--bez-eksportu` z opisem dlaczego): starsze wersje, pojedyncze arkusze
    zawarte w komplecie, archiwa `.zip`, notatki pisane przez AI (to opinie, nie dokumenty), faktury, pliki niezwiązane z budową.
-4. **Do wiedzy projektu (`--eksport`)** – domyślnie nic poza ściągą (przewodnik dodaje skrypt). Pełny dokument
+4. **Do wiedzy projektu (`--eksport`)** – domyślnie nic (przewodnik dodaje skrypt). Pełny dokument
    eksportuj tylko na wyraźną prośbę inwestora (np. na czas etapu, w którym jest potrzebny w prawie każdej rozmowie);
    po etapie zaproponuj `--bez-eksportu`. Dane osobowe w dokumentach nie wykluczają eksportu – projekt na claude.ai
    jest prywatny (decyzja inwestora); skrypt raz informuje, co wykrył.
@@ -66,8 +66,7 @@ nie ma go albo tekst nieczytelny (rysunki) → poproś jak wyżej.
 ## B. Po klasyfikacji – wiedza i paczka
 
 - Dokument, który zmienia fakty (nowa rewizja projektu, opinia, umowa, wybrana oferta): zaproponuj analizę
-  (procedura `analiza-techniczna`) i aktualizację ściągi: Notion → „📐 Dane projektu (ściąga)” (jedyne źródło), Notatnik;
-  po zmianie w Notion przepisz tę samą treść do `Ściąga projektu.md` w folderze budowy (kopia do paczki awaryjnej).
+  (procedura `analiza-techniczna`) i aktualizację ściągi: Notion → „📐 Dane projektu (ściąga)” (jedyne źródło – bez kopii w pliku), Notatnik.
 - Oferta wykonawcy → procedura `oferta`.
 - Ostrzeżenia skryptu („powyżej limitu”, informacja o danych osobowych) przekaż inwestorowi jednym zdaniem z propozycją
   (np. zmniejszona kopia PDF obok oryginału, oznaczona do paczki zamiast niego).

@@ -156,6 +156,8 @@ WZORCE = [
     (re.compile(r"\b\d{2}(?:[ ]?\d{4}){6}\b"), "numer konta"),
     (re.compile(r"\b(secre[t]_|n[t]n_|ghp_|gho_|ghs_|github_pa[t]_|sk-ant-|xox[bp]-)[A-Za-z0-9_-]{16,}"),
      "token / klucz API"),
+    # kwoty z „zł” albo „PLN” (z odstępami tysięcy i groszami); przykłady w procedurach pisz „N zł”
+    (re.compile(r"(?<![\w.,])\d(?:[\d \u00a0.,]*\d)?\s?(?:zł|PLN)(?!\w)|\bPLN\s?\d"), "kwota"),
 ]
 DOZWOLONE = [re.compile(r"noreply@anthropic\.com"),            # stopka Co-Authored-By
              re.compile(r"[\w.+-]+@users\.noreply\.github\.com")]  # anonimowy adres GitHuba
@@ -176,7 +178,7 @@ def zakazane_slowa() -> list:
             out += [w.strip().lower() for w in lista.read_text(encoding="utf-8").splitlines()
                     if w.strip() and not w.strip().startswith("#")]
     if not out:
-        print(f"UWAGA: brak listy {ZAKAZANE} – sprawdzam tylko wzorce (telefon, e-mail, działka, kod, adres, PESEL, konto, token)")
+        print(f"UWAGA: brak listy {ZAKAZANE} – sprawdzam tylko wzorce (telefon, e-mail, działka, kod, adres, PESEL, konto, token, kwota)")
     return out
 
 

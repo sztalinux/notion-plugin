@@ -1,6 +1,6 @@
 ---
 name: przeglad-tygodnia-osobisty
-description: Cotygodniowy przegląd spraw osobistych (zadania prywatne, dziecko, praca, emocje i produktywność w liczbach, wesele, suplementy) i porządki w Dzienniku, z odnośnikiem do osobnego przeglądu tygodnia budowy; uruchamia też przegląd budowy (skill przeglad-tygodnia z pluginu dom-budowa). Używaj, gdy uruchamia go zaplanowane zadanie tygodniowe albo użytkownik mówi „przegląd tygodnia”, „podsumuj tydzień”, „jak minął tydzień”, „co mnie czeka w tym tygodniu” (sprawy prywatne), „posprzątaj dziennik”.
+description: Cotygodniowy przegląd spraw osobistych (zadania prywatne, dziecko, praca, emocje i produktywność w liczbach, wesele, suplementy) i porządki w Dzienniku, z odnośnikiem do osobnego przeglądu tygodnia budowy; uruchamia też przegląd budowy (skill przeglad-tygodnia z pluginu dom-budowa). Używaj, gdy uruchamia go tygodniowy automat na Macu albo użytkownik mówi „przegląd tygodnia”, „podsumuj tydzień”, „jak minął tydzień”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – harmonogram), „posprzątaj dziennik”.
 ---
 
 # Przegląd tygodnia – sprawy osobiste
@@ -10,8 +10,10 @@ Cel: raz w tygodniu inwestor widzi w 2 minuty, co się działo poza budową, co 
 dom-budowa) na stronie DOM; tu jest do niego jedna linia z odnośnikiem.
 
 Strona wyniku: **„📅 Przeglądy tygodniowe”** pod Dziennikiem (`3faf5982-09e7-81e3-a6af-e3786ca4a074`).
-Zaplanowane zadanie: raz w tygodniu (np. niedziela wieczór), **poza projektem**, polecenie: „Przegląd tygodnia (skill
-przeglad-tygodnia-osobisty z pluginu ja)”. Ręcznie: „przegląd tygodnia”.
+Zaplanowany przebieg: raz w tygodniu (niedziela wieczór) uruchamia go **launchd na Macu** przez `claude -p` – jedyna droga,
+zaplanowanych zadań na claude.ai nie używamy; polecenie: „Przegląd tygodnia (skill przeglad-tygodnia-osobisty z pluginu ja)”.
+Ręcznie: „przegląd tygodnia”; „co mnie czeka w tym / przyszłym tygodniu” o sprawy prywatne – tylko część „Czeka na Ciebie”
+i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`, sekcja E).
 
 ## Zasady
 

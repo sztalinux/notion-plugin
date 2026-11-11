@@ -1,6 +1,6 @@
 ---
 name: przeglad-tygodnia
-description: Cotygodniowy przegląd budowy (osobno od spraw osobistych – te ma przeglad-tygodnia-osobisty z pluginu ja) i porządki w Notion budowy – co nowego doszło do wiedzy, otwarte sprzeczności czekające na decyzję, pytania do projektantów, zadania i terminy na najbliższe dni, informacje do ponownej weryfikacji. Używaj, gdy uruchamia go zaplanowane zadanie lub użytkownik pyta „co nowego”, „podsumuj tydzień”, „co czeka na mnie”, „przegląd”.
+description: Cotygodniowy przegląd budowy (osobno od spraw osobistych – te ma przeglad-tygodnia-osobisty z pluginu ja) i porządki w Notion budowy – co nowego doszło do wiedzy, otwarte sprzeczności czekające na decyzję, pytania do projektantów, zadania i terminy na najbliższe dni, informacje do ponownej weryfikacji. Używaj, gdy uruchamia go przegląd osobisty (automat na Macu) lub użytkownik pyta „co nowego”, „podsumuj tydzień”, „przegląd”. „Co mnie czeka w tym / przyszłym tygodniu” – nie tutaj: budowa → harmonogram, sprawy prywatne → przeglad-tygodnia-osobisty.
 ---
 
 # Przegląd tygodnia

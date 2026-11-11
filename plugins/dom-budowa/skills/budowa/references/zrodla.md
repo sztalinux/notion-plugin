@@ -26,7 +26,7 @@ Zasada podziału: **harness = JAK pracujemy** (procedury, formaty, zasady) – t
 | Bramki i odbiory etapów | Notion → DOM → 🏗 Etap → zakładki etapów (przewodnik, checklista), „Stan zero – punkty bez odwrotu”; protokoły w folderze budowy | agent przygotowuje (`etap`), odbiera inwestor z kierownikiem |
 | Analizy dokumentów | Notion (strona pod DOM) lub dokument w projekcie Claude | agent (`analiza-techniczna`) |
 | Dokumenty: projekty, opinie, oferty, umowy (PDF, Excel) | folder budowy na komputerze inwestora; opis każdego dokumentu: strona Notion „📑 Przewodnik po dokumentach i Notion” (synchronizuje Claude Code); pełne dokumenty na prośbę | inwestor wrzuca, agent klasyfikuje (`dokumenty`); oryginały tylko odczyt |
-| Ściąga projektu (najważniejsze liczby i decyzje) | **Notion → DOM → „📐 Dane projektu (ściąga)” – jedyne źródło**; `Ściąga projektu.md` w folderze budowy to kopia do paczki awaryjnej (Claude Code odświeża ją po zmianie w Notion) | agent po nowym dokumencie (`dokumenty`, `analiza-techniczna`), inwestor ręcznie |
+| Ściąga projektu (najważniejsze liczby i decyzje) | **Notion → DOM → „📐 Dane projektu (ściąga)” – jedyne źródło** (bez kopii w pliku) | agent po nowym dokumencie (`dokumenty`, `analiza-techniczna`), inwestor ręcznie |
 
 ## Notion – identyfikatory (konto prywatne inwestora)
 

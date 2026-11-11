@@ -37,8 +37,10 @@ dane indeksu, definicje kart, zbiory oceny, prywatne repo kopii, automaty launch
    `git config core.hooksPath .githooks`; autor commitów: imię albo login i e-mail `…@users.noreply.github.com`. Python 3 (3.9 wystarcza,
    tylko biblioteka standardowa w `tools/wiedza*.py`), `pip3 install --user openpyxl pypdf` dla `dokumenty.py`. Lista słów zakazanych w repo:
    `<folder budowy>/.dom/zakazane-w-repo.txt` (po jednym w linii; odtwórz ją z danych osób i firm projektu).
-2. **Notion – integracja tylko do odczytu.** Utwórz integrację z uprawnieniem „Read content” i udostępnij jej stronę DOM (cztery bazy wiedzy
-   oraz Notatnik budowy i zadania dla migawki). Zapisy robi wyłącznie asystent przez serwer MCP Notion, nie ta integracja.
+2. **Notion – integracja do odczytu + Update content dla bazy 💸 Wydatki.** Utwórz integrację z uprawnieniami „Read content”
+   i „Update content” i udostępnij jej stronę DOM (cztery bazy wiedzy oraz Notatnik budowy i zadania dla migawki). „Update content”
+   potrzebuje tylko `wydatki.py` (ten sam `NOTION_TOKEN`; zmienia pola stron w bazie 💸 Wydatki) – bez niego wysyłka wydatków
+   do arkusza nie działa. Pozostałe zapisy robi wyłącznie asystent przez serwer MCP Notion, nie ta integracja.
 3. **Plik sekretów** `.dom/sekrety.env` (tryb 600). Klucze (bez wartości):
    - `NOTION_TOKEN` – Notion przez API: odczyt (`sync`, `migawka.py`) i zmiana treści w bazie 💸 Wydatki (`wydatki.py`);
    - `GITHUB_REPO` – `właściciel/repo` prywatnego repo kopii (nazwa, nie sekret);
@@ -229,7 +231,7 @@ Claude Code i wpisz przypomnienie w kalendarzu, a datę zanotuj w lokalnym READM
 | `GITHUB_TOKEN_SEARCH` | `.dom/sekrety.env` + strona „🔑 Asystent – dostęp” + plik dostępu w projekcie „Dom” | czat na telefonie (odczyt kopii) | czat: „indeks niedostępny”; HTTP 401 przy pobraniu | wystaw nowy, tylko odczyt, jedno repo; wpisz w `sekrety.env` i na stronie dostępu (jedyne dozwolone miejsce poza plikiem); odśwież plik dostępu w projekcie; unieważnij stary |
 | `GITHUB_TOKEN_SYNC` | `.dom/sekrety.env` | Mac (publikacja kopii, migawka) | `[wiedza] … HTTP 401/403` przy `publikuj` | wystaw nowy (zapis do repo kopii), podmień, unieważnij stary, `publikuj --teraz` |
 | `GITHUB_TOKEN_PYTANIA` | `.dom/sekrety.env` + sekcja „Tryb głęboki” pliku dostępu | telefon (zapis pytania) | czat: „tryb głęboki niedostępny (kod 401/403)” | wystaw nowy (zapis do repo kopii), podmień w obu miejscach, odśwież plik dostępu, unieważnij stary |
-| `NOTION_TOKEN` | `.dom/sekrety.env` | `sync`, `migawka.py`, kontrola | `sync`: błąd 401; migawka „niedostępna” | integracja tylko do odczytu: utwórz nową, udostępnij jej stronę DOM, podmień wartość, usuń starą |
+| `NOTION_TOKEN` | `.dom/sekrety.env` | `sync`, `migawka.py`, kontrola, `wydatki.py` | `sync`: błąd 401; migawka „niedostępna”; 💸 bez wysyłki | integracja do odczytu + Update content dla bazy 💸 Wydatki: utwórz nową, udostępnij jej stronę DOM, podmień wartość, usuń starą |
 | MCP `notion` (logowanie OAuth, Mac) | konto Claude Code na Macu | automaty launchd, kolejka, sesje | kod 2, „NOTION: brak logowania” | 5.2 |
 | `CLAUDE_CODE_OAUTH_TOKEN` | sekret repo kopii (GitHub Actions) | tryb głęboki | workflow czerwony na kroku modelu | nowy token Claude Code (`claude setup-token`), podmień sekret |
 | Logowanie `claude` na Macu | konto Claude Code | automaty, sędzia, karty, kolejka | przebiegi kończą się błędem logowania, kod 1 | `claude` → zaloguj ponownie |
