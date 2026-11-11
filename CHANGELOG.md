@@ -4,52 +4,41 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
-## ja [1.12.6] – 2026-11-11 (POM-12)
+## ja [1.13.0] – 2026-11-11 (POM-13, POM-11, POM-12, POM-14, POM-20, POM-3, POM-7, POM-21, POM-15)
 
-POM-12 – kontrola spójności: zadanie „Porozmawiać z…” ↔ temat w „💬 Do przegadania”:
-- `przeglad-dnia`: nowy krok 5c (wieczorem) – grupa **R** serii „Kontrola spójności”, nowy
-  `references/kontrola-spojnosci-rozmowy.md` (klucze `KS-R…`). Zadanie „Porozmawiać z…” DONE, a temat nadal na liście osoby →
-  tylko pytanie „❓” (max 3 odczyty stron osób na przebieg, dopasowanie po dacie When − 3 dni i słowach kluczowych, bez
-  jednoznacznego kandydata – bez flagi); po ☑ pod tematem zagnieżdżony punkt „✅ przegadane”, nic się nie przenosi
-  (🗄 Archiwum nie przyjmuje wpisów, „💞 Relacja” go nie ma). ARCHIVED nie jest flagowane; treści tematów nie ma w logu.
-- `przeglad-tygodnia-osobisty` (pełny przebieg tygodniowy), `ja` zasada 9, `dziecko` pkt 4, README: odesłania do kroku 5c.
-- Wersja 1.12.6 (POM-11 ma 1.12.5, POM-13 1.12.4) – integrator scala wersje.
+Wspólne wydanie pomysłów z gałęzi `pom/2026-11-11-*` (scalone na `pom/2026-11-11-razem`); wersje robocze z gałęzi (1.12.4–1.13.1) nie wychodzą osobno.
 
-## ja [1.12.4] – 2026-11-11 (POM-13)
-
-POM-13 – kontrola spójności: zadanie budowy ↔ krok Harmonogramu (flagi, bez zmiany dat):
+**POM-13 – kontrola spójności: zadanie budowy ↔ krok Harmonogramu (flagi, bez zmiany dat)**
 - `przeglad-dnia`: nowy krok 5a „Kontrola spójności” (wieczorem, na wierszach kroku 5 z relacją Harmonogram) i licznik
   „spójność” w linii „🤖”; reguły H1–H4, odczyt i format flag – nowy `references/kontrola-spojnosci.md` (wspólna tabela
   dla serii „Kontrola spójności”: kolejne grupy dopisuj jako własne wiersze). Tylko pytania „❓” z kluczem `KS-…`;
   zmiana dopiero po ☑ inwestora, Terminów kroków nie zmienia nigdy.
 - Warunek wstępny z analizy sprawdzony 11.11: widok TASKS w trybie view zwraca relację Harmonogram (adresy kroków).
 
-## dom-budowa [3.12.2] – 2026-11-11 (POM-13)
-
-- `przeglad-tygodnia` („Spójność”): pełny przebieg kontroli zadania ↔ krok Harmonogramu; `harmonogram`: odesłanie do kontroli
-  spójności i zasada podpinania zadań do kroków relacją.
-## ja [1.12.5] – 2026-11-11 (POM-11)
-
-POM-11 – kontrola spójności: zakup Kupione ↔ zadanie „Kupić X” (i „Kupione dnia”):
+**POM-11 – kontrola spójności: zakup Kupione ↔ zadanie „Kupić X” (i „Kupione dnia”)**
 - `przeglad-dnia`: nowy krok 5b (wieczorem) i liczniki „zakupy” / „spójność” w linii „🤖”; reguły Z1–Z4, odczyt i format flag –
   nowy `references/kontrola-spojnosci-zakupy.md` (grupa Z serii „Kontrola spójności”, klucze `KS-Z…`). Zakup Kupione / Odpuszczone
   przy otwartym zadaniu i zadanie zamknięte przy zakupie „Do kupienia” → tylko pytanie „❓” (zmiana po ☑ inwestora);
   sam uzupełnia „Kupione dnia” (data ostatniej edycji) i zamyka research przy kupionej rzeczy.
 - `zadania` (Zakupy, pkt 4): odesłanie do kroku 5b; `ja/references/notion-mapa.md`: nowy widok bazy 🛒 Zakupy
   „🤖 Spójność – zamknięte zakupy (przegląd dnia)” (utworzony w Notion 11.11).
-## ja [1.12.7] – 2026-11-11 (POM-14)
 
-POM-14 – kontrola spójności: suplement z Buy = tak przy statusie BREAK / SUSPENDED (grupa **S1** serii „Kontrola spójności”):
+**POM-12 – kontrola spójności: zadanie „Porozmawiać z…” ↔ temat w „💬 Do przegadania”**
+- `przeglad-dnia`: nowy krok 5c (wieczorem) – grupa **R** serii „Kontrola spójności”, nowy
+  `references/kontrola-spojnosci-rozmowy.md` (klucze `KS-R…`). Zadanie „Porozmawiać z…” DONE, a temat nadal na liście osoby →
+  tylko pytanie „❓” (max 3 odczyty stron osób na przebieg, dopasowanie po dacie When − 3 dni i słowach kluczowych, bez
+  jednoznacznego kandydata – bez flagi); po ☑ pod tematem zagnieżdżony punkt „✅ przegadane”, nic się nie przenosi
+  (🗄 Archiwum nie przyjmuje wpisów, „💞 Relacja” go nie ma). ARCHIVED nie jest flagowane; treści tematów nie ma w logu.
+- `przeglad-tygodnia-osobisty` (pełny przebieg tygodniowy), `ja` zasada 9, `dziecko` pkt 4, README: odesłania do kroku 5c.
+
+**POM-14 – kontrola spójności: suplement z Buy = tak przy statusie BREAK / SUSPENDED (grupa S1)**
 - `przeglad-dnia` (krok 6, wieczorem): wstrzymane suplementy z Buy = tak nie wchodzą do licznika „kupić” ani do zadania „Zamówić
   suple”; pokazane osobno jako „do sprawdzenia” (`kupić: n (+ k do sprawdzenia)`) i jedno zbiorcze pytanie „❓ Odznaczyć Buy?”
   z kluczem `KS-S1-…` (propozycja: tak). Buy odznacza się dopiero po ☑ inwestora; bez nowych baz ani pól.
 - Nowy `przeglad-dnia/references/kontrola-spojnosci-suple.md` (reguła, odczyt odpowiedzi, wyciszenie, czego nie robić);
   `suple` („Odczyt”): wstrzymane wymieniane osobno.
-- Wersja 1.12.7 (POM-13 ma 1.12.4, POM-11 1.12.5, POM-12 1.12.6, POM-20 1.13.0) – integrator scala wersje; plik z regułą
-  można połączyć z `kontrola-spojnosci*.md` z POM-11/12/13 (wspólny format flag `KS-…`, limit 5 nowych flag na przebieg).
-## ja [1.13.0] – 2026-11-11 · POM-20
 
-Instrukcja obsługi całego systemu dla człowieka:
+**POM-20 – instrukcja obsługi całego systemu dla człowieka**
 - Nowa strona Notion „📘 Instrukcja obsługi” pod 📌 DASHBOARD (obok 🗺 Mapy Notion): na start, na co dzień, reguły
   z uzasadnieniem, „co się stanie, gdy…”, gdzie co jest, utrzymanie (przebiegi, logi, kody, koszty, tokeny), gdy coś nie
   działa, zmiana harnessu a telefon, odtworzenie od zera, słowniczek, najważniejsze decyzje; każda sekcja z linią „Stan:”.
@@ -58,28 +47,12 @@ Instrukcja obsługi całego systemu dla człowieka:
 - `przeglad-tygodnia-osobisty`, krok 3: pierwszy przegląd w miesiącu wypisuje sekcje instrukcji z „Stan:” starszym
   niż 60 dni i tokeny wygasające w 30 dni.
 - Mapa `ja/references/notion-mapa.md`: nowa strona (ID) na liście stron pod DASHBOARD; README – odnośnik „Dla człowieka”.
-## ja [1.12.4] – 2026-11-11
 
-POM-3 (poranny brief w dniu robót – wariant „Jutro + pogoda”):
+**POM-3 – poranny brief w dniu robót – wariant „Jutro + pogoda”**
 - `przeglad-dnia`: krok „Budowa” bierze z przeglądu budowy także ostrzeżenie pogodowe; osobny poranny brief z powiadomieniem
   odłożony do startu robót (przebieg launchd, bez zaplanowanych zadań na claude.ai).
 
-## dom-budowa [3.12.2] – 2026-11-11
-
-POM-3 (poranny brief w dniu robót – wariant „Jutro + pogoda”):
-- `etap/references/pogoda.md` (nowy): jedna tabela progów pogodowych robót `[opinia]` (do potwierdzenia z kierownikiem i Bazą
-  wiedzy) i zasady prognozy na jutro (miejscowość ze ściągi w Notion, tylko miejscowość do wyszukiwania, `[internet]`, brak
-  prognozy nie blokuje przeglądu).
-- `budowa`, „Wieczorem”: gdy jutro są roboty na budowie, „Jutro – plan” dostaje linię „Pogoda jutro” i ostrzeżenie przy kroku
-  „bez odwrotu”; `etap` (A.6, B.6) i `harmonogram` odsyłają do progów z `pogoda.md`.
-## dom-budowa [3.12.2] – 2026-11-11 (POM-16)
-
-- `budowa` („Wieczorem”, krok 2) i `zakupy`: przypomnienie o zakupie budowy z wyprzedzeniem wg Rodzaju – „Zamówić do” = „kupić
-  najpóźniej”, przegląd dnia budowy przypomina Materiał 7 dni, Drobnicę i resztę 2 dni przed terminem (tylko pozycje przed
-  zamówieniem; jedna zbiorcza linia dziennie, bez pushu na telefon – decyzja (b) inwestora).
-## ja [1.13.0] – 2026-11-11 – POM-7
-
-POM-7 „Przegląd dnia z rozkminką i planem na jutro” (gałąź `pom/2026-11-11-POM-7`):
+**POM-7 – przegląd dnia z rozkminką i czytelnym układem**
 - `przeglad-dnia`: nowy krok B.2a – rozkminki tylko na wyraźną prośbę z wpisu (max 2 na wieczór, tylko odczyt, wynik
   w sekcji „🧠 Rozkminka”, zapisy do baz dopiero po „tak” w „❓”); krok 8 – wpis w punktach, pilne na górze.
 - Nowy `przeglad-dnia/references/uklad-wpisu.md`: jeden zapis zwijanego nagłówka (`<toggle heading="h2">`, nigdy
@@ -88,9 +61,61 @@ POM-7 „Przegląd dnia z rozkminką i planem na jutro” (gałąź `pom/2026-11
   zapisywane jako `<toggle>` (także w `references/pytania.md`).
 - `przeglad-tygodnia-osobisty`: ten sam układ wpisu, cotygodniowa naprawa zepsutych nagłówków dni, propozycja archiwum
   przeglądów dziennych starszych niż 14 dni (za zgodą).
-## dom-budowa [3.13.0] – 2026-11-11 (POM-5)
 
-POM-5 „Budżet w czasie – ile gotówki potrzebuję w danym miesiącu” (gałąź `pom/2026-11-11-POM-5`, czeka na scalenie):
+**POM-21 – kopie zapasowe – plan i kontrola**
+- Nowy plan kopii `docs/kopie-zapasowe.md`: trzy warstwy (dysk zewnętrzny, chmura, eksport usług), pozycje z terminami,
+  rytm inwestora, odtworzenie, decyzje przyjęte do potwierdzenia (`.dom` tylko na zaszyfrowanym dysku zewnętrznym, bez Time Machine
+  na nieprywatnym Macu, terminy 7/30/90 dni).
+- Nowe narzędzie `tools/kopie.py` (`stan [--cicho|--json]`, `potwierdz <pozycja> [data]`) – kontrola tylko do odczytu:
+  kopia dokumentów, repozytoria `AI/*` (zdalne, niewypchnięte, niezacommitowane – bez `fetch`), kopia wartości arkusza,
+  rejestr kopii ręcznych, Time Machine i wolne miejsce; testy `tools/test_kopie.py`.
+- `przeglad-tygodnia-osobisty`: linia „Kopie” we wpisie tygodnia, pozycje ⚠/✗ jako komunikat 🔔 `kopie-zapasowe`
+  (`wpisy/references/pytania.md`, C); `ja`: wiersz mapy „stan kopii”, „zrobiłem kopię na dysk”.
+- `CLAUDE.md` (opcja startowa „Zdjęcia i kopia”), README, `docs/zdjecia-i-kopia.md` – odnośniki do planu.
+
+**POM-15 – kontrola spójności: status pomysłu ↔ stan wdrożenia (grupa P)**
+- `przeglad-dnia` (krok 2, wieczorem): na wierszach bazy pomysłów, bez dodatkowego odczytu – „Zrobione” bez „Zrobiono w wersji” (P1),
+  „Do zrobienia” / „Przeanalizowany” przy wypełnionej wersji (P2) lub wdrożeniu z CHANGELOG (P3), „gałąź … czeka na scalenie”
+  już scalona (P4). Pole wersji uzupełnia się tylko z nagłówka CHANGELOG z numerem POM; Status zmienia dopiero ☑ inwestora
+  (pytanie „❓”, klucz `KS-P…`). Wdrożenie oznaczone „częściowo” nie jest flagowane.
+- Nowy `przeglad-dnia/references/kontrola-spojnosci-pomysly.md` (reguły, przebieg, odpowiedzi, czego nie robić) i
+  `tools/pomysly_wersje.py` (+ `test_pomysly_wersje.py`) – wersje z CHANGELOG dla POM-n; tylko biblioteka standardowa.
+- `rozwoj-harnessu` (B.4, C): nagłówek wpisu CHANGELOG ma numer POM `(POM-n)`; wdrożenie częściowe – „(częściowo)” w polu wersji.
+- README: opis przeglądu dnia i narzędzie. Decyzje z analizy: POM-8 już „Zrobione” (4.11), POM-7 „Zrobione” w gałęzi – bez zmian w Notion.
+- Przebieg poza repo potrzebuje uprawnienia `Bash(python3 tools/pomysly_wersje.py:*)` w NARZEDZIA – bez niego czyta CHANGELOG
+  bezpośrednio.
+
+**Integracja:** `kontrola-spojnosci.md` (5a) wymienia wszystkie grupy serii (Z, R, S1, P) i ich pliki; linia „🤖” i „Czeka
+na Ciebie” mają liczniki wszystkich grup; kolejność wieczoru: 1–2a, 5, 5a–5c, potem 3, 4, 6–10.
+
+## dom-budowa [3.13.0] – 2026-11-11 (POM-13, POM-3, POM-16, POM-7, POM-5, POM-2, POM-4)
+
+Wspólne wydanie pomysłów z gałęzi `pom/2026-11-11-*` (scalone na `pom/2026-11-11-razem`); wersje robocze z gałęzi (3.12.2–3.14.0) nie wychodzą osobno.
+
+**POM-13 – kontrola spójności: zadanie budowy ↔ krok Harmonogramu (flagi, bez zmiany dat)**
+- `przeglad-tygodnia` („Spójność”): pełny przebieg kontroli zadania ↔ krok Harmonogramu; `harmonogram`: odesłanie do kontroli
+  spójności i zasada podpinania zadań do kroków relacją.
+
+**POM-3 – poranny brief w dniu robót – wariant „Jutro + pogoda”**
+- `etap/references/pogoda.md` (nowy): jedna tabela progów pogodowych robót `[opinia]` (do potwierdzenia z kierownikiem i Bazą
+  wiedzy) i zasady prognozy na jutro (miejscowość ze ściągi w Notion, tylko miejscowość do wyszukiwania, `[internet]`, brak
+  prognozy nie blokuje przeglądu).
+- `budowa`, „Wieczorem”: gdy jutro są roboty na budowie, „Jutro – plan” dostaje linię „Pogoda jutro” i ostrzeżenie przy kroku
+  „bez odwrotu”; `etap` (A.6, B.6) i `harmonogram` odsyłają do progów z `pogoda.md`.
+
+**POM-16 – przypomnienie o zakupach budowy z wyprzedzeniem wg Rodzaju**
+- `budowa` („Wieczorem”, krok 2) i `zakupy`: przypomnienie o zakupie budowy z wyprzedzeniem wg Rodzaju – „Zamówić do” = „kupić
+  najpóźniej”, przegląd dnia budowy przypomina Materiał 7 dni, Drobnicę i resztę 2 dni przed terminem (tylko pozycje przed
+  zamówieniem; jedna zbiorcza linia dziennie, bez pushu na telefon – decyzja (b) inwestora).
+
+**POM-7 – przegląd dnia z rozkminką i czytelnym układem**
+- `budowa` „Wieczorem”: wpis przeglądu dnia budowy w punktach wg `przeglad-dnia/references/uklad-wpisu.md` (plugin `ja`),
+  rozkminka tylko przekazana z przeglądu dnia; w tabeli luźnych wpisów – prośba o rozkminkę.
+- `przygotowanie`: sekcja „Bez inwestora” – karta do przeglądu dnia, nowe pytania do Notatnika dopiero po „tak”.
+- `przeglad-tygodnia`: wpis jako `<toggle heading="h2">` w punktach, naprawa nagłówków na stronie przeglądów dziennych
+  budowy, propozycja archiwum wpisów starszych niż 14 dni.
+
+**POM-5 – budżet w czasie – ile gotówki potrzebuję w danym miesiącu**
 - `tools/wydatki.py gotowka` – tylko odczyt: kopia arkusza (Etapy, Wydatki „Do zapłaty”, rezerwa z Podsumowania)
   + kroki Harmonogramu z Notion → tabela po miesiącach (do zapłaty, transze ekipy, materiał i inne, razem, z rezerwą,
   „bez daty”, „po terminie”); zapas bez Notion: `--harmonogram PLIK`; testy `tools/test_gotowka.py` na zmyślonych danych.
@@ -100,9 +125,8 @@ POM-5 „Budżet w czasie – ile gotówki potrzebuję w danym miesiącu” (ga�
   płatności; `docs/wydatki-arkusz.md` §5 i README – nowe polecenie.
 - Reguły przyjęte nocą bez inwestora (do potwierdzenia): transza w miesiącu końca ostatniego kroku etapu, materiał w miesiącu
   startu, rezerwa na cały miesiąc.
-## dom-budowa [3.13.0] – 2026-11-11 – POM-2 Książka domu
 
-POM-2 (gałąź `pom/2026-11-11-POM-2`; wersję ustala integrator przy scalaniu):
+**POM-2 – Książka domu**
 - Nowa procedura `ksiazka-domu`: rozdział etapu po odbiorze (stały układ ośmiu sekcji – `references/szablon-rozdzialu.md`),
   część „Gdzie co biegnie” (punkty od dwóch stałych punktów, strefy „nie wiercić / nie kopać”), odczyt, przeglądy
   i spis dokumentów, droga zapasowa bez Notion; nawyki zbierania danych jako propozycja (`references/nawyki.md`).
@@ -113,9 +137,8 @@ POM-2 (gałąź `pom/2026-11-11-POM-2`; wersję ustala integrator przy scalaniu)
 - `budowa`, „Luźny wpis z Dziennika”: położenie z miarą z Dziennika i Skrzynki trafia też do `ksiazka-domu` B.
 - `AGENTS.md`, `budowa` (mapa procedur), README (procedury, konektory), `notion-mapa.md`, `docs/zdjecia-i-kopia.md`
   (folder `Książka domu/` na Dysku).
-## dom-budowa [3.14.0] – 2026-11-11 (POM-4)
 
-POM-4 „Teczka transzy / do banku jednym poleceniem” (gałąź `pom/2026-11-11-POM-4`, czeka na scalenie):
+**POM-4 – teczka transzy / do banku jednym poleceniem**
 - `tools/teczka.py zbierz` (nowy, biblioteka standardowa): wg okresu etapu z Harmonogramu składa `Teczki/<Etap>/RRRR-MM-DD/`
   z działami (protokoły, faktury, wpisy kierownika, dostawy, dodatkowe) i `SPIS.md` z brakami; domyślnie na sucho, nie
   nadpisuje, źródeł nie rusza, pliki bez daty w nazwie wypisuje zamiast zgadywać; zdjęcia tylko jako linki. Testy
@@ -124,32 +147,6 @@ POM-4 „Teczka transzy / do banku jednym poleceniem” (gałąź `pom/2026-11-1
   potwierdzenia z umową kredytową); `koszty` D.3 odsyła do niej; `AGENTS.md` i `budowa` – nowe frazy kierowania.
 - `tools/dokumenty.py`: folder `Teczki/` poza indeksem (kopie, nie nowe dokumenty); `Teczki/` poza kopią na Dysk;
   README i `docs/zdjecia-i-kopia.md` – opis folderu i narzędzia.
-## ja [1.13.0] – 2026-11-11 (POM-21)
-
-POM-21 „Kopie zapasowe – plan i kontrola” (gałąź `pom/2026-11-11-POM-21`):
-- Nowy plan kopii `docs/kopie-zapasowe.md`: trzy warstwy (dysk zewnętrzny, chmura, eksport usług), pozycje z terminami,
-  rytm inwestora, odtworzenie, decyzje przyjęte do potwierdzenia (`.dom` tylko na zaszyfrowanym dysku zewnętrznym, bez Time Machine
-  na nieprywatnym Macu, terminy 7/30/90 dni).
-- Nowe narzędzie `tools/kopie.py` (`stan [--cicho|--json]`, `potwierdz <pozycja> [data]`) – kontrola tylko do odczytu:
-  kopia dokumentów, repozytoria `AI/*` (zdalne, niewypchnięte, niezacommitowane – bez `fetch`), kopia wartości arkusza,
-  rejestr kopii ręcznych, Time Machine i wolne miejsce; testy `tools/test_kopie.py`.
-- `przeglad-tygodnia-osobisty`: linia „Kopie” we wpisie tygodnia, pozycje ⚠/✗ jako komunikat 🔔 `kopie-zapasowe`
-  (`wpisy/references/pytania.md`, C); `ja`: wiersz mapy „stan kopii”, „zrobiłem kopię na dysk”.
-- `CLAUDE.md` (opcja startowa „Zdjęcia i kopia”), README, `docs/zdjecia-i-kopia.md` – odnośniki do planu.
-## ja [1.13.1] – 2026-11-11 (POM-15)
-
-POM-15 – kontrola spójności: status pomysłu w „Pomysły na rozwój” ↔ stan wdrożenia (grupa **P** serii „Kontrola spójności”):
-- `przeglad-dnia` (krok 2, wieczorem): na wierszach bazy pomysłów, bez dodatkowego odczytu – „Zrobione” bez „Zrobiono w wersji” (P1),
-  „Do zrobienia” / „Przeanalizowany” przy wypełnionej wersji (P2) lub wdrożeniu z CHANGELOG (P3), „gałąź … czeka na scalenie”
-  już scalona (P4). Pole wersji uzupełnia się tylko z nagłówka CHANGELOG z numerem POM; Status zmienia dopiero ☑ inwestora
-  (pytanie „❓”, klucz `KS-P…`). Wdrożenie oznaczone „częściowo” nie jest flagowane.
-- Nowy `przeglad-dnia/references/kontrola-spojnosci-pomysly.md` (reguły, przebieg, odpowiedzi, czego nie robić) i
-  `tools/pomysly_wersje.py` (+ `test_pomysly_wersje.py`) – wersje z CHANGELOG dla POM-n; tylko biblioteka standardowa.
-- `rozwoj-harnessu` (B.4, C): nagłówek wpisu CHANGELOG ma numer POM `(POM-n)`; wdrożenie częściowe – „(częściowo)” w polu wersji.
-- README: opis przeglądu dnia i narzędzie. Decyzje z analizy: POM-8 już „Zrobione” (4.11), POM-7 „Zrobione” w gałęzi – bez zmian w Notion.
-- Wersja 1.13.1 do uzgodnienia przez integratora (POM-7 ma 1.13.0, POM-11/12/13/14 1.12.4–1.12.7); plik z regułą można połączyć
-  z `kontrola-spojnosci*.md` z POM-11–14 (wspólny format flag `KS-…`, limit 5 nowych flag na przebieg). Przebieg poza repo
-  potrzebuje uprawnienia `Bash(python3 tools/pomysly_wersje.py:*)` w NARZEDZIA – bez niego czyta CHANGELOG bezpośrednio.
 
 ## ja [1.12.3] – 2026-11-11
 
@@ -162,15 +159,6 @@ Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:
 - `zadania`: „zrobiłem” przy zadaniu zakupu zamyka też pozycję w 🛒 Zakupach; termin względny bez daty wpisu liczony od daty
   przetwarzania – tak samo w `ja`, zasada 4 (zgodnie z `wpisy`).
 - `rozwoj-harnessu/references/dostawcy.md`: Gemini CLI ma oba pluginy, Gem tylko `dom-budowa`.
-
-## dom-budowa [3.12.2] – 2026-11-11 – POM-7
-
-POM-7 (gałąź `pom/2026-11-11-POM-7`):
-- `budowa` „Wieczorem”: wpis przeglądu dnia budowy w punktach wg `przeglad-dnia/references/uklad-wpisu.md` (plugin `ja`),
-  rozkminka tylko przekazana z przeglądu dnia; w tabeli luźnych wpisów – prośba o rozkminkę.
-- `przygotowanie`: sekcja „Bez inwestora” – karta do przeglądu dnia, nowe pytania do Notatnika dopiero po „tak”.
-- `przeglad-tygodnia`: wpis jako `<toggle heading="h2">` w punktach, naprawa nagłówków na stronie przeglądów dziennych
-  budowy, propozycja archiwum wpisów starszych niż 14 dni.
 
 ## dom-budowa [3.12.1] – 2026-11-11
 

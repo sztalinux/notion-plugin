@@ -15,7 +15,9 @@ rozjazdy i **tylko o nich pyta** – bez inwestora niczego nie przestawia (`SKIL
 
 Zawsze tylko po ☑ inwestora i **nigdy** nie zmieniaj Terminu ani Pewności terminu kroku (to `harmonogram`, C). Zmiana Statusu
 kroku na „Zrobione” i zmiana pola zadania to wykonanie decyzji inwestora, nie decyzja asystenta. Inne grupy serii mają własne pliki i litery:
-zakupy ↔ zadania (Z, `kontrola-spojnosci-zakupy.md`), „Porozmawiać z…” ↔ „💬 Do przegadania” (R, `kontrola-spojnosci-rozmowy.md`).
+zakupy ↔ zadania (Z, `kontrola-spojnosci-zakupy.md`, krok 5b), „Porozmawiać z…” ↔ „💬 Do przegadania” (R,
+`kontrola-spojnosci-rozmowy.md`, krok 5c), suplement wstrzymany z Buy (S1, `kontrola-spojnosci-suple.md`, krok 6), status
+pomysłu ↔ wdrożenie (P, `kontrola-spojnosci-pomysly.md`, krok 2). Klucze `KS-<grupa>-…` i wyciszenie są wspólne.
 
 ## Odczyt (tylko widoki – bez SQL i rows, `ja` zasada 3)
 
