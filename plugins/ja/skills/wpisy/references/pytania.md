@@ -66,7 +66,8 @@ Inwestor ma móc zaznaczyć jedno pole, zamiast pisać.
 	- [ ] Wariant B zamiast A
 		<toggle>
 		Szczegóły
-			dlaczego B, co zmieni, co zrobię po odpowiedzi
+
+		dlaczego B, co zmieni, co zrobię po odpowiedzi
 		</toggle>
 	- [ ] Termin do piątku → wpisz pod spodem
 ```
