@@ -47,6 +47,17 @@ POM-14 – kontrola spójności: suplement z Buy = tak przy statusie BREAK / SUS
   `suple` („Odczyt”): wstrzymane wymieniane osobno.
 - Wersja 1.12.7 (POM-13 ma 1.12.4, POM-11 1.12.5, POM-12 1.12.6, POM-20 1.13.0) – integrator scala wersje; plik z regułą
   można połączyć z `kontrola-spojnosci*.md` z POM-11/12/13 (wspólny format flag `KS-…`, limit 5 nowych flag na przebieg).
+## ja [1.13.0] – 2026-11-11 · POM-20
+
+Instrukcja obsługi całego systemu dla człowieka:
+- Nowa strona Notion „📘 Instrukcja obsługi” pod 📌 DASHBOARD (obok 🗺 Mapy Notion): na start, na co dzień, reguły
+  z uzasadnieniem, „co się stanie, gdy…”, gdzie co jest, utrzymanie (przebiegi, logi, kody, koszty, tokeny), gdy coś nie
+  działa, zmiana harnessu a telefon, odtworzenie od zera, słowniczek, najważniejsze decyzje; każda sekcja z linią „Stan:”.
+  Kopia offline poza repo: `AI/Instrukcja obsługi.md` w folderze budowy.
+- `ja`, zasada 8, i `rozwoj-harnessu` B.7: instrukcja na liście miejsc aktualizowanych przy każdym wdrożeniu (z kopią offline).
+- `przeglad-tygodnia-osobisty`, krok 3: pierwszy przegląd w miesiącu wypisuje sekcje instrukcji z „Stan:” starszym
+  niż 60 dni i tokeny wygasające w 30 dni.
+- Mapa `ja/references/notion-mapa.md`: nowa strona (ID) na liście stron pod DASHBOARD; README – odnośnik „Dla człowieka”.
 
 ## ja [1.12.3] – 2026-11-11
 
