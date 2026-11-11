@@ -274,7 +274,7 @@ def zbuduj_plugin(pl: Path) -> Path:
     out = DIST / f"{pl.name}.plugin"
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for f in sorted(pl.rglob("*")):
-            if f.is_file() and "__pycache__" not in f.parts:
+            if f.is_file() and "__pycache__" not in f.parts and f.name != ".DS_Store":  # Finder: spis plików folderu
                 z.write(f, f.relative_to(pl).as_posix())
     return out
 

@@ -70,7 +70,7 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
    Przejrzyj `git diff`: zero nazwisk, firm, adresów, działek, telefonów, e-maili, kwot i treści notatek.
    Jeśli wpis ze skrzynki zawiera takie dane – wdroż regułę w wersji ogólnej („Firma A”), a konkret zostaw w Notion.
 6. `git add <zmienione pliki> && git commit -m "Harness <plugin> <wersja>: HZ-… <skrót>" && git push` – tylko pliki z tej
-   sesji; obcych zmian nie komentuj (kolizję zgłaszasz tylko, gdy realnie utrudnia Twoją zmianę – `CLAUDE.md`, 0a). `tools/build.py` odtwarza dowiązania `.claude/skills/` – nowy skill dodaj do commita z nimi.
+   sesji; obcych zmian nie komentuj (kolizję zgłaszasz tylko, gdy realnie utrudnia Twoją zmianę – `CLAUDE.md`, 0a). `tools/build.py` odtwarza dowiązania `.claude/skills/` i `.agents/skills/` – nowy skill dodaj do commita z obydwoma.
 7. W Notion oznacz wdrożone wpisy jednym przebiegiem: Status „Wdrożone”, Wdrożono w wersji, Data wdrożenia.
    Zaktualizuj linię „Wersja” (obu pluginów) na stronie „🤖 Asystent AI” (najwyższy poziom Private, ID w `ja/references/notion-mapa.md`;
    strona to ramka nad skrzynką i pomysłami – opis procedur jest w README repo); nowa procedura = nowa opcja w polu „Procedura” skrzynki.

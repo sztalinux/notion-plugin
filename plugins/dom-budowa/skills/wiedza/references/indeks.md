@@ -108,7 +108,7 @@ Czytaj Notion (stronę z linku) mimo wyniku z indeksu, gdy:
 
 Po zapisie wiedzy do Notion w sesji interaktywnej uruchom `python3 tools/wiedza.py sync --publikuj` (indeks i kopia dla czatu).
 
-## Czat/telefon i zaplanowane zadania na claude.ai
+## Czat i telefon na claude.ai
 
 Tu nie ma `tools/` ani repo. Przeczytaj raz na rozmowę stronę Notion „🔑 Asystent – dostęp” (`3fcf5982-09e7-810e-aaca-f2b582438924`)
 i wstaw jej pola w miejsce `<GITHUB_REPO>` i `<TOKEN>`. Nigdy nie zapisuj tokena w odpowiedzi, notatce ani pliku.

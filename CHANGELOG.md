@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.14.1] – 2026-11-11
+
+- Scalenie gałęzi pomysłów `pom/2026-11-11-razem` (wydanie 3.13.0 niżej) z nocną samonaprawą na main (wydania 3.12.2–3.12.5 niżej). Bez zmian treści poza tym, co wnoszą obie strony. Numer wyżej niż obie strony i wyżej niż numery robocze gałęzi POM (do 3.14.0), żeby się z nimi nie mylił.
+
+## ja [1.13.2] – 2026-11-11
+
+- Scalenie gałęzi pomysłów `pom/2026-11-11-razem` (wydanie 1.13.0 niżej) z nocną samonaprawą na main (wydanie 1.12.4 niżej). Bez zmian treści poza tym, co wnoszą obie strony. Numer wyżej niż obie strony i wyżej niż numery robocze gałęzi POM (do 1.13.1), żeby się z nimi nie mylił.
+
 ## ja [1.13.0] – 2026-11-11 (POM-13, POM-11, POM-12, POM-14, POM-20, POM-3, POM-7, POM-21, POM-15)
 
 Wspólne wydanie pomysłów z gałęzi `pom/2026-11-11-*` (scalone na `pom/2026-11-11-razem`); numery robocze z tych gałęzi (1.12.4–1.13.1) nie wychodzą osobno – wpis `ja [1.12.4]` niżej to osobne wydanie nocnej samonaprawy na main.
@@ -90,7 +98,7 @@ na Ciebie” mają liczniki wszystkich grup; limit 5 nowych flag `KS-…` na prz
 
 ## dom-budowa [3.13.0] – 2026-11-11 (POM-13, POM-3, POM-16, POM-7, POM-5, POM-2, POM-4)
 
-Wspólne wydanie pomysłów z gałęzi `pom/2026-11-11-*` (scalone na `pom/2026-11-11-razem`); numery robocze z tych gałęzi (3.12.2–3.14.0) nie wychodzą osobno – wpisy `dom-budowa [3.12.2]`–`[3.12.4]` niżej to osobne wydania nocnej samonaprawy na main.
+Wspólne wydanie pomysłów z gałęzi `pom/2026-11-11-*` (scalone na `pom/2026-11-11-razem`); numery robocze z tych gałęzi (3.12.2–3.14.0) nie wychodzą osobno – wpisy `dom-budowa [3.12.2]`–`[3.12.5]` niżej to osobne wydania nocnej samonaprawy na main.
 
 **POM-13 – kontrola spójności: zadanie budowy ↔ krok Harmonogramu (flagi, bez zmiany dat)**
 - `przeglad-tygodnia` („Spójność”): pełny przebieg kontroli zadania ↔ krok Harmonogramu; `harmonogram`: odesłanie do kontroli
@@ -153,6 +161,47 @@ w `budowa/references/wieczorem.md`, szczegóły limitu odczytów Notion (zasada 
 przywrócony opis pluginu w `plugin.json` (zgubiony przy scalaniu POM-4). Poprawka: `tools/teczka.py --dodaj` sprawdza
 wykluczenie `AI/` i plików ukrytych po rozwinięciu ścieżki – pełna ścieżka, `ai/` ani dowiązanie do `.dom` nie trafią już
 do teczki; `tools/kopie.py` i `docs/kopie-zapasowe.md` – opis odczytu `.dom` zgodny z kodem (czyta tylko daty).
+## dom-budowa [3.12.5] – 2026-11-11
+
+Nocna samonaprawa, obszar 03-koszty:
+- `docs/wydatki-arkusz.md` 6: komunikaty odłożonych wycen i zwrotów cytowane dosłownie jak w `sync` („N wycen czeka: …”, „N zwrotów czeka: …”).
+- `tools/wydatki.py sync --proba`: pełne id strony w liniach „✗” i „→” zamiast 8 pierwszych znaków (wspólnych dla wielu stron).
+
+## dom-budowa [3.12.4] – 2026-11-11
+
+Nocna samonaprawa, obszar 06-dokumentacja (opisy dla człowieka wobec stanu faktycznego):
+- `README.md`: plik sekretów – poza czterema zmiennymi indeksu także `ARKUSZ_URL` i `ARKUSZ_SEKRET` (`wydatki.py`), odesłanie do pełnej listy kluczy w runbooku.
+- `docs/wiedza-runbook.md` 1.3: lista kluczy pliku sekretów z `ARKUSZ_URL` i `ARKUSZ_SEKRET`.
+- `docs/zdjecia-i-kopia.md` 4: link WZ w 🧱 Zakupach budowy w polu „Dokumenty” (url), „Dokumenty dostawy” zaznaczone.
+- `README.md` i `wiedza/references/karty.md`: 17 kart pytań (było „ok. 15”).
+- `README.md` „Na co dzień”: szybki przebieg co godzinę 8–22 (launchd), nie „co 1–2 h”.
+- `docs/wydatki-arkusz.md` 8: plik zmian dla `migruj` to obiekt `{"opis", "operacje"}`, nie goła lista.
+- `docs/wiedza-runbook.md`: log przebiegu bez linii „start” (5.1); `.dom/sens.json` tworzy się przy zmianie modelu (5.5).
+- `README.md`, tabela konektorów: brak logowania MCP po zalogowaniu daje tylko ślad „ustąpiło” w „Przetworzone”, bez bloku 🔔.
+
+## dom-budowa [3.12.3] – 2026-11-11
+
+Nocna samonaprawa, obszar 05-prywatnosc:
+- `tools/build.py`: paczka pluginu bez `.DS_Store` z Findera (spis plików folderu).
+
+## dom-budowa [3.12.2] – 2026-11-11
+
+Nocna samonaprawa, obszar 02-spojnosc (spójność procedur, Notion i narzędzi):
+- `koszty`: zapasowe źródło liczb bez kopii JSON – eksport od inwestora (stary kosztorys `.xlsx` już nie istnieje).
+- Zaplanowane zadania claude.ai usunięte z opisów kanałów (`wiedza/references/indeks.md`, `indeks-jakosc.md`,
+  `pytanie-do-bazy.md`, `budowa/references/notion-mapa.md`, `docs/zdjecia-i-kopia.md`) – przeglądy tylko przez launchd.
+- `budowa/references/notion-mapa.md`: widok Rejestru sprzeczności „⏳ Czeka na decyzję” – nazwa jak w Notion.
+- `dokumenty` D: numery sekcji `docs/zdjecia-i-kopia.md` (tryby bez aplikacji – 5, przypadki brzegowe – 11).
+- `docs/wydatki-arkusz.md`: Rodzaj „Zwrot” na schemacie przepływu (zakładka Wydatki).
+- Opisy schematów wg Notion: relacja Rejestru „Karta (Notatnik)” (`notion-wiedza.md`); nowsze pola Notatnika i TASKS
+  w `notatka/references/notion-schematy.md`.
+- `docs/zdjecia-i-kopia.md`: link WZ w 🧱 Zakupach budowy do pola „Dokumenty” (url); „Dokumenty dostawy” to checkbox.
+
+## ja [1.12.4] – 2026-11-11
+
+Nocna samonaprawa, obszar 02-spojnosc:
+- `rozwoj-harnessu` B.6: nowy skill commitowany z dowiązaniami `.claude/skills/` i `.agents/skills/`.
+- `suple`: dawki to liczby, formułami są tylko ceny (zakaz zmian bez zmian).
 
 ## ja [1.12.3] – 2026-11-11
 

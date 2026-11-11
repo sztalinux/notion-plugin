@@ -75,7 +75,7 @@ z ⚠ i inwestor o tym wie.
 
 | Konektor | Do czego | Gdy go zabraknie |
 |---|---|---|
-| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają w Dzienniku i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json` i trafia do „🔔 Komunikaty asystenta” przy pierwszym udanym przebiegu – do tego czasu widać go tylko w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
+| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają w Dzienniku i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json`; po zalogowaniu pierwszy udany przebieg zostawia tylko ślad „ustąpiło” w „Przetworzone” Dziennika, bez bloku 🔔 – w trakcie widać go wyłącznie w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
 | Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
 | Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
 | Google Sheets / Drive | liczby z żywego arkusza, zmiany układu | kopia `Kosztorys_google.json` (Apps Script z sekretem), eksport od inwestora, `wydatki.py migruj` (`docs/wydatki-arkusz.md`) |
@@ -132,8 +132,8 @@ Adresy artefaktów i dane robocze leżą w folderze budowy poza repo.
 `tools/wiedza.py` trzyma lokalną kopię czterech baz Bazy wiedzy z Notion w SQLite z wyszukiwaniem pełnotekstowym (tylko do odczytu –
 zapisy idą wyłącznie do Notion). Polecenia: `sync`, `szukaj`, `temat`, `etap`, `karty`, `karta`, `zrodla`, `duplikaty`, `stan`, `publikuj`. `tools/migawka.py`
 publikuje tą samą drogą migawkę otwartych wpisów Notatnika i zadań dla czatu bez Notion. Dane leżą w `.dom/wiedza/` poza repo
-i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600, poza repo), cztery zmienne: `NOTION_TOKEN` (odczyt Notion; w bazie 💸 Wydatki także zmiana treści – `wydatki.py`),
-`GITHUB_REPO` (prywatne repo kopii dla czatu na telefonie), `GITHUB_TOKEN_SYNC` (zapis kopii na Macu), `GITHUB_TOKEN_SEARCH` (odczyt kopii w czacie).
+i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600, poza repo), cztery zmienne indeksu: `NOTION_TOKEN` (odczyt Notion; w bazie 💸 Wydatki także zmiana treści – `wydatki.py`),
+`GITHUB_REPO` (prywatne repo kopii dla czatu na telefonie), `GITHUB_TOKEN_SYNC` (zapis kopii na Macu), `GITHUB_TOKEN_SEARCH` (odczyt kopii w czacie); w tym samym pliku `wydatki.py` trzyma `ARKUSZ_URL` i `ARKUSZ_SEKRET` (`docs/wydatki-arkusz.md`, 7); pełna lista kluczy – `docs/wiedza-runbook.md`, 1, krok 3.
 Trzy kanały użycia i ograniczenia: `plugins/dom-budowa/skills/wiedza/references/indeks.md`.
 Całość systemu wiedzy (części, kto co uruchamia, pomiary, decyzje): `docs/system-wiedzy.md`; instrukcja odtworzenia i naprawy (automaty, konektor Notion, rozjechany indeks, tokeny): `docs/wiedza-runbook.md`; rejestr decyzji – co wybrano, co sprawdzono i odrzucono, z liczbami z pomiarów: `docs/decyzje-system-wiedzy.md`.
 Wydatki z Notion do arkusza Google z kosztorysem (jak działa, konfiguracja krok po kroku, kod Apps Script): `docs/wydatki-arkusz.md`.
@@ -153,7 +153,7 @@ Opis lokalny (ścieżki, dane kolejki): `AI/import-wiedzy/docs/README-lokalne.md
 Czat na telefonie nie szuka tez sam, tylko czyta **karty** – gotowe wybory tez do typowych pytań. Wybór robi Mac, offline, mocnym modelem
 czytającym całą bazę w małych porcjach; wynik leży w tym samym pliku `wiedza.sqlite`, który telefon już pobiera. Po co: sam czat widzi
 przy pytaniach szerokich ok. 60% trafnych tez, a poziom „cały etap” (330–390 tys. znaków) przerasta okno rozmowy (test 28.10.2026: w całości
-czyta 3 z 16 części). Dwa rodzaje: ok. 15 kart pytań (100–200 tez, pokrycie zmierzone wobec wzorca i pokazane w nagłówku karty) oraz
+czyta 3 z 16 części). Dwa rodzaje: ok. 17 kart pytań (100–200 tez, pokrycie zmierzone wobec wzorca i pokazane w nagłówku karty) oraz
 68 kart czynności (małe, tezy otagowane czynnością, pokrycie niemierzone).
 - Czat i Claude Code: `python3 tools/wiedza.py karty [--do "A" "B" "C"]` (spis kart; z `--do` dopasowanie do pytania) i
   `karta KOD … --pytanie "A" "B" "C" --czesc k` (treść w częściach, z dopełnieniem z szukania). Karta drukuje tezy bez źródeł –
@@ -204,7 +204,7 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
   Gdy na telefonie asystent poprosi o dokument – załącz wskazany plik.
 - Wszystko, co przyjdzie Ci do głowy (emocja, zadanie, dziecko, suplement, budowa), wpisuj na stronę „📓 Dziennik” w Notion –
   punkt pod punktem albo jako podstronę (telefon wystarczy; widget „nowa strona” w telefonie zakłada stronę na najwyższym
-  poziomie Private – też trafi do Dziennika). Szybki przebieg co 1–2 h i wieczorny przegląd dnia rozłożą to według bazy „🧭 Obszary
+  poziomie Private – też trafi do Dziennika). Szybki przebieg co godzinę (8–22) i wieczorny przegląd dnia rozłożą to według bazy „🧭 Obszary
   Dziennika”, a pod niejasnymi wpisami w „📝 Wpisy” doda krótkie okienko z pytaniem – odpowiedź wpisujesz w nim, przerobi ją następny przebieg. Gdy coś zepsuje się „w tle” (automat na Macu, skrypt, wydatek, który nie wszedł do arkusza), na górze „Wpisów” pojawi się blok pod „🔔 Komunikaty asystenta” – odpisz pod nim albo zostaw, jeśli ustąpi samo; sprawy za duże na przebieg trafiają do bazy „🧯 Znane problemy” na stronie 🤖 Asystent AI. Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
   Ręcznie: „przerób dziennik”. Chcesz, żeby asystent coś przemyślał („przygotuj mi pytania na jutrzejsze spotkanie”, „porównaj…”)
   – napisz to we wpisie; wynik będzie rano w przeglądzie dnia, w sekcji „🧠 Rozkminka” (bez prośby asystent rozkminek nie robi).

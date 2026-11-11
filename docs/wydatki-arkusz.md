@@ -23,7 +23,7 @@ wpis w 📓 Dzienniku  ·  wiadomość do asystenta  ·  zdjęcie faktury  ·  w
    │  tools/wydatki.py sync  – NOTION_TOKEN, bez AI
    ▼
 Apps Script przypięty do arkusza (aplikacja internetowa + sekret, @OnlyCurrentDoc)
-   │  Rodzaj Wydatek → zakładka Wydatki  ·  Wycena → Cennik  ·  Plan → Kosztorys, kolumna „Plan ręczny”
+   │  Rodzaj Wydatek i Zwrot → zakładka Wydatki  ·  Wycena → Cennik  ·  Plan → Kosztorys, kolumna „Plan ręczny”
    ▼
 Notion: Arkusz = „W arkuszu” + Wiersz arkusza   albo   „Błąd” + powód w polu Błąd
    │  przebieg szybki: widok „⚠ Błędy do zgłoszenia” → komunikat 🔔 z okienkiem ❓ we „📝 Wpisach”, Zgłoszono = dziś
@@ -146,7 +146,7 @@ blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 | „cena netto bez stawki” | wpisz VAT % (nie zgaduj – zapytaj inwestora) |
 | HTTP 404 / 403 z Notion | integracja bez dostępu do bazy (⋯ → Połączenia) albo bez prawa „Update content” |
 | data przesunięta o dzień | strefa arkusza ≠ Warsaw – Plik → Ustawienia |
-| „wyceny czekają: kod w wersji …” / „Cennik w starym układzie” | starszy kod (sekcja 7) albo brak zmiany układu (sekcja 8) |
+| „N wycen czeka: arkusz ma kod w wersji …” / „N wycen czeka: Cennik w starym układzie …” / „N zwrotów czeka: arkusz ma kod w wersji …” | starszy kod (sekcja 7, aktualizacja kodu; `sprawdz` pokaże wersję) albo brak zmiany układu (sekcja 8); strony czekają „Do arkusza”, `sync` kończy się kodem 1 |
 | #ERROR! / dziwne liczby po zmianie układu | formuła z „,” zamiast „;” (arkusz ma polskie ustawienia) – sekcja 8, pułapki |
 
 ## 7. Konfiguracja od zera (już zrobiona – tylko przy odtwarzaniu)
@@ -177,7 +177,7 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
    ten sam wynik). Potem i tak krok 5 (kontrola).
 1. `wydatki.py pobierz` albo odczyt konektorem – aktualne wartości i nagłówki. Odwołania do innych zakładek buduj po
    **nagłówkach żywego arkusza**, nie po literach z `arkusze.md` (kolumny bywają przesunięte).
-2. Plik zmian JSON (lista operacji akcji `zmien`: `zakres`, `wyczysc`, `walidacja`, `warunkowe`, `szerokosci`, `wysokosci`,
+2. Plik zmian JSON `{"opis": …, "operacje": [ … ]}` (operacje akcji `zmien`: `zakres`, `wyczysc`, `walidacja`, `warunkowe`, `szerokosci`, `wysokosci`,
    `zamroz`, `siatka`, `ramka`) – ręcznie albo narzędziem `python3 ~/Documents/Dom/AI/automaty/arkusz_zmiany.py` (poza
    repo, openpyxl; z docelowego `.xlsx`). Zapisz go w `<hub>/.dom/wydatki/` z datą, obok migawkę „przed”.
 3. **Pułapki polskich ustawień:** formuły w operacji `zakres` muszą mieć „;” jako separator i przecinek dziesiętny

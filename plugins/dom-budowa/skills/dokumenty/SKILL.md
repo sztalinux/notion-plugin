@@ -86,7 +86,7 @@ i sprawy osobiste z `ja/references/notion-mapa.md`, plugin `ja`).
 
 ## D. Dokumenty z telefonu i kopia na Dysku Google
 
-Pełne reguły, tryby bez aplikacji/konektora i przypadki brzegowe: `docs/zdjecia-i-kopia.md` (sekcje 4, 7, 9).
+Pełne reguły, tryby bez aplikacji/konektora i przypadki brzegowe: `docs/zdjecia-i-kopia.md` (sekcje 4 i 7; tryby – 5; przypadki brzegowe – 11).
 - **Z telefonu** (faktura papierowa, WZ, wpis kierownika, protokół – zdjęcie w `Dom/Zdjęcia/_nowe`, najlepiej w folderze
   „faktura …”, „WZ …”, „dziennik KB”): rozkłada go to samo „rozłóż zdjęcia” (`dziennik`, E). Faktury → `Faktury/RRRR/`
   (`RRRR-MM-DD_sprzedawca_numer`), WZ / karty / deklaracje → `Dostawy/<Etap>/`, wpisy kierownika → `Dziennik budowy KB/`,

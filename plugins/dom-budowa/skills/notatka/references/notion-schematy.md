@@ -19,6 +19,9 @@ bazy (fetch data source) i zaktualizuj ten plik.
 | Źródło | tekst | skąd to wiem |
 | Wiedza | relacja → Informacje (Baza wiedzy) | informacje wynikające z tego ustalenia (`wiedza`, sekcja F) |
 
+Pola dopisane później (opis: `budowa/references/notion-mapa.md`, wiersze Notatnika): NT, Pulpit, Dotyczy etapu, Krok
+(relacja → Harmonogram), Temat, Dziennik budowy (relacja), Sprzeczność (Rejestr) (relacja zwrotna „Karta (Notatnik)”).
+
 ## TASKS – `collection://2a9f5982-09e7-81be-91e8-000b0e10a05e`
 
 Wspólna baza zadań (dom i sprawy prywatne – plugin `ja`). Procedury budowy ustawiają zawsze **Obszar = Dom**;
@@ -35,6 +38,8 @@ puste Obszar = stare wiersze budowy. Widoki budowy filtrują „Dom albo puste�
 | Desc | tekst | jedno zdanie; listy i szczegóły – w treści strony (checkboxy) |
 | Kto | select | Ja, Ekipa, Konstruktor, Architekt, Kierownik budowy, Geodeta / geotechnik, Dostawca, Urząd / gestor, Inny – ktoś inny + Status „WAITING” = czekam na |
 | Harmonogram | relacja → Harmonogram | krok, z którego wynika zadanie (`harmonogram`) |
+| Research, Dziennik budowy | relacje → 🔎 Research (`ja/references/notion-mapa.md`), Dziennik budowy (`dziennik`) | |
+| Last edited time | ostatnia edycja (auto) | czasy w UTC – przegląd dnia (`przeglad-dnia`, B.5) |
 
 ## Porównanie wykonawców – stan zero – `collection://f7ca5f38-8fc3-46e7-8345-8a32cc8b5215`
 
