@@ -892,8 +892,13 @@ def cmd_dodaj(a) -> int:
 
 
 # ------------------------------------------------------------------ raport
+def po_czasie(p: Path) -> tuple:
+    return p.stat().st_mtime, p.name
+
+
 def ocena_reczna(m: Miejsca) -> dict:
-    zestawy = sorted(m.dane.glob("reczna-*.jsonl")) if m.dane.is_dir() else []
+    # po czasie zmiany, nie po nazwie: „reczna-z9-…” (zestaw wczytany) sortuje się po każdym „reczna-RRRRMMDD-…”
+    zestawy = sorted(m.dane.glob("reczna-*.jsonl"), key=po_czasie) if m.dane.is_dir() else []
     if not zestawy:
         return {}
     wynik = {"zestawy": len(zestawy)}
@@ -1024,7 +1029,7 @@ def cmd_reczna(a) -> int:
             if plik.is_file():   # wczytany wcześniej – wznów kopię z ocenami
                 wiersze = czytaj_jsonl(plik)
         else:
-            otwarte = [p for p in sorted(m.dane.glob("reczna-*.jsonl"))
+            otwarte = [p for p in sorted(m.dane.glob("reczna-*.jsonl"), key=po_czasie)
                        if any(None in (w.get("oceny") or []) for w in czytaj_jsonl(p))]
             if otwarte and not a.nowa:
                 plik, wiersze = otwarte[-1], czytaj_jsonl(otwarte[-1])
