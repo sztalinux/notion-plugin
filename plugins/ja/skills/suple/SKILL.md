@@ -28,4 +28,6 @@ When, Last break, Type, ceny i dawki (formuły – nie ruszaj).
 
 ## Odczyt
 
-„Co mam kupić” → wiersze z Buy = tak (widok z filtrem Buy; brak – utwórz „🛒 Do kupienia”): nazwa, kto, link. „Co biorę” → Status = TAKING według When.
+„Co mam kupić” → wiersze z Buy = tak (widok z filtrem Buy; brak – utwórz „🛒 Do kupienia”): nazwa, kto, link. Pozycje ze Statusem
+BREAK / SUSPENDED wymień osobno jako „do sprawdzenia (wstrzymane)”, nie jako do kupienia – Buy odznacza dopiero inwestor
+(pytanie z wieczornego przeglądu dnia, `przeglad-dnia/references/kontrola-spojnosci-suple.md`). „Co biorę” → Status = TAKING według When.

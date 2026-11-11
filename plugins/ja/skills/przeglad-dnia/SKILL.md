@@ -112,11 +112,17 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    ↔ temat w „💬 Do przegadania” na stronie osoby. Tylko pytanie „❓” z kluczem `KS-R…` (wspólny limit 5 z 5a); po ☑ dopisek
    „✅ przegadane” pod tematem, nic się nie przenosi. Treści tematów nie wypisuj; licznik „rozjazdy” jak w 5a.
 6. **Jutro – sprawy osobiste** (odczyt; jedyny zapis – zadanie z suplementami, niżej): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
-   (When < dziś, niezakończone – widok „📅 Dziś”, ID w mapie), suplementy z Buy = tak (licznik), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
+   (When < dziś, niezakończone – widok „📅 Dziś”, ID w mapie), suplementy z Buy = tak (licznik – **bez** Statusu BREAK / SUSPENDED,
+   te to „do sprawdzenia”, niżej), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)
    sprawdź ID, jeśli któryś odczyt się nie powiedzie.
 
-   **Suplementy do zamówienia:** gdy jest choć jeden z Buy = tak, poszukaj w TASKS (wyszukiwarka z parametrem bazy, „suple”,
+   **Suplementy wstrzymane (kontrola spójności, grupa S1):** suplement z Buy = tak i Statusem BREAK albo SUSPENDED nie jest
+   „do kupienia” – nie wliczaj go do licznika ani do zadania „Zamówić suple”, pokaż osobno jako „do sprawdzenia” i zadaj jedno
+   zbiorcze pytanie „❓ Odznaczyć Buy?” (klucz `KS-S1-…`, propozycja: tak); pola Buy nie zmieniaj bez ☑ inwestora.
+   Reguły, klucze i obsługa odpowiedzi: `references/kontrola-spojnosci-suple.md`.
+
+   **Suplementy do zamówienia:** gdy jest choć jeden z Buy = tak (i Status inny niż BREAK / SUSPENDED), poszukaj w TASKS (wyszukiwarka z parametrem bazy, „suple”,
    wśród niezakończonych) otwartego zadania „Zamówić suple”. Jest → dopisz do niego brakujące suplementy (Name i treść strony),
    bez dublowania. Brak → załóż jedno zbiorcze: Name „Zamówić suple: <nazwy>”, Obszar Prywatne, Kategoria Zakup, Kto Ja,
    Priority Medium, Status TO DO, When = dzień przeglądu + 3 dni (najpóźniej, nigdy dalej), Desc jedno zdanie, lista (nazwa,

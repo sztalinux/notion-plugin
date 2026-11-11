@@ -37,6 +37,16 @@ POM-11 – kontrola spójności: zakup Kupione ↔ zadanie „Kupić X” (i „
   sam uzupełnia „Kupione dnia” (data ostatniej edycji) i zamyka research przy kupionej rzeczy.
 - `zadania` (Zakupy, pkt 4): odesłanie do kroku 5b; `ja/references/notion-mapa.md`: nowy widok bazy 🛒 Zakupy
   „🤖 Spójność – zamknięte zakupy (przegląd dnia)” (utworzony w Notion 11.11).
+## ja [1.12.7] – 2026-11-11 (POM-14)
+
+POM-14 – kontrola spójności: suplement z Buy = tak przy statusie BREAK / SUSPENDED (grupa **S1** serii „Kontrola spójności”):
+- `przeglad-dnia` (krok 6, wieczorem): wstrzymane suplementy z Buy = tak nie wchodzą do licznika „kupić” ani do zadania „Zamówić
+  suple”; pokazane osobno jako „do sprawdzenia” (`kupić: n (+ k do sprawdzenia)`) i jedno zbiorcze pytanie „❓ Odznaczyć Buy?”
+  z kluczem `KS-S1-…` (propozycja: tak). Buy odznacza się dopiero po ☑ inwestora; bez nowych baz ani pól.
+- Nowy `przeglad-dnia/references/kontrola-spojnosci-suple.md` (reguła, odczyt odpowiedzi, wyciszenie, czego nie robić);
+  `suple` („Odczyt”): wstrzymane wymieniane osobno.
+- Wersja 1.12.7 (POM-13 ma 1.12.4, POM-11 1.12.5, POM-12 1.12.6, POM-20 1.13.0) – integrator scala wersje; plik z regułą
+  można połączyć z `kontrola-spojnosci*.md` z POM-11/12/13 (wspólny format flag `KS-…`, limit 5 nowych flag na przebieg).
 
 ## ja [1.12.3] – 2026-11-11
 
