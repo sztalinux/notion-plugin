@@ -136,6 +136,20 @@ POM-21 „Kopie zapasowe – plan i kontrola” (gałąź `pom/2026-11-11-POM-21
 - `przeglad-tygodnia-osobisty`: linia „Kopie” we wpisie tygodnia, pozycje ⚠/✗ jako komunikat 🔔 `kopie-zapasowe`
   (`wpisy/references/pytania.md`, C); `ja`: wiersz mapy „stan kopii”, „zrobiłem kopię na dysk”.
 - `CLAUDE.md` (opcja startowa „Zdjęcia i kopia”), README, `docs/zdjecia-i-kopia.md` – odnośniki do planu.
+## ja [1.13.1] – 2026-11-11 (POM-15)
+
+POM-15 – kontrola spójności: status pomysłu w „Pomysły na rozwój” ↔ stan wdrożenia (grupa **P** serii „Kontrola spójności”):
+- `przeglad-dnia` (krok 2, wieczorem): na wierszach bazy pomysłów, bez dodatkowego odczytu – „Zrobione” bez „Zrobiono w wersji” (P1),
+  „Do zrobienia” / „Przeanalizowany” przy wypełnionej wersji (P2) lub wdrożeniu z CHANGELOG (P3), „gałąź … czeka na scalenie”
+  już scalona (P4). Pole wersji uzupełnia się tylko z nagłówka CHANGELOG z numerem POM; Status zmienia dopiero ☑ inwestora
+  (pytanie „❓”, klucz `KS-P…`). Wdrożenie oznaczone „częściowo” nie jest flagowane.
+- Nowy `przeglad-dnia/references/kontrola-spojnosci-pomysly.md` (reguły, przebieg, odpowiedzi, czego nie robić) i
+  `tools/pomysly_wersje.py` (+ `test_pomysly_wersje.py`) – wersje z CHANGELOG dla POM-n; tylko biblioteka standardowa.
+- `rozwoj-harnessu` (B.4, C): nagłówek wpisu CHANGELOG ma numer POM `(POM-n)`; wdrożenie częściowe – „(częściowo)” w polu wersji.
+- README: opis przeglądu dnia i narzędzie. Decyzje z analizy: POM-8 już „Zrobione” (4.11), POM-7 „Zrobione” w gałęzi – bez zmian w Notion.
+- Wersja 1.13.1 do uzgodnienia przez integratora (POM-7 ma 1.13.0, POM-11/12/13/14 1.12.4–1.12.7); plik z regułą można połączyć
+  z `kontrola-spojnosci*.md` z POM-11–14 (wspólny format flag `KS-…`, limit 5 nowych flag na przebieg). Przebieg poza repo
+  potrzebuje uprawnienia `Bash(python3 tools/pomysly_wersje.py:*)` w NARZEDZIA – bez niego czyta CHANGELOG bezpośrednio.
 
 ## ja [1.12.3] – 2026-11-11
 

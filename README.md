@@ -42,6 +42,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     tools/kopie.py                    ← kontrola kopii zapasowych: co ma kopię, gdzie i z kiedy, tylko odczyt (docs/kopie-zapasowe.md; test_kopie.py)
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
     tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google, gotówka po miesiącach (docs/wydatki-arkusz.md)
+    tools/pomysly_wersje.py           ← wersje z CHANGELOG dla POM-n (kontrola „status pomysłu ↔ wdrożenie” w przeglądzie dnia; test_pomysly_wersje.py)
     docs/                             ← opisy systemów dla człowieka: wiedza (mapa, runbook, rejestr decyzji), wydatki → arkusz
 ```
 
@@ -94,7 +95,7 @@ z ⚠ i inwestor o tym wie.
 | `zadania` | „muszę…”, „zrobiłem X”, „co mam jutro” | wspólna TASKS z polem Obszar; zmiana statusu z Dziennika |
 | `dziecko` | obserwacja, „porozmawiać z nią o…”, prezent, zalecenie | strona dziecka w sekcjach |
 | `suple` | „kończy się…”, „kupiłem…”, przerwa | baza Suple: Buy, Status, Last break |
-| `przeglad-dnia` | co godzinę (tryb szybki) i wieczorem – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; wieczorny: podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan na jutro – osobiste pod Dziennikiem, budowa osobno na DOM (z odnośnikiem), w punktach (pilne na górze), analiza pomysłów, kontrola spójności (zadanie budowy ↔ krok Harmonogramu, zadanie „Porozmawiać z…” ↔ temat do przegadania – tylko pytania ❓); rozkminka („przygotuj mi…”, „jakie pytania…”) tylko na prośbę we wpisie |
+| `przeglad-dnia` | co godzinę (tryb szybki) i wieczorem – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; wieczorny: podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan na jutro – osobiste pod Dziennikiem, budowa osobno na DOM (z odnośnikiem), w punktach (pilne na górze), analiza pomysłów, kontrola spójności (zadanie budowy ↔ krok Harmonogramu, zakup ↔ zadanie „Kupić X”, zadanie „Porozmawiać z…” ↔ temat do przegadania, suplement wstrzymany z Buy, status pomysłu ↔ wdrożenie – tylko pytania ❓, zmiana dopiero po Twoim ☑); rozkminka („przygotuj mi…”, „jakie pytania…”) tylko na prośbę we wpisie |
 | `przeglad-tygodnia-osobisty` | raz w tygodniu – automat na Macu / „przegląd tygodnia” | sprawy osobiste w liczbach, zaległe, najbliższy tydzień, porządki w Dzienniku; uruchamia przegląd budowy i linkuje do niego |
 | `rozwoj-harnessu` | „zapamiętaj na przyszłość”, nowa procedura, „mam pomysł…”, „zrób POM-n”, „zrób ZP-n” | skrzynka w Notion → wdrożenie do repo; pomysły → analiza → wdrożenie na polecenie; „🧯 Znane problemy” – sprawy, których przebieg nie załatwi |
 

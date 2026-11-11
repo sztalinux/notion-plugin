@@ -61,7 +61,9 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
    `gemini-extension.json` – muszą być równe): PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana
    struktury danych. **Bez podbicia wersji telefon i Cowork nie dostaną aktualizacji.**
 4. Dopisz wpis w `CHANGELOG.md` pod nagłówkiem `## <plugin> [wersja] – data` (lista HZ-n z jednym zdaniem każdy);
-   zmiana obu pluginów = dwa nagłówki.
+   zmiana obu pluginów = dwa nagłówki. Wdrożenie pomysłu lub znanego problemu: numer w nagłówku – `## ja [1.2.3] – data (POM-n)` –
+   bo z niego przegląd dnia bierze wersję do pola „Zrobiono w wersji” (`przeglad-dnia/references/kontrola-spojnosci-pomysly.md`;
+   `python3 tools/pomysly_wersje.py n` pokazuje, co wyjdzie).
 5. `python3 tools/build.py` – musi przejść walidację, w tym kontrolę prywatności (wzorce + lista słów zakazanych
    `.dom/zakazane-w-repo.txt` w folderze budowy). Hooki w `.githooks/` powtarzają ją przy commicie (pliki, autor,
    wiadomość) i przed pushem (każdy wysyłany commit). Zablokowany hook = popraw dane, nigdy `--no-verify`.
@@ -124,7 +126,8 @@ i słowa inwestora. Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to
 
 **Wdrożenie** – tylko gdy inwestor powie w Claude Code „zrób POM-n” (albo ustawi „Do zrobienia” i poprosi o to):
 przeczytaj stronę pomysłu z analizą, potwierdź decyzje z „Do decyzji przed startem”, potem kroki B.2–B.8. Na końcu Status
-„Zrobione”, „Zrobiono w wersji”, w treści linia „Wdrożone w <wersja> (data): co weszło, co pominięto”.
+„Zrobione”, „Zrobiono w wersji”, w treści linia „Wdrożone w <wersja> (data): co weszło, co pominięto”. Wdrożenie tylko część
+pomysłu → Status zostaje, a w „Zrobiono w wersji” dopisz „(częściowo)” (kontrola spójności tego nie flaguje).
 
 ## D. Znane problemy
 
