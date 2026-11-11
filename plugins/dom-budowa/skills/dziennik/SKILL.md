@@ -15,7 +15,8 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
 
 ## A. Wpis z dnia / wizyty
 
-1. **Rozbij relację** na pola wpisu: data, etap, krok, kto na budowie (ekipa – ile osób; ja – ile godzin; kierownik;
+1. **Rozbij relację** na pola wpisu: data, etap, krok (pole „Krok” słowami + relacja „Krok harmonogramu”, gdy krok jest
+   w Harmonogramie; nie wiadomo który – pytanie), kto na budowie (ekipa – ile osób; ja – ile godzin; kierownik;
    geotechnik; dostawa), co zrobiono (konkretnie: „ściany piwnicy – zbrojenie osi A–C”), pogoda (temperatura,
    opady – ważne przy betonie, murowaniu, zasypce), dostawy (co, ile, od kogo, dokument), problemy, ustalenia z ekipą.
    Brakujące dane → `?` i wymień w podsumowaniu (`budowa`, zasada 7). Nie dopowiadaj faktów.
@@ -25,6 +26,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    | Co w relacji | Dokąd |
    |---|---|
    | dostawa, zakup, zaliczka, gotówka dla ekipy | `koszty`, sekcja B – wiersze w „💸 Wydatki → arkusz” (Zrealizowane / Do zapłaty) |
+   | dostawa albo zakup materiału na budowę | `zakupy`, sekcja C (dostawa) albo 0.3 (kupione) – wiersz w 🧱 Zakupach budowy: Status, Dostawa = data, dokumenty |
    | ustalenie, pytanie, ryzyko, decyzja | `notatka` – Notatnik budowy z Etapem i Do kogo |
    | usterka do poprawy, rzecz do zrobienia z terminem | `notatka` – TASKS (When), Kto = Ekipa |
    | „ekipa chce dopłatę za…” (roboty dodatkowe) | sekcja B |
@@ -33,7 +35,8 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    | wiedza od wykonawcy („mówi, że…”) | `wiedza` (Rozmowy i źródła), jeśli to coś więcej niż ustalenie na dziś |
 3. **Zdjęcia:** inwestor wysyła je w rozmowie albo pisze, że wgrał → wskaż folder kroku na Dysku (link z pola „Zdjęcia”
    kroku w Harmonogramie) albo `Zdjęcia/_nowe` z folderem nazwanym, co na nich jest („zbrojenie z miarą”); zdjęcia
-   z rozmowy nie trafią na Dysk same. Pola wpisu wypełniasz po rozłożeniu (sekcja E). Jeśli krok zakrywa coś na stałe
+   z rozmowy nie trafią na Dysk same. Pola wpisu wypełniasz po rozłożeniu (sekcja E); bez zdjęć pole „Zdjęcia” zostaje
+   puste (pulpit liczy zdjęcia z jego treści – każdy tekst bez liczby na początku pokaże jako zdjęcie). Jeśli krok zakrywa coś na stałe
    (zbrojenie, izolacja, instalacje, trasy w zasypce) – sprawdź, czy są zdjęcia z miarą (`przed zakryciem/` w folderze
    kroku); brak → przypomnij **zanim** będzie za późno (`etap`, sekcja B).
 4. **Zapisz wpis** jednym wywołaniem (pola wg `references/notion-dziennik.md`), potwierdź linkiem i podaj,
