@@ -19,11 +19,13 @@ Zasady:
 - Ta sama treść w składni Notion: `.dom/przewodnik-notion.md` → strona „Przewodnik po dokumentach i Notion”
   (zapisuje ją agent w Claude Code; skrypt tylko zgłasza, że trzeba, i pamięta, co już zsynchronizowano).
 - Skrypt usuwa pliki wyłącznie w folderze paczki; plików w hubie nie przenosi i nie usuwa.
-- Foldery `Zdjęcia*` / `Foto*` (zdjęcia z budowy, procedura `dziennik`), `_Na Dysk`, `_Kopie` i `_Archiwum` są pomijane w całości.
+- Foldery `Zdjęcia*` / `Foto*` (zdjęcia z budowy, procedura `dziennik`; nie `Fotowoltaika`), `_Na Dysk`, `_Kopie` i `_Archiwum`
+  są pomijane w całości, pliki tymczasowe (`~$…`, `~WRL…`, `.tmp`) też.
 - Lista „do wgrania” liczona jest względem ostatniego potwierdzenia „wgrane”, nie ostatniego uruchomienia.
 """
 import argparse
 import datetime as dt
+import fcntl
 import hashlib
 import json
 import os
@@ -105,9 +107,9 @@ def skanuj() -> dict:
     for korzen, katalogi, pliki in os.walk(HUB):
         k = Path(korzen)
         katalogi[:] = [d for d in katalogi if not d.startswith(".") and (k / d).resolve() not in POMIN_KATALOGI
-                       and not nfc(d).lower().startswith(ZDJECIA)]
+                       and not pominiety(d)]
         for n in pliki:
-            if n.startswith(".") or n.startswith("~$"):
+            if n.startswith((".", "~$", "~WRL")) or n.lower().endswith((".tmp", ".part", ".crdownload")):
                 continue
             p = k / n
             try:  # zepsute dowiązanie – pomijamy, zamiast wywracać cały przebieg
@@ -116,6 +118,21 @@ def skanuj() -> dict:
                 continue
             out[nfc(p.relative_to(HUB).as_posix())] = (st.st_size, int(st.st_mtime))
     return out
+
+
+def pominiety(d: str) -> bool:
+    """Folder zdjęć (prefiks z ZDJECIA, ale nie „Fotowoltaika”) albo dokładnie `_Na Dysk` / `_Kopie` / `_Archiwum`."""
+    d = nfc(d).lower()
+    return d in ZDJECIA if d.startswith("_") else d.startswith(ZDJECIA) and not d.startswith("fotowolt")
+
+
+def blokada():
+    """Jeden zapis indeksu naraz (równoległe sesje: przebieg startowy i `ustaw`); zwolnienie przy końcu procesu."""
+    if not CONF.is_dir():
+        return None
+    f = open(CONF / "indeks.lock", "w")
+    fcntl.flock(f, fcntl.LOCK_EX)
+    return f
 
 
 def wspolny_koniec(a: str, b: str) -> int:
@@ -504,6 +521,7 @@ def main() -> int:
     sub.add_parser("wgrane")
     sub.add_parser("notion-ok")
     a = ap.parse_args()
+    _blok = blokada() if a.cmd == "ustaw" or (a.cmd is None and not a.dry_run) else None  # noqa: F841
     return {"ustaw": cmd_ustaw, "lista": cmd_lista, "wgrane": cmd_wgrane, "notion-ok": cmd_notion_ok}.get(a.cmd, cmd_sprawdz)(a)
 
 
