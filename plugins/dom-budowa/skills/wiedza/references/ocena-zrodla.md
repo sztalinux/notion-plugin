@@ -6,7 +6,7 @@ Oceniaj autora i sposób argumentacji, nie to, czy teza nam pasuje.
 
 | Sygnał | Konflikt interesów |
 |---|---|
-| Producent mówi o swoim systemie / film na kanale marki | Możliwy (lub Sprzedawca/Producent) |
+| Producent mówi o swoim systemie / film na kanale marki | Możliwy (Typ autora: Producent albo Sprzedawca / dystrybutor) |
 | „Materiał powstał we współpracy”, kody rabatowe, linki afiliacyjne do konkretnego produktu | Materiał sponsorowany |
 | Wykonawca promuje własną usługę/technologię („my robimy to tak i tylko tak”) | Możliwy |
 | Niezależny projektant/inspektor, bez wskazania marki, pokazuje alternatywy | Brak |
