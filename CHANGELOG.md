@@ -4,6 +4,15 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.6] – 2026-11-12
+
+Nocna samonaprawa, obszar 09-dokumenty:
+- `dokumenty` A.2: nowy plik porównywany z przewodnikiem (wpisy z zawartością w `lista`), nie tylko z paczką, która domyślnie jest pusta.
+- `tools/dokumenty.py`: zepsute dowiązanie w folderze budowy jest pomijane – wcześniej każdy przebieg kończył się „Błąd skryptu” bez zapisu indeksu (plik bez prawa odczytu nadal daje błąd, indeks zostaje nietknięty).
+- `tools/dokumenty.py`: uszkodzony albo zabezpieczony hasłem arkusz `.xlsx` w paczce – „nie sprawdzono – arkusz nieczytelny” zamiast wywrócenia przebiegu.
+- `tools/dokumenty.py ustaw`: ścieżka bezwzględna spoza folderu budowy – komunikat i kod 1 zamiast wyjątku z kodem 0.
+- `README.md`, schemat: „Dokumenty budowy” daje przewodnik na stronie Notion, paczka `_Do claude.ai/` to kopia awaryjna.
+
 ## dom-budowa [3.12.5] – 2026-11-11
 
 Nocna samonaprawa, obszar 03-koszty:
