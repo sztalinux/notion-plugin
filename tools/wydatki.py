@@ -236,14 +236,14 @@ def sync(k: dict, proba: bool) -> tuple:
         if b:
             licz["bledy"] += 1
             if proba:
-                print(f"  ✗ {w['id'][:8]} {w['lp'] or '–'}: {b}")
+                print(f"  ✗ {w['id']} {w['lp'] or '–'}: {b}")   # pełne id – pierwsze znaki powtarzają się w całej przestrzeni Notion
             else:
                 oznacz(k, w["id"], BLAD, blad=b)
         else:
             do_wyslania.append(w)
     if proba:
         for w in do_wyslania:
-            print(f"  → {w['id'][:8]} {w['rodzaj']} {w['data']} poz. {w['lp'] or '–'} {w['typ'] or w['status_wyceny'] or ''} – wysłałbym")
+            print(f"  → {w['id']} {w['rodzaj']} {w['data']} poz. {w['lp'] or '–'} {w['typ'] or w['status_wyceny'] or ''} – wysłałbym")
         return licz, bledy
     plany = [w for w in do_wyslania if w["rodzaj"] == "Plan"]
     do_wyslania = [w for w in do_wyslania if w["rodzaj"] != "Plan"]   # Apps Script wziąłby je za wydatki
