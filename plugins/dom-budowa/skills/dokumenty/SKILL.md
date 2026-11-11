@@ -81,7 +81,8 @@ dla asystenta na claude.ai – czyta go z Notion, więc inwestor niczego nie wgr
 i sprawy osobiste z `ja/references/notion-mapa.md`, plugin `ja`).
 
 1. Raport startowy pokazuje „Przewodnik zmieniony → przepisz stronę Notion…” → bez pytania zastąp całą treść strony
-   zawartością pliku (jedno wywołanie, plik już ma składnię Notion; nie zmieniaj jej ręcznie).
+   zawartością pliku (jedno wywołanie, plik już ma składnię Notion; nie zmieniaj jej ręcznie). Raport ma też
+   „Zmieniona treść dokumentów…” → najpierw A.5 dla tych plików i ponowny przebieg skryptu, dopiero potem strona.
 2. Potem `python3 tools/dokumenty.py notion-ok`. Zgłoś jedną linią: „Przewodnik w Notion zaktualizowany”.
 3. Paczka `_Do claude.ai/` to tylko kopia awaryjna (np. gdy Notion jest niedostępny) – wgrywanie jest opcjonalne.
 
