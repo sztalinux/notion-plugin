@@ -68,7 +68,7 @@ z ⚠ i inwestor o tym wie.
 
 | Konektor | Do czego | Gdy go zabraknie |
 |---|---|---|
-| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają w Dzienniku i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json` i trafia do „🔔 Komunikaty asystenta” przy pierwszym udanym przebiegu – do tego czasu widać go tylko w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
+| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają w Dzienniku i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json`; po zalogowaniu pierwszy udany przebieg zostawia tylko ślad „ustąpiło” w „Przetworzone” Dziennika, bez bloku 🔔 – w trakcie widać go wyłącznie w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
 | Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
 | Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
 | Google Sheets / Drive | liczby z żywego arkusza, zmiany układu | kopia `Kosztorys_google.json` (Apps Script z sekretem), eksport od inwestora, `wydatki.py migruj` (`docs/wydatki-arkusz.md`) |
