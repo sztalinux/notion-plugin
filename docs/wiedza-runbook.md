@@ -94,7 +94,7 @@ obserwatora oraz sędziego. Limit tygodnia pilnuje ustawienie `tydzien_stop`. Ra
 - `[karty] …` z `tools/wiedza_karty.py` (kody wyjścia: 0 sukces, 1 błąd, 3 stop na budżecie albo limicie – stan zapisany, wznowienie tym samym poleceniem,
   gotowe porcje z cache):
   - „trwa inny przebieg kart (karty.json zajęty)” – inny przebieg trzyma blokadę; poczekaj albo sprawdź, czy proces żyje (`pgrep -fl wiedza_karty`);
-  - „limit tygodnia n% ≥ --stop-tydzien” / „okno 5-godzinne wyczerpane” – poczekaj na odnowienie limitu, nie ponawiaj na siłę;
+  - „limit tygodnia n% ≥ --stop-tydzien” / „okno 5-godzinne limitu wyczerpane” – poczekaj na odnowienie limitu, nie ponawiaj na siłę;
   - „porcje z błędem … uruchom ponownie” – błędy są w `karty.json` (pole `bledy`); powtórzenie tego samego polecenia dokończy tylko braki;
   - „indeks zajęty (sync albo publikacja) – zapis w następnym przebiegu” – nic do zrobienia, zapis dogoni następny `aktualizuj`;
   - „--publikuj niedozwolone przy WIEDZA_KARTY_POLECENIE” – zmienna testowa zostawiona w środowisku; usuń ją.
@@ -240,7 +240,7 @@ zrzut ekranu, uznaj za ujawniony i wymień. Nowy token ma najmniejsze możliwe u
 ### 5.9 Inne
 
 - **Skrzynka zalega** (pozycje bez śladu w „Przetworzone”): uruchom przebieg godzinowy ręcznie (`przeglad.py szybki`) albo w rozmowie „przerób skrzynkę”; niejasne wpisy czekają we „Wpisach” z okienkiem ❓.
-- **Nocna kolejka nie rusza po przerwie:** `python3 kolejka_zdrowie.py` (kod 0 = sprawna; **uwaga:** naprawia dane kolejki i może przywracać pliki z kopii – uruchamiaj, gdy kolejka nie pracuje:
+- **Nocna kolejka nie rusza po przerwie:** `python3 kolejka_zdrowie.py` w katalogu kolejki poza repo (ścieżka – `README-lokalne.md`; kod 0 = sprawna; **uwaga:** naprawia dane kolejki i może przywracać pliki z kopii – uruchamiaj, gdy kolejka nie pracuje:
   `pgrep -fl "kolejka_run|kanal_do_notion|kurs_do_notion"`). Kolejka przed startem sprawdza logowanie MCP notion (bez niego nie zaczyna, pozycje zostają w kolejce), sieci – nie; przed nocą wykonaj `claude mcp get notion`.
 - **Prywatność:** zablokowany commit przez hook (`pre-commit`, `commit-msg`, `pre-push`) znaczy, że w diffie jest coś z listy zakazanych; usuń dane z pliku, nie omijaj hooka (`--no-verify` zabronione).
   Dane, które trafiły na GitHuba, nie wracają – zatrzymaj się i poinformuj inwestora.

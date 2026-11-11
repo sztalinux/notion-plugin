@@ -9,7 +9,7 @@ bez zgadywania. Polecenia uruchamiaj na Macu, z katalogu repo. Użycie na co dzi
 |---|---|---|
 | `✗ indeks uszkodzony – uruchom sync (na Macu)` | polecenie odczytu trafiło na zepsuty plik | `python3 tools/wiedza.py sync`; do tego czasu czytaj Notion |
 | `[wiedza] indeks uszkodzony – odłożony …, budowa od nowa pełnym sync` | sync sam zastąpił zepsuty plik | nic; sprawdź `stan` po zakończeniu |
-| `[wiedza] sync nie zmieścił się w limicie czasu startu (110 s, …) – nic nie zapisano` | start sesji ma budżet 110 s na pobór i publikację | uruchom `sync` ręcznie, bez `--cicho` i bez hooka |
+| `[wiedza] sync nie zmieścił się w limicie czasu startu (110 s, …) – nic nie zapisano` | start sesji ma budżet 110 s na pobór i publikację | uruchom `sync` ręcznie, bez `--cicho` |
 | `[wiedza] publikacja: … odłożone – wysyłka nie mieści się w limicie czasu startu` | duży plik nie zmieścił się w budżecie startu | `python3 tools/wiedza.py publikuj --teraz` |
 | `✗ GITHUB_REPO wskazuje repo, które nie jest prywatne – publikacja wstrzymana …` | kopia zawiera dane osób trzecich, więc nie trafi do publicznego repo | popraw `GITHUB_REPO` albo ustaw repo jako prywatne |
 | błąd HTTP 301 przy publikacji | repo przemianowano lub przeniesiono | wpisz nową nazwę w `GITHUB_REPO` |
@@ -73,7 +73,7 @@ który nie jest takim indeksem, program nigdy nie nadpisuje.
 
 Komunikaty celowo nie niosą wartości pól, tylko typ błędu i linię. Przy ręcznym uruchomieniu włącz pełny ślad:
 `WIEDZA_DEBUG=1 python3 tools/wiedza.py sync`. Ślad może zawierać fragmenty danych – nie wklejaj go do notatek ani do repo.
-Ślad pojawia się tylko w terminalu i bez `--cicho`, więc zmienna ustawiona na stałe nie trafi do wyjścia hooka.
+Ślad pojawia się tylko w terminalu i bez `--cicho`, więc zmienna ustawiona na stałe nie trafi do wyjścia listy startowej ani nocnych skryptów.
 
 ## Uprawnienia i dane
 

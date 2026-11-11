@@ -61,7 +61,7 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   ma trafień: „żadna karta nie ma trafień – użyj szukaj”. Nagłówek (`# indeks: stan … · karty: n (pytania a, czynności b) · zbudowano …`)
   przypomina, by wybierać karty do ok. 75 tys. znaków razem.
 - `python3 tools/wiedza.py karta KOD [KOD2 …] --pytanie "A" "B" "C" --czesc k` – treść karty w częściach po ok. 25 tys. znaków (kilka kodów =
-  suma bez powtórzeń). Nagłówek: `# indeks: stan … · karta: kod „Nazwa” · tez N (Kluczowe n, Ważne m)[ (+c ciekawostek – --ciekawostki)] · znaków N tys.
+  suma bez powtórzeń). Nagłówek: `# indeks: stan … · karta: kod „Nazwa” · tez N (Kluczowe n, Ważne m)[ (+c ciekawostek ukrytych – bez --bez-ciekawostek)] · znaków N tys.
   · części n · <pokrycie>[ · dopełnienie d] · część k/n – dalej --czesc k+1` (ostatnia część: `część n/n (ostatnia)`). `<pokrycie>` to `pokrycie X%
   trafnych / Y% Kluczowych (wobec wzorca <data> (<ID wzorca>, …)[; z dopełnieniem Z%])` albo `pokrycie: niemierzone` (karta czynności: `… (karta
   czynności – tagi modelu)`; karta pytań – także po `zbuduj`, dopóki `pomiar --zapisz` nie zapisze pokrycia); kilka kart o różnym pokryciu –

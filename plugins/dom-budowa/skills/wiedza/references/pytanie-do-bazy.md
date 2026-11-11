@@ -60,7 +60,7 @@ podaj go w zasięgu (pkt 9).
 | **cały etap** (tylko Mac) | pytanie o cały etap, gdy żadna karta nie pasuje; „cały etap”, „wszystko” | `etap "<etap>" --czesc 1` … do ostatniej części (bez `szukaj`); zamknięcie etapu, odbiory i kolejność → `--kontrola` | 330 tys. zn. w 14 częściach (z `--kontrola` 390 tys. / 16) |
 
 - **A B C** jak w pkt 2, w jednym wywołaniu `szukaj`. **Główny temat** = ten, który najczęściej stoi w kolumnie `T:` linii wyniku,
-  drugi – kolejny co do częstości; podaj nazwę dokładnie jak w `T:` (skrócona bywa niejednoznaczna – narzędzie odpowie „pasuje kilka”).
+  drugi – kolejny co do częstości; podaj nazwę dokładnie jak w `T:` (skrócona bywa niejednoznaczna – narzędzie odpowie „n pasujących – podaj dokładniejszą nazwę”).
 - Cały temat czytaj także wtedy, gdy trafienia leżą w nim tylko w połowie: lista tematu łapie to, czego słowa pytania nie zawierają.
   Pytania ogólne i łączące zaczynaj od „normalnie” („szybko” widzi na nich mniej niż połowę potrzebnych tez); `--ciekawostki` także
   przy `temat`. „Podobne do trafień” (≈WI-n) to podpowiedź o sąsiednim zagadnieniu: przeczytaj tezę przed użyciem.
