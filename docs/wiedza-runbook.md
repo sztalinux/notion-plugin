@@ -241,7 +241,7 @@ zrzut ekranu, uznaj za ujawniony i wymień. Nowy token ma najmniejsze możliwe u
 
 - **Skrzynka zalega** (pozycje bez śladu w „Przetworzone”): uruchom przebieg godzinowy ręcznie (`przeglad.py szybki`) albo w rozmowie „przerób skrzynkę”; niejasne wpisy czekają we „Wpisach” z okienkiem ❓.
 - **Nocna kolejka nie rusza po przerwie:** `python3 kolejka_zdrowie.py` (kod 0 = sprawna; **uwaga:** naprawia dane kolejki i może przywracać pliki z kopii – uruchamiaj, gdy kolejka nie pracuje:
-  `pgrep -fl "kolejka_run|kanal_do_notion|kurs_do_notion"`). Kolejka sama nie sprawdza logowania MCP notion ani sieci przed startem – przed nocą wykonaj `claude mcp get notion`.
+  `pgrep -fl "kolejka_run|kanal_do_notion|kurs_do_notion"`). Kolejka przed startem sprawdza logowanie MCP notion (bez niego nie zaczyna, pozycje zostają w kolejce), sieci – nie; przed nocą wykonaj `claude mcp get notion`.
 - **Prywatność:** zablokowany commit przez hook (`pre-commit`, `commit-msg`, `pre-push`) znaczy, że w diffie jest coś z listy zakazanych; usuń dane z pliku, nie omijaj hooka (`--no-verify` zabronione).
   Dane, które trafiły na GitHuba, nie wracają – zatrzymaj się i poinformuj inwestora.
 
