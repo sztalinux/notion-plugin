@@ -194,13 +194,19 @@ def bez_ogonkow(s: str) -> str:
 
 
 def jako_tekst(dane: bytes):
-    """Treść pliku do sprawdzenia bez względu na rozszerzenie (.csv, .html, .sh, .bak-* też); binarny → None."""
+    """Treść pliku do sprawdzenia bez względu na rozszerzenie (.csv, .html, .sh, .bak-* też); binarny → None.
+    Także „Tekst Unicode” z Excela/Notatnika (UTF-16 z BOM) i polski Windows (cp1250)."""
+    if dane[:2] in (b"\xff\xfe", b"\xfe\xff"):
+        try:
+            return dane.decode("utf-16")
+        except UnicodeDecodeError:
+            return None
     if b"\0" in dane:
         return None
     try:
         return dane.decode("utf-8")
     except UnicodeDecodeError:
-        return None
+        return dane.decode("cp1250", errors="replace")
 
 
 def sprawdz_tekst(etykieta: str, tekst: str, zakazane: list) -> list:
