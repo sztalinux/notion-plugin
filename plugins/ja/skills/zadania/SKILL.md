@@ -74,7 +74,8 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 2. Jedno trafienie → zmień status; w treści strony dopisz linię „<data>: <co się stało> (z Dziennika)”. Zadanie budowy
    (Obszar Dom/puste) z powiązanym krokiem Harmonogramu → status kroku zostaw bez zmian – zmienia go odbiór
    (`etap`, krok 7) albo relacja z końca kroku (`dziennik` A.2); w śladzie wzmianka kroku.
-   Zadanie z pozycją w 🛒 Zakupach (relacja Zadanie) – w tej samej pracy pozycja: DONE → Kupione + Kupione dnia,
+   Zadanie z pozycją w 🛒 Zakupach (relacja Zadanie – jest tylko po stronie Zakupów, w zadaniu jej nie widać: przy
+   Kategorii Zakup pozycję znajdź wyszukiwarką z parametrem bazy Zakupów po rzeczy z nazwy „Kupić X”) – w tej samej pracy pozycja: DONE → Kupione + Kupione dnia,
    ARCHIVED → Odpuszczone (sekcja „Zakupy”, pkt 4, w drugą stronę); w śladzie obie wzmianki. Wyjątek: zadanie „Zamówić
    suple” – Buy zostaje (`przeglad-dnia`, B.6).
 3. Brak trafienia także wśród świeżo zamkniętych → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4): „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
