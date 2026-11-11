@@ -53,8 +53,9 @@ a historia rozmów nie jest miejscem na sekrety.
 ## Reset historii
 
 Każda publikacja dokłada commit z plikiem SQLite, więc historia rośnie. Gdy `stan` pokazuje ostrzeżenie o 500 MB
-(`stan --json`: pole `historia_mb`), uruchom `python3 tools/wiedza.py publikuj --reset`. Jeden commit bez rodzica z czterema
-plikami zastępuje całą historię gałęzi domyślnej (wymuszenie). Starych wersji pliku nie odzyskasz – i o to chodzi.
+(`stan --json`: pole `historia_mb`), uruchom `python3 tools/wiedza.py publikuj --reset`. Jeden commit bez rodzica (bieżące drzewo
+z podmienionymi czterema plikami – workflow trybu głębokiego, `narzedzia/`, `pytania/`, `odpowiedzi/` i migawka zostają)
+zastępuje całą historię gałęzi domyślnej (wymuszenie). Starych wersji pliku nie odzyskasz – i o to chodzi.
 Na pustym repo (bez żadnego commita) `--reset` kończy się błędem HTTP 409 z Git Data API – pierwszą publikację
 zrób zwykłym `publikuj`.
 

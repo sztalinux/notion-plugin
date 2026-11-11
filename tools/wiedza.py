@@ -1184,17 +1184,19 @@ def wyslij_plik(repo: str, naglowki: dict, nazwa: str, tresc: str, sha_lokalny: 
 
 
 def resetuj_historie(repo: str, naglowki: dict, zakodowane: dict, wiadomosc: str, galaz: str):
-    """Historia repo od nowa (publikuj --reset): blob każdego z czterech plików, drzewo z dokładnie nimi (bez
-    base_tree – drzewo z samym indeksem usunęłoby kod potrzebny czatowi), commit bez rodzica, wymuszone
-    przestawienie gałęzi domyślnej. Błąd w środku niczego nie zmienia – gałąź przestawia dopiero ostatnie żądanie.
-    GitHub odzyskuje miejsce z opóźnieniem."""
+    """Historia repo od nowa (publikuj --reset): blob każdego z czterech plików, drzewo = bieżące drzewo gałęzi
+    (base_tree) z podmienionymi czterema plikami – pozostałe pliki repo (tryb głęboki: workflow, narzedzia/,
+    pytania/, odpowiedzi/; migawka) zostają; commit bez rodzica, wymuszone przestawienie gałęzi domyślnej. Błąd
+    w środku niczego nie zmienia – gałąź przestawia dopiero ostatnie żądanie. GitHub odzyskuje miejsce z opóźnieniem."""
     git = f"{GITHUB_API}/repos/{repo}/git"
+    glowa = zadanie_http("GET", f"{git}/ref/heads/{galaz}", naglowki)["object"]["sha"]
+    baza = zadanie_http("GET", f"{git}/commits/{glowa}", naglowki)["tree"]["sha"]
     wpisy = []
     for nazwa, tresc in zakodowane.items():
         blob = zadanie_http("POST", f"{git}/blobs", naglowki, {"content": tresc, "encoding": "base64"},
                             timeout=limit_wysylki(len(tresc)))
         wpisy.append({"path": nazwa, "mode": "100644", "type": "blob", "sha": blob["sha"]})
-    drzewo = zadanie_http("POST", f"{git}/trees", naglowki, {"tree": wpisy})["sha"]
+    drzewo = zadanie_http("POST", f"{git}/trees", naglowki, {"base_tree": baza, "tree": wpisy})["sha"]
     commit = zadanie_http("POST", f"{git}/commits", naglowki,
                           {"message": wiadomosc + " (reset historii)", "tree": drzewo, "parents": []})["sha"]
     zadanie_http("PATCH", f"{git}/refs/heads/{galaz}", naglowki, {"sha": commit, "force": True})
