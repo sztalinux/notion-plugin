@@ -5,7 +5,7 @@ w SQLite FTS5 – tylko do odczytu, Notion zostaje jedynym źródłem prawdy i j
 Plik indeksu: `.dom/wiedza/wiedza.sqlite` w folderze-centrum (hub) – domyślnie dwa poziomy nad repozytorium,
 albo zmienna DOM_HUB; w czacie podaje się --db <katalog>/wiedza.sqlite.
 
-    python3 tools/wiedza.py sync [--pelny] [--publikuj]   # pobierz zmiany z Notion (hook na starcie: --publikuj --cicho)
+    python3 tools/wiedza.py sync [--pelny] [--publikuj]   # pobierz zmiany z Notion (lista startowa „Indeks wiedzy”: --publikuj --cicho)
     python3 tools/wiedza.py szukaj "ZAPYTANIE" ["ZAPYTANIE 2" …] [--etap …] [--istotnosc …] [--status …] [--rodzaj …]
                                                [--temat …] [--ciekawostki] [--krotko] [--limit 12] [--sens]
     python3 tools/wiedza.py temat "NAZWA" [--lista] [--krotko] [--ciekawostki]   # stan wiedzy, Kluczowe, otwarte SP
@@ -38,7 +38,7 @@ Zasady:
   wartości nigdy nie są wypisywane ani zapisywane.
 - Dane leżą w `.dom/wiedza/` w hubie (katalog 700, pliki 600), nigdy w repozytorium; bez katalogu `.dom` sync
   kończy się komunikatem i niczego nie tworzy. Uszkodzony indeks domyślny sync odkłada na bok i buduje od nowa.
-- sync --cicho (hook na starcie, nocne skrypty) pisze tylko przy zmianach albo błędach, mieści się w limicie
+- sync --cicho (lista startowa sesji, nocne skrypty) pisze tylko przy zmianach albo błędach, mieści się w limicie
   czasu startu (pobór i publikacja razem) i kończy się kodem 0.
 - publikuj wysyła wyłącznie do repo prywatnego (sprawdza to przed wysyłką).
 - Komunikaty zawierają tylko numery WI/ZRD/SP, ID stron, nazwy właściwości, liczby i statusy HTTP – nigdy
