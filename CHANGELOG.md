@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.4] – 2026-11-11
+
+Nocna samonaprawa, obszar 06-dokumentacja (opisy dla człowieka wobec stanu faktycznego):
+- `README.md`: plik sekretów – poza czterema zmiennymi indeksu także `ARKUSZ_URL` i `ARKUSZ_SEKRET` (`wydatki.py`), odesłanie do pełnej listy kluczy w runbooku.
+- `docs/wiedza-runbook.md` 1.3: lista kluczy pliku sekretów z `ARKUSZ_URL` i `ARKUSZ_SEKRET`.
+- `docs/zdjecia-i-kopia.md` 4: link WZ w 🧱 Zakupach budowy w polu „Dokumenty” (url), „Dokumenty dostawy” zaznaczone.
+- `README.md` i `wiedza/references/karty.md`: 17 kart pytań (było „ok. 15”).
+- `README.md` „Na co dzień”: szybki przebieg co godzinę 8–22 (launchd), nie „co 1–2 h”.
+- `docs/wydatki-arkusz.md` 8: plik zmian dla `migruj` to obiekt `{"opis", "operacje"}`, nie goła lista.
+- `docs/wiedza-runbook.md`: log przebiegu bez linii „start” (5.1); `.dom/sens.json` tworzy się przy zmianie modelu (5.5).
+- `README.md`, tabela konektorów: brak logowania MCP po zalogowaniu daje tylko ślad „ustąpiło” w „Przetworzone”, bez bloku 🔔.
+
 ## dom-budowa [3.12.3] – 2026-11-11
 
 Nocna samonaprawa, obszar 05-prywatnosc:
