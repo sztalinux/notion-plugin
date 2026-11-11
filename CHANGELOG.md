@@ -4,6 +4,12 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.2] – 2026-11-11 (POM-16)
+
+- `budowa` („Wieczorem”, krok 2) i `zakupy`: przypomnienie o zakupie budowy z wyprzedzeniem wg Rodzaju – „Zamówić do” = „kupić
+  najpóźniej”, przegląd dnia budowy przypomina Materiał 7 dni, Drobnicę i resztę 2 dni przed terminem (tylko pozycje przed
+  zamówieniem; jedna zbiorcza linia dziennie, bez pushu na telefon – decyzja (b) inwestora).
+
 ## ja [1.12.3] – 2026-11-11
 
 Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:
