@@ -238,7 +238,7 @@ def sprawdz_osobe(etykieta: str, imie: str, email: str, zakazane: list) -> list:
     if not any(rx.fullmatch(email) for rx in DOZWOLONE):
         bledy.append(f"{etykieta}: e-mail „{email}” trafi do publicznej historii – ustaw "
                      "`git config user.email <id>+<login>@users.noreply.github.com`")
-    if any(w in imie.lower() for w in zakazane):
+    if any(w in unicodedata.normalize("NFC", imie).lower() for w in zakazane):
         bledy.append(f"{etykieta}: imię/nazwisko „{imie}” jest na liście zakazanych – ustaw `git config user.name <login>`")
     return bledy
 
