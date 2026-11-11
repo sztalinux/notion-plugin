@@ -60,7 +60,8 @@ Pobierz w jak najmniejszej liczbie zapytań:
     - indeks wiedzy (`wiedza/references/indeks.md`): `python3 tools/wiedza.py stan --json` i `python3 tools/wiedza.py duplikaty --od <data sprzed 7 dni> --json`
       → lista kandydatów na duplikaty do DECYZJI inwestora (nie scalaj bez zgody); `zbudowano` starsze niż 7 dni albo `ostatni_pelny`
       starszy niż 14 dni → zaproponuj ręczny `sync --pelny`; `liczniki.informacje` porównaj z liczbą Informacji w Notion, gdy jest znana
-      (duża rozbieżność → `sync --pelny`); `kopia_aktualna` = false → zaproponuj `publikuj --teraz`. Na claude.ai nie ma `tools/`:
+      (duża rozbieżność → `sync --pelny`); `kopia_aktualna` = false i `opublikowano_kiedy` starsze niż 26 h → zaproponuj `publikuj --teraz`
+      (świeższą różnicę wyśle sam automat po wieczornym przebiegu). Na claude.ai nie ma `tools/`:
       użyj kanału czatu z `indeks.md` (daty kopii tylko informacyjnie); bez dostępu napisz „indeks niedostępny” i czytaj Notion.
     - jakość wyszukiwania: w Claude Code `python3 tools/wiedza_jakosc.py raport` → alarmy i zapytania bez wyników do decyzji
       inwestora (`indeks-jakosc.md`); na claude.ai napisz, że raport jakości jest dostępny tylko w Claude Code.
