@@ -4,6 +4,25 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.2] – 2026-11-11
+
+Nocna samonaprawa, obszar 02-spojnosc (spójność procedur, Notion i narzędzi):
+- `koszty`: zapasowe źródło liczb bez kopii JSON – eksport od inwestora (stary kosztorys `.xlsx` już nie istnieje).
+- Zaplanowane zadania claude.ai usunięte z opisów kanałów (`wiedza/references/indeks.md`, `indeks-jakosc.md`,
+  `pytanie-do-bazy.md`, `budowa/references/notion-mapa.md`, `docs/zdjecia-i-kopia.md`) – przeglądy tylko przez launchd.
+- `budowa/references/notion-mapa.md`: widok Rejestru sprzeczności „⏳ Czeka na decyzję” – nazwa jak w Notion.
+- `dokumenty` D: numery sekcji `docs/zdjecia-i-kopia.md` (tryby bez aplikacji – 5, przypadki brzegowe – 11).
+- `docs/wydatki-arkusz.md`: Rodzaj „Zwrot” na schemacie przepływu (zakładka Wydatki).
+- Opisy schematów wg Notion: relacja Rejestru „Karta (Notatnik)” (`notion-wiedza.md`); nowsze pola Notatnika i TASKS
+  w `notatka/references/notion-schematy.md`.
+- `docs/zdjecia-i-kopia.md`: link WZ w 🧱 Zakupach budowy do pola „Dokumenty” (url); „Dokumenty dostawy” to checkbox.
+
+## ja [1.12.4] – 2026-11-11
+
+Nocna samonaprawa, obszar 02-spojnosc:
+- `rozwoj-harnessu` B.6: nowy skill commitowany z dowiązaniami `.claude/skills/` i `.agents/skills/`.
+- `suple`: dawki to liczby, formułami są tylko ceny (zakaz zmian bez zmian).
+
 ## ja [1.12.3] – 2026-11-11
 
 Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:
