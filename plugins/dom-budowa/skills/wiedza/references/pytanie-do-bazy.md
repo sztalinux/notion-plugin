@@ -37,9 +37,9 @@ brakujące pliki, a `/tmp` bywa pusty); strony dostępu nie czytaj drugi raz. Cl
    (pkt 9) – przepisz je do zasięgu; kilka kart o różnym pokryciu: „kod: …; kod2: …”. `tez 0` / „karta pusta – użyj szukaj / temat / etap” = karta
    niezbudowana (z `--pytanie` pokaże tylko dopełnienie): traktuj jak brak karty, wpisz „karta KOD pusta” do zasięgu, idź drogą zapasową (pkt 3).
 5. **Sekcje karty:** `## Kluczowe (n)` – wszystkie Kluczowe karty, na początku: czytaj je zawsze, bo z długiego wyniku czat czyta
-   w całości głównie początek; `## <temat> – Ważne (n)` wg tematów; `## Dopełnienie z szukania (n)` – na końcu karty, do 20 trafień szukania
+   w całości głównie początek; `## <temat> – Ważne (n)` wg tematów; `## Dopełnienie z szukania (n)` – pod koniec karty, po Ciekawostkach, a przed Otwartymi sprzecznościami, do 20 trafień szukania
    dla A/B/C spoza karty: traktuj je jak tezy karty, bo to, czego wybór z góry nie objął („## Dopełnienie z szukania: brak – …” = szukanie nic
-   nie dodaje); `## Otwarte sprzeczności (n)` – pkt 8. `## Ciekawostki (n)` na końcu – karta pokazuje je domyślnie (są jej częścią; wzorzec liczy je jako trafne), `--bez-ciekawostek`
+   nie dodaje); `## Otwarte sprzeczności (n)` – pkt 8. `## Ciekawostki (n)` po tezach Ważnych – karta pokazuje je domyślnie (są jej częścią; wzorzec liczy je jako trafne), `--bez-ciekawostek`
    je ukrywa. Nieznany kod → „✗ karta „KOD”: nie ma takiej karty – podobne: …” (kod wyjścia 1).
 6. **Notatnik** wg pkt 5, obok karty: karta niesie wiedzę z bazy, a „U nas ustalone” i „Czeka na decyzję” są tylko w Notatniku.
 7. **Tryb głęboki** (`tryb-gleboki.md`): pytanie złożone bez pasującej karty pytań, m > 15 albo „tryb głęboki” / „przeczytaj całą bazę” od inwestora –
