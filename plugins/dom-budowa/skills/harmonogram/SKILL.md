@@ -75,7 +75,7 @@ Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kro
 ## E. „Co mnie czeka” (domyślnie 14 dni)
 
 Jedno zestawienie, chronologicznie: kroki harmonogramu (start/koniec), moje zadania, czekam na (z terminem i po terminie),
-zamówienia z „Zamówić do” i dostawy, bramki. Na górze: po terminie i dzisiaj/jutro. Na dole: licznik spraw dalej niż 14 dni.
+zamówienia z „Zamówić do” (bez Dostarczone i Nieaktualne – jak przegląd dnia budowy) i dostawy, bramki. Na górze: po terminie i dzisiaj/jutro. Na dole: licznik spraw dalej niż 14 dni.
 
 ## Zasady
 
