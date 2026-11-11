@@ -79,6 +79,11 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    „Rozwiązany” albo „Zostaje” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5).
 2. **Pomysły na rozwój** – `rozwoj-harnessu`, sekcja C: Status Nowy lub pusty → analiza (max 3, najstarsze pierwsze);
    „Pytania do mnie” z odpowiedzią → analizuj dalej. Niczego nie wdrażaj.
+
+   **Kontrola spójności pomysłów (grupa P)** – na tych samych wierszach bazy, bez dodatkowego odczytu: „Zrobione” bez „Zrobiono
+   w wersji”, „Do zrobienia” / „Przeanalizowany” przy wdrożeniu zapisanym w polu albo w nagłówku `CHANGELOG.md`, „gałąź …”
+   już scalona. Pole wersji uzupełniasz tylko z nagłówka CHANGELOG z numerem POM; **Status zmienia dopiero ☑ inwestora**
+   (pytanie w „❓”, klucz `KS-P…`). Reguły i obsługa odpowiedzi: `references/kontrola-spojnosci-pomysly.md`.
 3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i jutro budowy i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze); najpierw domyka sprzeczności z Decyzją wpisaną
    przez inwestora. Weź z niego link do wpisu, 1 linię skrótu i liczbę domkniętych SP.
@@ -128,7 +133,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **Dziś:** 3–6 punktów – prywatne / dziecko / praca (bez treści emocji – tylko „emocje: n wpisów”)
    **Zadania (wszystkie obszary):** zamknięte n (nazwy) · w toku / czeka n · dodane lub zmienione n · z Dziennika n ·
    uzupełniono n wierszy (pola)   ← brak zmian → „bez zmian”
-   **Czeka na Ciebie:** n pytań pod wpisami (<wzmianka „📝 Wpisy”>) · n komunikatów 🔔 · n w ❓ Dziennika
+   **Czeka na Ciebie:** n pytań pod wpisami (<wzmianka „📝 Wpisy”>) · n komunikatów 🔔 · n w ❓ Dziennika (w tym spójność: n)
    **Jutro – plan:** zadania z terminem wg priorytetu, po terminie na górze, „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Research:** n gotowych, m czeka na Ciebie – wzmianki stron RES-n (brak researchu → pomiń linię)
    **🏗 Budowa:** <1 linia skrótu> → <wzmianka wpisu z przeglądu budowy z tego dnia>   (brak dnia budowy → „bez zmian”)
@@ -141,7 +146,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    edycję (`wpisy`, krok 7) zrób na końcu przebiegu, po kroku 8, gdy znasz już wszystkie liczby (kroki 4–5 doliczają
    ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma):
    ```
-   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · czeka na Ciebie 1 · komunikaty: 1 · pomysły – 1 · research: 1 gotowy · jutro: 2 prywatne, 3 budowa → przeglądy
+   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga, pomysły: 1 wersja uzupełniona · czeka na Ciebie 1 · komunikaty: 1 · pomysły – 1 · research: 1 gotowy · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy
    ```
 10. **Odpowiedź** (log zadania): linia „🤖” + lista zapisów (gdzie, link) i błędów.
