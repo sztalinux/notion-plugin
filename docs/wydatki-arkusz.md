@@ -119,6 +119,7 @@ Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
 | `sprawdz` | sekrety, dostęp do bazy i arkusza, wersja kodu | ręcznie, przy problemach |
 | `kod` | kod Apps Script z sekcji 9 (z `\| pbcopy` – do schowka) | przy aktualizacji kodu |
 | `migruj <zmiany.json>` | zmiana układu na żywym arkuszu (sekcja 8) | agent w Claude Code |
+| `gotowka [--harmonogram PLIK]` | tylko odczyt: ile pieniędzy wyjdzie w którym miesiącu – kopia arkusza + Harmonogram z Notion (`NOTION_TOKEN`); tabela z kwotami na ekran, nie do logu; reguły: `koszty/references/gotowka.md` | agent na „ile gotówki potrzebuję w …”, przegląd tygodnia |
 
 Kody wyjścia: 0 OK, 1 błąd polecenia (linie `✗` pod podsumowaniem, np. timeout arkusza, Notion), 2 brak konfiguracji.
 Błąd pojedynczej strony nie zmienia kodu: `sync` zapisuje go w Notion (Arkusz = „Błąd”), a `sync --proba` tylko go wypisuje

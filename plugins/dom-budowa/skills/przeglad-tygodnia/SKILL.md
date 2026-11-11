@@ -64,6 +64,8 @@ Pobierz w jak najmniejszej liczbie zapytań:
 11. **Zamówienia z wyprzedzeniem**: pozycje na najbliższe dwa etapy, których termin zamówienia (`zakupy/references/wyprzedzenia.md`)
    wypada w ciągu 14 dni; **płatności** – Wydatki „Do zapłaty” i transze, których odbiór wypada w 14 dni (Etapy kol. „Do zapłaty
    ekipie”, Harmonogram), jeśli kopia arkusza jest dostępna w tym miejscu (inaczej napisz, że to wymaga aktualnego pliku);
+   **gotówka** – „Razem” i „z rezerwą” bieżącego i następnego miesiąca z `python3 tools/wydatki.py gotowka` (`koszty/references/gotowka.md`;
+   bez `tools/` – tymi regułami z arkusza albo pomiń linię z dopiskiem „wymaga arkusza”);
    wiersze „💸 Wydatki → arkusz” z Arkusz = „Błąd” – do poprawy.
 
 ## Wynik
@@ -85,6 +87,7 @@ Pobierz w jak najmniejszej liczbie zapytań:
 **Zdjęcia tygodnia:** <dzień> – <NN Krok> (<n>, link) … (z pola „Zdjęcia” Dziennika budowy) · w `_nowe` starsze niż 3 dni: n
   · kroki zakryte bez kompletu ujęć: … · kopia dokumentów: <data potwierdzonej> / paczka do wgrania (`docs/zdjecia-i-kopia.md`)
 **Zamówić / zapłacić do 14 dni:** <pozycja – do kiedy – skąd>
+**Gotówka:** <miesiąc> N (z rezerwą M) · <następny miesiąc> N (z rezerwą M) · bez daty N – brutto, wg kopii arkusza z <data>
 **Do ponownej weryfikacji:** WI-x <cena/przepis z roku …>
 **Dziennik – budowa:** m wpisów o budowie czeka na Twoją odpowiedź: <wpis> – <pytanie>
 **Sugestia na ten tydzień:** 1–3 konkretne kroki.

@@ -35,7 +35,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     tools/dokumenty.py                ← indeks folderu budowy i paczka dla claude.ai
     tools/zdjecia.py, tools/kopia.py  ← rozkładanie zdjęć i dokumentów z telefonu, kopia dokumentów Mac → Dysk (docs/zdjecia-i-kopia.md; testy test_*.py)
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
-    tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google (docs/wydatki-arkusz.md)
+    tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google, gotówka po miesiącach (docs/wydatki-arkusz.md)
     docs/                             ← opisy systemów dla człowieka: wiedza (mapa, runbook, rejestr decyzji), wydatki → arkusz
 ```
 
@@ -97,7 +97,7 @@ z ⚠ i inwestor o tym wie.
 |---|---|---|
 | `budowa` | każda rozmowa o budowie | kontekst, zasady, mapa procedur, luźne wpisy o budowie, część budowlana przeglądu dnia |
 | `oferta` | oferta / wycena / rozmowa z ekipą | rozbicie, zakres 01–13, zgodność z projektem, porównanie, pytania; „sam czy ekipa”; zakres do umowy |
-| `koszty` | wydatek, faktura, cena dostawcy, „planuję wydać…”, „ile wydaliśmy” | kolejka „💸 Wydatki → arkusz” → arkusz Google (wydatki, Cennik, plan pozycji); plan / umówione / wydane; błędy → komunikat 🔔 we Wpisach; transze |
+| `koszty` | wydatek, faktura, cena dostawcy, „planuję wydać…”, „ile wydaliśmy” | kolejka „💸 Wydatki → arkusz” → arkusz Google (wydatki, Cennik, plan pozycji); plan / umówione / wydane; błędy → komunikat 🔔 we Wpisach; transze; gotówka po miesiącach („ile gotówki potrzebuję w …”) |
 | `notatka` | „zapisz”, „ustaliliśmy”, „decyzja” | Notatnik budowy, TASKS (Obszar Dom), „Do zamknięcia” |
 | `analiza-techniczna` | projekt, rysunek, umowa, pytanie techniczne, „jak to zrobić samemu” | [projekt]/[szacunek]/[opinia], pytania do projektanta, instrukcja pracy własnej |
 | `wiedza` | transkrypcja, artykuł, „dzwoniłem do…”, „SP-n: …”, „co wiemy o…” | Baza wiedzy, sprzeczności (ADR), odczyt stanu wiedzy; szukanie i duplikaty przez indeks `tools/wiedza.py` |

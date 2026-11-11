@@ -1,6 +1,6 @@
 ---
 name: koszty
-description: Kosztorys, wydatki i wyceny materiałów – arkusz Google „Kosztorys budowy” (źródło prawdy dla liczb, prowadzi inwestor) i kolejka w Notion „💸 Wydatki → arkusz”, z której automat na Macu dopisuje wydatki i wyceny do arkusza. Używaj, gdy użytkownik podaje wydatek, fakturę, paragon, przelew dla ekipy („wydałem…”, „zapłaciłem…”, „kupiłem za…”), cenę materiału od dostawcy („beton po N zł/m³ w X”, „biorę stal z Y”), pyta „ile wydaliśmy”, „ile zostało”, „plan vs wydane”, „ile poszło na materiał / na ekipę”, prosi o analizę kosztorysu albo o zmianę w arkuszu (kolumna, formuła, pozycja).
+description: Kosztorys, wydatki i wyceny materiałów – arkusz Google „Kosztorys budowy” (źródło prawdy dla liczb, prowadzi inwestor) i kolejka w Notion „💸 Wydatki → arkusz”, z której automat na Macu dopisuje wydatki i wyceny do arkusza. Używaj, gdy użytkownik podaje wydatek, fakturę, paragon, przelew dla ekipy („wydałem…”, „zapłaciłem…”, „kupiłem za…”), cenę materiału od dostawcy („beton po N zł/m³ w X”, „biorę stal z Y”), pyta „ile wydaliśmy”, „ile zostało”, „plan vs wydane”, „ile poszło na materiał / na ekipę”, „ile gotówki potrzebuję w grudniu”, „ile pieniędzy na ten / następny miesiąc”, prosi o analizę kosztorysu albo o zmianę w arkuszu (kolumna, formuła, pozycja).
 ---
 
 # Koszty i kosztorys
@@ -139,8 +139,10 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 2. Zaliczka, zatrzymanie, kary – zasady z umowy (`oferta/references/umowa.md`); kwoty zapisuj jako wydatki tej samej transzy.
 3. Kredyt w transzach po etapach – na „co do banku” zestaw: etap, stan wg arkusza (Podsumowanie), dokumenty (faktury,
    zdjęcia, wpisy kierownika), termin kontroli. Wymagania banku są w umowie kredytowej (folder budowy) – nie zgaduj ich.
-4. „Ile potrzebuję w tym miesiącu”: wydatki „Do zapłaty” + transze, których odbiór wypada w miesiącu (Harmonogram) +
-   zamówienia z `zakupy` z terminem w miesiącu; osobno zobowiązania bez daty.
+4. **Gotówka w czasie** („ile gotówki potrzebuję w grudniu”, „ile na ten / następny miesiąc”) – widok miesięczny:
+   „Do zapłaty” wg Daty + transze w miesiącu końca etapu i materiał w miesiącu startu etapu (Harmonogram); osobno „bez daty”
+   i kolumna z rezerwą. W Claude Code `python3 tools/wydatki.py gotowka`; reguły, drogi zapasowe i format odpowiedzi:
+   `references/gotowka.md`.
 
 ## E. Błąd kolejki → komunikat 🔔 we „📝 Wpisach”
 
