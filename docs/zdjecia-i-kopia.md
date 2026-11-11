@@ -113,8 +113,8 @@ Dziennika budowy z ostatnich 30 dni: Data → relacja „Krok harmonogramu” (g
   w komunikacie kopii (inwestor pobiera; Mac dociągnie sam, gdy aplikacja zacznie działać).
 - **Faktura nie tworzy wydatku** (decyzja inwestora 10.11.2026): zdjęcie trafia tylko do `Faktury/`. Wydatek inwestor
   zapisuje jak dotąd albo prosi o to wprost (`koszty`, B).
-- WZ i dokumenty dostawy: link pliku w polu „Dokumenty dostawy” wiersza 🧱 Zakupy budowy (`zakupy`) i w polu „Dokumenty
-  z dnia” wpisu Dziennika budowy.
+- WZ i dokumenty dostawy: link pliku w polu „Dokumenty” (url) wiersza 🧱 Zakupy budowy i zaznaczone „Dokumenty dostawy”
+  (`zakupy`), a w Dzienniku budowy – w polu „Dokumenty z dnia” wpisu.
 
 ## 5. Tryby pracy (droga zapasowa)
 
