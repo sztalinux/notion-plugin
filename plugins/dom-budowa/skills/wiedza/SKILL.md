@@ -117,7 +117,7 @@ podaje ocenę albo uwagę („WI-12 ciekawostka”, „do WI-20: nie zgadzam si�
    (`references/tryb-gleboki.md`). Polecenia i kanały:
    `references/indeks.md`. Notion czytaj po szczegóły, przed decyzją i przed zapisem. Stan indeksu starszy niż 24 h – podaj
    jego datę w odpowiedzi. Indeks niedostępny → dotychczasowa droga: znajdź temat(y) w Tematach (nazwa i „W skrócie”);
-   pobierz ich Informacje (Status ≠ Nieaktualne) i wpisy Rejestru (Status ≠ Zastąpione) – jednym zapytaniem na bazę.
+   pobierz ich Informacje (Status ≠ Nieaktualne) i wpisy Rejestru (Status ≠ Zastąpione i ≠ Nieaktualne) – jednym zapytaniem na bazę.
    Gdy dwa tematy pokrywają ten sam zakres, nie łącz ich wiedzy po cichu – zgłoś to inwestorowi jako sprawę porządkową.
 2. Kolejność w obrębie stanu wiedzy: Kluczowe → Ważne → nieocenione; Ciekawostki tylko jako licznik („+ n ciekawostek –
    pokazać?”), chyba że pytanie dotyczy właśnie ich. Przy informacji z **Moim komentarzem** podaj go obok („Twoja uwaga: …”);
