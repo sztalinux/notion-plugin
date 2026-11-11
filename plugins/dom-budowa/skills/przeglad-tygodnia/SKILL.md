@@ -61,7 +61,8 @@ Pobierz w jak najmniejszej liczbie zapytań:
       → lista kandydatów na duplikaty do DECYZJI inwestora (nie scalaj bez zgody); `zbudowano` starsze niż 7 dni albo `ostatni_pelny`
       starszy niż 14 dni → zaproponuj ręczny `sync --pelny`; `liczniki.informacje` porównaj z liczbą Informacji w Notion, gdy jest znana
       (duża rozbieżność → `sync --pelny`); `kopia_aktualna` = false i `opublikowano_kiedy` starsze niż 26 h → zaproponuj `publikuj --teraz`
-      (świeższą różnicę wyśle sam automat po wieczornym przebiegu). Na claude.ai nie ma `tools/`:
+      (świeższą różnicę wyśle sam automat po wieczornym przebiegu); `historia_mb` ponad 500 (`stan --json` nie drukuje
+      ostrzeżenia) → zaproponuj `publikuj --reset` (`wiedza/references/indeks-awarie.md`, „Reset historii”). Na claude.ai nie ma `tools/`:
       użyj kanału czatu z `indeks.md` (daty kopii tylko informacyjnie); bez dostępu napisz „indeks niedostępny” i czytaj Notion.
     - jakość wyszukiwania: w Claude Code `python3 tools/wiedza_jakosc.py raport` → alarmy i zapytania bez wyników do decyzji
       inwestora (`indeks-jakosc.md`); na claude.ai napisz, że raport jakości jest dostępny tylko w Claude Code.
