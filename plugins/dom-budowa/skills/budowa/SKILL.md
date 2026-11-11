@@ -56,7 +56,7 @@ Inwestor wpisuje wszystko na stronę „📓 Dziennik”; skill `wpisy` (plugin 
 tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `wpisy`). Dla każdego wpisu o budowie:
 
 1. **Klasa:** ustalenie/decyzja, pytanie do kogoś, ryzyko, zadanie z terminem, relacja z dnia na budowie, wiedza ogólna
-   (usłyszał, przeczytał, obejrzał), zakup, wydatek/koszt, oferta, dokument do posortowania, pomysł/do doczytania.
+   (usłyszał, przeczytał, obejrzał), zakup, roboty dodatkowe, wydatek/koszt, oferta, dokument do posortowania, pomysł/do doczytania.
 2. **Jednoznaczny i ze źródłem:** da się zapisać jako samodzielne zdanie (co, czego dotyczy, liczba, kiedy); dla wiedzy
    i ustaleń znane jest źródło (kto powiedział / skąd; własne przemyślenie = „własne”). Nie → wraca do `wpisy` z pytaniem
    pod wpisem (krok 4) i propozycją interpretacji.
@@ -69,7 +69,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    | zadanie z terminem, „do piątku dam znać…” | `harmonogram` (D) → TASKS, Kto = Ja, Obszar = Dom | |
    | ktoś ma coś zrobić / przyjść / dostarczyć w dniu X | `harmonogram` (D) → TASKS WAITING; krok budowy → Harmonogram | |
    | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia) | `zakupy` (0) | 🧱 Zakupy budowy; zadanie w TASKS tylko przy zakupie „na już” |
-   | relacja z budowy, dostawa, usterka, godziny własne | `dziennik` | |
+   | relacja z budowy, dostawa, usterka, godziny własne, roboty dodatkowe („ekipa chce dopłatę za…”) | `dziennik` (dopłata – B) | dopłata przed zapłatą nie idzie do 💸 (to nie wydatek) |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
    | wydatek, faktura do zapłaty / zapłacona, koszt (samo zdjęcie faktury na Dysku – `dokumenty` D) | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
    | oferta, wycena | `oferta` | cena materiału od dostawcy → `koszty` (B2) |
