@@ -109,11 +109,9 @@ def skanuj() -> dict:
             if n.startswith(".") or n.startswith("~$"):
                 continue
             p = k / n
-            try:  # zepsute dowiązanie albo plik bez prawa odczytu – pomijamy, zamiast wywracać cały przebieg
+            try:  # zepsute dowiązanie – pomijamy, zamiast wywracać cały przebieg
                 st = p.stat()
             except OSError:
-                continue
-            if not os.access(p, os.R_OK):
                 continue
             out[nfc(p.relative_to(HUB).as_posix())] = (st.st_size, int(st.st_mtime))
     return out
