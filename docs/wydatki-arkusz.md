@@ -65,7 +65,8 @@ Ilość i Jedn. Brak daty → dzień wpisu albo wiadomości i w Notatkach „dat
 blokuje – zapisz z „do potwierdzenia: …” w Notatkach. Pytaj (❓ pod wpisem albo w rozmowie) tylko o brakującą kwotę albo
 niepewną pozycję. Nie zgaduj netto/brutto ani stawki VAT (zasada 7 `budowa`): VAT 8% usługa z materiałem, 23% sam materiał.
 
-Duplikaty: przed zapisem szukaj w bazie strony z tą samą datą i kwotą; w Claude Code sprawdź też kopię arkusza
+Duplikaty: przed zapisem szukaj w bazie strony z tą samą datą i kwotą – duplikat to ta z tego samego źródła (wpis, wiadomość, nr FV);
+dwie płatności tego dnia na tę samą kwotę to dwa wiersze (`koszty` B.3); w Claude Code sprawdź też kopię arkusza
 (`Koszty/Kosztorys_google.json`, zakładka Wydatki) – starsze wydatki są tylko tam. Ta sama strona wysłana dwa razy nie
 zdubluje wiersza: arkusz rozpoznaje ją po kolumnie Źródło `notion:<id strony>`.
 

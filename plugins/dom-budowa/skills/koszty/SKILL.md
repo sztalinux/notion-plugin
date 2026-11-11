@@ -55,7 +55,9 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
    - jedna faktura na kilka pozycji → kilka wierszy (podziel kwotę wg faktury; bez rozbicia → zapytaj);
    - brak pasującej pozycji albo niepewność → nie zgaduj: pytanie z propozycją (okienko ❓ pod wpisem we „📝 Wpisach” – `wpisy/references/pytania.md`, A;
      w rozmowie – wprost); nowa pozycja to zmiana arkusza (sekcja C).
-3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą → zaktualizuj go zamiast dodawać drugi; w Claude Code sprawdź też
+3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą **z tego samego źródła** (ten sam wpis, wiadomość albo nr FV) →
+   zaktualizuj go zamiast dodawać drugi. Ta sama data i kwota z innego źródła albo dwie płatności nazwane wprost (np. przelew
+   w dwóch częściach) → osobne wiersze, w Notatkach „druga płatność tego dnia – nie duplikat”; niepewne → pytanie. W Claude Code sprawdź też
    kopię arkusza (`Kosztorys_google.json`, zakładka Wydatki) – starsze wydatki są tylko tam.
 4. Zapisz wiersze w „💸 Wydatki → arkusz” jednym wywołaniem: Wydatek (krótko, co kupione), Data, Kwota, Pozycja, Typ,
    Ilość + Jedn. (materiał – obowiązkowo), Płatność, Sposób, Dostawca / nr FV, VAT % (stawka z faktury, gdy znana – arkusz
