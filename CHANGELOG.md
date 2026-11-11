@@ -17,6 +17,15 @@ POM-13 – kontrola spójności: zadanie budowy ↔ krok Harmonogramu (flagi, be
 
 - `przeglad-tygodnia` („Spójność”): pełny przebieg kontroli zadania ↔ krok Harmonogramu; `harmonogram`: odesłanie do kontroli
   spójności i zasada podpinania zadań do kroków relacją.
+## ja [1.12.5] – 2026-11-11 (POM-11)
+
+POM-11 – kontrola spójności: zakup Kupione ↔ zadanie „Kupić X” (i „Kupione dnia”):
+- `przeglad-dnia`: nowy krok 5b (wieczorem) i liczniki „zakupy” / „spójność” w linii „🤖”; reguły Z1–Z4, odczyt i format flag –
+  nowy `references/kontrola-spojnosci-zakupy.md` (grupa Z serii „Kontrola spójności”, klucze `KS-Z…`). Zakup Kupione / Odpuszczone
+  przy otwartym zadaniu i zadanie zamknięte przy zakupie „Do kupienia” → tylko pytanie „❓” (zmiana po ☑ inwestora);
+  sam uzupełnia „Kupione dnia” (data ostatniej edycji) i zamyka research przy kupionej rzeczy.
+- `zadania` (Zakupy, pkt 4): odesłanie do kroku 5b; `ja/references/notion-mapa.md`: nowy widok bazy 🛒 Zakupy
+  „🤖 Spójność – zamknięte zakupy (przegląd dnia)” (utworzony w Notion 11.11).
 
 ## ja [1.12.3] – 2026-11-11
 

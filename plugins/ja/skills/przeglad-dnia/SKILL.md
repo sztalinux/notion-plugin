@@ -71,7 +71,7 @@ Budowa i sprawy osobiste mają **osobne przeglądy**, żeby intensywny dzień na
 budowa → „📆 Przeglądy dzienne – budowa” na stronie DOM (pisze skill `budowa`, sekcja „Wieczorem”); reszta → „📆 Przeglądy
 dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z tego dnia.
 
-**Kolejność wykonania:** kroki 1–2, potem **5** i **5a** (luki w zadaniach, kontrola spójności), dopiero potem 3, 4 i 6–10. Krok 5 idzie przed budową, bo
+**Kolejność wykonania:** kroki 1–2, potem **5**, **5a** i **5b** (luki w zadaniach, kontrola spójności zadań i zakupów), dopiero potem 3, 4 i 6–10. Krok 5 idzie przed budową, bo
 zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiłoby do przeglądu budowy.
 
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
@@ -105,6 +105,9 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **5a. Kontrola spójności** – `references/kontrola-spojnosci.md`: zastosuj odpowiedzi inwestora na dawne flagi `KS-…`, potem
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.
    Tylko pytania w „❓” (max 5), żadnych zmian bez ☑ inwestora; licznik „rozjazdy” idzie do kroku 8 i linii „🤖”.
+   **5b. Kontrola spójności zakupów** – `references/kontrola-spojnosci-zakupy.md`: zakup Kupione / Odpuszczone ↔ zadanie „Kupić X”
+   (flagi „❓” z kluczem `KS-Z…`, max 5, zmiana statusu dopiero po ☑ inwestora) oraz bezpieczne uzupełnienia „Kupione dnia”
+   i researchu Zamknięty. Liczniki „rozjazdy” i „zakupy” idą do kroku 8 i linii „🤖”.
 6. **Jutro – sprawy osobiste** (odczyt; jedyny zapis – zadanie z suplementami, niżej): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
    (When < dziś, niezakończone – widok „📅 Dziś”, ID w mapie), suplementy z Buy = tak (licznik), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)
@@ -145,7 +148,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    edycję (`wpisy`, krok 7) zrób na końcu przebiegu, po kroku 8, gdy znasz już wszystkie liczby (kroki 4–5 doliczają
    ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma):
    ```
-   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga · czeka na Ciebie 1 · komunikaty: 1 · pomysły – 1 · research: 1 gotowy · jutro: 2 prywatne, 3 budowa → przeglądy
+   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · pomysły – 1 · research: 1 gotowy · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy
    ```
 10. **Odpowiedź** (log zadania): linia „🤖” + lista zapisów (gdzie, link) i błędów.
