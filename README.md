@@ -123,8 +123,8 @@ Adresy artefaktów i dane robocze leżą w folderze budowy poza repo.
 `tools/wiedza.py` trzyma lokalną kopię czterech baz Bazy wiedzy z Notion w SQLite z wyszukiwaniem pełnotekstowym (tylko do odczytu –
 zapisy idą wyłącznie do Notion). Polecenia: `sync`, `szukaj`, `temat`, `etap`, `karty`, `karta`, `zrodla`, `duplikaty`, `stan`, `publikuj`. `tools/migawka.py`
 publikuje tą samą drogą migawkę otwartych wpisów Notatnika i zadań dla czatu bez Notion. Dane leżą w `.dom/wiedza/` poza repo
-i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600, poza repo), cztery zmienne: `NOTION_TOKEN` (odczyt Notion; w bazie 💸 Wydatki także zmiana treści – `wydatki.py`),
-`GITHUB_REPO` (prywatne repo kopii dla czatu na telefonie), `GITHUB_TOKEN_SYNC` (zapis kopii na Macu), `GITHUB_TOKEN_SEARCH` (odczyt kopii w czacie).
+i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600, poza repo), cztery zmienne indeksu: `NOTION_TOKEN` (odczyt Notion; w bazie 💸 Wydatki także zmiana treści – `wydatki.py`),
+`GITHUB_REPO` (prywatne repo kopii dla czatu na telefonie), `GITHUB_TOKEN_SYNC` (zapis kopii na Macu), `GITHUB_TOKEN_SEARCH` (odczyt kopii w czacie); w tym samym pliku `wydatki.py` trzyma `ARKUSZ_URL` i `ARKUSZ_SEKRET` (`docs/wydatki-arkusz.md`, 7).
 Trzy kanały użycia i ograniczenia: `plugins/dom-budowa/skills/wiedza/references/indeks.md`.
 Całość systemu wiedzy (części, kto co uruchamia, pomiary, decyzje): `docs/system-wiedzy.md`; instrukcja odtworzenia i naprawy (automaty, konektor Notion, rozjechany indeks, tokeny): `docs/wiedza-runbook.md`; rejestr decyzji – co wybrano, co sprawdzono i odrzucono, z liczbami z pomiarów: `docs/decyzje-system-wiedzy.md`.
 Wydatki z Notion do arkusza Google z kosztorysem (jak działa, konfiguracja krok po kroku, kod Apps Script): `docs/wydatki-arkusz.md`.
