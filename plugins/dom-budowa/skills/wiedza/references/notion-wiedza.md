@@ -80,7 +80,8 @@ Pola: Dylemat (tytuł), Status (Czeka na decyzję, Do sprawdzenia u projektanta,
 Nieaktualne), Rodzaj (Źródło vs źródło, Źródło vs projekt, Źródło vs nasza decyzja, Źródło vs oferta wykonawcy,
 Dylemat bez sprzeczności), Branża (multi-select), Etap (select), Priorytet (Krytyczne, Ważne, Zwykłe), Stanowisko A,
 Stanowisko B, Kontekst naszej budowy, Opcje, Rekomendacja asystenta, Pytanie do inwestora, Decyzja, Uzasadnienie,
-Konsekwencje, Data decyzji (data), Informacje (relacja), Źródła (relacja → Rozmowy i źródła), Tematy (relacja), Zgłoszono (auto).
+Konsekwencje, Data decyzji (data), Informacje (relacja), Źródła (relacja → Rozmowy i źródła), Tematy (relacja), Karta (Notatnik) (relacja → Notatnik budowy; po stronie
+Notatnika „Sprzeczność (Rejestr)”), Zgłoszono (auto).
 Długie pola tekstowe (Stanowisko A/B, Kontekst naszej budowy, Opcje, Rekomendacja asystenta, Uzasadnienie, Konsekwencje,
 Decyzja) to rich_text. Numer (WI-n, ZRD-n, SP-n) niesie właściwość `ID` (unique_id); Tematy jej nie mają.
 W Notion właściwość opisana tu jako „Pytanie do inwestora” ma w rzeczywistej nazwie imię inwestora – przed zapisem

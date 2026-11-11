@@ -7,7 +7,7 @@ description: Suplementy w bazie „Suple” w Notion – zaznaczenie do kupienia
 
 Baza **Suple** (`collection://0771d295-5bc0-46e3-b0cb-def13bccab8d`): Name, Status (TAKING / BREAK / TO START / SUSPENDED),
 **Buy** (checkbox – lista zakupów), Who (kto bierze – opcja inwestora jest podana w bazie Obszary, wiersz „Suple”),
-When, Last break, Type, ceny i dawki (formuły – nie ruszaj).
+When, Last break, Type, ceny (formuły) i dawki (liczby) – nie ruszaj.
 
 ## Procedura
 
