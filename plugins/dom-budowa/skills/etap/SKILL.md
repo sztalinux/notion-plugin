@@ -61,7 +61,8 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 7. **Zdjęcia przed zakryciem:** lista ujęć z miarą (od stałych punktów), które mają powstać zanim krok zakryje
    instalacje, zbrojenie, izolację – to jedyna dokumentacja na lata. Inwestor wgrywa je do `przed zakryciem/` w folderze
    kroku na Dysku (albo folder w `_nowe` ze słowami „z miarą”); ta lista jest wzorcem pola „Ujęcia przed zakryciem”
-   w Dzienniku budowy (`dziennik`, E).
+   w Dzienniku budowy (`dziennik`, E), a punkty z miarą trafiają potem do części „Gdzie co biegnie” Książki domu
+   (`ksiazka-domu`, B).
 8. Po bramce: odhacz punkty na stronie Notion i w „✅ Checkliście budowy” (Zrobione, wynik w Uwagach), zamknij wpisy
    w Notatniku (status + dopisek), zapisz pominięcia jako Decyzje.
 
@@ -81,6 +82,9 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 7. **Harmonogram i gwarancja:** krok w Harmonogramie → Status „Zrobione”; odbiór końcowy umowy → w Umowach i gwarancjach
    Odbiór = data protokołu, Gwarancja do / Rękojmia do (z umowy; rękojmia ustawowo 5 lat dla budynku, jeśli umowa jej
    nie wyłącza – `[opinia]`, sprawdź umowę), Status „Odebrana”.
+8. **Książka domu:** odbiór całego etapu (odebrane albo odebrane warunkowo) → szkic rozdziału etapu i punkty „gdzie co
+   biegnie” wg `ksiazka-domu`, sekcja A – w tym samym przebiegu albo jako propozycja na koniec odpowiedzi, gdy rozmowa
+   dotyczy tylko usterek. Odbiór pojedynczego kroku rozdziału nie tworzy.
 
 ## Wynik w rozmowie
 

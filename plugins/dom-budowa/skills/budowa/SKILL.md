@@ -41,6 +41,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | „przegląd dnia budowy”, „co dziś na budowie i co jutro” | sekcja „Wieczorem” niżej |
 | dostał nowe pliki od projektanta/wykonawcy, pyta o dokument, „co wgrać do claude.ai”, „wgrałem” (paczka, kopia, faktura z telefonu), „aplikacja Dysku nie działa” | `dokumenty` |
 | „zaczynamy etap”, „jutro betonowanie – co sprawdzić”, „ekipa skończyła”, odbiór, usterki | `etap` |
+| „napisz rozdział książki domu”, „zapisz w książce: zawór…”, „gdzie biegnie rura / kabel”, „gdzie nie wiercić”, „kto robił dach i do kiedy gwarancja”, „kiedy przegląd…” | `ksiazka-domu` (rozdział etapu po odbiorze – wywołuje go `etap` C) |
 | relacjonuje dzień na budowie, wysyła zdjęcia, „rozłóż zdjęcia”, podaje swoje godziny, „ekipa chce dopłatę za…” | `dziennik` (zdjęcia na Dysku – E); dokumenty z telefonu, kopia na Dysk – `dokumenty` D |
 | „co kupić na…”, „kupić X na budowę / działkę”, „ile zamówić”, „kiedy zamawiać okna”, oferta hurtowni, „przyjechała dostawa” | `zakupy` |
 | „ekipa wchodzi…”, „przesuwamy…”, „ułóż harmonogram”, „do piątku mam…”, „czekam na…”, „co mnie czeka” | `harmonogram` |
@@ -178,7 +179,6 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
     - Gdy inwestor zmienia etap („zaczynamy SSO”), zaproponuj przestawienie strony DOM jednym zestawem zmian:
       tytuł sekcji „🔴 Do zamknięcia przed <nowy etap>”, w widoku `view://ddbaff9a-2f5b-47a5-bf7b-aa031bf88fc8` nazwa
       i filtr Etap = nowy etap (zostaje „Projekt i formalności”), otwarte sprawy starego etapu przeniesione albo zamknięte.
-
 13. **Notion niedostępny w tym kanale → Skrzynka, nie odmowa.** Bez narzędzi Notion w rozmowie: wiedza z indeksu, Notatnik
     i zadania z migawki (`wiedza/references/indeks.md`, sekcja czatu; `pytanie-do-bazy.md`, pkt 5), a każdy zapis (notatka,
     dziennik, zadanie, wiedza, wydatek) do dokumentu Claude „📥 Skrzynka” słowami, bez pól Notion – plugin `ja`,

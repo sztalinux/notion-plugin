@@ -73,6 +73,7 @@ z ⚠ i inwestor o tym wie.
 | Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
 | Google Sheets / Drive | liczby z żywego arkusza, zmiany układu | kopia `Kosztorys_google.json` (Apps Script z sekretem), eksport od inwestora, `wydatki.py migruj` (`docs/wydatki-arkusz.md`) |
 | Google Drive (zdjęcia, dokumenty z telefonu, kopia) | rozkładanie `Zdjęcia/_nowe`, odczyt dokumentów z Dysku na czacie | skrypt lokalnie (z aplikacją Dysku albo po pobraniu `_nowe` / AirDropie), kopia paczką przez przeglądarkę, „prośba o dokument” jak dotąd; wgrywanie z telefonu działa zawsze (`docs/zdjecia-i-kopia.md`, 5) |
+| Notion – „📘 Książka domu” (procedura `ksiazka-domu`) | rozdziały etapów, „gdzie co biegnie” | szkic rozdziału jako Markdown w folderze budowy (`Książka domu/`), punkty z telefonu przez Skrzynkę; ostatni eksport PDF i zdjęcia na Dysku działają bez Notion i bez asystenta |
 | Artifact / ArtifactData (pulpit budowy, Claude Code) | publikacja pulpitu, odczyt zaznaczeń inwestora (procedura `pulpit`) | ⚠ brak zapasu dla samej strony pulpitu: nie odświeża się, a nowych zaznaczeń nie da się odczytać; nic nie ginie – źródłem prawdy jest Notion (Notatnik, Harmonogram, Checklista), decyzje wpisuje się tam wprost |
 
 ## Procedury
@@ -103,6 +104,7 @@ z ⚠ i inwestor o tym wie.
 | `wiedza` | transkrypcja, artykuł, „dzwoniłem do…”, „SP-n: …”, „co wiemy o…” | Baza wiedzy, sprzeczności (ADR), odczyt stanu wiedzy; szukanie i duplikaty przez indeks `tools/wiedza.py` |
 | `dokumenty` | nowe pliki, „wgrałem”, „gdzie jest…” | folder budowy, indeks, paczka dla claude.ai, przewodnik w Notion |
 | `etap` | „zaczynamy etap”, „jutro betonowanie”, odbiór, usterki | plan etapu, bramki „bez odwrotu”, protokół odbioru |
+| `ksiazka-domu` | odbiór etapu, „zapisz w książce domu…”, „gdzie biegnie…”, „gdzie nie wiercić” | „📘 Książka domu” w Notion: rozdział po każdym odebranym etapie, „gdzie co biegnie” (punkty z miarą, strefy nie wiercić / nie kopać), przeglądy, spis dokumentów; PDF – na razie eksport z Notion |
 | `dziennik` | „dziś na budowie…”, zdjęcia, godziny własne, roboty dodatkowe | Dziennik budowy w Notion, przekazanie kosztów/zadań |
 | `harmonogram` | „ekipa wchodzi…”, „przesuwamy…”, „czekam na…”, „co mnie czeka” | harmonogram w Notion (oś czasu), terminy pochodne (zamówienia, bramki, ludzie), przesunięcia |
 | `pulpit` | „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło” (tylko Claude Code) | obieg pulpitu budowy: zaznaczenia ze strony → Notion (statusy, decyzje), świeże dane z Notion, testy, publikacja pod stałym adresem |
