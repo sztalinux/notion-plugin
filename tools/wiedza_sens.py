@@ -182,7 +182,12 @@ def przelicz_podobne(conn: sqlite3.Connection, cw: sqlite3.Connection, k: dict, 
     wektory = wczytaj_wektory(cw, k["model"], set(teksty_indeksu(conn)))
     gotowe = {wi for (wi,) in cw.execute("SELECT wi FROM wektory WHERE lista = 1 AND model = ?", (k["model"],))
               if wi in wektory}
-    model_listy = dict(conn.execute("SELECT klucz, wartosc FROM meta")).get("podobne_model")
+    poprzednio = dict(conn.execute("SELECT klucz, wartosc FROM meta"))
+    model_listy = poprzednio.get("podobne_model")
+    if termin is not None and int(poprzednio.get("podobne_brakuje") or 0) > 0:
+        # poprzedni przebieg zostawił listy na następny: ten liczy do końca bez terminu – liczone porcjami pod terminem
+        # nie dochodzą, gdy pracy jest więcej niż na jeden przebieg (sąsiedzi z lista = 0 unieważniają policzone)
+        termin = None
     if model_listy != k["model"]:
         # inny model albo brak meta (indeks przebudowany od nowa: tabela podobne pusta, a odciski mają lista = 1):
         # wszystkie listy od nowa i bez terminu (ok. 95 s przy 2300 informacjach) – przerwane terminem nie dochodzą,
