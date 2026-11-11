@@ -108,7 +108,7 @@ z ⚠ i inwestor o tym wie.
 | `pulpit` | „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło” (tylko Claude Code) | obieg pulpitu budowy: zaznaczenia ze strony → Notion (statusy, decyzje), świeże dane z Notion, testy, publikacja pod stałym adresem |
 | `zakupy` | „kupić X na budowę”, „co kupić na…”, „kiedy zamawiać”, oferta hurtowni, dostawa | wszystko na działkę i do budynku w 🧱 Zakupy budowy, lista z kosztorysu, wyprzedzenia, porównanie dostawców |
 | `przygotowanie` | „jutro spotkanie z…”, „o co zapytać”, „kogo wybrać z kilku” | karta przygotowania: pytania, czerwone flagi, macierz decyzji, zapis po spotkaniu |
-| `przeglad-tygodnia` | poniedziałek / „co nowego” | decyzje, nowa wiedza, terminy, budowa, zamówienia, porządki |
+| `przeglad-tygodnia` | niedziela wieczorem – automat na Macu, z przeglądem osobistym / „co nowego” | decyzje, nowa wiedza, terminy, budowa, zamówienia, porządki |
 
 ## Pulpit budowy
 
