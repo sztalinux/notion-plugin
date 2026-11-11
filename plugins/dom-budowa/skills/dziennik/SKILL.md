@@ -26,7 +26,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    | Co w relacji | Dokąd |
    |---|---|
    | dostawa, zakup, zaliczka, gotówka dla ekipy | `koszty`, sekcja B – wiersze w „💸 Wydatki → arkusz” (Zrealizowane / Do zapłaty) |
-   | dostawa albo zakup materiału na budowę | `zakupy`, sekcja C (dostawa) albo 0.3 (kupione) – wiersz w 🧱 Zakupach budowy: Status, Dostawa = data, dokumenty |
+   | dostawa albo zakup materiału na budowę | `zakupy`, sekcja C albo 0.3 – tylko wiersz w 🧱 Zakupach budowy (Status, Dostawa = data, Dokumenty); wydatek raz – wiersz wyżej |
    | ustalenie, pytanie, ryzyko, decyzja | `notatka` – Notatnik budowy z Etapem i Do kogo |
    | usterka do poprawy, rzecz do zrobienia z terminem | `notatka` – TASKS (When), Kto = Ekipa |
    | „ekipa chce dopłatę za…” (roboty dodatkowe) | sekcja B |
