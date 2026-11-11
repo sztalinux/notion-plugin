@@ -77,6 +77,17 @@ POM-3 (poranny brief w dniu robót – wariant „Jutro + pogoda”):
 - `budowa` („Wieczorem”, krok 2) i `zakupy`: przypomnienie o zakupie budowy z wyprzedzeniem wg Rodzaju – „Zamówić do” = „kupić
   najpóźniej”, przegląd dnia budowy przypomina Materiał 7 dni, Drobnicę i resztę 2 dni przed terminem (tylko pozycje przed
   zamówieniem; jedna zbiorcza linia dziennie, bez pushu na telefon – decyzja (b) inwestora).
+## ja [1.13.0] – 2026-11-11 – POM-7
+
+POM-7 „Przegląd dnia z rozkminką i planem na jutro” (gałąź `pom/2026-11-11-POM-7`):
+- `przeglad-dnia`: nowy krok B.2a – rozkminki tylko na wyraźną prośbę z wpisu (max 2 na wieczór, tylko odczyt, wynik
+  w sekcji „🧠 Rozkminka”, zapisy do baz dopiero po „tak” w „❓”); krok 8 – wpis w punktach, pilne na górze.
+- Nowy `przeglad-dnia/references/uklad-wpisu.md`: jeden zapis zwijanego nagłówka (`<toggle heading="h2">`, nigdy
+  `{toggle="true"}` ani `<details>`), sprawdzenie przed zapisem, układ sekcji i szablon wpisu dnia.
+- `wpisy`: prośba o rozkminkę w przebiegu bez inwestora → ślad `→ 🧠 rozkminka wieczorem`; bloki dni i „Szczegóły”
+  zapisywane jako `<toggle>` (także w `references/pytania.md`).
+- `przeglad-tygodnia-osobisty`: ten sam układ wpisu, cotygodniowa naprawa zepsutych nagłówków dni, propozycja archiwum
+  przeglądów dziennych starszych niż 14 dni (za zgodą).
 
 ## ja [1.12.3] – 2026-11-11
 
@@ -89,6 +100,15 @@ Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:
 - `zadania`: „zrobiłem” przy zadaniu zakupu zamyka też pozycję w 🛒 Zakupach; termin względny bez daty wpisu liczony od daty
   przetwarzania – tak samo w `ja`, zasada 4 (zgodnie z `wpisy`).
 - `rozwoj-harnessu/references/dostawcy.md`: Gemini CLI ma oba pluginy, Gem tylko `dom-budowa`.
+
+## dom-budowa [3.12.2] – 2026-11-11 – POM-7
+
+POM-7 (gałąź `pom/2026-11-11-POM-7`):
+- `budowa` „Wieczorem”: wpis przeglądu dnia budowy w punktach wg `przeglad-dnia/references/uklad-wpisu.md` (plugin `ja`),
+  rozkminka tylko przekazana z przeglądu dnia; w tabeli luźnych wpisów – prośba o rozkminkę.
+- `przygotowanie`: sekcja „Bez inwestora” – karta do przeglądu dnia, nowe pytania do Notatnika dopiero po „tak”.
+- `przeglad-tygodnia`: wpis jako `<toggle heading="h2">` w punktach, naprawa nagłówków na stronie przeglądów dziennych
+  budowy, propozycja archiwum wpisów starszych niż 14 dni.
 
 ## dom-budowa [3.12.1] – 2026-11-11
 

@@ -72,6 +72,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    | relacja z budowy, dostawa, usterka, godziny własne, roboty dodatkowe („ekipa chce dopłatę za…”) | `dziennik` (dopłata – B) | dopłata to nie wydatek: do 💸 dopiero uzgodniona kwota jako plan (`koszty` B3), zapłata jako wydatek (`koszty` B) |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
    | wydatek, faktura do zapłaty / zapłacona, koszt (samo zdjęcie faktury na Dysku – `dokumenty` D) | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
+   | prośba o rozkminkę: „przygotuj mi pytania na…”, „przemyśl…”, „porównaj…” | bez inwestora: ślad `→ 🧠 rozkminka wieczorem` (`wpisy`, krok 5); w rozmowie: `przygotowanie` / `analiza-techniczna` / `oferta` | wykonuje ją wieczorem `przeglad-dnia` (B.2a), wynik w przeglądzie dnia budowy |
    | oferta, wycena | `oferta` | cena materiału od dostawcy → `koszty` (B2) |
    | plan kwoty od inwestora („planuję wydać…”, „szacowałem…”) | `koszty` (B3) | Rodzaj Plan; wydatek z tego wpisu – osobna strona |
    | „dostałem plik” | `dokumenty` | gdzie indziej niż Claude Code – przypomnienie, żeby wrzucić do `_Przychodzące/` |
@@ -87,10 +88,10 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
 2. **Jutro** (odczyt): kroki Harmonogramu startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zadania), dostawy
    jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone i Nieaktualne) albo w oknie przypomnienia wg Rodzaju
    (`zakupy`, „Przypomnienie”), TASKS Dom z When = jutro, WAITING z terminem jutro lub po; przy robotach jutro **pogoda** (`etap/references/pogoda.md`).
-3. **Wpis w „📆 Przeglądy dzienne – budowa”** (`3f8f5982-09e7-815e-8b03-eacaa74db190`, strona na DOM) – tylko gdy dziś albo
-   jutro coś jest: zwijany nagłówek „Przegląd dnia budowy – <dzień tygodnia> <data>” na górze strony (najnowszy pierwszy),
-   w środku **Dziś**, **Decyzje i pytania** (SP domknięte dziś, czekające), **Jutro – plan** (po terminie na górze; linia „Pogoda jutro”), opcjonalnie **Rozkminka**
-   (gdy inwestor o nią prosił we wpisie, np. lista pytań na spotkanie). Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
+3. **Wpis w „📆 Przeglądy dzienne – budowa”** (`3f8f5982-09e7-815e-8b03-eacaa74db190`, strona na DOM) – gdy dziś albo jutro coś jest
+   (albo rozkminka): zwijany nagłówek h2 „Przegląd dnia budowy – <dzień tygodnia> <data>” na górze, zapis i układ wg `przeglad-dnia/references/uklad-wpisu.md`
+   (plugin `ja`): ⚠ Na teraz · Jutro – plan (z linią „Pogoda jutro”) · Dziś · Decyzje i pytania (SP domknięte dziś) · 🧠 Rozkminka (tylko z `przeglad-dnia`, B.2a; ręcznie –
+   ślady `→ 🧠 rozkminka wieczorem` o budowie) · linia o nieudanych odczytach. Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
 4. **Zwróć** do przeglądu dnia: link do wpisu, jedną linię skrótu („3 sprawy dziś, SP: 1 domknięte, jutro: geodeta 8:00”)
    i max 1 punkt jutra (ostrzeżenie pogodowe ma pierwszeństwo). Nic nie ma → „bez zmian”, bez wpisu.
 
@@ -105,8 +106,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
 3. **Kwoty:** zawsze netto/brutto jawnie. Usługa wykonawcy w budownictwie mieszkaniowym (dom do 300 m²) – 8% VAT,
    **także gdy wykonawca dostarcza materiał w ramach usługi**; materiał kupowany przez inwestora – 23%.
    Dlatego „ekipa z materiałem” vs „materiał sam” porównuj brutto do brutto. Ceny bez faktury traktuj osobno.
-4. **Trzy warstwy liczb:** PLAN = kosztorys; UMÓWIONE = umowy i oferty wybrane;
-   WYDANE = wydatki „Zrealizowane”. Nie mieszaj ich w jednej kolumnie.
+4. **Trzy warstwy liczb:** PLAN = kosztorys; UMÓWIONE = umowy i oferty wybrane; WYDANE = wydatki „Zrealizowane”. Nie mieszaj ich w jednej kolumnie.
 5. **Arkusz Google „Kosztorys budowy” jest źródłem prawdy dla liczb** (prowadzi inwestor). Wydatki idą przez kolejkę
    „💸 Wydatki → arkusz”; strukturę arkusza asystent zmienia tylko na wyraźną prośbę (procedura `koszty`).
 6. **Notion – zapisy wsadowe, ale bez straty jakości.** Gdy każdy zapis wymaga zgody inwestora

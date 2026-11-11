@@ -70,8 +70,14 @@ Pobierz w jak najmniejszej liczbie zapytań:
 
 ## Wynik
 
+Zapis wg `przeglad-dnia/references/uklad-wpisu.md` (plugin `ja`), sekcje A–B: zwijany nagłówek h2 (`<toggle heading="h2">`,
+nigdy `{toggle="true"}` ani sam `##`), każda etykieta niżej jako pogrubiony akapit z punktami pod spodem (jedna sprawa =
+jeden punkt), nieudane odczyty jedną linią kursywą na końcu.
+
 ```
-## Przegląd budowy – tydzień <RRRR-Www> (<data>)
+<toggle heading="h2">
+Przegląd budowy – tydzień <RRRR-Www> (<data>)
+
 **Do decyzji (n):** SP-x <dylemat> – od <n> dni … (najstarsze/krytyczne pierwsze)
 **Nowa wiedza (n z m źródeł; k kluczowych, c ciekawostek):** <Temat>: 1–2 najważniejsze punkty z WI-x; … (max 8 punktów)
 **Twoje komentarze do wiedzy:** WI-x – <komentarz> → proponuję: …
@@ -91,7 +97,8 @@ Pobierz w jak najmniejszej liczbie zapytań:
 **Dziennik – budowa:** m wpisów o budowie czeka na Twoją odpowiedź: <wpis> – <pytanie>
 **Sugestia na ten tydzień:** 1–3 konkretne kroki.
 **Na później (n):** licznik spraw z dalszych etapów – bez listy.
-**Porządki (n):** propozycje z sekcji „Porządki” – do zatwierdzenia jednym „tak”.
+**Porządki (n):** propozycje z sekcji „Porządki” – do zatwierdzenia jednym „tak” · naprawione nagłówki: n
+</toggle>
 ```
 
 ## Porządki (raz w tygodniu, max 10 pozycji)
@@ -104,7 +111,11 @@ Znajdź i zaproponuj – nie wykonuj bez zgody; po „tak” wykonaj wsadowo (za
 - Informacje „Nowe” starsze niż 30 dni → „Przejrzane” albo „Nieaktualne”;
 - otwarte sprawy zakończonego etapu → przenieść do bieżącego albo zamknąć;
 - rozjazdy z punktu „Spójność” → dopisać relację Wiedza / Informację (`wiedza`, F), uzgodnić statusy, poprawić „W skrócie”.
+- wpisy w „📆 Przeglądy dzienne – budowa” starsze niż 14 dni → przenieść na podstronę archiwum tej strony (tak samo jak
+  w `przeglad-tygodnia-osobisty`, D – tam opis przeniesienia).
 Niczego nie usuwaj – porządek tylko statusami i scalaniem (z dopiskiem, co scalono).
+Bez pytania: na stronie „📆 Przeglądy dzienne – budowa” napraw zepsute nagłówki dni (`uklad-wpisu.md`, A, „Naprawa raz
+w tygodniu”) – to tylko format, treść bez zmian.
 
 Zapis: dopisz przegląd na górze strony Notion „Przeglądy tygodniowe” (pod DOM, `3f4f5982-09e7-8144-af5e-f9521a52ea9d`)
 jako zwijany nagłówek z tytułem tygodnia – **jedno wywołanie**. W rozmowie podaj ten sam tekst. Gdy wywołał cię przegląd

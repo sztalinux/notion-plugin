@@ -14,16 +14,16 @@ jeszcze nie widział):
 
 ```
 📓 Dziennik
-	<details> Jak używać </details>
+	▸ Jak używać (zwijany blok)
 	- nowy wpis inwestora (albo podstrona)              ← NOWE: pierwszy poziom; po przebiegu pusto
-	### ❓ Czeka na Twoją odpowiedź {toggle}  ← tylko pytania spoza wpisów (RES-n, luki w zadaniach); wpisów tu nie trzymaj
-	### Przetworzone {toggle}
+	▸ ### ❓ Czeka na Twoją odpowiedź (zwijany nagłówek)  ← tylko pytania spoza wpisów (RES-n, luki w zadaniach); wpisów tu nie trzymaj
+	▸ ### Przetworzone (zwijany nagłówek)
 		▸ 📅 13.10 wt · 🤖 przetworzono 3 · czeka na Ciebie 1 · jutro 2   ← zwijany blok dnia, najnowszy na górze
 			🤖 13.10 wieczór: dziennik – przetworzono 3 (emocje 1, zadania 2), … (pełna linia)
 			- ~~wpis~~ → Wpisy emocji: <link>
-	### 🧭 Dla asystenta {toggle}  ← baza Obszary; nie ruszaj
+	▸ ### 🧭 Dla asystenta (zwijany nagłówek)  ← baza Obszary; nie ruszaj
 	📝 Wpisy (podstrona) ← inwestor pisze tu wprost w treści albo zakłada wpisy jako osobne strony; bloki i podstrony = nowe wpisy
-		### 🔔 Komunikaty asystenta {toggle}  ← na górze; problemy bez wpisu (automaty, 💸) – references/pytania.md, C; nie są wpisami
+		▸ ### 🔔 Komunikaty asystenta (zwijany nagłówek)  ← na górze; problemy bez wpisu (automaty, 💸) – references/pytania.md, C; nie są wpisami
 		wpis niejasny                                     ← czeka tu, aż inwestor odpowie
 			❓ {okienko} **Co miałeś na myśli – X czy Y?** (propozycja: …)
 				✍️ odpowiedź inwestora
@@ -91,7 +91,12 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
      Pola „Gdzie” i „Jak zapisać” z wiersza to **ustawienia inwestora nadrzędne wobec skilla** (np. inna sekcja, dodatkowe
      pole, inny format) – stosuj je, jeśli są czymś więcej niż odesłaniem do skilla.
    - Procedura = `ogólna` → zapisz według „Gdzie” i „Jak zapisać” z wiersza; najpierw szukaj duplikatu (2–3 słowa).
-6. **Zamknij wpis:** przenieś go do „Przetworzone” (z okienkiem: pytanie i odpowiedź w jednej linii `(❓ … → ✍️ …)`), do **zwijanego bloku dzisiejszego dnia** (`<details>`,
+   - **Prośba o rozkminkę** – wpis wprost prosi o pracę myślową dla inwestora („przygotuj mi…”, „napisz mi…”, „jakie pytania
+     zadać…”, „przemyśl / rozkmiń…”, „porównaj…”), nie o zapis. W rozmowie – wykonaj od razu właściwą procedurę. W przebiegu
+     bez inwestora nie wykonuj jej: jasne części wpisu (zadanie, termin) zapisz normalnie, a ślad daj jako
+     `~~wpis~~ → 🧠 rozkminka wieczorem` (z obszarem: „budowa” albo nazwa obszaru) – robi ją przegląd dnia (`przeglad-dnia`, B.2a).
+     W tym śladzie zostaw pełną treść prośby, bez skrótu z kroku 6 – wieczór czyta ją stąd.
+6. **Zamknij wpis:** przenieś go do „Przetworzone” (z okienkiem: pytanie i odpowiedź w jednej linii `(❓ … → ✍️ …)`), do **zwijanego bloku dzisiejszego dnia** (`<toggle>` – zapis jak w `przeglad-dnia/references/uklad-wpisu.md`, A; nigdy `<details>`,
    tytuł „📅 <dd.mm> <dzień> · <skrót linii 🤖>”; brak – utwórz na górze), jako `~~wpis~~ → <gdzie>: <link>`;
    **wpis rozłożony na więcej niż dwa miejsca** – punkt z przekreślonym skrótem wpisu (do ok. 80 znaków) i pod nim po
    jednym podpunkcie na miejsce, z ikoną i liczbą: `📓 Dziennik budowy: <link>` · `💸 Wydatki (3): <link>, …` ·
