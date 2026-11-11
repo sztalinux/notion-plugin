@@ -1,6 +1,6 @@
 ---
 name: przeglad-dnia
-description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę lub co 2 godziny w ciągu dnia) rozkłada nowe wpisy z „📓 Dziennika” (i strony z widgetu na najwyższym poziomie Private) na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan na jutro – sprawy osobiste w „📆 Przeglądy dzienne” pod Dziennikiem, budowa osobno w „📆 Przeglądy dzienne – budowa” na DOM (z odnośnikiem między nimi) – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów i rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
+description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę w ciągu dnia) rozkłada nowe wpisy z „📓 Dziennika” (i strony z widgetu na najwyższym poziomie Private) na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan na jutro – sprawy osobiste w „📆 Przeglądy dzienne” pod Dziennikiem, budowa osobno w „📆 Przeglądy dzienne – budowa” na DOM (z odnośnikiem między nimi) – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów i rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
 ---
 
 # Przegląd dnia – tryb szybki i wieczorny
@@ -11,8 +11,8 @@ w rozmowie, te same zasady:
 
 | Zadanie | Kiedy | Polecenie | Co robi |
 |---|---|---|---|
-| Dziennik – szybki przebieg | co 1–2 h w ciągu dnia (np. 8–22) | „Dziennik – szybki przebieg (skill przeglad-dnia z pluginu ja, tryb szybki)” | rozkłada nowe wpisy; pusto → koniec bez zapisów |
-| Przegląd dnia | raz wieczorem (np. 21:30) | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + podsumowanie dnia + zmiany w zadaniach + plan na jutro + pomysły |
+| Dziennik – szybki przebieg | co godzinę 8:05–22:05 i 22:30 | „Dziennik – szybki przebieg (skill przeglad-dnia z pluginu ja, tryb szybki)” | rozkłada nowe wpisy; pusto → koniec bez zapisów |
+| Przegląd dnia | raz wieczorem, 22:45 | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + podsumowanie dnia + zmiany w zadaniach + plan na jutro + pomysły |
 
 Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia” / „podsumuj dzień” = tryb wieczorny.
 
@@ -176,7 +176,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 
 Każdy przebieg to osobna sesja – nawet pusty zużywa limit konta na start (instrukcje, opisy skilli, narzędzia Notion) i jeden
 odczyt Dziennika. Dlatego tryb szybki ma wyjście w kroku A.2 bez dalszych odczytów i zapisów, a strona Dziennik ma zostać
-krótka (przegląd tygodnia przenosi „Przetworzone” starsze niż 14 dni do archiwum). Zacznij od co 2 godzin; częściej – gdy limit pozwala.
+krótka (przegląd tygodnia przenosi „Przetworzone” starsze niż 14 dni do archiwum). Godziny ustawia launchd (README automatów); rzadszy szybki = zmiana tam, nie tutaj.
 
 ## Rozszerzanie
 

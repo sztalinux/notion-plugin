@@ -119,7 +119,7 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 3. Zmiana układu lub wyglądu (kolumny, formuły, kolory, listy) – w Claude Code, na żywym arkuszu, według
    `docs/wydatki-arkusz.md`, sekcja 8:
    - **konektor Google Sheets** (szybciej): migawka zakresu przed zmianą (z formułami), zapis, odczyt kontrolny; formuły ze
-     „;” i przecinkiem dziesiętnym (polskie ustawienia); nie nadpisuj kolumn wpisywanych (Wydatki A–H, J–M, O; Kosztorys F,
+     „;” i przecinkiem dziesiętnym (polskie ustawienia); nie nadpisuj kolumn wpisywanych (Wydatki A–H, J–M, O, P; Kosztorys F,
      U; Cennik A–F, H–J, L–N) i nie wstawiaj formuł IMPORT…/IMAGE/HYPERLINK;
    - **bez konektora albo przy jego błędzie** → plik zmian i `wydatki.py migruj` (wolniej, ten sam wynik);
    - potem kontrola: zero błędów formuł, sumy jak przed, „Kontrola powiązań” = 0; cofanie – historia wersji arkusza.
@@ -128,7 +128,7 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 4. Szacunek AI (zakładka „Szacunek AI 10.2026”, pełna wycena z 10.2026): gdy dochodzi nowa pozycja albo etap (np. SSO),
    przypisz pasujące wiersze szacunku w kol. J (etap) i K (pozycja „Lp Nazwa”) – plik zmian z operacją `zakres` tylko na
    tych komórkach J:K; nie zmieniaj kwot szacunku. Wiersze niepasujące zostają bez przypisania (liczą się wg stanu).
-5. Kolumny A–O arkusza Wydatki, kolumny A, B, M arkusza Kosztorys i nazwy tych arkuszy czyta automat – zmiana ich kolejności
+5. Kolumny A–P arkusza Wydatki (P – VAT %, wpisuje `sync`), kolumny A, B, M arkusza Kosztorys i nazwy tych arkuszy czyta automat – zmiana ich kolejności
    albo nazw wymaga zmiany `tools/wydatki.py` i kodu Apps Script w tym samym kroku.
 6. Oddaj plik albo instrukcję + krótką listę zmian (arkusz, zakres, co).
 
