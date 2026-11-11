@@ -144,7 +144,8 @@ def zbierz(hub: Path, etap: str, od: date, do: date, zapas: int = ZAPAS_PROTOKOL
         p = (hub / rel).resolve()
         if hub not in p.parents or not p.is_file():
             uwagi.append(f"--dodaj: „{rel}” – nie ma takiego pliku w folderze budowy (pominięto)")
-        elif any(c.startswith(".") for c in Path(rel).parts) or Path(rel).parts[0] in ("AI",):
+        elif (any(c.startswith(".") for c in p.relative_to(hub).parts)
+              or p.relative_to(hub).parts[0].casefold() == "ai"):  # po resolve: pełna ścieżka, ai/, dowiązanie
             uwagi.append(f"--dodaj: „{rel}” – plik ukryty albo z katalogu roboczego (pominięto)")
         else:
             skladniki["dodatkowe"].append(p)

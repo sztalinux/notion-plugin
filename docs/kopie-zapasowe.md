@@ -97,7 +97,7 @@ python3 tools/kopie.py potwierdz <pozycja> [RRRR-MM-DD]
 - nie zapisuje stanu `kopia.py`;
 - nie robi `git fetch`, a gita czyta bez blokad, więc nie przeszkadza równoległym sesjom;
 - nie montuje dysku Time Machine;
-- z `.dom` nie czyta treści.
+- z `.dom` czyta tylko daty: `kopia/stan.json` i rejestr `kopie-zapasowe.json` (sekretów nie czyta).
 
 Kod wyjścia to 0 także wtedy, gdy są ⚠ i ✗, bo to wynik kontroli. Kod 1 oznacza błąd narzędzia. Testy:
 `python3 tools/test_kopie.py`.

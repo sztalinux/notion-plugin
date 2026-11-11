@@ -5,7 +5,7 @@
     python3 tools/kopie.py potwierdz <pozycja> [RRRR-MM-DD]   # inwestor zrobił kopię ręczną → data do rejestru
 
 `stan` niczego nie zmienia: nie zapisuje stanu `kopia.py`, nie robi `git fetch`, git czyta bez blokad (`--no-optional-locks`),
-Time Machine tylko `tmutil destinationinfo` (bez montowania), `.dom` tylko po dacie modyfikacji – bez czytania treści.
+Time Machine tylko `tmutil destinationinfo` (bez montowania), z `.dom` czyta tylko `kopia/stan.json` i rejestr `kopie-zapasowe.json` (daty) – sekretów nie czyta.
 `potwierdz` zapisuje wyłącznie datę w rejestrze `<hub>/.dom/kopie-zapasowe.json`.
 Pozycja: ✓ aktualna · ⚠ po terminie albo z zaległością (niewypchnięte commity, zmiany od kopii) · ✗ brak kopii · ℹ informacja.
 Kod wyjścia 0 także przy ⚠/✗ (to wynik kontroli, nie błąd); 1 = błąd narzędzia.
