@@ -88,6 +88,18 @@ POM-7 „Przegląd dnia z rozkminką i planem na jutro” (gałąź `pom/2026-11
   zapisywane jako `<toggle>` (także w `references/pytania.md`).
 - `przeglad-tygodnia-osobisty`: ten sam układ wpisu, cotygodniowa naprawa zepsutych nagłówków dni, propozycja archiwum
   przeglądów dziennych starszych niż 14 dni (za zgodą).
+## dom-budowa [3.13.0] – 2026-11-11 (POM-5)
+
+POM-5 „Budżet w czasie – ile gotówki potrzebuję w danym miesiącu” (gałąź `pom/2026-11-11-POM-5`, czeka na scalenie):
+- `tools/wydatki.py gotowka` – tylko odczyt: kopia arkusza (Etapy, Wydatki „Do zapłaty”, rezerwa z Podsumowania)
+  + kroki Harmonogramu z Notion → tabela po miesiącach (do zapłaty, transze ekipy, materiał i inne, razem, z rezerwą,
+  „bez daty”, „po terminie”); zapas bez Notion: `--harmonogram PLIK`; testy `tools/test_gotowka.py` na zmyślonych danych.
+- `koszty`: D.4 jako widok miesięczny z nowym `references/gotowka.md` (reguły, trzy drogi – skrypt, konektor, eksport –
+  i format odpowiedzi); `references/arkusze.md` – proponowany układ zakładki „Płatności” (arkusz bez zmian).
+- `budowa`: „ile gotówki potrzebuję w …” w tabeli kierowania do `koszty`. `przeglad-tygodnia`: linia „Gotówka” (bieżący i następny miesiąc); `harmonogram` B: przesunięcie kroku zmienia miesiąc
+  płatności; `docs/wydatki-arkusz.md` §5 i README – nowe polecenie.
+- Reguły przyjęte nocą bez inwestora (do potwierdzenia): transza w miesiącu końca ostatniego kroku etapu, materiał w miesiącu
+  startu, rezerwa na cały miesiąc.
 
 ## ja [1.12.3] – 2026-11-11
 

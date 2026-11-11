@@ -8,6 +8,8 @@
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
     python3 tools/wydatki.py kod | pbcopy               # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
     python3 tools/wydatki.py migruj <zmiany.json>        # zmiana układu na arkuszu (cofanie: Plik → Historia wersji)
+    python3 tools/wydatki.py gotowka [--harmonogram PLIK] # ile pieniędzy wyjdzie w którym miesiącu (tylko odczyt, kwoty
+                                                          # na ekran – nie do logu; koszty, sekcja D)
 
 Przepływ: przebieg Dziennika (agent) albo inwestor dodaje w Notion wiersz z Arkusz = „Do arkusza”; `sync` wysyła takie
 wiersze do aplikacji Apps Script przypiętej do arkusza (kod i instrukcja: docs/wydatki-arkusz.md), a ta dopisuje je
@@ -491,6 +493,197 @@ def pobierz(k: dict, gdy_starsza_h: float = 0) -> Path:
     return cel
 
 
+# ---------------------------------------------------------------- gotówka w czasie (POM-5, tylko odczyt)
+
+HARMONOGRAM = "d7a479ab-1e23-453f-8f59-55f4097f7d04"   # Notion → Harmonogram (kroki budowy w czasie)
+BEZ_DATY = "bez daty"
+KOD_ETAPU = re.compile(r"^(P?\d{1,2})\s")
+
+
+def kwota(x) -> float:
+    if isinstance(x, (int, float)) and not isinstance(x, bool):
+        return float(x)
+    s = str(x or "").replace(" ", "").replace(" ", "").replace(",", ".")
+    try:
+        return float(s)
+    except ValueError:
+        return 0.0
+
+
+def tabela(arkusze: dict, nazwa: str) -> tuple:
+    """Nagłówki (wiersz 4) i wiersze danych zakładki z kopii arkusza."""
+    dane = arkusze.get(nazwa) or []
+    if len(dane) < PIERWSZY_WIERSZ - 1:
+        raise BladKonfiguracji(f"kopia arkusza bez zakładki {nazwa}")
+    return [str(x).strip() for x in dane[PIERWSZY_WIERSZ - 2]], dane[PIERWSZY_WIERSZ - 1:]
+
+
+def kolumna(nag: list, poczatek: str, od: int = 0) -> int:
+    """Pierwsza kolumna od indeksu `od`, której nagłówek zaczyna się od `poczatek` (po nagłówkach, nie po literach)."""
+    for i in range(od, len(nag)):
+        if nag[i].startswith(poczatek):
+            return i
+    raise BladKonfiguracji(f"brak kolumny „{poczatek}” w nagłówkach kopii arkusza")
+
+
+def pole(w: list, i: int):
+    return w[i] if i < len(w) else ""
+
+
+def miesiac(data: str) -> str:
+    return str(data or "")[:7] if re.match(r"^\d{4}-\d{2}", str(data or "")) else ""
+
+
+def harmonogram_z_notion(k: dict) -> list:
+    """Kroki Harmonogramu: Nr etapu i Termin (od–do). Token NOTION_TOKEN – integracja wydatków może nie widzieć tej bazy."""
+    token = k["sekrety"].get("NOTION_TOKEN") or k.get("token")
+    if not token:
+        raise BladKonfiguracji("brak NOTION_TOKEN w .dom/sekrety.env")
+    url = f"{W.NOTION_API}/v1/data_sources/{HARMONOGRAM}/query"
+    cialo, kroki = {"page_size": 100}, []
+    while True:
+        odp = W.zadanie_http("POST", url, {"Authorization": "Bearer " + token, "Notion-Version": W.NOTION_WERSJA}, cialo)
+        for s in odp.get("results") or []:
+            p = s.get("properties") or {}
+            termin = (p.get("Termin") or {}).get("date") or {}
+            kroki.append({"nr": "".join(t.get("plain_text", "") for t in (p.get("Nr etapu") or {}).get("rich_text") or []).strip(),
+                          "od": termin.get("start") or "", "do": termin.get("end") or termin.get("start") or ""})
+        if not odp.get("has_more") or not odp.get("next_cursor"):
+            return kroki
+        cialo["start_cursor"] = odp["next_cursor"]
+
+
+def licz_gotowke(arkusze: dict, kroki: list, dzis: str) -> dict:
+    """Ile pieniędzy wyjdzie w którym miesiącu. Reguły (przyjęte nocą 2026-11-11, do potwierdzenia przez inwestora):
+    - Wydatki „Do zapłaty” – miesiąc z kolumny Data;
+    - transza ekipy etapu = Etapy „Do zapłaty ekipie” (bez umowy: plan ekipy − wydane) − „Do zapłaty” ekipy tego etapu,
+      w miesiącu końca ostatniego kroku etapu w Harmonogramie (płatność po odbiorze);
+    - materiał i inne etapu = plan − wydane − „Do zapłaty” tego typu, w miesiącu startu pierwszego kroku etapu;
+    - termin już minął, a pieniądze nie wyszły → bieżący miesiąc („po terminie”); etap bez kroków z datą → „bez daty”;
+    - rezerwa – stawka z Podsumowania („Rezerwa…”), doliczona do każdego miesiąca w kolumnie „z rezerwą”."""
+    teraz = dzis[:7]
+    wyniki, po_terminie, gotowka_znana = {}, {}, {}
+
+    def dodaj(mies: str, rodzaj: str, ile: float):
+        if ile <= 0:
+            return
+        if mies and mies < teraz:
+            po_terminie[teraz] = po_terminie.get(teraz, 0) + ile
+            mies = teraz
+        wiersz = wyniki.setdefault(mies or BEZ_DATY, {"do_zaplaty": 0.0, "ekipa": 0.0, "material": 0.0})
+        wiersz[rodzaj] += ile
+
+    nag, wiersze = tabela(arkusze, "Wydatki")
+    k_data, k_status, k_kwota = kolumna(nag, "Data"), kolumna(nag, "Status"), kolumna(nag, "Kwota")
+    k_etap, k_typ, k_sposob = kolumna(nag, "Etap"), kolumna(nag, "Typ"), kolumna(nag, "Sposób")
+    zalegle = {}   # (etap, ekipa|material) → suma „Do zapłaty”, żeby nie liczyć tych pieniędzy drugi raz z planu
+    for w in wiersze:
+        if str(pole(w, k_status)).strip() != "Do zapłaty":
+            continue
+        ile = kwota(pole(w, k_kwota))
+        mies = miesiac(pole(w, k_data))
+        dodaj(mies, "do_zaplaty", ile)
+        if str(pole(w, k_sposob)).strip() == "Gotówka" and ile > 0:
+            m = max(mies, teraz) if mies else BEZ_DATY
+            gotowka_znana[m] = gotowka_znana.get(m, 0) + ile
+        if ile <= 0:   # obiecany zwrot (kwota ujemna) nie jest wpływem w planie i nie zwiększa reszty etapu
+            continue
+        rodzaj = "ekipa" if str(pole(w, k_typ)).strip() == "Robocizna" else "material"
+        klucz = (str(pole(w, k_etap)).strip(), rodzaj)
+        zalegle[klucz] = zalegle.get(klucz, 0) + ile
+
+    terminy = {}
+    for kr in kroki:
+        if kr.get("nr") and kr.get("od"):
+            t = terminy.setdefault(kr["nr"], {"od": kr["od"], "do": kr.get("do") or kr["od"]})
+            t["od"] = min(t["od"], kr["od"])
+            t["do"] = max(t["do"], kr.get("do") or kr["od"])
+
+    nag, wiersze = tabela(arkusze, "Etapy")
+    k_e = kolumna(nag, "Etap")
+    k_umowa = kolumna(nag, "Umowa")
+    k_plan_razem = kolumna(nag, "PLAN razem")
+    k_wyd_razem = kolumna(nag, "WYDANE razem")
+    plan = [kolumna(nag, n) for n in ("Materiał", "Ekipa", "Inne")]
+    wyd = [kolumna(nag, n, k_plan_razem) for n in ("Materiał", "Ekipa", "Inne")]
+    if max(plan) > k_plan_razem or max(wyd) > k_wyd_razem:
+        raise BladKonfiguracji("Etapy: kolumny PLAN / WYDANE w nieoczekiwanej kolejności")
+    k_do_zaplaty = kolumna(nag, "Do zapłaty ekipie")
+    bez_terminu = []
+    for w in wiersze:
+        etap = str(pole(w, k_e)).strip()
+        m = KOD_ETAPU.match(etap)
+        if not m:
+            continue
+        ekipa = (kwota(pole(w, k_do_zaplaty)) if kwota(pole(w, k_umowa)) > 0
+                 else kwota(pole(w, plan[1])) - kwota(pole(w, wyd[1]))) - zalegle.get((etap, "ekipa"), 0)
+        material = (kwota(pole(w, plan[0])) - kwota(pole(w, wyd[0])) + kwota(pole(w, plan[2])) - kwota(pole(w, wyd[2]))
+                    - zalegle.get((etap, "material"), 0))
+        t = terminy.get(m.group(1))
+        if not t and (ekipa > 0 or material > 0):
+            bez_terminu.append(m.group(1))
+        dodaj(miesiac(t["do"]) if t else "", "ekipa", ekipa)
+        dodaj(miesiac(t["od"]) if t else "", "material", material)
+
+    rezerwa = 0.0
+    for w in arkusze.get("Podsumowanie") or []:
+        if str(pole(w, 0)).strip().startswith("Rezerwa"):
+            r = kwota(pole(w, 1))
+            rezerwa = r / 100 if r > 1 else r
+            break
+    for wiersz in wyniki.values():
+        wiersz["razem"] = wiersz["do_zaplaty"] + wiersz["ekipa"] + wiersz["material"]
+        wiersz["z_rezerwa"] = wiersz["razem"] * (1 + rezerwa)
+    kolejnosc = sorted(m for m in wyniki if m != BEZ_DATY) + ([BEZ_DATY] if BEZ_DATY in wyniki else [])
+    return {"miesiace": [dict(wyniki[m], miesiac=m, po_terminie=po_terminie.get(m, 0.0),
+                              gotowka=gotowka_znana.get(m, 0.0)) for m in kolejnosc],
+            "rezerwa": rezerwa, "bez_terminu": bez_terminu, "kroki_z_data": len(terminy)}
+
+
+def gotowka(k: dict, plik_krokow, bledy: list) -> str:
+    """Tylko odczyt: kopia arkusza + Harmonogram. Wypisuje kwoty – na ekran rozmowy, nigdy do logu automatu."""
+    plik = W.HUB / "Koszty" / PLIK_KOPII
+    if not plik.exists():
+        raise BladKonfiguracji(f"brak {PLIK_KOPII} – najpierw `wydatki.py pobierz`")
+    kopia = json.loads(plik.read_text(encoding="utf-8"))
+    if plik_krokow:
+        try:
+            kroki, zrodlo = json.loads(Path(plik_krokow).read_text(encoding="utf-8")), f"plik {Path(plik_krokow).name}"
+        except (OSError, ValueError) as e:
+            bledy.append(f"--harmonogram: nie da się odczytać {Path(plik_krokow).name} ({type(e).__name__}) – wszystko „bez daty”")
+            kroki, zrodlo = [], "niedostępny"
+    else:
+        try:
+            kroki, zrodlo = harmonogram_z_notion(k), "Notion"
+        except (W.BladHttp, W.BladSieci, BladKonfiguracji) as e:
+            bledy.append("Harmonogram niedostępny (wszystko „bez daty”; zapas: --harmonogram PLIK) – "
+                         + W.tekst_bledu(e, k["sekrety"]))
+            kroki, zrodlo = [], "niedostępny"
+    w = licz_gotowke(kopia["arkusze"], kroki, time.strftime("%Y-%m-%d"))
+    wypisz_gotowke(w, kopia.get("pobrano"), f"{zrodlo}, etapów z datą {w['kroki_z_data']}")
+    return f"gotowka: {len(w['miesiace'])} wierszy"
+
+
+def wypisz_gotowke(w: dict, pobrano: str, zrodlo_kroki: str):
+    def zl(x):
+        return f"{x:,.0f}".replace(",", " ")
+    print(f"Gotówka w czasie (brutto, zł) – kopia arkusza z {pobrano or '?'}, Harmonogram: {zrodlo_kroki}, "
+          f"rezerwa {w['rezerwa'] * 100:.0f}%")
+    print(f"{'Miesiąc':<10}{'Do zapłaty':>13}{'Transze ekipy':>15}{'Materiał i inne':>17}{'Razem':>13}{'z rezerwą':>13}")
+    for m in w["miesiace"]:
+        print(f"{m['miesiac']:<10}{zl(m['do_zaplaty']):>13}{zl(m['ekipa']):>15}{zl(m['material']):>17}{zl(m['razem']):>13}"
+              f"{zl(m['z_rezerwa']):>13}")
+        dopiski = []
+        if m["po_terminie"]:
+            dopiski.append(f"w tym po terminie {zl(m['po_terminie'])}")
+        if m["gotowka"]:
+            dopiski.append(f"w tym gotówką (Sposób w „Do zapłaty”) {zl(m['gotowka'])}")
+        if dopiski:
+            print(" " * 10 + " · ".join(dopiski))
+    if w["bez_terminu"]:
+        print("Etapy bez kroków z datą w Harmonogramie (→ „bez daty”): " + ", ".join(w["bez_terminu"]))
+
+
 def sprawdz(k: dict) -> list:
     bledy = []
     for pole, nazwa in (("token", "NOTION_TOKEN"), ("url", "ARKUSZ_URL"), ("sekret", "ARKUSZ_SEKRET")):
@@ -514,12 +707,15 @@ def sprawdz(k: dict) -> list:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz", "kod", "migruj"])
+    ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz", "kod", "migruj",
+                                                "gotowka"])
     ap.add_argument("ids", nargs="*", help="wycofaj: id stron Notion; migruj: plik zmian JSON")
     ap.add_argument("--proba", action="store_true", help="sync: tylko pokaż, co poszłoby do arkusza (bez zapisu)")
     ap.add_argument("--cicho", action="store_true", help="jedna linia wyniku (dla automatów)")
     ap.add_argument("--gdy-starsza", type=float, default=0, metavar="H",
                     help="pobierz: tylko gdy kopia jest starsza niż H godzin")
+    ap.add_argument("--harmonogram", metavar="PLIK",
+                    help="gotowka: kroki z pliku JSON [{\"nr\": \"03\", \"od\": \"RRRR-MM-DD\", \"do\": \"RRRR-MM-DD\"}] zamiast Notion")
     a = ap.parse_args(argv)
     if a.polecenie == "kod":
         m = re.search(r"```javascript\n(.*?)```", DOKUMENTACJA.read_text(encoding="utf-8"), re.S)
@@ -547,6 +743,8 @@ def main(argv=None) -> int:
         elif a.polecenie == "migruj":
             w = migruj(k, Path(a.ids[0]))
             linia = f"migruj: wykonano {w['operacje']} z {w['z']} operacji"
+        elif a.polecenie == "gotowka":
+            linia = gotowka(k, a.harmonogram, bledy)
         elif a.polecenie == "pozycje":
             w = pozycje(k)
             linia = f"pozycje: {w['pozycje']} w arkuszu, nowe opcje w Notion {w['nowe_opcje']}"

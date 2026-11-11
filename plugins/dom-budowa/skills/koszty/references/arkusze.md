@@ -52,3 +52,13 @@ ekipa – zielony, inne – fioletowy, plan – niebieski, wydane – piaskowy, 
 Wydatki: wiersze po dacie, odcień wiersza wg kwoty (do 500 / 500–5 000 / 5 000–50 000 / 50 000+ zł), niebieski = „Do zapłaty”,
 żółty = ⚠ w Kontroli; Status, Etap i Typ jako kolorowe pola. Cennik: wybrana oferta – zielony wiersz, odrzucona – szary tekst.
 „Ekipa” = Typ Robocizna (transze z umowy, roboty dodatkowe); „Inne” = Sprzęt, Usługa, Formalności.
+
+## Proponowane (nie ma w arkuszu – dodaje inwestor albo agent na prośbę, `koszty` C)
+**Płatności** – plan płatności z umów i zamówień, gdy inwestor chce go prowadzić w arkuszu (gotówka w czasie działa bez tej
+zakładki: `references/gotowka.md`; `wydatki.py gotowka` jej nie czyta). Wiersze od 5, nagłówki w wierszu 4:
+A Data planowana · B Etap (lista z Etapy!A) · C Co (transza z umowy / zamówienie / faktura) · D Kwota brutto · E Sposób
+(Gotówka / Przelew) · F Status (Plan / Zapłacone – zapłacone idzie też jako wydatek przez kolejkę) · G Skąd termin (umowa,
+krok Harmonogramu) · H Uwagi. Obok zestawienie miesięczne J:N: J Miesiąc (1. dzień miesiąca, format RRRR-MM) · K Plan
+`=SUMIFS(D:D;A:A;">="&J5;A:A;"<"&EDATE(J5;1);F:F;"Plan")` · L w tym gotówką (to samo z `E:E;"Gotówka"`) · M Do zapłaty
+z Wydatków (`SUMIFS` po kolumnach Kwota, Status = „Do zapłaty” i Data – litery po nagłówkach żywego arkusza) · N z rezerwą
+`=(K5+M5)*(1+<komórka rezerwy w Podsumowaniu>)`. Formuły z „;” (polskie ustawienia), bez formuł tablicowych.

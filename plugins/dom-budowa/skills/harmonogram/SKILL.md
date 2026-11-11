@@ -44,7 +44,8 @@ Dla kroku z datą wylicz i **pokaż jako propozycję** (w odpowiedzi, w przeglą
 - **Ludzie:** kto musi być (`etap/references/formalnosci.md`, „kto musi być obecny”): kierownik przy odbiorze zbrojenia,
   geotechnik przy dnie wykopu → „umówić <kogo> na <data>” z wyprzedzeniem 3–7 dni.
 - **Pogoda:** betonowanie, izolacje, tynki zewnętrzne – przy bramce „sprawdzić prognozę” (progi: `etap/references/pogoda.md`; prognozę na jutro dopisuje wieczorny przegląd budowy).
-- **Płatności:** transza po odbiorze kroku – przypomnienie dla `koszty` (sekcja D), bez kwot w Notion.
+- **Płatności:** transza po odbiorze kroku – przypomnienie dla `koszty` (sekcja D), bez kwot w Notion. Termin kroku
+  przesuwa też miesiąc transzy i materiału w planie gotówki (`koszty`, D.4) – przy przesunięciu na inny miesiąc wspomnij o tym.
 Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kroku – wtedy przesunięcie kroku je pokaże.
 
 ## C. Przesunięcie („płyta przesunięta o tydzień”, „ekipa spóźni się 3 dni”)
