@@ -47,7 +47,8 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    **Kopie zapasowe:** `python3 tools/kopie.py stan --cicho` (tylko odczyt; brak wyjścia = wszystko aktualne; polecenie
    niedostępne → „niesprawdzone”). Pozycje ⚠/✗ → jeden komunikat 🔔 z kluczem `kopie-zapasowe` we „Wpisach”
    (`wpisy/references/pytania.md`, C; kolejny tydzień – aktualizacja bloku, wszystko ✓ → „ustąpiło”), w okienku
-   „Co możesz zrobić”: najpilniejsza pozycja i czynność z `docs/kopie-zapasowe.md`, 4 (repo harnessu).
+   „Co możesz zrobić”: najpilniejsza pozycja i czynność z `docs/kopie-zapasowe.md`, 4 (repo harnessu), a po kopii
+   „powiedz w Claude Code na Macu »zrobiłem …«” – przebieg nie wpisze potwierdzenia (`kopie.py potwierdz` tylko tam).
 4. **Wpis w „📅 Przeglądy tygodniowe”** na górze strony, zwijany nagłówek „Tydzień <RRRR-Www> (<data od–do>)”:
    ```
    **Zrobione:** 3–6 punktów (prywatne / dziecko / praca)

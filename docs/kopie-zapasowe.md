@@ -13,6 +13,8 @@ sekcja 7.
 - **Trzy kopie, dwa nośniki, jedna poza Makiem.** Gdy coś żyje tylko na Macu albo tylko w jednej usłudze, nie ma kopii.
 - **Asystent niczego nie wysyła sam.** Nie instaluje programów, nie zmienia ustawień systemu, nie wysyła folderu `.dom`
   ani sekretów do żadnej chmury. Przygotowuje polecenia i sprawdza stan, a kopię robi inwestor.
+- **Dysk zewnętrzny jest zaszyfrowany** (Finder → prawy klik na dysku → „Zaszyfruj”, albo Narzędzie dyskowe przy
+  formatowaniu, APFS zaszyfrowany). Trafiają na niego `.dom` i pamięć asystenta, a zgubiony dysk nie może ich ujawnić.
 - **`.dom` nie trafia na Dysk Google.** Trzyma karty, indeksy, stan automatów i plik z sekretami, dlatego kopia idzie
   tylko na dysk zewnętrzny. Zaszyfrowane archiwum na Dysku to osobna decyzja (sekcja 7).
 - **Sekrety nie leżą nigdzie w jawnej postaci.** Tokeny i hasła trzymaj w menedżerze haseł. Token, który przeszedł przez
@@ -42,7 +44,7 @@ sekcja 7.
 
 | Klucz | Co | Gdzie kopia | Termin | Skąd kontrola wie |
 |---|---|---|---|---|
-| `dokumenty` | dokumenty budowy | Dysk (`Dom/_Kopie`) | 7 dni, gdy są zmiany | `.dom/kopia/stan.json` + porównanie plików (`kopia.py`) |
+| `dokumenty` | dokumenty budowy | Dysk (`Dom/_Kopie`) | ⚠, gdy są zmiany od kopii, a kopia ma ponad 7 dni | `.dom/kopia/stan.json` + porównanie plików (`kopia.py`) |
 | `repo:<katalog>` | każdy katalog w `AI/` | GitHub | bez zaległości | git: zdalne repo, niewypchnięte commity, niezacommitowane pliki (bez `fetch`) |
 | `kosztorys` | kopia wartości arkusza | Mac → dysk zewnętrzny | 2 dni | data pliku `Koszty/Kosztorys_google.json` |
 | `dysk-zewnetrzny` | warstwa 1 w całości | dysk zewnętrzny | 7 dni | rejestr potwierdzeń |
@@ -64,13 +66,15 @@ wyłącznie `kopie.py potwierdz`.
 - **Co tydzień (dysk zewnętrzny):** skopiuj trzy rzeczy w Finderze albo w Terminalu. Polecenie poniżej tylko dopisuje i
   nadpisuje pliki, niczego na dysku nie usuwa:
   ```
-  rsync -a --exclude '.DS_Store' "<folder budowy>/" "/Volumes/<dysk>/Kopia-Dom/Dom/"
+  mkdir -p "/Volumes/<dysk>/Kopia-Dom/Dom" "/Volumes/<dysk>/Kopia-Dom/pamiec-asystenta" "/Volumes/<dysk>/Kopia-Dom/launchd"
+  rsync -a --exclude '.DS_Store' --exclude 'sekrety.env' "<folder budowy>/" "/Volumes/<dysk>/Kopia-Dom/Dom/"
   rsync -a ~/.claude/projects/<projekt folderu budowy>/memory/ "/Volumes/<dysk>/Kopia-Dom/pamiec-asystenta/"
   rsync -a ~/Library/LaunchAgents/pl.dom.* "/Volumes/<dysk>/Kopia-Dom/launchd/"
   ```
-  Potem powiedz asystentowi „zrobiłem kopię na dysk”. Asystent uruchomi `python3 tools/kopie.py potwierdz dysk-zewnetrzny`.
+  Plik z sekretami jest pominięty, bo sekrety wracają z menedżera haseł. Potem powiedz w Claude Code na Macu
+  „zrobiłem kopię na dysk”. Asystent uruchomi `python3 tools/kopie.py potwierdz dysk-zewnetrzny`.
 - **Co tydzień (Dysk):** „zrób kopię dokumentów” (`dokumenty`, kopia Mac → Dysk).
-- **Co miesiąc:** zrób trzy rzeczy, a potem napisz „zrobiłem eksport Notion / xlsx / zdjęcia”, żeby asystent wpisał
+- **Co miesiąc:** zrób trzy rzeczy, a potem napisz w Claude Code na Macu „zrobiłem eksport Notion / xlsx / zdjęcia”, żeby asystent wpisał
   `potwierdz notion` (`kosztorys-xlsx`, `zdjecia`):
   - eksport Notion: Ustawienia → Eksport → cały obszar, Markdown i CSV. Plik zip trafia na dysk zewnętrzny do
     `Kopia-Dom/Notion/RRRR-MM/`;
@@ -103,7 +107,8 @@ Kod wyjścia to 0 także wtedy, gdy są ⚠ i ✗, bo to wynik kontroli. Kod 1 o
 - pozycje ⚠ i ✗ z terminem trafiają jako jeden komunikat 🔔 `kopie-zapasowe` do „📝 Wpisów” (`wpisy/references/pytania.md`, C).
 
 Jeśli automat tygodniowy nie ma uprawnienia do polecenia, przegląd pisze „Kopie: niesprawdzone”. Uprawnienie dodaje
-inwestor (sekcja 7).
+inwestor (sekcja 7). Przebiegi automatów nie wpisują potwierdzeń: kopię ręczną potwierdza się w Claude Code na Macu,
+nie odpowiedzią pod komunikatem 🔔.
 
 **Bez konektora:** kontrola działa lokalnie, bez Notion i Google. Komunikat 🔔 wymaga Notion. Bez niego wynik widać
 w odpowiedzi przeglądu i w `kopie.py stan`.
@@ -128,7 +133,7 @@ w odpowiedzi przeglądu i w `kopie.py stan`.
 ## 7. Decyzje inwestora
 
 Przyjęte nocą 11.11.2026 jako bezpieczniejsza opcja, do potwierdzenia:
-1. **Dysk zewnętrzny** to główna kopia warstwy 1. Do czasu zakupu albo podłączenia kontrola pokazuje ✗ `dysk-zewnetrzny`.
+1. **Dysk zewnętrzny, zaszyfrowany,** to główna kopia warstwy 1. Do czasu zakupu albo podłączenia kontrola pokazuje ✗ `dysk-zewnetrzny`.
 2. **Time Machine** nie jest częścią planu, dopóki Mac nie jest prywatny. Zostaje ręczna kopia folderów na dysk
    zewnętrzny.
 3. **Archiwum `.dom` tylko na dysku zewnętrznym**, nigdy na Dysku Google, także zaszyfrowane. Skrypt szyfrowanego
@@ -137,12 +142,12 @@ Przyjęte nocą 11.11.2026 jako bezpieczniejsza opcja, do potwierdzenia:
    - dysk zewnętrzny co 7 dni;
    - eksport Notion, xlsx kosztorysu i zdjęcia co 30 dni;
    - próba odtworzenia co 90 dni;
-   - kopia dokumentów na Dysk: 7 dni od pierwszej zmiany.
+   - kopia dokumentów na Dysk: ⚠, gdy są zmiany od kopii, a potwierdzona kopia ma ponad 7 dni.
 5. **Ślad kopii ręcznych:** potwierdzenie w rejestrze (`kopie.py potwierdz`), a nie wyszukiwanie plików eksportu na dyskach.
 6. **Katalogi `AI/*` z archiwum** (plany, raporty, wyniki prób) nie dostają repozytorium. Chroni je dysk zewnętrzny.
 
 Do zrobienia przez inwestora (asystent nie ma do tego narzędzi albo zgody):
-- dysk zewnętrzny i pierwsza kopia;
+- zaszyfrowany dysk zewnętrzny i pierwsza kopia;
 - wypchnięcie zaległych commitów w repozytoriach `AI/*` (lista w `kopie.py stan`);
 - uprawnienie `Bash(python3 tools/kopie.py stan:*)` w liście narzędzi automatu przeglądu w repozytorium automatów;
 - pierwszy eksport Notion;

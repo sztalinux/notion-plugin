@@ -8,7 +8,7 @@ PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury 
 
 POM-21 „Kopie zapasowe – plan i kontrola” (gałąź `pom/2026-11-11-POM-21`):
 - Nowy plan kopii `docs/kopie-zapasowe.md`: trzy warstwy (dysk zewnętrzny, chmura, eksport usług), pozycje z terminami,
-  rytm inwestora, odtworzenie, decyzje przyjęte do potwierdzenia (`.dom` tylko na dysku zewnętrznym, bez Time Machine
+  rytm inwestora, odtworzenie, decyzje przyjęte do potwierdzenia (`.dom` tylko na zaszyfrowanym dysku zewnętrznym, bez Time Machine
   na nieprywatnym Macu, terminy 7/30/90 dni).
 - Nowe narzędzie `tools/kopie.py` (`stan [--cicho|--json]`, `potwierdz <pozycja> [data]`) – kontrola tylko do odczytu:
   kopia dokumentów, repozytoria `AI/*` (zdalne, niewypchnięte, niezacommitowane – bez `fetch`), kopia wartości arkusza,
