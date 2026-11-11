@@ -1,4 +1,4 @@
-# Pytanie do bazy – jak szukać i odpowiadać (czat na telefonie, Claude Code, zaplanowane zadania)
+# Pytanie do bazy – jak szukać i odpowiadać (czat na telefonie, Claude Code)
 
 Cel: odpowiedź uwzględnia **całą** istotną wiedzę z bazy (z numerami WI), mówi, co przeczytała, i wprost – czego nie wie
 ani nie sprawdziła. Droga domyślna to **karta wiedzy** (`karty.md`): gotowy wybór tez do typowych pytań, który na Macu zrobił

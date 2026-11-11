@@ -16,7 +16,7 @@ Narzędzie: `python3 tools/wiedza_jakosc.py` – tylko Claude Code na Macu (na c
 
 ## Czego nie mierzy
 
-- Zapytań z czatu na telefonie i zaplanowanych zadań claude.ai – działają na kopii w sandboksie, logu nie ma.
+- Zapytań z czatu na claude.ai (telefon, przeglądarka) – działają na kopii w sandboksie, logu nie ma.
   Zbiory oceny testują ten sam kod i ten sam indeks, więc pokrywają też ten kanał.
 - Prawdziwej trafności: predykaty słów to przybliżenie (±1 P@12 na pytanie, ślepe na synonimy i sens).
 - Wyszukiwarki Notion MCP: `notion` używa publicznego API (filtr `contains`, AND słów, przy zerze OR).

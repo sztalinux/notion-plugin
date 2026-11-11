@@ -136,7 +136,7 @@ brak → paczka. Czat i telefon bez konektora nie czytają dokumentów z Dysku �
 | Claude Code z folderem budowy | tak – plan, zatwierdzenie, ruchy konektorem lub skryptem | tak (z odczytem pliku) | tak (`kopia.py`) | tak |
 | Czat / telefon z konektorem Dysku | tylko plan słowami i ruchy po „ok” inwestora; bez skryptu reguły z sekcji 3 stosujesz ręcznie, ruchy wpisujesz do komunikatu 🔔 „do zapisania w dzienniku ruchów” | tak, bez wydatku | nie | tak |
 | Czat bez konektora | nie – powiedz, gdzie wgrać (sekcja 9) | nie | nie | nie |
-| Przebieg bez inwestora (automat, zaplanowane zadanie) | **na razie nie** – nie wiadomo, czy ma konektor Dysku (test T9); tylko licznik „w `_nowe` czeka n” w przeglądzie, jeśli konektor jest | nie | `kopia.py stan --cicho` (sama informacja) | nie |
+| Przebieg bez inwestora (automat launchd na Macu) | **na razie nie** – nie wiadomo, czy ma konektor Dysku (test T9); tylko licznik „w `_nowe` czeka n” w przeglądzie, jeśli konektor jest | nie | `kopia.py stan --cicho` (sama informacja) | nie |
 | Inne AI | tylko odczyt reguł i podpowiedź, gdzie wgrać | nie | nie | nie |
 
 ## 7. Kopia dokumentów Mac → Dysk – `tools/kopia.py`
