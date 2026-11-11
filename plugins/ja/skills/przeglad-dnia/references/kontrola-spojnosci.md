@@ -14,8 +14,8 @@ rozjazdy i **tylko o nich pyta** – bez inwestora niczego nie przestawia (`SKIL
 | **H4** | krok „Przesunięte”, a zadanie WAITING z relacją ma When przed początkiem Terminu kroku (stary termin „czekam na” po przesunięciu; bywa zgodne z planem – np. dostawa przed startem) | zadanie When → początek Terminu kroku |
 
 Zawsze tylko po ☑ inwestora i **nigdy** nie zmieniaj Terminu ani Pewności terminu kroku (to `harmonogram`, C). Zmiana Statusu
-kroku na „Zrobione” i zmiana pola zadania to wykonanie decyzji inwestora, nie decyzja asystenta. Inne grupy serii (zakupy ↔ zadania,
-„Porozmawiać z…” ↔ „💬 Do przegadania”) dopisuj jako kolejne wiersze z własną literą.
+kroku na „Zrobione” i zmiana pola zadania to wykonanie decyzji inwestora, nie decyzja asystenta. Inne grupy serii mają własne pliki i litery:
+zakupy ↔ zadania (Z, `kontrola-spojnosci-zakupy.md`), „Porozmawiać z…” ↔ „💬 Do przegadania” (R, `kontrola-spojnosci-rozmowy.md`).
 
 ## Odczyt (tylko widoki – bez SQL i rows, `ja` zasada 3)
 

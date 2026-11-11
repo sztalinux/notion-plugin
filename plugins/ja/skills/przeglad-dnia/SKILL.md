@@ -71,7 +71,7 @@ Budowa i sprawy osobiste mają **osobne przeglądy**, żeby intensywny dzień na
 budowa → „📆 Przeglądy dzienne – budowa” na stronie DOM (pisze skill `budowa`, sekcja „Wieczorem”); reszta → „📆 Przeglądy
 dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z tego dnia.
 
-**Kolejność wykonania:** kroki 1–2, potem **5** i **5a** (luki w zadaniach, kontrola spójności), dopiero potem 3, 4 i 6–10. Krok 5 idzie przed budową, bo
+**Kolejność wykonania:** kroki 1–2, potem **5**, **5a** i **5c** (luki w zadaniach, kontrola spójności), dopiero potem 3, 4 i 6–10. Krok 5 idzie przed budową, bo
 zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiłoby do przeglądu budowy.
 
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
@@ -105,6 +105,10 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **5a. Kontrola spójności** – `references/kontrola-spojnosci.md`: zastosuj odpowiedzi inwestora na dawne flagi `KS-…`, potem
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.
    Tylko pytania w „❓” (max 5), żadnych zmian bez ☑ inwestora; licznik „rozjazdy” idzie do kroku 8 i linii „🤖”.
+
+   **5c. Kontrola spójności: rozmowy** – `references/kontrola-spojnosci-rozmowy.md`: zadanie „Porozmawiać z…” DONE (wiersze kroku 5)
+   ↔ temat w „💬 Do przegadania” na stronie osoby. Tylko pytanie „❓” z kluczem `KS-R…` (wspólny limit 5 z 5a); po ☑ dopisek
+   „✅ przegadane” pod tematem, nic się nie przenosi. Treści tematów nie wypisuj; licznik „rozjazdy” jak w 5a.
 6. **Jutro – sprawy osobiste** (odczyt; jedyny zapis – zadanie z suplementami, niżej): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
    (When < dziś, niezakończone – widok „📅 Dziś”, ID w mapie), suplementy z Buy = tak (licznik), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)

@@ -38,6 +38,8 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    - Dziennik produktywności widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81af-9ea1-000cbe3dd643`): dni zapisane,
      średnia ocena, najczęstsze przeszkadzajki;
    - strona dziecka: nowe punkty w „💬 Do przegadania” i „🎁 Prezenty” z tygodnia (licznik + tytuły tematów);
+   - zadania „Porozmawiać z…” zamknięte w tygodniu a temat nadal na liście „💬 Do przegadania” – pytania „❓” z kluczem `KS-R…`
+     (`przeglad-dnia/references/kontrola-spojnosci-rozmowy.md`; tylko licznik, bez treści tematów);
    - strona „💍 Wesele”: nowe punkty i zadania „Wesele:” z terminem w 30 dni;
    - Suple: Buy = tak (licznik, nazwy);
    - Zakupy: 🛒 Zakupy „Do kupienia” (licznik, najstarsze) i z Terminem w 7 dni (wymień).
