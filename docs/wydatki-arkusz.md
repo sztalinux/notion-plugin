@@ -176,7 +176,7 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
    ten sam wynik). Potem i tak krok 5 (kontrola).
 1. `wydatki.py pobierz` albo odczyt konektorem – aktualne wartości i nagłówki. Odwołania do innych zakładek buduj po
    **nagłówkach żywego arkusza**, nie po literach z `arkusze.md` (kolumny bywają przesunięte).
-2. Plik zmian JSON (lista operacji akcji `zmien`: `zakres`, `wyczysc`, `walidacja`, `warunkowe`, `szerokosci`, `wysokosci`,
+2. Plik zmian JSON `{"opis": …, "operacje": [ … ]}` (operacje akcji `zmien`: `zakres`, `wyczysc`, `walidacja`, `warunkowe`, `szerokosci`, `wysokosci`,
    `zamroz`, `siatka`, `ramka`) – ręcznie albo narzędziem `python3 ~/Documents/Dom/AI/automaty/arkusz_zmiany.py` (poza
    repo, openpyxl; z docelowego `.xlsx`). Zapisz go w `<hub>/.dom/wydatki/` z datą, obok migawkę „przed”.
 3. **Pułapki polskich ustawień:** formuły w operacji `zakres` muszą mieć „;” jako separator i przecinek dziesiętny
