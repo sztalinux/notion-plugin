@@ -30,7 +30,8 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
 1. **Budowa** – wczytaj skill `przeglad-tygodnia` (plugin dom-budowa) i wykonaj go; zapisze przegląd budowy na DOM
    („Przeglądy tygodniowe”). Weź link do wpisu i jedną linię skrótu (do decyzji n, terminy 7 dni n).
 2. **Tydzień – sprawy osobiste** (odczyt):
-   - „📆 Przeglądy dzienne” – wpisy z 7 dni (co się działo, co zamknięto);
+   - „📆 Przeglądy dzienne” – wpisy z 7 dni (co się działo, co zamknięto); przy okazji napraw zepsute nagłówki dni
+     (`przeglad-dnia/references/uklad-wpisu.md`, A, „Naprawa raz w tygodniu”) – bez pytania, to tylko format;
    - TASKS widok „🤖 Tydzień – prywatne” (`view://3faf5982-09e7-81b5-ad0a-000c1cfabfa0`): zamknięte w tygodniu, po terminie,
      z terminem w 7 dni (osobno Prywatne / Dziecko / Praca); SOMEDAY tylko licznikiem;
    - Wpisy emocji widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81ec-83af-000c8b518d37`): liczba wpisów, najczęstsze
@@ -44,16 +45,19 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
 3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i pozycje „❓” Dziennika starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
    tylko licznikiem, są w przeglądzie budowy); skrzynka „Zmiany do harnessu” – wpisy do wdrożenia starsze niż 7 dni
    (przypomnienie: uruchom Claude Code); „Pomysły na rozwój” – nowe bez analizy i „Pytania do mnie”.
-4. **Wpis w „📅 Przeglądy tygodniowe”** na górze strony, zwijany nagłówek „Tydzień <RRRR-Www> (<data od–do>)”:
+4. **Wpis w „📅 Przeglądy tygodniowe”** na górze strony, zwijany nagłówek h2 „Tydzień <RRRR-Www> (<data od–do>)”, zapisany wg
+   `przeglad-dnia/references/uklad-wpisu.md`, sekcje A–B (`<toggle heading="h2">`; każda etykieta niżej to pogrubiony akapit
+   z punktami; najpierw zaległe i czekające; nieudane odczyty jedną linią na końcu):
    ```
-   **Zrobione:** 3–6 punktów (prywatne / dziecko / praca)
    **Zaległe i po terminie:** zadanie – od kiedy → zamknąć, przesunąć czy odpuścić?
+   **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia, POM-x z pytaniami
+   **Zrobione:** 3–6 punktów (prywatne / dziecko / praca)
    **Najbliższy tydzień:** zadania z terminem wg dni, wesele (30 dni), „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Emocje i praca (liczby):** n wpisów emocji, najczęściej: …, śr. intensywność x; praca: n dni, śr. ocena y; wzorzec: …
    **Dziecko:** n nowych tematów do przegadania, n pomysłów na prezent
-   **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia, POM-x z pytaniami
    **🏗 Budowa:** <linia skrótu> → <wzmianka przeglądu budowy z tego tygodnia>
-   **Porządki (n):** propozycje z sekcji D – do zatwierdzenia jednym „tak” · archiwum: przeniesiono n dni (dd.mm–dd.mm)
+   **Porządki (n):** propozycje z sekcji D – do zatwierdzenia jednym „tak” · archiwum: przeniesiono n dni (dd.mm–dd.mm) ·
+   naprawione nagłówki: n
    ```
    Pusty tydzień → krótki wpis „spokojny tydzień” z linią budowy. Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
 5. **Porządki bez pytania** (sekcja D, pierwsza lista) – **zawsze, także w zaplanowanym przebiegu**: bloki dni starsze
@@ -72,5 +76,9 @@ Do zatwierdzenia (propozycja w przeglądzie):
 - wpisy z okienkiem ❓ i pozycje „❓” bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
-- TASKS prywatne po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze).
+- TASKS prywatne po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze);
+- wpisy w „📆 Przeglądy dzienne” starsze niż 14 dni → przenieść na podstronę „🗃 Przeglądy dzienne – archiwum” (pod
+  „📆 Przeglądy dzienne”): przy pierwszym „tak” utwórz ją i zgłoś jej ID do mapy przez skrzynkę (`rozwoj-harnessu`, A);
+  przeniesienie jak bloków „Przetworzone” wyżej (najpierw wklej na górę archiwum, sprawdź, potem zdejmij). Ta sama
+  propozycja dla strony budowy idzie w porządkach `przeglad-tygodnia`.
 Po „tak” wykonaj wsadowo (`ja`, zasada 2). Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.

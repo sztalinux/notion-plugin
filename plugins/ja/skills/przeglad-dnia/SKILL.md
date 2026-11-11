@@ -1,6 +1,6 @@
 ---
 name: przeglad-dnia
-description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę lub co 2 godziny w ciągu dnia) rozkłada nowe wpisy z „📓 Dziennika” (i strony z widgetu na najwyższym poziomie Private) na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan na jutro – sprawy osobiste w „📆 Przeglądy dzienne” pod Dziennikiem, budowa osobno w „📆 Przeglądy dzienne – budowa” na DOM (z odnośnikiem między nimi) – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów. Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
+description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę lub co 2 godziny w ciągu dnia) rozkłada nowe wpisy z „📓 Dziennika” (i strony z widgetu na najwyższym poziomie Private) na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan na jutro – sprawy osobiste w „📆 Przeglądy dzienne” pod Dziennikiem, budowa osobno w „📆 Przeglądy dzienne – budowa” na DOM (z odnośnikiem między nimi) – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów i rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
 ---
 
 # Przegląd dnia – tryb szybki i wieczorny
@@ -71,7 +71,7 @@ Budowa i sprawy osobiste mają **osobne przeglądy**, żeby intensywny dzień na
 budowa → „📆 Przeglądy dzienne – budowa” na stronie DOM (pisze skill `budowa`, sekcja „Wieczorem”); reszta → „📆 Przeglądy
 dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z tego dnia.
 
-**Kolejność wykonania:** kroki 1–2, potem **5** (luki w zadaniach), dopiero potem 3, 4 i 6–10. Krok 5 idzie przed budową, bo
+**Kolejność wykonania:** kroki 1–2a, potem **5** (luki w zadaniach), dopiero potem 3, 4 i 6–10. Krok 5 idzie przed budową, bo
 zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiłoby do przeglądu budowy.
 
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
@@ -79,6 +79,12 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    „Rozwiązany” albo „Zostaje” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5).
 2. **Pomysły na rozwój** – `rozwoj-harnessu`, sekcja C: Status Nowy lub pusty → analiza (max 3, najstarsze pierwsze);
    „Pytania do mnie” z odpowiedzią → analizuj dalej. Niczego nie wdrażaj.
+2a. **Rozkminki – tylko na prośbę z wpisu** (ślad `→ 🧠 rozkminka wieczorem` w dzisiejszym lub wczorajszym bloku
+   „Przetworzone”, `wpisy` krok 5; z własnej inicjatywy nie rób – to koszt). Max 2, najstarsze pierwsze; reszta jutro
+   („rozkminki czekają: n” w „⚠ Na teraz”). Procedura tematu **tylko odczytem**: budowa – spotkanie, decyzja → `przygotowanie`
+   („Bez inwestora”), technika → `analiza-techniczna`, oferta → `oferta`, terminy → `harmonogram`; osobiste – skill `ja` obszaru.
+   Wynik = sekcja „🧠 Rozkminka: <temat>”: budowa → krok 3, reszta → krok 8. Bez zapisów do baz – nowe pytania, zadania
+   i decyzje → jedno „❓” w Dzienniku (`wpisy/references/pytania.md`, B). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
 3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i jutro budowy i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze); najpierw domyka sprzeczności z Decyzją wpisaną
    przez inwestora. Weź z niego link do wpisu, 1 linię skrótu i liczbę domkniętych SP.
@@ -123,17 +129,10 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    zmienia statusów zakupów ani zadań. **Zabezpieczenie** (tylko wieczorem – szybki ma być tani): każda linia RES-n w „❓”,
    której research nie ma już Statusu „Pytania do mnie”, idzie do „Przetworzone” z dopiskiem „→ rozwiązane poza Dziennikiem”.
 8. **Wpis w „📆 Przeglądy dzienne”** (`3faf5982-09e7-81df-a361-cc65fddb81f4`, pod Dziennikiem) – **codziennie**, także
-   w spokojny dzień: zwijany nagłówek „Przegląd dnia – <dzień tygodnia> <data>” na górze strony (najnowszy pierwszy):
-   ```
-   **Dziś:** 3–6 punktów – prywatne / dziecko / praca (bez treści emocji – tylko „emocje: n wpisów”)
-   **Zadania (wszystkie obszary):** zamknięte n (nazwy) · w toku / czeka n · dodane lub zmienione n · z Dziennika n ·
-   uzupełniono n wierszy (pola)   ← brak zmian → „bez zmian”
-   **Czeka na Ciebie:** n pytań pod wpisami (<wzmianka „📝 Wpisy”>) · n komunikatów 🔔 · n w ❓ Dziennika
-   **Jutro – plan:** zadania z terminem wg priorytetu, po terminie na górze, „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
-   **Research:** n gotowych, m czeka na Ciebie – wzmianki stron RES-n (brak researchu → pomiń linię)
-   **🏗 Budowa:** <1 linia skrótu> → <wzmianka wpisu z przeglądu budowy z tego dnia>   (brak dnia budowy → „bez zmian”)
-   **Rozkminka** (tylko gdy inwestor prosił we wpisie albo dzień przyniósł decyzję do przemyślenia): 2–5 zdań
-   ```
+   w spokojny dzień: zwijany nagłówek h2 „Przegląd dnia – <dzień tygodnia> <data>” na górze strony (najnowszy pierwszy).
+   Zapis, sprawdzenie przed zapisem i szablon: `references/uklad-wpisu.md` – sekcje z punktami: ⚠ Na teraz (po terminie,
+   czeka na Ciebie) · Jutro – plan („kupić: …”) · Dziś (emocje tylko liczbą) · Zadania (liczby z kroku 5) · Pomysły i research ·
+   🏗 Budowa (skrót + wzmianka albo „bez zmian”) · 🧠 Rozkminka (tylko z kroku 2a) · na końcu linia o nieudanych odczytach.
    **Ręczny przebieg** (prośba w rozmowie) = osobny wpis z tą samą datą i dopiskiem „(ręczne)”, kolejne „(ręczne 2)”… –
    tak samo w przeglądzie budowy. Nigdy nie nadpisuj wcześniejszego wpisu – sprostowanie to jedna linia kursywą na jego
    górze z odesłaniem.
@@ -141,7 +140,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    edycję (`wpisy`, krok 7) zrób na końcu przebiegu, po kroku 8, gdy znasz już wszystkie liczby (kroki 4–5 doliczają
    ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma):
    ```
-   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · czeka na Ciebie 1 · komunikaty: 1 · pomysły – 1 · research: 1 gotowy · jutro: 2 prywatne, 3 budowa → przeglądy
+   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · czeka na Ciebie 1 · komunikaty: 1 · pomysły – 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy
    ```
 10. **Odpowiedź** (log zadania): linia „🤖” + lista zapisów (gdzie, link) i błędów.

@@ -54,6 +54,14 @@ Krótko, do przeczytania na telefonie przed wejściem na spotkanie:
 8. **Słowniczek** – tylko pojęcia, które prawdopodobnie padną, po jednym zdaniu (max 5).
 9. **Po spotkaniu** – „napisz mi 3–5 zdań: co ustaliliście, odpowiedzi na pytania 1–N, terminy” (krok 7).
 
+## Bez inwestora (rozkminka w przeglądzie dnia)
+
+Gdy wywołuje cię wieczorny przegląd dnia (`przeglad-dnia`, B.2a – inwestor poprosił we wpisie np. „przygotuj mi pytania
+na spotkanie z …”): w kroku 1 zamiast pytania przyjmij założenie i napisz je w pierwszym punkcie karty; kartę skróć do
+punktów (pytania obowiązkowe, czerwone flagi, co zabrać) – trafia do sekcji „🧠 Rozkminka” przeglądu dnia budowy, nie do
+rozmowy. Krok 6 bez zapisów: nowe pytania do Notatnika i termin do TASKS wymień w jednym zbiorczym „❓” w Dzienniku
+(`wpisy/references/pytania.md`, B, plugin `ja`) i zapisz dopiero po „tak”.
+
 ## Zasady
 
 - Konkretnie dla naszej budowy, nie podręcznik: każdy punkt karty ma odniesienie do etapu, projektu albo Notion.
