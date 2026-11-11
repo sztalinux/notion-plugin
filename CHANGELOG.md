@@ -4,6 +4,16 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.11.6] – 2026-11-11
+
+Nocna samonaprawa, obszar 08-wiedza:
+- `tools/wiedza.py` (`--help`): linia użycia `karta` z `--wiecej` i `--bez-ciekawostek` zamiast ukrytej flagi `--ciekawostki`.
+- `tools/wiedza_jakosc.py` (`--help`): `przypomnij` uruchamia lista startowa „Indeks wiedzy”, nie „hook startu”.
+- `wiedza/references/indeks.md`: nagłówek karty – „(+c ciekawostek ukrytych – bez --bez-ciekawostek)”, jak drukuje narzędzie.
+- `wiedza/references/pytanie-do-bazy.md`: `temat` przy kilku dopasowaniach odpowiada „n pasujących – podaj dokładniejszą nazwę”.
+- `wiedza/references/indeks-awarie.md`: bez wzmianek o hooku startowym (lista startowa, nocne skrypty).
+- `docs/wiedza-runbook.md`: komunikat „okno 5-godzinne limitu wyczerpane” jak w kodzie; `kolejka_zdrowie.py` leży w katalogu kolejki poza repo.
+
 ## dom-budowa [3.11.5] – 2026-11-11
 
 Nocna samonaprawa, obszar 06-dokumentacja (opisy dla człowieka):
