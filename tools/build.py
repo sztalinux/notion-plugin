@@ -182,9 +182,15 @@ def zakazane_slowa() -> list:
         if lista.exists():
             out += [unicodedata.normalize("NFC", w.strip()).lower() for w in lista.read_text(encoding="utf-8").splitlines()
                     if w.strip() and not w.strip().startswith("#")]
+    # wariant bez ogonków („zolw” dla „żółw”) – w wiadomościach i nazwach plików polskie znaki często znikają
+    out += [w for w in {bez_ogonkow(x) for x in out} if w not in out]
     if not out:
         print(f"UWAGA: brak listy {ZAKAZANE} – sprawdzam tylko wzorce (telefon, e-mail, działka, kod, adres, PESEL, konto, NIP, KW, token, kwota)")
     return out
+
+
+def bez_ogonkow(s: str) -> str:
+    return unicodedata.normalize("NFKD", s.replace("ł", "l").replace("Ł", "L")).encode("ascii", "ignore").decode()
 
 
 def jako_tekst(dane: bytes):
@@ -206,7 +212,7 @@ def sprawdz_tekst(etykieta: str, tekst: str, zakazane: list) -> list:
         for rx, opis in WZORCE:
             if rx.search(linia):
                 bledy.append(f"{etykieta}:{nr}: wygląda na {opis} – repo jest publiczne")
-        niskie = linia.lower()
+        niskie = re.sub(r"\s+", " ", linia.lower())  # „Imię  Nazwisko” z podwójną spacją albo tabulatorem
         if any(w in niskie for w in zakazane):
             bledy.append(f"{etykieta}:{nr}: słowo z listy zakazanych – repo jest publiczne, usuń lub uogólnij")
     return bledy
