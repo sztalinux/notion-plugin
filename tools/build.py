@@ -287,7 +287,11 @@ def zbuduj_gem(wersja: str) -> Path:
              "\n## Jak korzystać z plików wiedzy\n",
              "Każda procedura jest w osobnym pliku wiedzy `procedura-<nazwa>.md`. Gdy zadanie pasuje do procedury, "
              "przeczytaj ten plik w całości i wykonaj kroki. Ścieżki `skills/<nazwa>/...` w tekście oznaczają "
-             "odpowiedni plik wiedzy. Narzędzia Notion mogą być niedostępne – wtedy przygotuj wpisy do wklejenia."]
+             "odpowiedni plik wiedzy. Narzędzia Notion mogą być niedostępne – wtedy przygotuj wpisy do wklejenia.",
+             "\nTen Gem ma tylko procedury budowy (`dom-budowa`). Procedur pluginu `ja` (`plugins/ja/skills/...`: "
+             "Dziennik, zadania prywatne, emocje, dziecko, suplementy, przegląd dnia, rozwój harnessu) tu nie ma – "
+             "w takich sprawach napisz to w pierwszym zdaniu i nie zgaduj procedury; w sprawach budowy pomiń krok "
+             "z wczytaniem `plugins/ja/skills/ja/SKILL.md` i zacznij od `procedura-budowa.md`."]
     (gem / "instrukcje.md").write_text("\n".join(instr), encoding="utf-8")
     for d in sorted(p for p in SKILLS.iterdir() if p.is_dir()):
         czesci = [f"<!-- dom-budowa {wersja} / skills/{d.name} -->", (d / "SKILL.md").read_text(encoding="utf-8")]

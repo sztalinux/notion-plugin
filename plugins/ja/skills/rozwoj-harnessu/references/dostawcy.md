@@ -18,8 +18,9 @@ Uwagi:
 - `.agents/skills/` i `.claude/skills/` to katalogi z dowiązaniem na każdy skill obu pluginów (odtwarza je `tools/build.py`).
   Na Windows bez obsługi symlinków: `python3 tools/build.py --kopiuj-dowiazania` (albo `git config core.symlinks true`
   i tryb dewelopera Windows).
-- Gemini (CLI i Gem) dostaje na razie tylko `dom-budowa` (`gemini-extension.json`, `dist/gemini-gem/`); plugin `ja` działa
-  w Claude i w narzędziach czytających `AGENTS.md` + `.agents/skills`.
+- Gem dostaje na razie tylko `dom-budowa` (`dist/gemini-gem/`; instrukcje Gema mówią to wprost). Gemini CLI w katalogu
+  repo czyta `AGENTS.md` (mapa obu pluginów) i `.agents/skills`, więc ma też `ja`; `gemini-extension.json` nosi nazwę
+  i wersję `dom-budowa`.
 - Dane (Notion, arkusz kosztorysu, dokumenty) nie są częścią pluginu. Pliki leżą w folderze budowy na komputerze (poza repo).
 - W Claude Code w repo synchronizacja pluginów z claude.ai jest wyłączona lokalnie (`.claude/settings.local.json`,
   `syncClaudeAiPlugins: false`) – inaczej wersja z konta dublowałaby procedury z dysku.
