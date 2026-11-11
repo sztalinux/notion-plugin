@@ -11,7 +11,7 @@ albo zmienna DOM_HUB; w czacie podaje się --db <katalog>/wiedza.sqlite.
     python3 tools/wiedza.py temat "NAZWA" [--lista] [--krotko] [--ciekawostki]   # stan wiedzy, Kluczowe, otwarte SP
     python3 tools/wiedza.py etap "NAZWA" [--czesc k] [--kontrola] [--ciekawostki]   # cała wiedza etapu w częściach
     python3 tools/wiedza.py karty [--do "PYTANIE" ["PYTANIE 2" …]] [--etap …] [--rodzaj pytanie|czynnosc]   # spis kart
-    python3 tools/wiedza.py karta KOD [KOD2 …] [--pytanie "A" ["B" …]] [--czesc k] [--ciekawostki]   # karta w częściach
+    python3 tools/wiedza.py karta KOD [KOD2 …] [--pytanie "A" ["B" …]] [--czesc k] [--wiecej] [--bez-ciekawostek]   # karta w częściach
     python3 tools/wiedza.py zrodla WI-n [WI-m …] | --temat "NAZWA"   # źródła tez wg typu autora („Na czym się opieram”)
     python3 tools/wiedza.py duplikaty [--od RRRR-MM-DD] [--prog 0.84] [--temat NAZWA] [--sens | --slowa]
     python3 tools/wiedza.py stan                          # liczniki, daty synchronizacji i publikacji

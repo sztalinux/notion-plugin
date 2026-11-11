@@ -10,7 +10,7 @@ Nie zmienia indeksu ani Notion; indeks otwiera tylko do odczytu.
     python3 tools/wiedza_jakosc.py reczna [--n 30] [--nowa]          # ocena ręczna w terminalu (y/n/s, q = przerwa)
     python3 tools/wiedza_jakosc.py reczna --wczytaj PLIK             # dokończ albo wczytaj zestaw ocen z pliku
     python3 tools/wiedza_jakosc.py notion [--budzet 300]             # raz w miesiącu: porównanie z Notion przez API
-    python3 tools/wiedza_jakosc.py przypomnij --cicho                # hook startu: jedna linia, gdy jest coś do zrobienia
+    python3 tools/wiedza_jakosc.py przypomnij --cicho                # lista startowa „Indeks wiedzy”: jedna linia, gdy jest coś do zrobienia
     python3 tools/wiedza_jakosc.py sedzia [--wyslij]                 # sędzia LLM; bez --wyslij tylko na sucho
     python3 tools/wiedza_jakosc.py pokaz [--pytania 30]              # lokalny HTML: pytanie → indeks → Notion
 
@@ -1361,7 +1361,7 @@ def zbuduj_parser() -> argparse.ArgumentParser:
     p.add_argument("--wczytaj", help="plik JSONL zestawu (id, q, wi, oceny) do dokończenia albo wczytania")
     p = sub.add_parser("notion", parents=[wspolne], help="miesięczne porównanie z Notion przez API (tylko odczyt)")
     p.add_argument("--budzet", type=int, default=300, help="najwyżej tyle żądań do Notion (domyślnie 300)")
-    p = sub.add_parser("przypomnij", parents=[wspolne], help="hook startu: linia, gdy raport albo alarmy czekają")
+    p = sub.add_parser("przypomnij", parents=[wspolne], help="lista startowa: linia, gdy raport albo alarmy czekają")
     p.add_argument("--cicho", action="store_true", help="nic nie pisz, gdy nic nie czeka")
     p = sub.add_parser("sedzia", parents=[wspolne], help="sędzia LLM: ocena 0/1/2 wyników pytań (bez --wyslij: na sucho)")
     p.add_argument("--wyslij", action="store_true", help="wyślij do modelu (bez tego tylko podsumowanie)")
