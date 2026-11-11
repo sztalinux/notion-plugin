@@ -81,7 +81,8 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    „Pytania do mnie” z odpowiedzią → analizuj dalej. Niczego nie wdrażaj.
 3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i jutro budowy i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze); najpierw domyka sprzeczności z Decyzją wpisaną
-   przez inwestora. Weź z niego link do wpisu, 1 linię skrótu i liczbę domkniętych SP.
+   przez inwestora; gdy jutro są roboty na budowie, dopisuje prognozę pogody i ostrzeżenia wg progów (`etap/references/pogoda.md`) –
+   to „poranny brief” bez osobnego zadania. Weź z niego link do wpisu, 1 linię skrótu (z ⚠️ pogodowym, jeśli jest) i liczbę domkniętych SP.
 4. **Dziś – sprawy osobiste** (tylko odczyt): blok dzisiejszego dnia w „Przetworzone” (wpisy obszarów innych niż Budowa,
    liczby per obszar), dzień pracy z Dziennika produktywności, liczba wpisów emocji z dziś (bez treści), nowe punkty na stronie
    dziecka, wpisy z okienkiem ❓ we „Wpisach”, bloki pod „🔔 Komunikaty asystenta” (liczba) i pozycje „❓” Dziennika. Zadania zmienione dziś – krok 5.
@@ -170,5 +171,5 @@ krótka (przegląd tygodnia przenosi „Przetworzone” starsze niż 14 dni do a
 
 ## Rozszerzanie
 
-Nowa rzecz codzienna (np. poranny brief, suplementy do kupienia) = nowy krok trybu wieczornego przed wpisem w Przeglądach
+Nowa rzecz codzienna (np. suplementy do kupienia; osobny poranny brief z powiadomieniem – dopiero po starcie robót, gdy Harmonogram ma daty, i jako przebieg launchd, nie zadanie na claude.ai) = nowy krok trybu wieczornego przed wpisem w Przeglądach
 i jeden licznik w linii „🤖”. Tryb szybki zostaje minimalny. Nowy obszar Dziennika nie wymaga zmian tutaj – obsługuje go `wpisy`.

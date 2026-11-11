@@ -43,7 +43,7 @@ Dla kroku z datą wylicz i **pokaż jako propozycję** (w odpowiedzi, w przeglą
 - **Bramka:** krok „Bez odwrotu” → dzień przed: „Bramka: <krok> – sprawdzić wg `etap` (B)”.
 - **Ludzie:** kto musi być (`etap/references/formalnosci.md`, „kto musi być obecny”): kierownik przy odbiorze zbrojenia,
   geotechnik przy dnie wykopu → „umówić <kogo> na <data>” z wyprzedzeniem 3–7 dni.
-- **Pogoda:** betonowanie, izolacje, tynki zewnętrzne – przy bramce „sprawdzić prognozę” (progi: `etap`).
+- **Pogoda:** betonowanie, izolacje, tynki zewnętrzne – przy bramce „sprawdzić prognozę” (progi: `etap/references/pogoda.md`; prognozę na jutro dopisuje wieczorny przegląd budowy).
 - **Płatności:** transza po odbiorze kroku – przypomnienie dla `koszty` (sekcja D), bez kwot w Notion.
 Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kroku – wtedy przesunięcie kroku je pokaże.
 

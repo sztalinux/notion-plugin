@@ -22,6 +22,7 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 | Kto robi (Sam / Ekipa), ilości | Harmonogram (pole Kto); umowa z ekipą i ilości – arkusz kosztorysu, Etapy i Kosztorys (`koszty/references/arkusze.md`) |
 | Zakres umowy z ekipą | arkusz kosztorysu: Etapy kol. „Umowa z ekipą” + umowa w folderze budowy (`dokumenty`) |
 | Formalności i obecność osób | `references/formalnosci.md` |
+| Progi pogodowe robót, prognoza na jutro | `references/pogoda.md` |
 
 ## A. Plan etapu („zaczynamy stan zero / SSO”, „ekipa wchodzi za 2 tygodnie”)
 
@@ -33,7 +34,7 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
    (przepusty, uziom), dostawy betonu/stali – co trzeba umówić i z jakim wyprzedzeniem.
 5. **Materiały i sprzęt** do zamówienia na ten etap → procedura `zakupy` (lista z Kosztorysu + wyprzedzenia).
 6. **Formalności** (`references/formalnosci.md`) i **pogoda**: ograniczenia temperatury/opadów dla betonu, murowania,
-   zasypki, tynków – podaj widełki [opinia] i co zrobić, jeśli prognoza nie pasuje.
+   zasypki, tynków – podaj progi z `references/pogoda.md` [opinia] i co zrobić, jeśli prognoza nie pasuje.
 7. Zapis: terminy z kroków 4–5 jako propozycja (`harmonogram`, B) – zadanie w TASKS tylko na „dodaj”; przy zmianie etapu zaproponuj przestawienie strony DOM
    (`budowa`, zasada 12) jednym zestawem zmian – razem z widokiem Informacji „🎯 Na teraz – <etap>”
    (`view://3f7f5982-09e7-81bf-a377-000c19ce62cc`: nazwa i filtr Etap = nowy etap lub „Cała budowa”; poprzedni etap
@@ -56,8 +57,9 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
    to też blokada tego kroku.
 4. Oznacz stan każdego punktu: ✅ zamknięte / ❌ otwarte / ⏭ świadomie pominięte (z powodem – zapisz jako Decyzja).
 5. Punkt ❌ o priorytecie Krytyczne → napisz wprost: **„Nie betonować / nie zasypywać, dopóki …”**.
-6. **Pogoda na dzień kroku:** temperatura (dzień i noc) i opady – widełki z `references/odbiory.md` `[opinia]`;
-   jeśli prognoza nie pasuje, zaproponuj przesunięcie.
+6. **Pogoda na dzień kroku:** temperatura (dzień i noc), opady, wiatr – progi z `references/pogoda.md` `[opinia]`
+   (prognozę na jutro podaje też wieczorny przegląd budowy, `budowa`, „Wieczorem”); jeśli prognoza nie pasuje,
+   zaproponuj przesunięcie.
 7. **Zdjęcia przed zakryciem:** lista ujęć z miarą (od stałych punktów), które mają powstać zanim krok zakryje
    instalacje, zbrojenie, izolację – to jedyna dokumentacja na lata. Inwestor wgrywa je do `przed zakryciem/` w folderze
    kroku na Dysku (albo folder w `_nowe` ze słowami „z miarą”); ta lista jest wzorcem pola „Ujęcia przed zakryciem”
