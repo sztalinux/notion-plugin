@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.11.5] – 2026-11-11
+
+Nocna samonaprawa, obszar 06-dokumentacja (opisy dla człowieka):
+- `README.md` Start, krok 3: w `/mcp` szukać lokalnego serwera `notion` (krok 5), nie „claude.ai Notion”.
+- `README.md`: lista poleceń `tools/wiedza.py` uzupełniona o `zrodla`.
+- `README.md`: przegląd tygodnia budowy w niedzielę wieczorem (automat na Macu, z przeglądem osobistym), nie w poniedziałek.
+- `tools/wiedza.py`, `tools/dokumenty.py` (`--help`): „hook na starcie” → lista startowa sesji (hooków startowych nie ma).
+- `docs/wiedza-runbook.md` 5.9: nocna kolejka wiedzy sprawdza przed startem logowanie MCP `notion` (sieci – nie).
+- `docs/wiedza-runbook.md` (tryb głęboki, zapas): lokalna odpowiedź `pytania.py` ląduje w `<folder budowy>/.dom/automaty/`.
+- `docs/system-wiedzy.md` (rysunek): zapisy z czatu – konektor Notion zablokowany, zapisy przez Skrzynkę.
+
 ## dom-budowa [3.11.4] – 2026-11-11
 
 Nocna samonaprawa, obszar 05-prywatnosc:
