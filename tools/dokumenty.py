@@ -53,7 +53,11 @@ MAPY_NOTION = [
 ]
 ZDJECIA = ("zdjęcia", "zdjecia", "foto", "photos",  # foldery ze zdjęciami z budowy – poza indeksem i paczką
            "_na dysk", "_kopie", "_archiwum")  # paczki kopii na Dysk i archiwum (docs/zdjecia-i-kopia.md)
-POMIN_KATALOGI = {PACZKA, REPO.parent if REPO.parent != HUB else REPO}
+try:  # katalog folderu budowy z repozytorium (…/Dom/AI) – także gdy skrypt działa z kopii roboczej w .claude/worktrees
+    KATALOG_REPO = HUB / REPO.relative_to(HUB).parts[0]
+except (ValueError, IndexError):
+    KATALOG_REPO = REPO
+POMIN_KATALOGI = {PACZKA, KATALOG_REPO}
 KONTAKT = re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+|(?<!\d)(\+48[\s-]?)?\d{3}[\s-]\d{3}[\s-]\d{3}(?!\d)")
 WRAZLIWE_PESEL = re.compile(r"PESEL\D{0,5}\d{11}", re.I)
 WRAZLIWE_KONTO = re.compile(r"(?<!\d)(PL)?\d{2}(\s?\d{4}){6}(?!\d)")
