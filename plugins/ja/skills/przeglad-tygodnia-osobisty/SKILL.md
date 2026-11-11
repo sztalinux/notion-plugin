@@ -68,13 +68,15 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    **Dziecko:** n nowych tematów do przegadania, n pomysłów na prezent
    **Kopie:** aktualne / ⚠ n (…) · ✗ n (…) / niesprawdzone
    **🏗 Budowa:** <linia skrótu> → <wzmianka przeglądu budowy z tego tygodnia>
-   **Porządki (n):** propozycje z sekcji D – do zatwierdzenia jednym „tak” · archiwum: przeniesiono n dni (dd.mm–dd.mm) ·
+   **Porządki (n):** n propozycji z sekcji D – pytania w „❓” Dziennika · archiwum: przeniesiono n dni (dd.mm–dd.mm) ·
    naprawione nagłówki: n
    ```
    Pusty tydzień → krótki wpis „spokojny tydzień” z linią budowy. Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
 5. **Porządki bez pytania** (sekcja D, pierwsza lista) – **zawsze, także w zaplanowanym przebiegu**: bloki dni starsze
    niż 14 dni do archiwum; liczbę i zakres dni dopisz w linii „Porządki” wpisu (brak takich dni → „archiwum: nic”).
-   Pozostałe porządki tylko proponujesz (linia „Porządki” wyżej).
+   Pozostałe porządki tylko proponujesz: jeden punkt w „❓” Dziennika w formacie B (`wpisy/references/pytania.md`;
+   `❓ asystent (data) · porządki tygodnia <RRRR-Www> – ☑ = tak`, jedno to-do na porządek), w tej samej edycji Dziennika
+   co archiwum; we wpisie tylko liczba (linia „Porządki”). Ta sama propozycja już czeka w „❓” → nie dubluj.
 6. **Odpowiedź** (log): link do wpisu + liczby, w tym „archiwum: n dni”; bez treści emocji.
 
 ## D. Porządki w Dzienniku
@@ -90,7 +92,8 @@ Do zatwierdzenia (propozycja w przeglądzie):
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
 - TASKS prywatne po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze);
 - wpisy w „📆 Przeglądy dzienne” starsze niż 14 dni → przenieść na podstronę „🗃 Przeglądy dzienne – archiwum” (pod
-  „📆 Przeglądy dzienne”): przy pierwszym „tak” utwórz ją i zgłoś jej ID do mapy przez skrzynkę (`rozwoj-harnessu`, A);
+  „📆 Przeglądy dzienne”): przy pierwszym zatwierdzeniu utwórz ją i zgłoś jej ID do mapy przez skrzynkę (`rozwoj-harnessu`, A);
   przeniesienie jak bloków „Przetworzone” wyżej (najpierw wklej na górę archiwum, sprawdź, potem zdejmij). Ta sama
   propozycja dla strony budowy idzie w porządkach `przeglad-tygodnia`.
-Po „tak” wykonaj wsadowo (`ja`, zasada 2). Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.
+Odpowiedź (☑ albo dopisek pod to-do) czyta najbliższy przebieg dnia (`przeglad-dnia` A.2) – wykonaj wtedy
+zatwierdzone porządki wsadowo (`ja`, zasada 2), punkt do „Przetworzone”. Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.
