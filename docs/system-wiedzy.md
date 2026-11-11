@@ -11,7 +11,7 @@ Stan: 4.11.2026 (dom-budowa 2.16.3, ja 1.8.1). Wszystkie części poniżej dzia�
 ```
 Notion (jedyne źródło prawdy: Informacje WI, Tematy, Rozmowy i źródła ZRD, Rejestr sprzeczności SP, Notatnik, zadania)
    │  odczyt tokenem integracji (tylko do odczytu)                      ▲ zapisy: wyłącznie asystent przez Notion MCP
-   ▼                                                                    │ (Mac: launchd + claude -p; czat: konektor)
+   ▼                                                                    │ (Mac: launchd + claude -p; czat: konektor – zablokowany, zapisy przez Skrzynkę)
 Mac inwestora: tools/wiedza.py sync ──► wiedza.sqlite (FTS5, synonimy, listy podobnych, karty) + wektory.sqlite (Ollama, bge-m3)
    │  tools/migawka.py: otwarte wpisy Notatnika i zadania ──► migawka.md
    │  tools/wiedza_karty.py: karty wiedzy (model Claude na Macu) ──► tabele karty w wiedza.sqlite

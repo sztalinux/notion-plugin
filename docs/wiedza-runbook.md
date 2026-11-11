@@ -216,7 +216,7 @@ Odciski leżą w `.dom/wiedza/wektory.sqlite`, listy podobnych w tabeli `podobne
 2. Zakładka Actions repo kopii: uruchomienie `tryb-gleboki` (po każdym zapisie do `pytania/` i co kilka godzin dla pytań czekających na limit); czerwone = błąd; ręcznie „Run workflow”.
 3. Typowe przyczyny: sekret `CLAUDE_CODE_OAUTH_TOKEN` wygasł lub unieważniony (kroki w logu kończą się błędem logowania) → wystaw nowy token Claude Code i podmień sekret; limit konta (krok „czeka na limit”,
    pytanie wraca przy następnym uruchomieniu); token zapisu pytań (`GITHUB_TOKEN_PYTANIA`) wygasł (telefon dostaje kod inny niż 201 → „tryb głęboki niedostępny”).
-4. Zapasowo: lokalny skrypt Maca (`pytania.py`) – `--sprawdz`, potem `--pytanie "…"`; odpowiedź ląduje w katalogu automatów. Nie usuwaj z repo samej odpowiedzi – pytanie bez `<ID>.md` zostanie policzone od nowa.
+4. Zapasowo: lokalny skrypt Maca (`pytania.py`) – `--sprawdz`, potem `--pytanie "…"`; odpowiedź ląduje w `<folder budowy>/.dom/automaty/odpowiedz-lokalna-<czas>.md`. Nie usuwaj z repo samej odpowiedzi – pytanie bez `<ID>.md` zostanie policzone od nowa.
 
 ### 5.8 Token wygasa albo wygasł
 
