@@ -51,14 +51,16 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    jeśli pozycja jest w cenie, napisz to wprost z odwołaniem do punktu umowy.
 3. Zasada: **cena uzgodniona na piśmie przed wykonaniem** (SMS/mail wystarczy). Zaproponuj treść wiadomości
    do wykonawcy (co, cena, termin, że wchodzi do protokołu odbioru).
-4. Zapis: uzgodniona kwota → plan pozycji „Roboty dodatkowe – poza umową” w etapie (kolejka, Rodzaj = Plan – `koszty`, sekcja B3),
+4. Zapis: uzgodniona kwota → plan pozycji „Roboty dodatkowe – poza umową” w etapie (kolejka, Rodzaj = Plan – `koszty`, sekcja B3;
+   Kwota = plan całej pozycji brutto: dotychczasowy plan tej pozycji + ta dopłata),
    zapłata → wydatek na tę pozycję (`koszty`, sekcja B); wpis w dzienniku; decyzja → Notatnik (Typ „Decyzja”).
 
 ## C. Godziny własne i narzędzia
 
 - Godziny pracy własnej zapisuj we wpisie (liczba, co robiono). Na życzenie podaj sumę za etap – służy do uczciwego
   porównania „sam vs ekipa” (`oferta`, sekcja „Sam czy ekipa”) i do planowania kolejnych etapów.
-- Zakup lub wynajem narzędzi → `koszty` (Typ „Sprzęt”, Pozycja z etapu 16 albo z etapu, dla którego kupiono).
+- Zakup lub wynajem narzędzi → wiersz w 🧱 Zakupach budowy (`zakupy` 0.3, Rodzaj „Narzędzia i sprzęt” / „Wynajem”) i wydatek
+  w `koszty` (Typ „Sprzęt”, Pozycja z etapu 16 albo z etapu, dla którego kupiono).
 - Wypadek, zagrożenie, praca na wysokości / w wykopie bez zabezpieczeń → zapisz jako Ryzyko Krytyczne i powiedz wprost.
 
 ## D. „Co się działo” (pytanie o okres)

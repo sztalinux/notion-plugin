@@ -61,8 +61,8 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
    Ilość + Jedn. (materiał – obowiązkowo), Płatność, Sposób, Dostawca / nr FV, VAT % (stawka z faktury, gdy znana – arkusz
    policzy netto; nie zgaduj), Notatki, **Arkusz = „Do arkusza”**
    (puste działa tak samo; „Nie wysyłać” wstrzymuje). Wydatek wpisany ręcznie w arkuszu nie idzie do kolejki – jedna droga.
-   Brakujące pole, które da się uzupełnić później (sposób, nr FV) – zostaw puste; brak kwoty, daty albo pozycji → pytanie
-   zamiast zapisu.
+   Brakujące pole, które da się uzupełnić później (sposób, nr FV) – zostaw puste; brak kwoty albo pozycji → pytanie
+   zamiast zapisu (brak daty – krok 1: dzień wpisu albo wiadomości).
 5. Wysyłka zależy od kanału:
    - **Claude Code z inwestorem:** po zapisie `python3 tools/wydatki.py sync` – od razu w arkuszu; podaj wiersz.
    - **Przebieg bez inwestora (`claude -p`):** tylko kolejka – `sync` uruchamia automat po przebiegu.
