@@ -162,7 +162,15 @@ def aktualizuj_indeks(ind: dict) -> dict:
         pliki[cel] = {**znikniete[sciezka], "sha1": nowy["sha1"], "rozmiar": nowy["rozmiar"], "mtime": nowy["mtime"]}
         przeniesienia[sciezka] = cel
         zd["przeniesione"].append(f"{sciezka} → {cel}")
+    for sciezka in [s for s in znikniete if s not in przeniesienia]:  # oryginał usunięty, jego kopia została → przejmuje opis
+        kopia = next((c for c, w in pliki.items() if w.get("opis") == f"duplikat: {sciezka}"
+                      and w["sha1"] == znikniete[sciezka]["sha1"]), None)
+        if kopia:
+            pliki[kopia] = {**znikniete[sciezka], **{k: pliki[kopia][k] for k in ("sha1", "rozmiar", "mtime")}}
+            przeniesienia[sciezka] = kopia
+            zd["przeniesione"].append(f"{sciezka} → {kopia}")
     zd["usuniete"] += [s for s in znikniete if s not in przeniesienia]
+    zd["usuniete_przewodnik"] = [s for s in zd["usuniete"] if w_przewodniku(znikniete[s])]
     for w in pliki.values():  # „duplikat: <ścieżka oryginału>” idzie za przeniesionym oryginałem
         org = (w.get("opis") or "")[len("duplikat: "):] if (w.get("opis") or "").startswith("duplikat: ") else None
         if org in przeniesienia:
@@ -403,6 +411,9 @@ def cmd_sprawdz(a):
                         ("duplikaty", "Duplikaty (pominięte)")):
         if zd[klucz]:
             r.append(f"  {opis}: {len(zd[klucz])}")
+    if zd["usuniete_przewodnik"]:
+        r.append("  Zniknęły dokumenty z przewodnika – opis przepadł (przeniesiony ze zmienioną treścią → sklasyfikuj nowy plik):")
+        r += lista(zd["usuniete_przewodnik"])
     for o in ostrz:
         r.append(f"  ! {o}")
     if PRZEWODNIK_NOTION.exists() and wczytaj(STAN_NOTION, {}).get("sha1") != sha1(PRZEWODNIK_NOTION):
