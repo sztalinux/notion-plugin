@@ -144,8 +144,8 @@ Objaw: brak nowych linii „🤖” w Dzienniku, puste albo stare logi, „kopia
 4. **Czy Mac spał:** launchd z `StartCalendarInterval` nie uruchamia zadań w uśpieniu; pominięte uruchomienia scala w jedno po wybudzeniu. Mac wyłączony w porze zadania –
    przebieg przepada (wpisy poczekają na następny). Wieczorny po przegapionej porze uruchom ręcznie: `python3 <katalog automatów>/przeglad.py wieczorny`.
 5. **Próba ręczna:** `python3 <katalog automatów>/przeglad.py --sprawdz` (przebieg bez Notion: ma wypisać „notion MCP: zalogowany” i odpowiedź `OK`).
-6. **Kopia dla telefonu mimo to świeża?** `python3 tools/wiedza.py sync --publikuj` i `python3 tools/migawka.py` ręcznie; `wiedza_karty.py aktualizuj --publikuj`. Zadania na claude.ai nie
-   mogą jednocześnie chodzić (dublowanie) – gdy launchd działa, zaplanowane zadania claude.ai wyłączone.
+6. **Kopia dla telefonu mimo to świeża?** `python3 tools/wiedza.py sync --publikuj` i `python3 tools/migawka.py` ręcznie; `wiedza_karty.py aktualizuj --publikuj`. Zaplanowanych zadań
+   na claude.ai nie używamy – przeglądy uruchamia wyłącznie launchd.
 7. **Wyłączenie jednego automatu:** `launchctl bootout gui/$(id -u)/<etykieta>`; zmiana godzin: edytuj `StartCalendarInterval` w pliku plist, skopiuj do `~/Library/LaunchAgents/`, bootout + bootstrap.
 8. **Lokalny automat trybu głębokiego (`pl.dom.pytania`)** jest zapasowy (primary: GitHub Actions, 5.7); nie musi być załadowany.
 
@@ -162,7 +162,7 @@ Są trzy niezależne drogi do Notion – rozróżnij, która nie działa:
 Konektor na claude.ai zniknął albo jest zablokowany: **to nie jest powód do odmowy**. Asystent (zasada 13 w `budowa`, zasada 11 w `ja`) przechodzi w tryb bez Notion:
 wiedza z indeksu (karty, `szukaj`), Notatnik i zadania z migawki (`migawka.md`), a każdy zapis (notatka, dziennik, zadanie, wiedza) do dokumentu „📥 Skrzynka” słowami, bez pól Notion;
 przebieg godzinowy na Macu przenosi go do Notion. Co zrobić: sprawdź w ustawieniach claude.ai, czy konektor jest włączony i zalogowany (po zmianie hasła lub polityki organizacji logowanie
-trzeba powtórzyć); jeśli organizacja go blokuje – zostaw tryb bez Notion i automaty launchd (5.1). Zaplanowane zadania claude.ai wyłączone, gdy ich pracę robi launchd.
+trzeba powtórzyć); jeśli organizacja go blokuje – zostaw tryb bez Notion i automaty launchd (5.1). Zaplanowanych zadań na claude.ai nie używamy – przeglądy uruchamia wyłącznie launchd.
 Po powrocie konektora Skrzynkę opróżnia przebieg godzinowy (albo „przerób skrzynkę” w rozmowie).
 
 ### 5.3 Telefon mówi „indeks niedostępny” (albo „brak w tej kopii”)
