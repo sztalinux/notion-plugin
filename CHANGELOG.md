@@ -100,6 +100,19 @@ POM-5 „Budżet w czasie – ile gotówki potrzebuję w danym miesiącu” (ga�
   płatności; `docs/wydatki-arkusz.md` §5 i README – nowe polecenie.
 - Reguły przyjęte nocą bez inwestora (do potwierdzenia): transza w miesiącu końca ostatniego kroku etapu, materiał w miesiącu
   startu, rezerwa na cały miesiąc.
+## dom-budowa [3.13.0] – 2026-11-11 – POM-2 Książka domu
+
+POM-2 (gałąź `pom/2026-11-11-POM-2`; wersję ustala integrator przy scalaniu):
+- Nowa procedura `ksiazka-domu`: rozdział etapu po odbiorze (stały układ ośmiu sekcji – `references/szablon-rozdzialu.md`),
+  część „Gdzie co biegnie” (punkty od dwóch stałych punktów, strefy „nie wiercić / nie kopać”), odczyt, przeglądy
+  i spis dokumentów, droga zapasowa bez Notion; nawyki zbierania danych jako propozycja (`references/nawyki.md`).
+- Notion: strona „📘 Książka domu” na dole DOM (szkielet z zakładkami, wzmianka w 🗂 Więcej); format główny Notion,
+  PDF na razie eksportem z Notion; bez osobnej bazy produktów – sekcja „Dostawy i produkty” w rozdziale etapu.
+- `etap` C.8: odbiór całego etapu → szkic rozdziału; B.7 – punkty z miarą zasilają część B.
+- `zakupy` C.1: przy dostawie linia „Produkt: producent, typ / klasa, partia” w Uwagach.
+- `budowa`, „Luźny wpis z Dziennika”: położenie z miarą z Dziennika i Skrzynki trafia też do `ksiazka-domu` B.
+- `AGENTS.md`, `budowa` (mapa procedur), README (procedury, konektory), `notion-mapa.md`, `docs/zdjecia-i-kopia.md`
+  (folder `Książka domu/` na Dysku).
 
 ## ja [1.12.3] – 2026-11-11
 

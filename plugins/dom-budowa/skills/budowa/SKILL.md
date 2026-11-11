@@ -41,6 +41,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | „przegląd dnia budowy”, „co dziś na budowie i co jutro” | sekcja „Wieczorem” niżej |
 | dostał nowe pliki od projektanta/wykonawcy, pyta o dokument, „co wgrać do claude.ai”, „wgrałem” (paczka, kopia, faktura z telefonu), „aplikacja Dysku nie działa” | `dokumenty` |
 | „zaczynamy etap”, „jutro betonowanie – co sprawdzić”, „ekipa skończyła”, odbiór, usterki | `etap` |
+| „napisz rozdział książki domu”, „zapisz w książce: zawór…”, „gdzie biegnie rura / kabel”, „gdzie nie wiercić”, „kto robił dach i do kiedy gwarancja”, „kiedy przegląd…” | `ksiazka-domu` (rozdział etapu po odbiorze – wywołuje go `etap` C) |
 | relacjonuje dzień na budowie, wysyła zdjęcia, „rozłóż zdjęcia”, podaje swoje godziny, „ekipa chce dopłatę za…” | `dziennik` (zdjęcia na Dysku – E); dokumenty z telefonu, kopia na Dysk – `dokumenty` D |
 | „co kupić na…”, „kupić X na budowę / działkę”, „ile zamówić”, „kiedy zamawiać okna”, oferta hurtowni, „przyjechała dostawa” | `zakupy` |
 | „ekipa wchodzi…”, „przesuwamy…”, „ułóż harmonogram”, „do piątku mam…”, „czekam na…”, „co mnie czeka” | `harmonogram` |
@@ -69,7 +70,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    | zadanie z terminem, „do piątku dam znać…” | `harmonogram` (D) → TASKS, Kto = Ja, Obszar = Dom | |
    | ktoś ma coś zrobić / przyjść / dostarczyć w dniu X | `harmonogram` (D) → TASKS WAITING; krok budowy → Harmonogram | |
    | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia) | `zakupy` (0) | 🧱 Zakupy budowy; zadanie w TASKS tylko przy zakupie „na już” |
-   | relacja z budowy, dostawa, usterka, godziny własne, roboty dodatkowe („ekipa chce dopłatę za…”) | `dziennik` (dopłata – B) | dopłata to nie wydatek: do 💸 dopiero uzgodniona kwota jako plan (`koszty` B3), zapłata jako wydatek (`koszty` B) |
+   | relacja z budowy, dostawa, usterka, godziny własne, roboty dodatkowe („ekipa chce dopłatę za…”) | `dziennik` (dopłata – B) | dopłata to nie wydatek: do 💸 dopiero uzgodniona kwota jako plan (`koszty` B3), zapłata jako wydatek (`koszty` B); położenie z miarą („zapisz w książce…”, „zawór 1,2 m od narożnika”) → także `ksiazka-domu` B |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
    | wydatek, faktura do zapłaty / zapłacona, koszt (samo zdjęcie faktury na Dysku – `dokumenty` D) | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
    | prośba o rozkminkę: „przygotuj mi pytania na…”, „przemyśl…”, „porównaj…” | bez inwestora: ślad `→ 🧠 rozkminka wieczorem` (`wpisy`, krok 5); w rozmowie: `przygotowanie` / `analiza-techniczna` / `oferta` | wykonuje ją wieczorem `przeglad-dnia` (B.2a), wynik w przeglądzie dnia budowy |
@@ -178,7 +179,6 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
     - Gdy inwestor zmienia etap („zaczynamy SSO”), zaproponuj przestawienie strony DOM jednym zestawem zmian:
       tytuł sekcji „🔴 Do zamknięcia przed <nowy etap>”, w widoku `view://ddbaff9a-2f5b-47a5-bf7b-aa031bf88fc8` nazwa
       i filtr Etap = nowy etap (zostaje „Projekt i formalności”), otwarte sprawy starego etapu przeniesione albo zamknięte.
-
 13. **Notion niedostępny w tym kanale → Skrzynka, nie odmowa.** Bez narzędzi Notion w rozmowie: wiedza z indeksu, Notatnik
     i zadania z migawki (`wiedza/references/indeks.md`, sekcja czatu; `pytanie-do-bazy.md`, pkt 5), a każdy zapis (notatka,
     dziennik, zadanie, wiedza, wydatek) do dokumentu Claude „📥 Skrzynka” słowami, bez pól Notion – plugin `ja`,

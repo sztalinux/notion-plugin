@@ -78,6 +78,8 @@ Aktualizuj wiersz w Zakupach budowy: Status (Zamówione → Potwierdzone → Dos
 
 1. Sprawdź z zamówieniem: ilość, asortyment, uszkodzenia, dokumenty (WZ, deklaracja właściwości). Zdjęcie WZ z telefonu →
    `Dostawy/<Etap>/` (`dokumenty`, D); są w folderze → zaznacz „Dokumenty dostawy” i wpisz link pliku w pole „Dokumenty”.
+   Z WZ, etykiety albo karty dopisz do Uwag jedną linię „Produkt: producent, typ / klasa, partia” – z niej powstaje sekcja
+   „Dostawy i produkty” rozdziału Książki domu (`ksiazka-domu`); osobnej bazy produktów nie ma.
 2. Wydatek → `koszty`, sekcja B (nr FV; Płatność „Zrealizowane” tylko po zapłacie – faktura z terminem = „Do zapłaty”, `koszty` D); wpis w `dziennik` (dostawy).
 3. Braki / nadwyżki: co dokupić → nowy wiersz w Zakupach budowy (z „Zamówić do”); co zwrócić → Uwagi
    w wierszu dostawy.
