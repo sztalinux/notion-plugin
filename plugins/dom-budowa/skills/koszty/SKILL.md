@@ -21,7 +21,7 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
   Przebiegi bez inwestora (`claude -p`) nigdy na nim nie polegają.
 - **Claude Code:** `Koszty/Kosztorys_google.json` w folderze budowy – wartości wszystkich zakładek, odświeżane co wieczór; świeże
   pobierzesz poleceniem `python3 tools/wydatki.py pobierz`. Nie ma jej (arkusz jeszcze nieskonfigurowany, kod 2) →
-  najnowszy `Koszty/Kosztorys_stan_zero_*.xlsx` wg indeksu dokumentów (`python3 tools/dokumenty.py lista`). Nigdy nie
+  eksport od inwestora (punkt niżej; starych kosztorysów `.xlsx` w folderze budowy już nie ma). Nigdy nie
   kopiuj arkusza do repo.
 - **claude.ai, telefon, Cowork bez konektora:** poproś o eksport (Arkusze Google → Plik → Pobierz → Microsoft Excel) i załączenie.
 - Wydatki jeszcze w kolejce (Arkusz „Do arkusza” albo „Błąd”) nie są w arkuszu – przy „ile wydaliśmy” dolicz je osobno
