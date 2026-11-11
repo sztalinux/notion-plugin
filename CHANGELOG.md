@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.3] – 2026-11-11
+
+Nocna samonaprawa, obszar 05-prywatnosc:
+- `tools/build.py`: paczka pluginu bez `.DS_Store` z Findera (spis plików folderu).
+
 ## dom-budowa [3.12.2] – 2026-11-11
 
 Nocna samonaprawa, obszar 02-spojnosc (spójność procedur, Notion i narzędzi):
