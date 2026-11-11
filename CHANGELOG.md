@@ -4,6 +4,13 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.11.7] – 2026-11-11
+
+Nocna samonaprawa, obszar 09-dokumenty:
+- `tools/dokumenty.py`: uruchomiony z kopii roboczej (`.claude/worktrees`) pomija cały katalog folderu budowy z repo (`AI/`),
+  nie tylko katalog kopii roboczych – wcześniej liczył pliki z `AI/` jako dokumenty budowy.
+- `dokumenty/SKILL.md`: przykład prośby o plik ze ścieżką projektu konstrukcji po reorganizacji folderu budowy (`Projekty/Konstrukcja/`).
+
 ## dom-budowa [3.11.6] – 2026-11-11
 
 Nocna samonaprawa, obszar 08-wiedza:
