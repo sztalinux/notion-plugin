@@ -130,7 +130,7 @@ Objaw: brak nowych linii „🤖” w Dzienniku, puste albo stare logi, „kopia
 
 1. **Czy załadowane:** `launchctl list | grep pl.dom` – mają być `pl.dom.przeglad-szybki`, `-wieczorny`, `-tygodniowy` (kolumny: PID, ostatni kod wyjścia, etykieta).
    Brak – załaduj: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/<plist>`; po zmianie pliku najpierw `launchctl bootout gui/$(id -u)/<etykieta>`.
-2. **Co mówi log:** w `<folder budowy>/.dom/automaty/` – `<tryb>-RRRR-MM-DD.log` (start, kod wyjścia, czas, koszt), `stan.json` (ostatni start, koniec, kod, koszt na tryb),
+2. **Co mówi log:** w `<folder budowy>/.dom/automaty/` – `<tryb>-RRRR-MM-DD.log` (przygotowanie, kod wyjścia, czas, koszt), `stan.json` (ostatni start, koniec, kod, koszt na tryb),
    `launchd-<tryb>.log` (surowe wyjście launchd). Kod wyjścia: **0** ok; **1** błąd przebiegu; **2** brak logowania MCP notion (linia „NOTION: brak logowania” → 5.2);
    **3** przekroczony limit czasu; **4** brak sieci (przed startem sprawdzane: hosty Notion, API modelu i stan `claude mcp get notion`; szybki kończy od razu i ponawia za godzinę,
    wieczorny i tygodniowy ponawiają co 5 min do 45 min).
@@ -196,7 +196,7 @@ Objawy: wiersz usunięty w Notion wciąż jest w wynikach; `stan` – `zbudowano
 
 Odciski leżą w `.dom/wiedza/wektory.sqlite`, listy podobnych w tabeli `podobne` indeksu. Po zmianie modelu (np. innego niż `bge-m3`):
 
-1. `ollama pull <model>`, zmień `"model"` w `.dom/sens.json`.
+1. `ollama pull <model>`, zmień `"model"` w `.dom/sens.json` (pliku nie ma, dopóki działa domyślne Ollama + `bge-m3` – wtedy go utwórz: `{"zrodlo": "ollama", "model": "<model>"}`).
 2. `python3 tools/wiedza_sens.py przelicz` – odciski liczone innym modelem są liczone od nowa (ok. kilku minut), listy podobnych też; `--pelny` buduje od nowa tylko listy podobnych z istniejących odcisków. W trakcie `szukaj --sens` nie jest wiarygodne.
 3. `python3 tools/wiedza_sens.py stan` – model i liczba odcisków mają się zgadzać z liczbą informacji.
 4. `python3 tools/wiedza.py publikuj --teraz` – nowe listy podobnych jadą do kopii czatu.
