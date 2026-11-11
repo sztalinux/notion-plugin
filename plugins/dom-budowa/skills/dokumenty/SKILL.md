@@ -68,7 +68,8 @@ nie ma go albo tekst nieczytelny (rysunki) → poproś jak wyżej.
 
 - Dokument, który zmienia fakty (nowa rewizja projektu, opinia, umowa, wybrana oferta): zaproponuj analizę
   (procedura `analiza-techniczna`) i aktualizację ściągi: Notion → „📐 Dane projektu (ściąga)” (jedyne źródło – bez kopii w pliku), Notatnik.
-- Oferta wykonawcy → procedura `oferta`.
+- Oferta wykonawcy → procedura `oferta`. Umowa, protokół, karta gwarancyjna z wierszem w bazie **Umowy i gwarancje**
+  (`collection://60c06f30-7867-435d-8f2e-1e025a3daa5c`) z pustym polem Dokument → zaproponuj wpisanie ścieżki z indeksu.
 - Ostrzeżenia skryptu („powyżej limitu”, informacja o danych osobowych) przekaż inwestorowi jednym zdaniem z propozycją
   (np. zmniejszona kopia PDF obok oryginału, oznaczona do paczki zamiast niego).
 - Na koniec podaj listę „dodaj / podmień / usuń” z raportu. Po „wgrałem” o paczce dla claude.ai: `python3 tools/dokumenty.py wgrane`; „wgrałem kopię” (Dysk) – sekcja D.
