@@ -53,4 +53,5 @@ branżą i adresatem, tak żeby dało się ją filtrować i zamknąć.
   szczegóły, listy (np. pozycje do sprawdzenia jako checkboxy), kontekst i dopiski z datą – w treści strony.
 - Daty jako daty Notion, nie tekst. Termin względny („za tydzień”) przelicz na datę.
 - Nie zmieniaj ani nie usuwaj cudzych wpisów bez prośby; zamknięcie = Status „Zrobione”/„Odrzucone” + dopisek.
-- Jeśli narzędzia Notion są niedostępne: przygotuj wpisy jako tabelę Markdown do wklejenia i powiedz o tym wprost.
+- Jeśli narzędzia Notion są niedostępne: zapis do Skrzynki słowami, bez pól Notion (`budowa`, zasada 13) – Mac przeniesie go
+  do Notion; powiedz o tym wprost.
