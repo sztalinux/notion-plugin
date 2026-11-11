@@ -54,7 +54,8 @@ Dom/
 ```
 
 Mac (folder budowy): te same foldery dokumentów, `_Przychodzące/` (skrzynka na dokumenty), `_Na Dysk/` (paczki
-do wgrania), `Wiedza…`, `AI/` i `.dom/` – trzy ostatnie nigdy nie idą na Dysk. `Zdjęcia/` na Macu tylko w trybach
+do wgrania), `Teczki/<Etap>/RRRR-MM-DD/` (teczki etapów składane przez `tools/teczka.py` – pochodne kopie dokumentów,
+poza kopią na Dysk i poza indeksem `dokumenty`; `etap`, D), `Wiedza…`, `AI/` i `.dom/` – trzy ostatnie nigdy nie idą na Dysk. `Zdjęcia/` na Macu tylko w trybach
 z aplikacją albo AirDropem (kopia lokalna, gdy jest miejsce na dysku).
 
 Źródło: dla zdjęć – Dysk; dla dokumentów – Mac. Żywy arkusz „Kosztorys budowy” zostaje tam, gdzie jest.

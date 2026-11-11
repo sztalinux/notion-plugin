@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.14.0] – 2026-11-11 (POM-4)
+
+POM-4 „Teczka transzy / do banku jednym poleceniem” (gałąź `pom/2026-11-11-POM-4`, czeka na scalenie):
+- `tools/teczka.py zbierz` (nowy, biblioteka standardowa): wg okresu etapu z Harmonogramu składa `Teczki/<Etap>/RRRR-MM-DD/`
+  z działami (protokoły, faktury, wpisy kierownika, dostawy, dodatkowe) i `SPIS.md` z brakami; domyślnie na sucho, nie
+  nadpisuje, źródeł nie rusza, pliki bez daty w nazwie wypisuje zamiast zgadywać; zdjęcia tylko jako linki. Testy
+  `tools/test_teczka.py` na zmyślonych danych.
+- `etap`: sekcja D „Teczka etapu” + `references/teczka.md` (składniki, braki, forma; wymagania banku jako typowe – do
+  potwierdzenia z umową kredytową); `koszty` D.3 odsyła do niej; `AGENTS.md` i `budowa` – nowe frazy kierowania.
+- `tools/dokumenty.py`: folder `Teczki/` poza indeksem (kopie, nie nowe dokumenty); `Teczki/` poza kopią na Dysk;
+  README i `docs/zdjecia-i-kopia.md` – opis folderu i narzędzia.
+
 ## ja [1.12.3] – 2026-11-11
 
 Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:

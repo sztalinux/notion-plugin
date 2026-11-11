@@ -40,7 +40,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` (plugin `ja`); przegląd dnia budowy – sekcja „Wieczorem” niżej |
 | „przegląd dnia budowy”, „co dziś na budowie i co jutro” | sekcja „Wieczorem” niżej |
 | dostał nowe pliki od projektanta/wykonawcy, pyta o dokument, „co wgrać do claude.ai”, „wgrałem” (paczka, kopia, faktura z telefonu), „aplikacja Dysku nie działa” | `dokumenty` |
-| „zaczynamy etap”, „jutro betonowanie – co sprawdzić”, „ekipa skończyła”, odbiór, usterki | `etap` |
+| „zaczynamy etap”, „jutro betonowanie – co sprawdzić”, „ekipa skończyła”, odbiór, usterki, „teczka do banku” | `etap` |
 | relacjonuje dzień na budowie, wysyła zdjęcia, „rozłóż zdjęcia”, podaje swoje godziny, „ekipa chce dopłatę za…” | `dziennik` (zdjęcia na Dysku – E); dokumenty z telefonu, kopia na Dysk – `dokumenty` D |
 | „co kupić na…”, „kupić X na budowę / działkę”, „ile zamówić”, „kiedy zamawiać okna”, oferta hurtowni, „przyjechała dostawa” | `zakupy` |
 | „ekipa wchodzi…”, „przesuwamy…”, „ułóż harmonogram”, „do piątku mam…”, „czekam na…”, „co mnie czeka” | `harmonogram` |
