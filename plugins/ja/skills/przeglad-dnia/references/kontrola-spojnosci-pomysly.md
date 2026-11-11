@@ -18,14 +18,14 @@ to praca poza główną gałęzią – dopóki CHANGELOG nie ma wpisu z tym POM,
 | **P1** | Status „Zrobione”, „Zrobiono w wersji” **puste** | CHANGELOG ma nagłówek z POM-n → **uzupełnij pole** (jedyny zapis bez ☑); nie ma → pytanie „❓ Uzupełnić »Zrobiono w wersji«?” (inwestor wpisuje wersję albo „skrypt poza repo, data”) |
 | **P2** | Status „Do zrobienia” / „Przeanalizowany”, pole „Zrobiono w wersji” niepuste, bez „częściowo” i bez „gałąź” | pytanie „❓ Status → Zrobione?” (☑ = ustaw „Zrobione”, pole zostaje) |
 | **P3** | Status „Do zrobienia” / „Przeanalizowany”, pole **puste**, a CHANGELOG ma nagłówek z POM-n | pytanie „❓ Status → Zrobione? (CHANGELOG: <wersja>)” (☑ = ustaw „Zrobione” i uzupełnij pole z nagłówka) |
-| **P4** | pole „Zrobiono w wersji” to „gałąź … (czeka na scalenie)”, a CHANGELOG na głównej gałęzi ma nagłówek z tym POM-n | **zastąp pole** wersją z nagłówka (po scaleniu przez integratora; Status bez zmian) |
+| **P4** | pole „Zrobiono w wersji” to „gałąź … (czeka na scalenie)”, a CHANGELOG na głównej gałęzi ma nagłówek z tym POM-n | **zastąp pole** wersją z nagłówka (po scaleniu przez integratora; Status bez zmian) – przy Statusie innym niż „Zrobione” dopisz „ (częściowo)”, żeby P2 nie pytał o wdrożenie niepełne |
 
 Zasada pomysłu: „Zrobione” bez wersji uzupełniasz tylko, gdy wersja jest **jednoznaczna** – czyli stoi w nagłówku
 `## <plugin> [wersja] – data (POM-n)`. Sama wzmianka POM-n w treści wpisu nie wystarcza (bywa odwołaniem do innego pomysłu;
 starsze wpisy sprzed 11.11 nie mają numerów w nagłówkach) – wtedy P1 daje pytanie, a P3 nie flaguje wcale.
 Kilka nagłówków jednego POM (kolejne etapy) → wpisz wszystkie wersje po przecinku („ja 1.4.0, ja 1.5.0”).
 
-## Przebieg (w kroku 2, na wierszach z odczytu bazy pomysłów – bez dodatkowego odczytu Notion)
+## Przebieg (w kroku 2; jeden odczyt bazy pomysłów – cała tablica, wszystkie statusy, nie tylko „Nowy”; ten sam wynik służy analizie)
 
 1. **Zastosuj odpowiedzi** na wcześniejsze punkty `KS-P…` (zanim dopiszesz nowe): ☑ przy P2 → Status „Zrobione”; ☑ przy P3 →
    Status „Zrobione” i pole „Zrobiono w wersji” z nagłówka CHANGELOG; dopisek „zostaje” / „częściowo” → nic nie zmieniaj;
