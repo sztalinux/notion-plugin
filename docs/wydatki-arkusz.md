@@ -23,7 +23,7 @@ wpis w 📓 Dzienniku  ·  wiadomość do asystenta  ·  zdjęcie faktury  ·  w
    │  tools/wydatki.py sync  – NOTION_TOKEN, bez AI
    ▼
 Apps Script przypięty do arkusza (aplikacja internetowa + sekret, @OnlyCurrentDoc)
-   │  Rodzaj Wydatek → zakładka Wydatki  ·  Wycena → Cennik  ·  Plan → Kosztorys, kolumna „Plan ręczny”
+   │  Rodzaj Wydatek i Zwrot → zakładka Wydatki  ·  Wycena → Cennik  ·  Plan → Kosztorys, kolumna „Plan ręczny”
    ▼
 Notion: Arkusz = „W arkuszu” + Wiersz arkusza   albo   „Błąd” + powód w polu Błąd
    │  przebieg szybki: widok „⚠ Błędy do zgłoszenia” → komunikat 🔔 z okienkiem ❓ we „📝 Wpisach”, Zgłoszono = dziś
