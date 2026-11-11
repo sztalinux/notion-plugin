@@ -392,9 +392,12 @@ def cmd_sprawdz(a):
         oczek = [s for s, w in ind["pliki"].items() if w["status"] == "nowy"]
         if oczek:
             r.append(f"  Czeka na klasyfikację: {len(oczek)} (procedura `dokumenty`).")
-    zm = [s for s in zd["zmienione"] if ind["pliki"].get(s, {}).get("eksport")]
+    # dokumenty z przewodnika też (eksport domyślnie pusty); bez .json – kopie maszynowe nadpisywane codziennie (kosztorys)
+    zm = [s for s in zd["zmienione"] if ind["pliki"].get(s, {}).get("eksport")
+          or (w_przewodniku(ind["pliki"].get(s, {})) and not s.lower().endswith(".json"))]
     if zm:
-        r.append("  Zmieniona treść plików z paczki (sprawdź, czy to nowa wersja – ściąga, Notion):")
+        r.append("  Zmieniona treść dokumentów z paczki lub przewodnika (nowa wersja? zaktualizuj --opis i --zawartosc "
+                 "– procedura `dokumenty`, A.5; ściąga, Notion):")
         r += lista(zm)
     for klucz, opis in (("przeniesione", "Przeniesione"), ("usuniete", "Usunięte z dysku"),
                         ("duplikaty", "Duplikaty (pominięte)")):

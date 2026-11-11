@@ -54,7 +54,8 @@ nie ma go albo tekst nieczytelny (rysunki) → poproś jak wyżej.
    jest prywatny (decyzja inwestora); skrypt raz informuje, co wykrył.
 5. Nowa wersja dokumentu: nadaj jej **tę samą** `--nazwa` co poprzedniej i nową `--zawartosc`, a starej usuń
    z przewodnika (`--zawartosc ""`, `--bez-eksportu`, opis „starsza wersja – zastąpiona przez …”). Nazwy są stałe –
-   w przewodniku i w projekcie dokument się podmienia, a nie dubluje.
+   w przewodniku i w projekcie dokument się podmienia, a nie dubluje. Nowa wersja nadpisana pod tą samą ścieżką (raport
+   „Zmieniona treść dokumentów…”) – przeczytaj ją i zaktualizuj `--opis` i `--zawartosc` tego pliku.
 6. Zapisz decyzje (jedno wywołanie na plik):
    `python3 tools/dokumenty.py ustaw "<ścieżka>" --bez-eksportu --nazwa "<NN_Krotka-nazwa.ext>" --kategoria "<NN Kategoria>" --opis "<co to jest, z datą/wersją>" --zawartosc "<na jakie pytania odpowiada, gdzie szukać>"`
    Prefiksy nazw: 00 podsumowanie, 1x projekty, 2x grunt, 3x media i formalności, 4x koszty, 5x oferty, 6x umowy.
