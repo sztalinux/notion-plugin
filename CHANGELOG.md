@@ -4,9 +4,9 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
-## ja [1.13.0] – 2026-11-11
+## ja [1.13.0] – 2026-11-11 · POM-20
 
-POM-20 – instrukcja obsługi całego systemu dla człowieka:
+Instrukcja obsługi całego systemu dla człowieka:
 - Nowa strona Notion „📘 Instrukcja obsługi” pod 📌 DASHBOARD (obok 🗺 Mapy Notion): na start, na co dzień, reguły
   z uzasadnieniem, „co się stanie, gdy…”, gdzie co jest, utrzymanie (przebiegi, logi, kody, koszty, tokeny), gdy coś nie
   działa, zmiana harnessu a telefon, odtworzenie od zera, słowniczek, najważniejsze decyzje; każda sekcja z linią „Stan:”.
