@@ -53,6 +53,7 @@ wyłączony → strony czekają w Notion, nic nie ginie. GitHub Actions nie maj�
 | faktura albo transza czeka na zapłatę | Płatność „Do zapłaty” | liczy się do zobowiązań, nie do WYDANE |
 | „zapłaciłem tę fakturę” (strona już w arkuszu) | ta sama strona: Płatność „Zrealizowane”, Data = dzień zapłaty, Arkusz „Do arkusza” | `sync` poprawia jej wiersz (A:H, J:M), nie dodaje nowego |
 | zła kwota / pozycja w wysłanym wydatku | popraw pola tej samej strony, Arkusz „Do arkusza” | jak wyżej; nadpisze ręczną zmianę inwestora w tym wierszu |
+| zwrot pieniędzy (różnica VAT od wykonawcy, zwrot towaru) | nowa strona: Rodzaj Zwrot, Kwota dodatnia, ta sama Pozycja i Typ co wydatek, bez Ilości; „Do zapłaty” = oczekiwany | arkusz: osobny wiersz z minusem (kod Apps Script ≥ 4); wydatek zostaje bez zmian, WYDANE = suma |
 | wydatek wysłany przez pomyłkę | – | `python3 tools/wydatki.py wycofaj <id strony>` (czyści wiersz, w Notion „Nie wysyłać”) |
 | oferta / cena dostawcy („X ma beton po … zł/m³ brutto”) | Rodzaj Wycena, Kwota = cena za jednostkę, Jedn., Cena podana Netto/Brutto, VAT % | idzie do Cennika, nie do Wydatków; wybór = Status wyceny „Wybrana” i ponowne wysłanie |
 | „planuję wydać ok. N”, „szacowałem N, wyszło M” | Rodzaj Plan, Kwota = plan całej pozycji brutto (+ osobno wydatek M) | `sync` wpisuje „Plan ręczny” pozycji; inny plan już jest → Błąd i pytanie, „Nadpisz plan” zastępuje |
@@ -79,7 +80,10 @@ Agent nie przelicza ręcznie niczego, co liczy arkusz – zmienia dane wejściow
 - **Grupy materiałów (Kosztorys V, Cennik P):** jedna oferta (np. stal) zasila kilka pozycji tej samej grupy.
 - **Jednostki:** Cennik Q przelicza cenę na jednostkę bazową (t → kg), żeby oferta za tonę pasowała do pozycji w kg.
 - **VAT w Cenniku:** G = cena brutto, O = cena netto; VAT % wpisany jako 8 albo 0,08 działa tak samo.
-- **WYDANE:** sumy Wydatków „Zrealizowane” po pozycji i typie → Kosztorys I, Etapy H–L, Podsumowanie.
+- **WYDANE:** sumy Wydatków „Zrealizowane” po pozycji i typie → Kosztorys I, Etapy H–L, Podsumowanie. Zwroty (kwoty
+  ujemne) odejmują się same; „Do zapłaty” z minusem obniża zobowiązania.
+- **VAT w Wydatkach:** P = VAT % (z pola VAT % strony; `sync` wpisuje, korekta nadpisuje, `wycofaj` czyści), Q = netto
+  (formuła `C/(1+P)`, pusta bez stawki).
 - **Szacunek AI:** zakładka „Szacunek AI 10.2026” (pełna wycena AI, wartości); kol. J–K przypisują wiersz do etapu i pozycji
   Kosztorysu, stąd Kosztorys Q–S, Etapy P–R i tabela „wg stanów” w Podsumowaniu (materiał / robocizna / razem).
 - **Kontrole:** Kosztorys T (⚠ etap spoza Etapów, brak typu), Wydatki N (⚠ przy wierszu), Podsumowanie „Kontrola
@@ -123,7 +127,8 @@ Błąd pojedynczej strony nie zmienia kodu: `sync` zapisuje go w Notion (Arkusz 
 
 Zabezpieczenia w `sync`: walidacja przed wysyłką (data, kwota, pozycja, ilość materiału 02–08; wycena – jednostka, nazwa,
 VAT przy netto) → strona dostaje „Błąd” z powodem; wyceny czekają, gdy kod Apps Script < 2 albo Cennik w starym układzie
-(`cennik_ok`); kolumny z formułami (Wydatki I i N, Cennik G i K, Kosztorys N–P) nigdy nie są nadpisywane; zapis pod
+(`cennik_ok`), zwroty – gdy kod < 4; kolumny z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) nigdy nie są
+nadpisywane; zapis pod
 blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 
 ## 6. Problemy
@@ -165,7 +170,7 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
 0. **Droga szybka – konektor Google Sheets** (gdy jest w sesji): migawka zmienianego zakresu z formułami
    (`get_spreadsheet` z `userEnteredValue`) zapisana w `<hub>/.dom/wydatki/` → zapis (`update_formulas`, `update_values`,
    `update_spreadsheet`) → odczyt kontrolny. Te same zasady co skrypt: formuły ze „;” i przecinkiem dziesiętnym
-   (sprawdzone 10.11.2026 – „,” daje liczbę dziesiętną), bez nadpisywania kolumn wpisywanych (Wydatki A–H, J–M, O;
+   (sprawdzone 10.11.2026 – „,” daje liczbę dziesiętną), bez nadpisywania kolumn wpisywanych (Wydatki A–H, J–M, O, P;
    Kosztorys F, U; Cennik A–F, H–J, L–N), bez IMPORT…/IMAGE/HYPERLINK, nie w trakcie `sync`. Reguły formatowania
    warunkowego przez `update_spreadsheet` przetestuj najpierw na jednej regule. Konektora brak albo błąd → kroki 1–5 (wolniej,
    ten sam wynik). Potem i tak krok 5 (kontrola).
@@ -196,13 +201,14 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
  *   ping · pozycje · dane · dopisz (wiersze[]) · usun (ids[]) · zmien (operacje[]) – zmiany układu bez ponownego importu.
  * @OnlyCurrentDoc: skrypt ma dostęp wyłącznie do tego arkusza (bez Dysku, bez innych plików). Cofanie zmian – Plik →
  * Historia wersji.
- * dopisz: rodzaj „Wycena” → arkusz Cennik (ponowne wysłanie aktualizuje ten sam wiersz), reszta → arkusz Wydatki.
- * Kolumn z formułami (Wydatki I i N, Cennik G i K, Kosztorys N–P) dopisz/usun nigdy nie nadpisują.
+ * dopisz: rodzaj „Wycena” → arkusz Cennik (ponowne wysłanie aktualizuje ten sam wiersz), reszta → arkusz Wydatki
+ * („Zwrot” z kwotą ujemną). Wydatki P (VAT %) wpisuje i czyści tools/wydatki.py akcją zmien, nie dopisz/usun.
+ * Kolumn z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) dopisz/usun nigdy nie nadpisują.
  * zmien: tylko znane zakładki, bez usuwania zakładek, bez formuł IMPORT…/IMAGE/HYPERLINK; czyścić wolno tylko pusty Cennik
  * i archiwum szacunku AI.
  */
 
-var WERSJA = 3;
+var WERSJA = 4;
 var ARKUSZ_WYDATKI = 'Wydatki';
 var ARKUSZ_KOSZTORYS = 'Kosztorys';
 var ARKUSZ_CENNIK = 'Cennik';
@@ -340,7 +346,8 @@ function nastepnyWolny(arkusz, od) {
 function sprawdz(w, mapa) {
   if (!w.id) return 'brak id strony';
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(w.data || ''))) return 'brak daty';
-  if (!(Number(w.kwota) > 0)) return 'brak kwoty';
+  // Zwrot (pieniądze oddane, np. różnica VAT) przychodzi z kwotą ujemną – wtedy plus byłby błędem
+  if (w.rodzaj === 'Zwrot' ? !(Number(w.kwota) < 0) : !(Number(w.kwota) > 0)) return 'brak kwoty';
   if (STATUSY.indexOf(w.status) < 0) return 'Płatność: ' + STATUSY.join(' / ');
   if (!w.lp) return 'brak pozycji (numer z Kosztorysu, np. 03.5)';
   if (!mapa[w.lp]) return 'pozycja ' + w.lp + ' nie istnieje w Kosztorysie';

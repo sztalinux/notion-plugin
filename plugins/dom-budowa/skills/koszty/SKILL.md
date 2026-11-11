@@ -58,7 +58,8 @@ wydatki: 150 zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to 
 3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą → zaktualizuj go zamiast dodawać drugi; w Claude Code sprawdź też
    kopię arkusza (`Kosztorys_google.json`, zakładka Wydatki) – starsze wydatki są tylko tam.
 4. Zapisz wiersze w „💸 Wydatki → arkusz” jednym wywołaniem: Wydatek (krótko, co kupione), Data, Kwota, Pozycja, Typ,
-   Ilość + Jedn. (materiał – obowiązkowo), Płatność, Sposób, Dostawca / nr FV, Notatki, **Arkusz = „Do arkusza”**
+   Ilość + Jedn. (materiał – obowiązkowo), Płatność, Sposób, Dostawca / nr FV, VAT % (stawka z faktury, gdy znana – arkusz
+   policzy netto; nie zgaduj), Notatki, **Arkusz = „Do arkusza”**
    (puste działa tak samo; „Nie wysyłać” wstrzymuje). Wydatek wpisany ręcznie w arkuszu nie idzie do kolejki – jedna droga.
    Brakujące pole, które da się uzupełnić później (sposób, nr FV) – zostaw puste; brak kwoty, daty albo pozycji → pytanie
    zamiast zapisu.
@@ -70,9 +71,13 @@ wydatki: 150 zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to 
 6. Wiersz z Arkusz = „Błąd” (powód w polu Błąd) wraca do inwestora jako pytanie we „📝 Wpisach” (sekcja E); po poprawce
    pola inwestor albo asystent ustawia znów „Do arkusza”.
 7. Korekta wydatku już w arkuszu („zapłaciłem tę fakturę”, zła kwota) – popraw pola tej samej strony w Notion (np. Płatność
-   = Zrealizowane, Data = dzień zapłaty) i ustaw Arkusz = „Do arkusza”: `sync` nadpisze jej wiersz (pola A:H, J:M), nie doda
+   = Zrealizowane, Data = dzień zapłaty) i ustaw Arkusz = „Do arkusza”: `sync` nadpisze jej wiersz (pola A:H, J:M, P), nie doda
    nowego. Inwestor może też poprawić wiersz w arkuszu ręcznie – wtedy nie wysyłaj tej strony ponownie, bo nadpisze jego
    zmianę. Wydatek wysłany przez pomyłkę – w Claude Code `python3 tools/wydatki.py wycofaj <id strony>`.
+7a. **Zwrot** (wykonawca oddaje różnicę VAT po przefakturowaniu materiału z 23% na 8%, zwrot towaru, korekta faktury) –
+   nigdy nie zmniejszaj kwoty wydatku: to osobna strona, Rodzaj = Zwrot, Kwota dodatnia (arkusz zapisze ją z minusem),
+   ta sama Pozycja i Typ co wydatek, bez Ilości, w Notatkach – którego wydatku dotyczy. Zwrot obiecany = Płatność
+   „Do zapłaty” (obniża zobowiązania), otrzymany = „Zrealizowane” i data wpływu. WYDANE pozycji = wydatek − zwrot.
 
 Zakup z listy 🧱 Zakupy budowy: najpierw `zakupy` (Status, dostawa), potem ten wydatek.
 8. **Zakup to wybór oferty.** Wydatek albo zamówienie („kupiłem / zamówiłem stal w X”) u dostawcy, który ma wycenę

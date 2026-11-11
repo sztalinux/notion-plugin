@@ -61,7 +61,7 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 
 | Pole | Typ | Wartości |
 |---|---|---|
-| Rodzaj | select | Wydatek (puste = Wydatek) → arkusz Wydatki; Wycena → arkusz Cennik; Plan → Kosztorys „Plan ręczny” pozycji (`koszty` B3) |
+| Rodzaj | select | Wydatek (puste = Wydatek) → arkusz Wydatki; Zwrot (pieniądze oddane: różnica VAT, zwrot towaru) → arkusz Wydatki z minusem (Kwota dodatnia, bez Ilości); Wycena → arkusz Cennik; Plan → Kosztorys „Plan ręczny” pozycji (`koszty` B3) |
 | Wydatek | tytuł | co kupione / za co zapłacone (→ Opis w Wydatkach / Materiał w Cenniku) |
 | Data | data | data płatności |
 | Kwota | liczba | Wydatek: zł brutto, tyle ile zapłacono; Wycena: cena za jednostkę; Plan: plan całej pozycji brutto |
@@ -78,7 +78,7 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 | Wiersz arkusza | liczba | numer wiersza w arkuszu Wydatki albo Cennik (ustawia skrypt) |
 | Status wyceny | select | tylko Wycena: Oferta, Wybrana, Odrzucona – zmiana + „Do arkusza” aktualizuje wiersz Cennika |
 | Cena podana | select | tylko Wycena: Brutto, Netto |
-| VAT % | liczba | tylko Wycena: stawka w procentach (23, 8…); obowiązkowa przy Netto |
+| VAT % | liczba | stawka w procentach (23, 8…); Wycena – obowiązkowa przy Netto; Wydatek – stawka z faktury (opcjonalnie, → Wydatki kol. P i netto w Q) |
 | Ważna do | data | tylko Wycena: termin ważności oferty |
 
 Widok „⚠ Błędy do zgłoszenia” (`view://414f5982-09e7-8182-a74d-000c2bef9ffb`): Arkusz = Błąd i puste Zgłoszono – czyta go przebieg szybki.

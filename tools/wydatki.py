@@ -15,7 +15,9 @@ w pierwszym wolnym wierszu arkusza Wydatki (bez nadpisywania kolumn z formułami
 z numerem wiersza albo „Błąd” z powodem. Ponowne wysłanie tej samej strony nie dubluje wiersza (kolumna Źródło
 = notion:<id strony>). Strona już dopisana, która wróci do kolejki (zmienione pola + Arkusz = „Do arkusza”), poprawia swój
 wiersz (pola wpisywane A:H, J:M – np. „Do zapłaty” → „Zrealizowane”); korekta z Notion nadpisuje ręczne zmiany tego wiersza
-w arkuszu. Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;
+w arkuszu. Rodzaj „Zwrot” (pieniądze oddane – różnica VAT, zwrot towaru) to wiersz Wydatków z kwotą ujemną i bez ilości
+(kod Apps Script ≥ 4, inaczej czeka w kolejce); VAT % strony wydatku trafia do kolumny P (zapis akcją „zmien”).
+Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;
 ponowne wysłanie tej samej strony aktualizuje jej wiersz (np. Status wyceny = Wybrana). Rodzaj „Plan” (plan całej pozycji
 brutto) nie idzie do Apps Script jako wiersz – `sync` wpisuje go w Kosztorys „Plan ręczny” (kolumna i wiersz po nagłówkach),
 inny plan nadpisuje tylko strona, która go ustawiła, albo z „Nadpisz plan”. Każde wysłanie czyści pole Zgłoszono (pytanie
@@ -51,6 +53,9 @@ LIMIT_ODCZYTU_S = 300       # „dane” (cały arkusz) – Google bywa wolny go
 PIERWSZY_WIERSZ = 5         # pierwszy wiersz danych w zakładkach (nagłówki w wierszu 4) – jak w Apps Script
 PACZKA = 25                 # wierszy w jednym żądaniu do arkusza
 WERSJA_WYCEN = 2            # minimalna wersja kodu Apps Script, która zapisuje wyceny do Cennika
+WERSJA_ZWROTOW = 4          # minimalna wersja kodu Apps Script, która przyjmuje kwotę ujemną (Rodzaj „Zwrot”)
+ZWROT = "Zwrot"
+KOL_VAT = "P"               # Wydatki: VAT % (wpisuje sync z pola VAT %); Q – kwota netto (formuła)
 PLIK_KOPII = "Kosztorys_google.json"
 DOKUMENTACJA = Path(__file__).resolve().parent.parent / "docs" / "wydatki-arkusz.md"
 LP = re.compile(r"^(\d{1,2})\.(\d+)$|^(P\d)\.(\d+)$")
@@ -147,10 +152,12 @@ def numer_pozycji(nazwa: str) -> str:
 
 
 def na_wiersz(strona: dict) -> dict:
+    """Strona Notion → wiersz do wysłania. Zwrot: kwota zawsze ujemna (w Notion wpisuje się ją dodatnio) i bez ilości –
+    to jedyne miejsce zmiany znaku, więc dopisanie i korekta wiersza dostają tę samą wartość."""
     p = strona.get("properties") or {}
     data = ((p.get("Data") or {}).get("date") or {}).get("start") or ""
     wazna = ((p.get("Ważna do") or {}).get("date") or {}).get("start") or ""
-    return {
+    w = {
         "rodzaj": wybor(p.get("Rodzaj") or {}) or "Wydatek",
         "status_wyceny": wybor(p.get("Status wyceny") or {}),
         "cena_podana": wybor(p.get("Cena podana") or {}),
@@ -171,6 +178,11 @@ def na_wiersz(strona: dict) -> dict:
         "nadpisz": bool((p.get("Nadpisz plan") or {}).get("checkbox")),
         "wiersz_ark": (p.get("Wiersz arkusza") or {}).get("number"),
     }
+    if w["rodzaj"] == ZWROT:
+        if isinstance(w["kwota"], (int, float)):
+            w["kwota"] = -abs(w["kwota"])
+        w["ilosc"], w["jedn"] = None, ""
+    return w
 
 
 def blad_lokalny(w: dict) -> str:
@@ -182,7 +194,7 @@ def blad_lokalny(w: dict) -> str:
         return ""
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", w["data"]):
         return "brak daty"
-    if not isinstance(w["kwota"], (int, float)) or w["kwota"] <= 0:
+    if not isinstance(w["kwota"], (int, float)) or (w["kwota"] >= 0 if w["rodzaj"] == ZWROT else w["kwota"] <= 0):
         return "brak kwoty" if w["rodzaj"] != "Wycena" else "brak ceny za jednostkę (pole Kwota)"
     if w["rodzaj"] == "Wycena":
         if not w["jedn"]:
@@ -196,7 +208,7 @@ def blad_lokalny(w: dict) -> str:
         return ""
     if not w["lp"] or w["lp"] == ZASTEPCZA:
         return "brak pozycji – wybierz z listy Pozycja"
-    if w["typ"] == "Materiał" and not w["ilosc"] and "02" <= w["lp"][:2] <= "08":
+    if w["rodzaj"] != ZWROT and w["typ"] == "Materiał" and not w["ilosc"] and "02" <= w["lp"][:2] <= "08":
         return "materiał stanu zero bez ilości – wpisz Ilość i Jedn."
     return ""
 
@@ -240,13 +252,20 @@ def sync(k: dict, proba: bool) -> tuple:
             wyslij_plany(k, plany, licz)
         except BladArkusza as e:
             bledy.append(f"plany: {e} – strony zostają w kolejce")
+    ping = arkusz(k, "ping") if any(w["rodzaj"] in ("Wycena", ZWROT) for w in do_wyslania) else {}
+    wersja = ping.get("wersja") or 1
+    if any(w["rodzaj"] == ZWROT for w in do_wyslania) and wersja < WERSJA_ZWROTOW:
+        # starszy kod odrzuciłby kwotę ujemną jako „brak kwoty” – zwroty czekają w kolejce na nowe wdrożenie
+        czekaja = [w for w in do_wyslania if w["rodzaj"] == ZWROT]
+        do_wyslania = [w for w in do_wyslania if w["rodzaj"] != ZWROT]
+        licz["czekaja"] += len(czekaja)
+        bledy.append(f"{len(czekaja)} zwrotów czeka: arkusz ma kod w wersji {wersja} – wklej nowy kod i zrób nową wersję "
+                     "wdrożenia (docs/wydatki-arkusz.md, sekcja 7)")
     if any(w["rodzaj"] == "Wycena" for w in do_wyslania):
-        ping = arkusz(k, "ping")
-        wersja = ping.get("wersja") or 1
         if wersja < WERSJA_WYCEN or not ping.get("cennik_ok"):
             czekaja = [w for w in do_wyslania if w["rodzaj"] == "Wycena"]
             do_wyslania = [w for w in do_wyslania if w["rodzaj"] != "Wycena"]
-            licz["czekaja"] = len(czekaja)
+            licz["czekaja"] += len(czekaja)
             powod = (f"arkusz ma kod w wersji {wersja} – wklej nowy kod i zrób nową wersję wdrożenia"
                      if wersja < WERSJA_WYCEN else "Cennik w starym układzie – najpierw zmiana układu (migruj)")
             bledy.append(f"{len(czekaja)} wycen czeka: {powod} (docs/wydatki-arkusz.md)")
@@ -259,6 +278,7 @@ def sync(k: dict, proba: bool) -> tuple:
         except BladArkusza as e:
             bledy.append(f"arkusz: {e}")
             break
+        nowe_z_vat = []   # nowy wiersz z VAT % – „W arkuszu” dopiero po zapisie kolumny P
         for r in wyniki:
             if r.get("ok"):
                 if r.get("arkusz") == "Cennik":
@@ -279,16 +299,35 @@ def sync(k: dict, proba: bool) -> tuple:
                     licz["poprawione"] += 1
                 else:
                     licz["dopisane"] += 1
+                    if po_id[r["id"]]["vat"] is not None:
+                        nowe_z_vat.append(r)
+                        continue
                 oznacz(k, r["id"], W_ARKUSZU, wiersz=r.get("wiersz"))
             else:
                 licz["bledy"] += 1
                 oznacz(k, r["id"], BLAD, blad=str(r.get("blad") or "odrzucone przez arkusz"))
+        if nowe_z_vat:
+            try:
+                arkusz(k, "zmien", operacje=[op_vat(po_id[r["id"]], r["wiersz"]) for r in nowe_z_vat])
+            except BladArkusza as e:
+                # strony zostają „Do arkusza” – następny sync trafi w korektę wiersza i dopisze VAT
+                bledy.append(f"VAT %: {e} – {len(nowe_z_vat)} stron zostaje w kolejce")
+                continue
+            for r in nowe_z_vat:
+                oznacz(k, r["id"], W_ARKUSZU, wiersz=r.get("wiersz"))
     return licz, bledy
 
 
+def op_vat(w: dict, wiersz: int) -> dict:
+    """Wydatki kol. P = VAT % strony jako ułamek (23 → 0,23, format procentowy); brak stawki czyści komórkę."""
+    v = w["vat"]
+    return {"op": "zakres", "arkusz": "Wydatki", "a1": f"{KOL_VAT}{wiersz}",
+            "wartosci": [["" if v is None else (v / 100 if v > 1 else v)]]}
+
+
 def popraw_wiersz(k: dict, w: dict, wiersz: int, mapa: dict) -> str:
-    """Nadpisuje pola wpisywane (A:H, J:M) wiersza Wydatków danymi strony Notion – formuły I i N oraz Źródło zostają.
-    Zwraca opis błędu albo ''."""
+    """Nadpisuje pola wpisywane (A:H, J:M, P) wiersza Wydatków danymi strony Notion – formuły I, N, Q oraz Źródło
+    zostają. Zwraca opis błędu albo ''."""
     p = mapa.get(w["lp"])
     if not p:
         return f"pozycja {w['lp']} nie istnieje w Kosztorysie"
@@ -296,7 +335,8 @@ def popraw_wiersz(k: dict, w: dict, wiersz: int, mapa: dict) -> str:
             "" if w["ilosc"] is None else w["ilosc"], w["jedn"] or ""]]
     j_m = [[w["sposob"] or "", w["opis"] or "", w["dostawca"] or "", w["notatki"] or ""]]
     arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Wydatki", "a1": f"A{wiersz}:H{wiersz}", "wartosci": a_h},
-                                  {"op": "zakres", "arkusz": "Wydatki", "a1": f"J{wiersz}:M{wiersz}", "wartosci": j_m}])
+                                  {"op": "zakres", "arkusz": "Wydatki", "a1": f"J{wiersz}:M{wiersz}", "wartosci": j_m},
+                                  op_vat(w, wiersz)])
     return ""
 
 
@@ -384,6 +424,10 @@ def wycofaj(k: dict, ids: list) -> dict:
             W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{w['id']}", naglowki(k),
                            {"properties": {"Arkusz": {"select": {"name": "Nie wysyłać"}}, "Wiersz arkusza": {"number": None}}})
     wyniki = arkusz(k, "usun", ids=ids)["wyniki"] if ids else []
+    wiersze_vat = [n for r in wyniki for n in r.get("wydatki") or []]
+    if wiersze_vat:   # kol. P wpisuje sync, nie Apps Script – czyści ją też ten skrypt
+        arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Wydatki", "a1": f"{KOL_VAT}{n}", "wartosci": [[""]]}
+                                     for n in wiersze_vat])
     for r in wyniki:
         licz["wiersze_wydatkow"] += len(r.get("wydatki") or [])
         licz["wiersze_cennika"] += len(r.get("cennik") or [])

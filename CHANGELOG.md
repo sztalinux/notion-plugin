@@ -4,6 +4,19 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.0] – 2026-11-11
+
+Zwroty i VAT w Wydatkach:
+- Kolejka 💸 Wydatki: Rodzaj „Zwrot” (różnica VAT od wykonawcy, zwrot towaru) – osobny wiersz Wydatków z kwotą ujemną
+  (Kwota w Notion dodatnia, bez Ilości); wydatek zostaje bez zmian, WYDANE pozycji = wydatek − zwrot. Pole VAT % także dla
+  wydatków (opcjonalne).
+- `tools/wydatki.py`: znak zwrotu w jednym miejscu (`na_wiersz`, dopisanie i korekta), zwroty czekają w kolejce, dopóki kod
+  Apps Script < 4; VAT % → Wydatki kol. P akcją `zmien` (nowy wiersz, korekta, `wycofaj` czyści).
+- Kod Apps Script (docs, sekcja 9) w wersji 4: `dopisz` przyjmuje kwotę ujemną tylko dla Rodzaju „Zwrot”.
+- Arkusz (zmienione na żywo konektorem): Wydatki P „VAT %”, Q „Netto (zł)” (formuła), Kontrola N nie żąda ilości przy
+  kwocie ujemnej.
+- `koszty/SKILL.md` B (krok 4 – VAT %, nowy krok 7a – Zwrot), `arkusze.md`, `notion-schematy.md`, `docs/wydatki-arkusz.md`.
+
 ## dom-budowa [3.11.7] – 2026-11-11
 
 Nocna samonaprawa, obszar 09-dokumenty:
