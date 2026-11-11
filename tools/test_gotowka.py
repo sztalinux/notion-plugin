@@ -66,6 +66,13 @@ class Gotowka(unittest.TestCase):
         self.assertEqual(m["2026-11"]["ekipa"], 600)         # 1000 − 400 już w „Do zapłaty”
         self.assertEqual(m["2026-11"]["material"], 400)      # 500 − 100 już w „Do zapłaty”
 
+    def test_obiecany_zwrot_nie_zwieksza_planu(self):
+        a = arkusz([etap("03 Płyta", 0, (500, 0, 0), (0, 0, 0), 0)],
+                   [["2026-12-01", "Do zapłaty", -50, "03 Płyta", "03.2 Beton", "Materiał", "", "", "", ""]])
+        m = po_miesiacu(WY.licz_gotowke(a, [{"nr": "03", "od": "2026-11-10", "do": "2026-11-30"}], "2026-11-05"))
+        self.assertEqual(list(m), ["2026-11"])
+        self.assertEqual(m["2026-11"]["material"], 500)
+
     def test_bez_umowy_plan_ekipy(self):
         a = arkusz([etap("05 Izolacje", 0, (0, 700, 0), (0, 200, 0), 0)], rezerwa=0)
         m = po_miesiacu(WY.licz_gotowke(a, [{"nr": "05", "od": "2026-12-01", "do": "2026-12-20"}], "2026-11-05"))

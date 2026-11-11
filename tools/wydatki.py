@@ -586,6 +586,8 @@ def licz_gotowke(arkusze: dict, kroki: list, dzis: str) -> dict:
         if str(pole(w, k_sposob)).strip() == "Gotówka" and ile > 0:
             m = max(mies, teraz) if mies else BEZ_DATY
             gotowka_znana[m] = gotowka_znana.get(m, 0) + ile
+        if ile <= 0:   # obiecany zwrot (kwota ujemna) nie jest wpływem w planie i nie zwiększa reszty etapu
+            continue
         rodzaj = "ekipa" if str(pole(w, k_typ)).strip() == "Robocizna" else "material"
         klucz = (str(pole(w, k_etap)).strip(), rodzaj)
         zalegle[klucz] = zalegle.get(klucz, 0) + ile
@@ -645,7 +647,11 @@ def gotowka(k: dict, plik_krokow, bledy: list) -> str:
         raise BladKonfiguracji(f"brak {PLIK_KOPII} – najpierw `wydatki.py pobierz`")
     kopia = json.loads(plik.read_text(encoding="utf-8"))
     if plik_krokow:
-        kroki, zrodlo = json.loads(Path(plik_krokow).read_text(encoding="utf-8")), f"plik {Path(plik_krokow).name}"
+        try:
+            kroki, zrodlo = json.loads(Path(plik_krokow).read_text(encoding="utf-8")), f"plik {Path(plik_krokow).name}"
+        except (OSError, ValueError) as e:
+            bledy.append(f"--harmonogram: nie da się odczytać {Path(plik_krokow).name} ({type(e).__name__}) – wszystko „bez daty”")
+            kroki, zrodlo = [], "niedostępny"
     else:
         try:
             kroki, zrodlo = harmonogram_z_notion(k), "Notion"

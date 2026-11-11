@@ -32,7 +32,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | wkleja ofertę, wycenę, notatkę z rozmowy z wykonawcą; „porównaj oferty” | `oferta` |
 | wpis z Dziennika o budowie (przekazany przez `wpisy`), kilka luźnych notatek o budowie naraz | sekcja „Luźny wpis z Dziennika” niżej |
 | ma spotkanie, rozmowę lub decyzję: „jutro spotkanie z kierownikiem”, „o co zapytać”, „przygotuj mnie”, „kogo wybrać z kilku” | `przygotowanie` (liczby z `oferta`) |
-| podaje wydatek, fakturę, paragon; prosi o kosztorys, arkusz, „ile wydaliśmy” | `koszty` |
+| podaje wydatek, fakturę, paragon; prosi o kosztorys, arkusz, „ile wydaliśmy”, „ile gotówki potrzebuję w …” | `koszty` |
 | dyktuje notatkę, ustalenie, decyzję, zadanie; „zapisz”, „dodaj do Notion” | `notatka` |
 | pyta o projekt, rysunek, umowę, normę, technologię, „czy to dobrze” | `analiza-techniczna` |
 | wkleja transkrypcję filmu/artykuł; relacjonuje rozmowę („dzwoniłem do konstruktora…”); odpowiada „SP-n: …” | `wiedza` |

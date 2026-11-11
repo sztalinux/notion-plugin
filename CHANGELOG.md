@@ -12,7 +12,7 @@ POM-5 „Budżet w czasie – ile gotówki potrzebuję w danym miesiącu” (ga�
   „bez daty”, „po terminie”); zapas bez Notion: `--harmonogram PLIK`; testy `tools/test_gotowka.py` na zmyślonych danych.
 - `koszty`: D.4 jako widok miesięczny z nowym `references/gotowka.md` (reguły, trzy drogi – skrypt, konektor, eksport –
   i format odpowiedzi); `references/arkusze.md` – proponowany układ zakładki „Płatności” (arkusz bez zmian).
-- `przeglad-tygodnia`: linia „Gotówka” (bieżący i następny miesiąc); `harmonogram` B: przesunięcie kroku zmienia miesiąc
+- `budowa`: „ile gotówki potrzebuję w …” w tabeli kierowania do `koszty`. `przeglad-tygodnia`: linia „Gotówka” (bieżący i następny miesiąc); `harmonogram` B: przesunięcie kroku zmienia miesiąc
   płatności; `docs/wydatki-arkusz.md` §5 i README – nowe polecenie.
 - Reguły przyjęte nocą bez inwestora (do potwierdzenia): transza w miesiącu końca ostatniego kroku etapu, materiał w miesiącu
   startu, rezerwa na cały miesiąc.

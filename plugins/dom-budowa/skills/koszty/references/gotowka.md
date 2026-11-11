@@ -35,7 +35,7 @@ Zasady oznaczone [do potwierdzenia] przyjęto nocą 2026-11-11 bez inwestora (PO
 - **Gotówka a przelew:** znana tylko z kolumny Sposób wierszy „Do zapłaty” (dopisek „w tym gotówką”). Sposobu płatności
   transz arkusz nie trzyma – sprawdź go w umowie z wykonawcą (`oferta/references/umowa.md`); umowa mówi „gotówką po
   etapach” → transze dolicz do gotówki i napisz to wprost.
-- **Nie modelujemy:** zatrzymania (kaucji) z umowy, terminów płatności faktur dłuższych niż Data, kredytu w transzach
+- **Nie modelujemy:** obiecanych zwrotów (wiersz „Do zapłaty” z minusem – nie są wpływem), zatrzymania (kaucji) z umowy, terminów płatności faktur dłuższych niż Data, kredytu w transzach
   (D.3), etapów umowy wykonawcy innych niż etapy arkusza – wspomnij o nich, gdy dotyczą miesiąca.
 
 ## Format odpowiedzi
