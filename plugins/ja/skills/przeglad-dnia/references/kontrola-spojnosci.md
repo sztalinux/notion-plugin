@@ -20,14 +20,18 @@ kroku na „Zrobione” i zmiana pola zadania to wykonanie decyzji inwestora, ni
 ## Odczyt (tylko widoki – bez SQL i rows, `ja` zasada 3)
 
 1. **Zadania z relacją:** wiersze Obszaru Dom (albo pustego) z kroku 5 przeglądu, które mają niepustą kolumnę Harmonogram
-   (widok daje adresy kroków). Brak takich wierszy → pomiń cały krok i napisz „spójność: bez zmian”.
+   (widok daje adresy kroków), oraz wiersze widoku „⏳ Czekam na” (`view://3f7f5982-09e7-8126-9825-000cc472cb4d`, mały odczyt)
+   z relacją Harmonogram – te ostatnie nie wymagają dziś edycji zadania, bo „czekam na” po przesunięciu kroku zwykle nie jest
+   ruszane. Brak takich wierszy w obu źródłach → pomiń cały krok i napisz „spójność: bez zmian”.
 2. **Kroki:** widok Harmonogramu „📅 Oś czasu” (`view://3f7f5982-09e7-814f-bb28-000c12b8d4f1`, jeden odczyt; to duży
    wynik, więc czytaj go tylko w kroku 1 niepustym). Dopasuj kroki po adresie; potrzebne: Krok, Status, Termin (od–do).
 3. **Odpowiedzi na wcześniejsze flagi:** zaznaczone ☑ i dopiski pod punktami `KS-` w Dzienniku „❓” (krok 3 poniżej).
 
-Pełny przebieg bez warunku z punktu 1 robi `przeglad-tygodnia` (`dom-budowa`, punkt „Spójność”): tam dodatkowo widok
-„⏳ Czekam na” (`view://3f7f5982-09e7-8126-9825-000cc472cb4d`) dla H3/H4 i – dla kroków „Zrobione” – odczyt stron zadań
-z relacji Zadania (strony czytaj pojedynczo, max 15) dla H2.
+**Zasięg wieczoru:** H1 i H3 widać tylko, gdy zadanie zmieniono od wczoraj (krok 5); H4 – dla każdego „czekam na” z relacją;
+H2 zaczyna się od zmiany po stronie kroku (krok „Zrobione”), której widok zadań nie widzi – wieczorem trafia tylko na zadania
+edytowane od wczoraj. Pełny przebieg robi `przeglad-tygodnia` (`dom-budowa`, punkt „Spójność”): dla kroków „Zrobione” czyta
+strony zadań z relacji Zadania (pojedynczo, max 15) dla H2 i widok „🏗 ToDo/Doing – Dom” tylko pomocniczo – nie zwraca
+wszystkich otwartych zadań.
 
 ## Przebieg
 
@@ -51,5 +55,6 @@ i kroków nie wypisuj w odpowiedzi poza linkami (log zadania).
 ## Czego nie robić
 
 - Nie flaguj zadań bez relacji do kroku (to nie rozjazd, tylko brak powiązania – to wyłapuje `zadania`, D).
-- Nie flaguj tego, co zmieniła dziś procedura z Dziennika (kroki z linkiem w „Przetworzone” z dzisiejszego dnia) – to nie ręczna zmiana.
+- Zadanie zamknięte dziś przez wpis z Dziennika („zrobiłem X”) flaguj tak samo: `zadania` zostawia status kroku procedurze
+  `harmonogram`, więc nic go nie synchronizuje.
 - Nie zakładaj nowych zadań i nie zmieniaj terminów kroków; krok zależny przesuwa `harmonogram` (C), nie ten krok.
