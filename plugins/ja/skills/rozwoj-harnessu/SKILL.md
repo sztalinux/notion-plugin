@@ -56,7 +56,8 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
    o co chodzi → zapytaj inwestora, nie wdrażaj.
 2. Dla każdego wpisu: znajdź właściwe miejsce (`plugins/<plugin>/skills/<procedura>/SKILL.md` lub `references/`),
    wprowadź zmianę zgodnie z `references/pisanie-procedur.md`. Nie kopiuj treści mechanicznie – wpasuj w strukturę
-   procedury, usuń sprzeczne stare zapisy. Wpis niejasny lub sprzeczny z inną procedurą → zapytaj inwestora przed wdrożeniem.
+   procedury, usuń sprzeczne stare zapisy. Wpis niejasny lub sprzeczny z inną procedurą → zapytaj inwestora przed wdrożeniem;
+   „nie wdrażaj” → Status „Odrzucone”, powód jednym zdaniem w polu Dlaczego (inaczej wpis wraca na każdym starcie).
 3. Podbij wersję zmienionego pluginu w `plugins/<plugin>/.claude-plugin/plugin.json` (dla `dom-budowa` także
    `gemini-extension.json` – muszą być równe): PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana
    struktury danych. **Bez podbicia wersji telefon i Cowork nie dostaną aktualizacji.**
