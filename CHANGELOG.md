@@ -4,6 +4,12 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.5] – 2026-11-11
+
+Nocna samonaprawa, obszar 03-koszty:
+- `docs/wydatki-arkusz.md` 6: komunikaty odłożonych wycen i zwrotów cytowane dosłownie jak w `sync` („N wycen czeka: …”, „N zwrotów czeka: …”).
+- `tools/wydatki.py sync --proba`: pełne id strony w liniach „✗” i „→” zamiast 8 pierwszych znaków (wspólnych dla wielu stron).
+
 ## dom-budowa [3.12.4] – 2026-11-11
 
 Nocna samonaprawa, obszar 06-dokumentacja (opisy dla człowieka wobec stanu faktycznego):
