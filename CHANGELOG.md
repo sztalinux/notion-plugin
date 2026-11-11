@@ -4,6 +4,21 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.12.4] – 2026-11-11
+
+POM-3 (poranny brief w dniu robót – wariant „Jutro + pogoda”):
+- `przeglad-dnia`: krok „Budowa” bierze z przeglądu budowy także ostrzeżenie pogodowe; osobny poranny brief z powiadomieniem
+  odłożony do startu robót (przebieg launchd, bez zaplanowanych zadań na claude.ai).
+
+## dom-budowa [3.12.2] – 2026-11-11
+
+POM-3 (poranny brief w dniu robót – wariant „Jutro + pogoda”):
+- `etap/references/pogoda.md` (nowy): jedna tabela progów pogodowych robót `[opinia]` (do potwierdzenia z kierownikiem i Bazą
+  wiedzy) i zasady prognozy na jutro (miejscowość ze ściągi w Notion, tylko miejscowość do wyszukiwania, `[internet]`, brak
+  prognozy nie blokuje przeglądu).
+- `budowa`, „Wieczorem”: gdy jutro są roboty na budowie, „Jutro – plan” dostaje linię „Pogoda jutro” i ostrzeżenie przy kroku
+  „bez odwrotu”; `etap` (A.6, B.6) i `harmonogram` odsyłają do progów z `pogoda.md`.
+
 ## ja [1.12.3] – 2026-11-11
 
 Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:

@@ -85,13 +85,13 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    błędy kolejki 💸 zgłoszone we „Wpisach” (`koszty` E) – licznik, bez powtarzania pytań. **Najpierw domknij decyzje wpisane** w Rejestrze (widok
    „🤖 Decyzja wpisana – do domknięcia”) wg `wiedza/references/sprzecznosci.md`, „Bez inwestora” – jedyny zapis tego kroku. Z konektorem Dysku: „zdjęcia: w `_nowe` czeka n” (bez rozkładania – `docs/zdjecia-i-kopia.md`, 6).
 2. **Jutro** (odczyt): kroki Harmonogramu startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zadania), dostawy
-   jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone i Nieaktualne), TASKS Dom z When = jutro, WAITING z terminem jutro lub po.
+   jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone i Nieaktualne), TASKS Dom z When = jutro, WAITING z terminem jutro lub po; przy robotach jutro **pogoda** (`etap/references/pogoda.md`).
 3. **Wpis w „📆 Przeglądy dzienne – budowa”** (`3f8f5982-09e7-815e-8b03-eacaa74db190`, strona na DOM) – tylko gdy dziś albo
    jutro coś jest: zwijany nagłówek „Przegląd dnia budowy – <dzień tygodnia> <data>” na górze strony (najnowszy pierwszy),
-   w środku **Dziś**, **Decyzje i pytania** (SP domknięte dziś, czekające), **Jutro – plan** (po terminie na górze), opcjonalnie **Rozkminka**
+   w środku **Dziś**, **Decyzje i pytania** (SP domknięte dziś, czekające), **Jutro – plan** (po terminie na górze; linia „Pogoda jutro”), opcjonalnie **Rozkminka**
    (gdy inwestor o nią prosił we wpisie, np. lista pytań na spotkanie). Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
 4. **Zwróć** do przeglądu dnia: wzmiankę (link) do tego wpisu, jedną linię skrótu („3 sprawy dziś, SP: 1 domknięte, jutro: geodeta 8:00”)
-   i max 1 najważniejszy punkt jutra. Nic nie ma → „bez zmian”, bez wpisu.
+   i max 1 najważniejszy punkt jutra (ostrzeżenie pogodowe ma pierwszeństwo). Nic nie ma → „bez zmian”, bez wpisu.
 
 ## Zasady pracy (obowiązują we wszystkich procedurach)
 
