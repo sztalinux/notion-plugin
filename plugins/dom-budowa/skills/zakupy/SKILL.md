@@ -17,6 +17,12 @@ folia), narzędzia i sprzęt, wynajem, transport – nawet jedna rolka z marketu
 Zakupów budowy nie dubluj zadaniem w TASKS – termin trzyma pole „Zamówić do”, a przypomina wieczorny przegląd budowy
 (`budowa`, „Wieczorem”).
 
+**Przypomnienie („kupić najpóźniej”).** „Zamówić do” to ostatni bezpieczny dzień zakupu. Wieczorny przegląd budowy zaczyna
+przypominać o pozycji przed zamówieniem z wyprzedzeniem wg Rodzaju: **Materiał 7 dni**, **Drobnica 2 dni**, Narzędzia i sprzęt,
+Wynajem, Transport i pusty Rodzaj 2 dni. Przy ręcznym „Zamówić do” dla zwykłej drobnicy wpisz datę, do której realnie trzeba kupić –
+przypomnienie przyjdzie 2 dni wcześniej. Pozycja bez „Zamówić do” nie przypomina się (nie zgaduj terminu).
+Przypomnienie jest linią w przeglądzie dnia, nie powiadomieniem na telefon; pilny zakup „na już” – zadanie z When (sekcja 0).
+
 ## 0. Pojedyncza rzecz („kupić X na budowę”, wpis z Dziennika)
 
 1. Sprawdź duplikat (wyszukiwarka z parametrem bazy, 1–2 słowa, wśród niedostarczonych); jest → uzupełnij.

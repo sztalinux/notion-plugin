@@ -72,6 +72,11 @@ POM-3 (poranny brief w dniu robót – wariant „Jutro + pogoda”):
   prognozy nie blokuje przeglądu).
 - `budowa`, „Wieczorem”: gdy jutro są roboty na budowie, „Jutro – plan” dostaje linię „Pogoda jutro” i ostrzeżenie przy kroku
   „bez odwrotu”; `etap` (A.6, B.6) i `harmonogram` odsyłają do progów z `pogoda.md`.
+## dom-budowa [3.12.2] – 2026-11-11 (POM-16)
+
+- `budowa` („Wieczorem”, krok 2) i `zakupy`: przypomnienie o zakupie budowy z wyprzedzeniem wg Rodzaju – „Zamówić do” = „kupić
+  najpóźniej”, przegląd dnia budowy przypomina Materiał 7 dni, Drobnicę i resztę 2 dni przed terminem (tylko pozycje przed
+  zamówieniem; jedna zbiorcza linia dziennie, bez pushu na telefon – decyzja (b) inwestora).
 
 ## ja [1.12.3] – 2026-11-11
 
