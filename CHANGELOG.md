@@ -148,6 +148,10 @@ Wspólne wydanie pomysłów z gałęzi `pom/2026-11-11-*` (scalone na `pom/2026-
 - `tools/dokumenty.py`: folder `Teczki/` poza indeksem (kopie, nie nowe dokumenty); `Teczki/` poza kopią na Dysk;
   README i `docs/zdjecia-i-kopia.md` – opis folderu i narzędzia.
 
+**Recenzja przed scaleniem (bez zmiany zachowania):** `budowa/SKILL.md` skrócony poniżej limitu 200 linii – kroki „Wieczorem”
+w `budowa/references/wieczorem.md`, szczegóły limitu odczytów Notion (zasada 6) w `budowa/references/notion-odczyt.md`;
+przywrócony opis pluginu w `plugin.json` (zgubiony przy scalaniu POM-4).
+
 ## ja [1.12.3] – 2026-11-11
 
 Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:

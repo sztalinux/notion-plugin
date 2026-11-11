@@ -81,20 +81,8 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
 ## Wieczorem (przegląd dnia budowy)
 
 `przeglad-dnia` (plugin `ja`) wywołuje tę sekcję wieczorem; ręcznie: „przegląd dnia budowy” (osobno od spraw osobistych).
-
-1. **Dziś** (odczyt): wpisy o budowie przetworzone dziś (blok dnia w „Przetworzone” w Dzienniku), Dziennik budowy z dzisiejszą
-   datą, Notatnik i TASKS (Obszar Dom/puste) zamknięte lub dodane dziś, nowe decyzje czekające na inwestora (❓ o budowie, SP),
-   błędy kolejki 💸 zgłoszone we „Wpisach” (`koszty` E) – licznik, bez powtarzania pytań. **Najpierw domknij decyzje wpisane** w Rejestrze (widok
-   „🤖 Decyzja wpisana – do domknięcia”) wg `wiedza/references/sprzecznosci.md`, „Bez inwestora” – jedyny zapis tego kroku. Z konektorem Dysku: „zdjęcia: w `_nowe` czeka n” (bez rozkładania – `docs/zdjecia-i-kopia.md`, 6).
-2. **Jutro** (odczyt): kroki Harmonogramu startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zadania), dostawy
-   jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone i Nieaktualne) albo w oknie przypomnienia wg Rodzaju
-   (`zakupy`, „Przypomnienie”), TASKS Dom z When = jutro, WAITING z terminem jutro lub po; przy robotach jutro **pogoda** (`etap/references/pogoda.md`).
-3. **Wpis w „📆 Przeglądy dzienne – budowa”** (`3f8f5982-09e7-815e-8b03-eacaa74db190`, strona na DOM) – gdy dziś albo jutro coś jest
-   (albo rozkminka): zwijany nagłówek h2 „Przegląd dnia budowy – <dzień tygodnia> <data>” na górze, zapis i układ wg `przeglad-dnia/references/uklad-wpisu.md`
-   (plugin `ja`): ⚠ Na teraz · Jutro – plan (z linią „Pogoda jutro”) · Dziś · Decyzje i pytania (SP domknięte dziś) · 🧠 Rozkminka (tylko z `przeglad-dnia`, B.2a; ręcznie –
-   ślady `→ 🧠 rozkminka wieczorem` o budowie) · linia o nieudanych odczytach. Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
-4. **Zwróć** do przeglądu dnia: link do wpisu, jedną linię skrótu („3 sprawy dziś, SP: 1 domknięte, jutro: geodeta 8:00”)
-   i max 1 punkt jutra (ostrzeżenie pogodowe ma pierwszeństwo). Nic nie ma → „bez zmian”, bez wpisu.
+Kroki 1–4 (dziś, jutro z zakupami i pogodą, wpis w „📆 Przeglądy dzienne – budowa”, zwrot do przeglądu dnia) – wczytaj
+`references/wieczorem.md` i wykonaj je w całości; jedyny zapis poza wpisem to domknięcie decyzji wpisanych w Rejestrze (krok 1).
 
 ## Zasady pracy (obowiązują we wszystkich procedurach)
 
@@ -121,15 +109,9 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    Jakość ma pierwszeństwo: nie skracaj treści, nie pomijaj pól, nie łącz niepowiązanych informacji
    w jeden wpis, nie pomijaj sprawdzenia duplikatów i sprzeczności tylko po to, żeby zaoszczędzić wywołanie.
    Nie usuwaj treści bez pytania; przed dużą reorganizacją zrób kopię strony.
-   **Odczyt baz a limit Notion:** wiedzę (Informacje, Tematy, Rozmowy i źródła, sprzeczności) czytaj **najpierw z indeksu**
-   (`wiedza/references/indeks.md`; kolejność – zasada 10) – nie zużywa limitu Notion. Limit dotyczy tylko odczytu z Notion:
-   zapytania do baz (`query_data_sources`) w trybach **sql i rows** mają w planie Notion
-   inwestora wspólny limit dla całego workspace'u (SQL wyczerpany 12.10.2026, rows – 15.10.2026; termin odnowienia nieznany).
-   Tryb **view** (zapisany widok z filtrem) limitu nie ma. Czytaj w tej kolejności: **view** (istniejący widok; brak
-   pasującego → utwórz widok z filtrem, to nie zmienia danych) → wyszukiwarka z parametrem bazy (duplikaty, pojedyncze
-   wiersze) → rows → SQL tylko do zliczeń i łączenia baz. Błąd „usage limit” → bez ponawiania przejdź na view/wyszukiwarkę
-   i wspomnij o limicie raz. Rollupy (np. Potwierdzenia, Data informacji) w rows/view przychodzą jako
-   odnośniki, nie wartości – gdy są potrzebne, pobierz pojedyncze strony (`fetch`) albo napisz, że ich nie sprawdziłeś.
+   **Odczyt baz a limit Notion:** wiedza najpierw z indeksu (zasada 10); bazy Notion w kolejności **view** → wyszukiwarka
+   z parametrem bazy → rows → SQL (sql i rows mają wspólny limit workspace'u, view – nie); błąd „usage limit” → bez
+   ponawiania na view/wyszukiwarkę. Szczegóły i rollupy: `references/notion-odczyt.md`.
 7. **Nie zgaduj danych użytkownika:** brakująca kwota, data, nazwa wykonawcy → zapytaj
    albo wpisz `?` i wymień to w podsumowaniu. Brakuje treści dokumentu (projekt, opinia, oferta, umowa, Excel) →
    poproś jawnie o konkretny plik z przewodnika po dokumentach (nazwa, ścieżka, strona/arkusz, po co) – procedura
