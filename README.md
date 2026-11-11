@@ -87,7 +87,7 @@ z ⚠ i inwestor o tym wie.
 | `zadania` | „muszę…”, „zrobiłem X”, „co mam jutro” | wspólna TASKS z polem Obszar; zmiana statusu z Dziennika |
 | `dziecko` | obserwacja, „porozmawiać z nią o…”, prezent, zalecenie | strona dziecka w sekcjach |
 | `suple` | „kończy się…”, „kupiłem…”, przerwa | baza Suple: Buy, Status, Last break |
-| `przeglad-dnia` | co godzinę (tryb szybki) i wieczorem – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; wieczorny: podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan na jutro – osobiste pod Dziennikiem, budowa osobno na DOM (z odnośnikiem), analiza pomysłów |
+| `przeglad-dnia` | co godzinę (tryb szybki) i wieczorem – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; wieczorny: podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan na jutro – osobiste pod Dziennikiem, budowa osobno na DOM (z odnośnikiem), analiza pomysłów, kontrola spójności (zadanie budowy ↔ krok Harmonogramu – tylko pytania ❓) |
 | `przeglad-tygodnia-osobisty` | raz w tygodniu – automat na Macu / „przegląd tygodnia” | sprawy osobiste w liczbach, zaległe, najbliższy tydzień, porządki w Dzienniku; uruchamia przegląd budowy i linkuje do niego |
 | `rozwoj-harnessu` | „zapamiętaj na przyszłość”, nowa procedura, „mam pomysł…”, „zrób POM-n”, „zrób ZP-n” | skrzynka w Notion → wdrożenie do repo; pomysły → analiza → wdrożenie na polecenie; „🧯 Znane problemy” – sprawy, których przebieg nie załatwi |
 

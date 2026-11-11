@@ -4,6 +4,20 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.12.4] – 2026-11-11 (POM-13)
+
+POM-13 – kontrola spójności: zadanie budowy ↔ krok Harmonogramu (flagi, bez zmiany dat):
+- `przeglad-dnia`: nowy krok 5a „Kontrola spójności” (wieczorem, na wierszach kroku 5 z relacją Harmonogram) i licznik
+  „spójność” w linii „🤖”; reguły H1–H4, odczyt i format flag – nowy `references/kontrola-spojnosci.md` (wspólna tabela
+  dla serii „Kontrola spójności”: kolejne grupy dopisuj jako własne wiersze). Tylko pytania „❓” z kluczem `KS-…`;
+  zmiana dopiero po ☑ inwestora, Terminów kroków nie zmienia nigdy.
+- Warunek wstępny z analizy sprawdzony 11.11: widok TASKS w trybie view zwraca relację Harmonogram (adresy kroków).
+
+## dom-budowa [3.12.2] – 2026-11-11 (POM-13)
+
+- `przeglad-tygodnia` („Spójność”): pełny przebieg kontroli zadania ↔ krok Harmonogramu; `harmonogram`: odesłanie do kontroli
+  spójności i zasada podpinania zadań do kroków relacją.
+
 ## ja [1.12.3] – 2026-11-11
 
 Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:
