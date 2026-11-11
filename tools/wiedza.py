@@ -2434,7 +2434,9 @@ def cmd_karta(a) -> int:
         sekcje = sekcje_karty(opisy, karty[kody[0]]["etap"], pokaz_ciekawostki)
         dopelnienie = None
         if a.pytanie:
-            dopelnienie = dopelnienie_karty(conn, a.pytanie, set(numery))
+            # przy --wiecej rdzeń też jest „na karcie” – dopełnienie nie powtarza jego tez
+            na_karcie = set(numery) | (set().union(*(karty[k]["wi"] for k in kody)) if a.wiecej else set())
+            dopelnienie = dopelnienie_karty(conn, a.pytanie, na_karcie)
             sekcje.append((f"## Dopełnienie z szukania ({len(dopelnienie)})", opisz_informacje(conn, dopelnienie), True)
                           if dopelnienie else
                           ("## Dopełnienie z szukania: brak – szukanie nic nie dodaje do karty", [], True))
