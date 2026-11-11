@@ -110,8 +110,8 @@ zmianie szukania lub kart: `wiedza_jakosc.py zloty` (alarmy obserwatora), `wiedz
 
 - Karty pytań dla kolejnych etapów budujemy dopiero, gdy etap nadejdzie; karty czynności nie mają zmierzonego pokrycia (tagi modelu).
 - Pokrycie nowych kart (podzielonych 30.10) po `ocen --zastosuj` wymaga `pomiar --zapisz`.
-- Nocna kolejka od przepięcia na lokalny MCP Notion (28.10) nie była sprawdzona w nocy; brak kontroli logowania MCP i sieci przed startem
-  (automaty launchd ją mają).
+- Nocna kolejka od przepięcia na lokalny MCP Notion (28.10) nie była sprawdzona w nocy; przed startem sprawdza logowanie MCP Notion, ale nie sieć
+  (automaty launchd sprawdzają oba; runbook 5.9).
 - Etap porównania w nocy: noc testowa na 10 filmach i audyt jeszcze nie zrobione.
 
 ## Gdzie czytać dalej
