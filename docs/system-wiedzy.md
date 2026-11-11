@@ -46,7 +46,8 @@ Czat na telefonie (claude.ai, pluginy ja + dom-budowa): karty → odpowiedź z n
    i przypomnienie obserwatora.
 2. **Automaty launchd (samo)** – szybki przebieg co godzinę w ciągu dnia (8:05–22:05 i 22:30), wieczorny 22:45, tygodniowy w niedzielę
    wieczorem. Każdy zaczyna od `sync --publikuj`, `migawka.py` i `wiedza_karty.py aktualizuj --publikuj` (nowe tezy → tagi
-   czynności, wybór do kart pytań, ocena ścisła, zapis, publikacja). Mac uśpiony = przebieg przesunięty do wybudzenia, wyłączony = przepada
+   czynności, wybór do kart pytań, ocena ścisła, zapis, publikacja); plik indeksu, który nie mieści się w limicie czasu `sync --cicho`,
+   wysyła `publikuj` po wieczornym przebiegu. Mac uśpiony = przebieg przesunięty do wybudzenia, wyłączony = przepada
    (wpisy poczekają).
 3. **Noc (inwestor uruchamia z strony kolejki)** – po każdej pozycji odświeżenie indeksu, co N-te pytanie o wiedzę kontrola obu
    silników, na końcu publikacja kopii, obserwator i sędzia (gdy minął ustawiony odstęp). Nowe tezy z nocy trafiają do kart przy

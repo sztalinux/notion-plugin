@@ -47,6 +47,7 @@ Telefon / czat ── poprawka sposobu pracy ──► Notion „Zmiany do harne
 Claude Code (komputer; na starcie lista wyboru, domyślnie nic) ◄──┘
    ├─ „Dokumenty budowy” (tools/dokumenty.py): skan folderu budowy → przewodnik na stronie Notion (+ kopia awaryjna `_Do claude.ai/`)
    ├─ „Indeks wiedzy” (tools/wiedza.py sync --publikuj --cicho): odświeża indeks Bazy wiedzy z Notion i publikuje kopię dla czatu
+   │    (plik indeksu ponad ok. 13 MB nie mieści się w limicie 110 s – od razu: tools/wiedza.py publikuj --teraz)
    ├─ klasyfikuje nowe dokumenty (procedura `dokumenty`)
    └─ wdraża zmiany harnessu → wersja → commit → push ──► GitHub sztalinux/notion-plugin
                                                                │ ręczne odświeżenie pluginów (claude-ai-projekt.md)

@@ -78,6 +78,8 @@ dane indeksu, definicje kart, zbiory oceny, prywatne repo kopii, automaty launch
 **Dzień (samo):** launchd uruchamia szybki przebieg Dziennika co godzinę (8:05–22:05, plus 22:30); każdy przebieg zaczyna od trzech kroków przygotowania:
 `wiedza.py sync --publikuj --cicho` (indeks z Notion i kopia dla telefonu), `migawka.py --cicho` (Notatnik i zadania), `wiedza_karty.py aktualizuj --cicho --publikuj`
 (nowe tezy → karty). Wieczorny przegląd o 22:45, tygodniowy w niedzielę wieczorem. Gdy nic nowego – przebieg kończy się bez zapisów.
+Plik indeksu (ponad ok. 13 MB) nie mieści się w limicie 110 s `sync --cicho` – ten wysyła tylko kod, a indeks jedzie z `wiedza.py publikuj --cicho`
+po wieczornym przebiegu (bez limitu czasu) i z `aktualizuj --publikuj`, gdy dopisze nowe tezy do kart.
 
 **Sesja Claude Code w repo:** lista wyboru na starcie, domyślnie nic (`CLAUDE.md`). „Indeks wiedzy” = `sync --publikuj --cicho` + `wiedza_jakosc.py przypomnij --cicho`.
 Po zapisie wiedzy do Notion w sesji interaktywnej: `python3 tools/wiedza.py sync --publikuj`.
