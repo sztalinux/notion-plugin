@@ -1551,7 +1551,7 @@ def data_wzorca(wzorzec: dict, plik: Path) -> str:
 
 
 def cmd_pomiar(a, m: Miejsca) -> int:
-    """Pokrycie kart z wzorcem: trafne WI wzorca (wi2, kluczowe2; bez Nieaktualnych) na karcie, opcjonalnie z
+    """Pokrycie kart z wzorcem: trafne WI wzorca (wi2, kluczowe2; bez Nieaktualnych) w rdzeniu karty, opcjonalnie z
     dopełnieniem z szukania (to samo co `wiedza.py karta --pytanie`)."""
     definicje = wczytaj_definicje(m)
     plik_wzorca = m.wejscie(WZORZEC, a.wzorzec)
@@ -1569,7 +1569,9 @@ def cmd_pomiar(a, m: Miejsca) -> int:
     with contextlib.closing(W.otworz_db(m.db, zapis=False)) as conn:
         zywe = zywe_wi(conn)
         for k in karty:
-            karta = numery_karty(stan, k["kod"]) & set(zywe)
+            # rdzeń – to, co czat czyta bez --wiecej i co podaje nagłówek karty; rozszerzenie („wiecej”) poza pomiarem
+            wpisy = (stan["karty"].get(k["kod"]) or {}).get("wi") or {}
+            karta = {int(wi) for wi, z in wpisy.items() if str(wi).isdigit() and z != "wiecej"} & set(zywe)
             rozmiar = W.rozmiar_karty(conn, W.opisz_informacje(conn, sorted(karta)), k.get("etap") or "")
             suma = Counter()
             brakujace = set()

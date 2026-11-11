@@ -37,7 +37,7 @@ data ostatniego zapisu) i jadą do czatu razem z publikacją indeksu.
 - `ocen [--karty KOD,…] [--zastosuj]` – ocena ścisła tez kart pytań po `zbuduj` (2 konieczna, 1 pokrewna, 0 nie dotyczy; tylko tezy
   bez oceny, budżet USD i limit tygodnia jak w `zbuduj`); `--zastosuj` ustawia rdzeń ≤ 200 tez + rozszerzenie (kopia
   `karty.json.przed-ocena`) – potem `pomiar --zapisz` i `zapisz --publikuj`. Bez niej `zbuduj` zostawia karty za duże dla telefonu.
-- `pomiar [--dopelnienie] [--zapisz] [--brakujace]` – pokrycie wobec wzorca; `--zapisz` zapisuje je do stanu (do nagłówka karty trafia z `zapisz`,
+- `pomiar [--dopelnienie] [--zapisz] [--brakujace]` – pokrycie rdzenia wobec wzorca (bez rozszerzenia `--wiecej`, jak nagłówek karty); `--zapisz` zapisuje je do stanu (do nagłówka karty trafia z `zapisz`,
   a `zbuduj` je zeruje); pozostałe flagi: `pomiar --help`.
 - `zapisz [--publikuj]` – wyniki doboru (`karty.json`) do SQLite; `--publikuj` wysyła kopię dla czatu.
 - `aktualizuj [--cicho] [--publikuj]` – nowe tezy → tagi czynności, wybór i ocena ścisła względem każdej karty pytań (2 → rdzeń,
