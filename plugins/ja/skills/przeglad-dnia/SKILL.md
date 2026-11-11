@@ -80,7 +80,8 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 2. **Pomysły na rozwój** – `rozwoj-harnessu`, sekcja C: Status Nowy lub pusty → analiza (max 3, najstarsze pierwsze);
    „Pytania do mnie” z odpowiedzią → analizuj dalej. Niczego nie wdrażaj.
 2a. **Rozkminki – tylko na prośbę z wpisu** (ślad `→ 🧠 rozkminka wieczorem` w dzisiejszym lub wczorajszym bloku
-   „Przetworzone”, `wpisy` krok 5; z własnej inicjatywy nie rób – to koszt). Max 2, najstarsze pierwsze; reszta jutro
+   „Przetworzone”, `wpisy` krok 5, **także ślady z kroku 1 tego przebiegu** – na stronie ich jeszcze nie ma, zapisz je od razu
+   jako `→ 🧠 rozkminka: <wzmianka>`; z własnej inicjatywy nie rób – to koszt). Max 2, najstarsze pierwsze; reszta jutro
    („rozkminki czekają: n” w „⚠ Na teraz”). Procedura tematu **tylko odczytem**: budowa – spotkanie, decyzja → `przygotowanie`
    („Bez inwestora”), technika → `analiza-techniczna`, oferta → `oferta`, terminy → `harmonogram`; osobiste – skill `ja` obszaru.
    Wynik = sekcja „🧠 Rozkminka: <temat>”: budowa → krok 3, reszta → krok 8. Bez zapisów do baz – nowe pytania, zadania

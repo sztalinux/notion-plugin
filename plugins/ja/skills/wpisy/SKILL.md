@@ -95,6 +95,7 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
      zadać…”, „przemyśl / rozkmiń…”, „porównaj…”), nie o zapis. W rozmowie – wykonaj od razu właściwą procedurę. W przebiegu
      bez inwestora nie wykonuj jej: jasne części wpisu (zadanie, termin) zapisz normalnie, a ślad daj jako
      `~~wpis~~ → 🧠 rozkminka wieczorem` (z obszarem: „budowa” albo nazwa obszaru) – robi ją przegląd dnia (`przeglad-dnia`, B.2a).
+     W tym śladzie zostaw pełną treść prośby, bez skrótu z kroku 6 – wieczór czyta ją stąd.
 6. **Zamknij wpis:** przenieś go do „Przetworzone” (z okienkiem: pytanie i odpowiedź w jednej linii `(❓ … → ✍️ …)`), do **zwijanego bloku dzisiejszego dnia** (`<toggle>` – zapis jak w `przeglad-dnia/references/uklad-wpisu.md`, A; nigdy `<details>`,
    tytuł „📅 <dd.mm> <dzień> · <skrót linii 🤖>”; brak – utwórz na górze), jako `~~wpis~~ → <gdzie>: <link>`;
    **wpis rozłożony na więcej niż dwa miejsca** – punkt z przekreślonym skrótem wpisu (do ok. 80 znaków) i pod nim po
