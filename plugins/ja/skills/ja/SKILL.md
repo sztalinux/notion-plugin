@@ -81,6 +81,8 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
      plik ze starym określeniem (np. dawna nazwa narzędzia; wyszukaj w `plugins/`, `docs/`, `README.md`, `AGENTS.md`);
      mapy `ja/references/notion-mapa.md` i `budowa/references/notion-mapa.md`, README, `docs/` (opisy dla człowieka), CHANGELOG;
    - Notion: w Dzienniku „Jak używać” i „🧭 Dla asystenta”; „🗺 Mapa Notion” (schemat, kroki, tabela struktury);
+     „📘 Instrukcja obsługi” (pod DASHBOARD – sekcje, których dotyczy zmiana, i ich linia „Stan:”; po zmianie Claude Code
+     nadpisuje jej kopię offline `AI/Instrukcja obsługi.md` w folderze budowy treścią pobranej strony);
      strona „🤖 Asystent AI” (jedyne miejsce z wersją pluginów) i jej podstrony-instrukcje (np. „💸 Wydatki → arkusz
      Google”); opis na stronie, której dotyczy zmiana; przewodnik (`dokumenty`, C).
    Strony Notion zmieniaj punktowo (zamiana fragmentu), nigdy całą treścią – mają osadzone bazy i bloki, których odczyt

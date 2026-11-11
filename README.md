@@ -6,6 +6,10 @@ Procedury i zasady, według których asystenci AI (Claude, Gemini, Codex…) pra
   według bazy „🧭 Obszary Dziennika”, zadania, wieczorny przegląd dnia, rozwój harnessu;
 - **`dom-budowa`** – budowa domu: oferty, koszty, notatki, wiedza, dokumenty, etapy, dziennik budowy, harmonogram, zakupy.
 
+> **Dla człowieka:** jak używać całego systemu, reguły, „co się stanie, gdy…”, utrzymanie i odtworzenie od zera – strona
+> Notion „📘 Instrukcja obsługi” (pod 📌 DASHBOARD; kopia offline `AI/Instrukcja obsługi.md` w folderze budowy). To README
+> opisuje repo i szczegóły techniczne.
+
 Repozytorium mówi tylko **jak** pracować. Dane są w Notion, liczby w arkuszu Google „Kosztorys budowy” (wydatki trafiają tam z Notion przez kolejkę – `docs/wydatki-arkusz.md`), dokumenty w folderze budowy na komputerze.
 
 > **Repo jest publiczne.** Nie trafiają tu żadne dane osobowe ani dane projektu (imiona domowników, nazwiska, firmy, adres,

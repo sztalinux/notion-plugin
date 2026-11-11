@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.13.0] – 2026-11-11
+
+POM-20 – instrukcja obsługi całego systemu dla człowieka:
+- Nowa strona Notion „📘 Instrukcja obsługi” pod 📌 DASHBOARD (obok 🗺 Mapy Notion): na start, na co dzień, reguły
+  z uzasadnieniem, „co się stanie, gdy…”, gdzie co jest, utrzymanie (przebiegi, logi, kody, koszty, tokeny), gdy coś nie
+  działa, zmiana harnessu a telefon, odtworzenie od zera, słowniczek, najważniejsze decyzje; każda sekcja z linią „Stan:”.
+  Kopia offline poza repo: `AI/Instrukcja obsługi.md` w folderze budowy.
+- `ja`, zasada 8, i `rozwoj-harnessu` B.7: instrukcja na liście miejsc aktualizowanych przy każdym wdrożeniu (z kopią offline).
+- `przeglad-tygodnia-osobisty`, krok 3: pierwszy przegląd w miesiącu wypisuje sekcje instrukcji z „Stan:” starszym
+  niż 60 dni i tokeny wygasające w 30 dni.
+- Mapa `ja/references/notion-mapa.md`: nowa strona (ID) na liście stron pod DASHBOARD; README – odnośnik „Dla człowieka”.
+
 ## ja [1.12.3] – 2026-11-11
 
 Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:

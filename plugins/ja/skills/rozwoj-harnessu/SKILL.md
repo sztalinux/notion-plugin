@@ -74,7 +74,8 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
    strona to ramka nad skrzynką i pomysłami – opis procedur jest w README repo); nowa procedura = nowa opcja w polu „Procedura” skrzynki.
    **Dokumentacja dla człowieka – przy każdym wdrożeniu, nie tylko przy zmianie struktury:** przejdź listę z `ja`,
    zasada 8 (repo i Notion), wyszukaj stare określenia, których zmiana dotyczy, i popraw nieaktualne zdania w tym samym
-   wydaniu; w podsumowaniu linia „Dokumentacja: <co zaktualizowane> / bez zmian – <dlaczego>”.
+   wydaniu – zawsze także „📘 Instrukcja obsługi” (pod DASHBOARD; zmienione sekcje z nową linią „Stan:”, potem kopia
+   offline `AI/Instrukcja obsługi.md` w folderze budowy); w podsumowaniu linia „Dokumentacja: <co zaktualizowane> / bez zmian – <dlaczego>”.
    Zmiana struktury Notion (baza, widok, pole) → zaktualizuj mapę: budowa – `dom-budowa/skills/budowa/references/notion-mapa.md`,
    sprawy osobiste – `ja/skills/ja/references/notion-mapa.md`. Obie trafiają do przewodnika w Notion przy następnym
    `tools/dokumenty.py` – zsynchronizuj go (`dokumenty`, sekcja C). Pełna lista miejsc w repo i w Notion, które trzeba
