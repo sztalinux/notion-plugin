@@ -66,7 +66,7 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   trafnych / Y% Kluczowych (wobec wzorca <data> (<ID wzorca>, …)[; z dopełnieniem Z%])` albo `pokrycie: niemierzone` (karta czynności: `… (karta
   czynności – tagi modelu)`; karta pytań – także po `zbuduj`, dopóki `pomiar --zapisz` nie zapisze pokrycia); kilka kart o różnym pokryciu –
   `kod: …; kod2: …`. Sekcje: `## Kluczowe (n)` – wszystkie Kluczowe karty, na początku; `## <temat> – Ważne (n)` wg tematów (część zaczynająca się
-  w środku sekcji powtarza jej nagłówek z „(c.d.)”); `## Ciekawostki (n)` – domyślnie na końcu karty (`--bez-ciekawostek` ukrywa); `## Dopełnienie z szukania (n)` – do 20 trafień
+  w środku sekcji powtarza jej nagłówek z „(c.d.)”); `## Ciekawostki (n)` – domyślnie po tezach Ważnych (`--bez-ciekawostek` ukrywa); `## Dopełnienie z szukania (n)` – do 20 trafień
   szukania dla A/B/C spoza karty albo `## Dopełnienie z szukania: brak – szukanie nic nie dodaje do karty`; `## Otwarte sprzeczności (n)`. Karta
   bez tez: `tez 0 (Kluczowe 0, Ważne 0)` i „karta pusta – użyj szukaj / temat / etap” (z `--pytanie` – sama sekcja dopełnienia). `--wiecej` drukuje rozszerzenie karty
   zamiast rdzenia (tezy pokrewne; nagłówek rdzenia podaje „rozszerzenie: +n tez pokrewnych (karta KOD --wiecej, …)”) – czytaj po rdzeniu,
