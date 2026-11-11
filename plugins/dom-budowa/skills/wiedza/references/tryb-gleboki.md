@@ -3,7 +3,7 @@
 Cel: odpowiedź na pytanie, którego nie pokrywa żadna karta, oparta na CAŁEJ bazie. Czat zostawia pytanie w prywatnym repo kopii indeksu;
 Mac czyta całą bazę modelem w małych porcjach (dwa przebiegi, Sonnet), pisze pełną odpowiedź (Opus) z tezami, otwartymi sprzecznościami
 i Notatnikiem z migawki i odkłada ją do repo; czat pobiera ją i przekazuje. Powód: karta to wybór tez zrobiony z góry dla rodziny pytań,
-a pytanie złożone lub nietypowe może potrzebować tez, których karta nie ma. Koszt: 3–6 minut, ok. 1–2 USD na pytanie; Mac musi nie spać.
+a pytanie złożone lub nietypowe może potrzebować tez, których karta nie ma. Koszt: 3–6 minut, ok. 1–2 USD na pytanie. Liczy workflow GitHub Actions w repo kopii; lokalny automat Maca to zapas (wtedy Mac musi nie spać).
 
 ## Kiedy
 
@@ -52,7 +52,8 @@ wc -c < /tmp/odp-$ID.md; curl -s -o /dev/null -w "w-toku: %{http_code}\n" -H "Au
    - plik jest → krok 4; brak pliku i `w-toku: 200` (znacznik `odpowiedzi/<ID>.w-toku`; jego pole `krok` mówi: „w kolejce”, „wybór tez”,
      „odpowiedź” albo „czeka na limit” – przekaż inwestorowi) → Mac pracuje: powtórz wywołanie, a po trzecim
      napisz, że jeszcze pracuje, i podaj „sprawdź odpowiedź <ID>”;
-   - brak pliku i `w-toku: 404` po ok. 2 minutach → Mac uśpiony albo offline: napisz to, zostaw wstępną odpowiedź i powiedz, że „sprawdź
+   - brak pliku i `w-toku: 404` po ok. 2 minutach → obsługa nie ruszyła (workflow `tryb-gleboki` w GitHub Actions czeka albo padł – zakładka Actions
+     repo kopii; przy zapasowym automacie na Macu – Mac uśpiony albo offline): napisz to, zostaw wstępną odpowiedź i powiedz, że „sprawdź
      odpowiedź <ID>” pobierze ją później (pytanie czeka w repo; to jedno pobranie `odpowiedzi/<ID>.md`). Powód: nie czekaj na Maca, który się nie obudzi.
 4. **Przekaż w całości** – odpowiedź ma własny nagłówek i linię Zasięg („przeczytano całą bazę: N tez…”); czytaj plik porcjami po 20 000 bajtów
    (`pytanie-do-bazy.md`, pkt 3, „Długie wyniki”) i nie skracaj: za pełną lekturę bazy zapłacono, a skrót gubi tezy, dla których to robiono.
