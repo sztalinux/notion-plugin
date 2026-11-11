@@ -37,7 +37,8 @@ nie ma go albo tekst nieczytelny (rysunki) → poproś jak wyżej.
 
 ## A. Klasyfikacja nowych plików
 
-1. Lista: raport ze startu sesji albo `python3 tools/dokumenty.py lista --nowe`.
+1. Lista: raport ze startu sesji albo `python3 tools/dokumenty.py lista --nowe` (pliki z `_Przychodzące/` raport podaje
+   tylko liczbą, jedną linią – ich listę daje `lista --nowe`).
 2. Dla każdego pliku ustal: co to jest (nazwa, folder, w razie wątpliwości pierwsza strona), kategorię, czy jest
    nowszą wersją czegoś, co już jest w przewodniku (`lista` – wpisy z „zawartość”) albo w paczce.
 3. **Przewodnik (`--zawartosc`)** – każdy dokument przydatny agentom, w **jednej, najnowszej** wersji: projekty
