@@ -268,8 +268,9 @@ def kontrola_commitow(zakres: list) -> list:
         an, ae, cn, ce = git("show", "-s", "--format=%an%n%ae%n%cn%n%ce", sha).splitlines()[:4]
         bledy += sprawdz_osobe(f"{k} autor", an, ae, zakazane) + sprawdz_osobe(f"{k} commiter", cn, ce, zakazane)
         bledy += sprawdz_tekst(f"{k} wiadomość", git("show", "-s", "--format=%B", sha), zakazane)
-        # -z: ścieżki z polskimi znakami bez cudzysłowów i ósemkowych kodów (inaczej plik byłby pominięty)
-        for sciezka in filter(None, git("diff-tree", "-z", "--no-commit-id", "-r", "--root", "--name-only",
+        # -z: ścieżki z polskimi znakami bez cudzysłowów i ósemkowych kodów (inaczej plik byłby pominięty);
+        # -c: w scaleniu pliki różne od wszystkich rodziców – treść wniesiona przy rozwiązaniu konfliktu
+        for sciezka in filter(None, git("diff-tree", "-z", "-c", "--no-commit-id", "-r", "--root", "--name-only",
                                         "--diff-filter=AMR", sha).split("\0")):
             if (Path(sciezka).suffix.lower() in BINARNE or DANE_OBSERWATORA.search(sciezka)
                     or sciezka.startswith("dane/")):
