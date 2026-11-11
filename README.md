@@ -45,7 +45,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
 Telefon / czat ── poprawka sposobu pracy ──► Notion „Zmiany do harnessu” (obowiązuje od razu)
                                                    │
 Claude Code (komputer; na starcie lista wyboru, domyślnie nic) ◄──┘
-   ├─ „Dokumenty budowy” (tools/dokumenty.py): skan folderu budowy → paczka `_Do claude.ai/` + lista „do wgrania”
+   ├─ „Dokumenty budowy” (tools/dokumenty.py): skan folderu budowy → przewodnik na stronie Notion (+ kopia awaryjna `_Do claude.ai/`)
    ├─ „Indeks wiedzy” (tools/wiedza.py sync --publikuj --cicho): odświeża indeks Bazy wiedzy z Notion i publikuje kopię dla czatu
    ├─ klasyfikuje nowe dokumenty (procedura `dokumenty`)
    └─ wdraża zmiany harnessu → wersja → commit → push ──► GitHub sztalinux/notion-plugin
