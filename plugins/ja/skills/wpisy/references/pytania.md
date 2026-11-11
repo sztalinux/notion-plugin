@@ -75,7 +75,8 @@ w „Przetworzone”), reszta zostaje. Zaznaczony checkbox liczy się jako odpow
 ## C. Komunikaty asystenta (🔔 we „📝 Wpisach”)
 
 Problemy asynchroniczne – nikt o nie nie pytał we wpisie, a inwestor powinien o nich wiedzieć: przebieg na Macu się nie udał
-albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błąd, wpis kolejki 💸 nie trafił do arkusza
+albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błąd, kopie zapasowe po terminie
+(`przeglad-tygodnia-osobisty`, klucz `kopie-zapasowe`), wpis kolejki 💸 nie trafił do arkusza
 (`koszty`, E). Wszystkie w jednym miejscu: zwijany nagłówek „🔔 Komunikaty asystenta” na górze treści „📝 Wpisy”
 (nad wpisami). Nagłówek zostaje także pusty – nie usuwaj go; brak → utwórz przy pierwszym komunikacie.
 

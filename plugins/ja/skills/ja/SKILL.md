@@ -44,6 +44,7 @@ Podział wpisów na obszary **nie jest w harnessie** – jest w bazie Notion „
 | „kończy się X”, „kupiłem X”, „zaczynam / przerwa od” (suplement) | `suple` |
 | „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` |
 | „przegląd tygodnia”, „podsumuj tydzień”, tygodniowe zaplanowane zadanie, „posprzątaj dziennik”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – `harmonogram`) | `przeglad-tygodnia-osobisty` (uruchamia też przegląd budowy) |
+| „stan kopii”, „zrobiłem kopię na dysk / eksport Notion”, kopie zapasowe | Claude Code na Macu: `docs/kopie-zapasowe.md` w repo harnessu (`tools/kopie.py stan` / `potwierdz`); poza nim powiedz, że potwierdzenie wpisze Claude Code |
 | poprawia sposób pracy asystenta, „zapamiętaj na przyszłość”, „mam pomysł na…”, „zrób POM-n”, „zrób ZP-n”, nowa procedura | `rozwoj-harnessu` |
 | budowa domu: ekipa, projekt, kosztorys, działka, wiedza budowlana, dokumenty budowy | `budowa` (plugin `dom-budowa`) |
 

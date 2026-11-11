@@ -4,6 +4,19 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.13.0] – 2026-11-11 (POM-21)
+
+POM-21 „Kopie zapasowe – plan i kontrola” (gałąź `pom/2026-11-11-POM-21`):
+- Nowy plan kopii `docs/kopie-zapasowe.md`: trzy warstwy (dysk zewnętrzny, chmura, eksport usług), pozycje z terminami,
+  rytm inwestora, odtworzenie, decyzje przyjęte do potwierdzenia (`.dom` tylko na dysku zewnętrznym, bez Time Machine
+  na nieprywatnym Macu, terminy 7/30/90 dni).
+- Nowe narzędzie `tools/kopie.py` (`stan [--cicho|--json]`, `potwierdz <pozycja> [data]`) – kontrola tylko do odczytu:
+  kopia dokumentów, repozytoria `AI/*` (zdalne, niewypchnięte, niezacommitowane – bez `fetch`), kopia wartości arkusza,
+  rejestr kopii ręcznych, Time Machine i wolne miejsce; testy `tools/test_kopie.py`.
+- `przeglad-tygodnia-osobisty`: linia „Kopie” we wpisie tygodnia, pozycje ⚠/✗ jako komunikat 🔔 `kopie-zapasowe`
+  (`wpisy/references/pytania.md`, C); `ja`: wiersz mapy „stan kopii”, „zrobiłem kopię na dysk”.
+- `CLAUDE.md` (opcja startowa „Zdjęcia i kopia”), README, `docs/zdjecia-i-kopia.md` – odnośniki do planu.
+
 ## ja [1.12.3] – 2026-11-11
 
 Wdrożenie po nocnej samonaprawie 10.11 i decyzje inwestora:

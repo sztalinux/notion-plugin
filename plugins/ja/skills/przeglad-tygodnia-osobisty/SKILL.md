@@ -44,6 +44,10 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
 3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i pozycje „❓” Dziennika starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
    tylko licznikiem, są w przeglądzie budowy); skrzynka „Zmiany do harnessu” – wpisy do wdrożenia starsze niż 7 dni
    (przypomnienie: uruchom Claude Code); „Pomysły na rozwój” – nowe bez analizy i „Pytania do mnie”.
+   **Kopie zapasowe:** `python3 tools/kopie.py stan --cicho` (tylko odczyt; brak wyjścia = wszystko aktualne; polecenie
+   niedostępne → „niesprawdzone”). Pozycje ⚠/✗ → jeden komunikat 🔔 z kluczem `kopie-zapasowe` we „Wpisach”
+   (`wpisy/references/pytania.md`, C; kolejny tydzień – aktualizacja bloku, wszystko ✓ → „ustąpiło”), w okienku
+   „Co możesz zrobić”: najpilniejsza pozycja i czynność z `docs/kopie-zapasowe.md`, 4 (repo harnessu).
 4. **Wpis w „📅 Przeglądy tygodniowe”** na górze strony, zwijany nagłówek „Tydzień <RRRR-Www> (<data od–do>)”:
    ```
    **Zrobione:** 3–6 punktów (prywatne / dziecko / praca)
@@ -52,6 +56,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    **Emocje i praca (liczby):** n wpisów emocji, najczęściej: …, śr. intensywność x; praca: n dni, śr. ocena y; wzorzec: …
    **Dziecko:** n nowych tematów do przegadania, n pomysłów na prezent
    **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia, POM-x z pytaniami
+   **Kopie:** aktualne / ⚠ n (…) · ✗ n (…) / niesprawdzone
    **🏗 Budowa:** <linia skrótu> → <wzmianka przeglądu budowy z tego tygodnia>
    **Porządki (n):** propozycje z sekcji D – do zatwierdzenia jednym „tak” · archiwum: przeniesiono n dni (dd.mm–dd.mm)
    ```
