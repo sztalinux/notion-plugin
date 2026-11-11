@@ -39,7 +39,7 @@ nie ma go albo tekst nieczytelny (rysunki) → poproś jak wyżej.
 
 1. Lista: raport ze startu sesji albo `python3 tools/dokumenty.py lista --nowe`.
 2. Dla każdego pliku ustal: co to jest (nazwa, folder, w razie wątpliwości pierwsza strona), kategorię, czy jest
-   nowszą wersją czegoś, co już jest w paczce.
+   nowszą wersją czegoś, co już jest w przewodniku (`lista` – wpisy z „zawartość”) albo w paczce.
 3. **Przewodnik (`--zawartosc`)** – każdy dokument przydatny agentom, w **jednej, najnowszej** wersji: projekty
    (architektura, konstrukcja, instalacje – najlepiej komplet w jednym PDF), opinie geotechniczne, warunki
    i uzgodnienia, oferty i wyceny, umowy, karty techniczne produktów, stare kosztorysy Excel (dziś kosztorys żyje w arkuszu Google). Przeczytaj dokument (duże PDF-y
