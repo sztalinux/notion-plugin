@@ -408,9 +408,11 @@ def strona(k: dict, id_: str) -> dict:
 def wycofaj(k: dict, ids: list) -> dict:
     """Czyści wiersze tych stron w arkuszu (Wydatki i Cennik) i ustawia w Notion Arkusz = „Nie wysyłać”."""
     wymagaj(k, "token", "url", "sekret")
-    ids = [i.strip() for i in ids if i.strip()]
+    # id z adresu strony (bez myślników) → kanoniczne id z Notion: Apps Script porównuje Źródło „notion:<id>” dosłownie
+    strony = [strona(k, i.strip()) for i in ids if i.strip()]
+    ids = [s["id"] for s in strony]
     licz = {"stron": len(ids), "wiersze_wydatkow": 0, "wiersze_cennika": 0, "plany": 0}
-    plany = [w for w in (na_wiersz(strona(k, i)) for i in ids) if w["rodzaj"] == "Plan"]
+    plany = [w for w in map(na_wiersz, strony) if w["rodzaj"] == "Plan"]
     if plany:
         # plan wycofany = pusta komórka „Plan ręczny”, ale tylko gdy nadal stoi tam kwota z tej strony
         m = mapa_planu(k)
