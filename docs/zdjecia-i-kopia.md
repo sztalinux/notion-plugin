@@ -49,6 +49,7 @@ Dom/
   Projekty/ Dokumenty/ Umowy/ Faktury/RRRR/ Wyceny/ Materiały/ Koszty/ Media/     kopia z Maca (źródło: Mac)
   Dostawy/<Etap>/                WZ, deklaracje, karty produktów, etykiety
   Dziennik budowy KB/            zdjęcia wpisów kierownika
+  Książka domu/                  PDF-y Książki domu (eksport z Notion po rozdziale etapu – procedura `ksiazka-domu`)
   _Kopie/                        paczki z datą (kopia drogą ręczną)
   _Archiwum/                     duplikaty, puste foldery, stare wersje, pliki usunięte na Macu, stary układ Dysku
 ```

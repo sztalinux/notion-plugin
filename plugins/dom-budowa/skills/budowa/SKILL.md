@@ -70,7 +70,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    | zadanie z terminem, „do piątku dam znać…” | `harmonogram` (D) → TASKS, Kto = Ja, Obszar = Dom | |
    | ktoś ma coś zrobić / przyjść / dostarczyć w dniu X | `harmonogram` (D) → TASKS WAITING; krok budowy → Harmonogram | |
    | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia) | `zakupy` (0) | 🧱 Zakupy budowy; zadanie w TASKS tylko przy zakupie „na już” |
-   | relacja z budowy, dostawa, usterka, godziny własne, roboty dodatkowe („ekipa chce dopłatę za…”) | `dziennik` (dopłata – B) | dopłata to nie wydatek: do 💸 dopiero uzgodniona kwota jako plan (`koszty` B3), zapłata jako wydatek (`koszty` B) |
+   | relacja z budowy, dostawa, usterka, godziny własne, roboty dodatkowe („ekipa chce dopłatę za…”) | `dziennik` (dopłata – B) | dopłata to nie wydatek: do 💸 dopiero uzgodniona kwota jako plan (`koszty` B3), zapłata jako wydatek (`koszty` B); położenie z miarą („zapisz w książce…”, „zawór 1,2 m od narożnika”) → także `ksiazka-domu` B |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
    | wydatek, faktura do zapłaty / zapłacona, koszt (samo zdjęcie faktury na Dysku – `dokumenty` D) | `koszty` (B) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |
    | oferta, wycena | `oferta` | cena materiału od dostawcy → `koszty` (B2) |

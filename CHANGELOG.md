@@ -14,7 +14,9 @@ POM-2 (gałąź `pom/2026-11-11-POM-2`; wersję ustala integrator przy scalaniu)
   PDF na razie eksportem z Notion; bez osobnej bazy produktów – sekcja „Dostawy i produkty” w rozdziale etapu.
 - `etap` C.8: odbiór całego etapu → szkic rozdziału; B.7 – punkty z miarą zasilają część B.
 - `zakupy` C.1: przy dostawie linia „Produkt: producent, typ / klasa, partia” w Uwagach.
-- `AGENTS.md`, `budowa` (mapa procedur), README (procedury, konektory), `notion-mapa.md`.
+- `budowa`, „Luźny wpis z Dziennika”: położenie z miarą z Dziennika i Skrzynki trafia też do `ksiazka-domu` B.
+- `AGENTS.md`, `budowa` (mapa procedur), README (procedury, konektory), `notion-mapa.md`, `docs/zdjecia-i-kopia.md`
+  (folder `Książka domu/` na Dysku).
 
 ## ja [1.12.3] – 2026-11-11
 
