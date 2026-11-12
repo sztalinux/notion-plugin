@@ -44,7 +44,7 @@ sekcja 7.
 
 | Klucz | Co | Gdzie kopia | Termin | Skąd kontrola wie |
 |---|---|---|---|---|
-| `dokumenty` | dokumenty budowy | Dysk (`Dom/_Kopie`) | ⚠, gdy są zmiany od kopii, a kopia ma ponad 7 dni | `.dom/kopia/stan.json` + porównanie plików (`kopia.py`) |
+| `dokumenty` | dokumenty budowy | Dysk (`Dom/_Kopie`) | ⚠, gdy są zmiany od kopii, a kopia ma ponad 7 dni | stan `kopia.py` (`.dom/kopia/stan.json`, zapas: pierwsza paczka) + porównanie plików |
 | `repo:<katalog>` | każdy katalog w `AI/` | GitHub | bez zaległości | git: zdalne repo, niewypchnięte commity, niezacommitowane pliki (bez `fetch`) |
 | `kosztorys` | kopia wartości arkusza | Mac → dysk zewnętrzny | 2 dni | data pliku `Koszty/Kosztorys_google.json` |
 | `dysk-zewnetrzny` | warstwa 1 w całości | dysk zewnętrzny | 7 dni | rejestr potwierdzeń |
@@ -55,8 +55,9 @@ sekcja 7.
 | `sekrety` | sekrety w menedżerze haseł, tokeny z rozmów wymienione | menedżer haseł | raz | rejestr potwierdzeń |
 | `time-machine`, `miejsce` | informacja: Time Machine, wolne miejsce na Macu (⚠ poniżej 15 GB) | – | – | `tmutil destinationinfo`, `df` |
 
-Katalog `AI/*` bez zdalnego repozytorium jest ✓, gdy kopia `dysk-zewnetrzny` jest aktualna. Kopia na dysku zewnętrznym
-nie zastępuje pushu: niewypchnięte commity zostają ⚠.
+Katalog `AI/*` bez zdalnego repozytorium jest ✓, gdy kopia `dysk-zewnetrzny` jest aktualna, ⚠, gdy jest po terminie,
+i ✗ dopiero wtedy, gdy nigdy jej nie potwierdzono. Kopia na dysku zewnętrznym nie zastępuje pushu: niewypchnięte commity
+zostają ⚠.
 
 Rejestr potwierdzeń to plik `<folder budowy>/.dom/kopie-zapasowe.json` w postaci `{"pozycja": "RRRR-MM-DD"}`. Zapisuje go
 wyłącznie `kopie.py potwierdz`.
@@ -97,7 +98,11 @@ python3 tools/kopie.py potwierdz <pozycja> [RRRR-MM-DD]
 - nie zapisuje stanu `kopia.py`;
 - nie robi `git fetch`, a gita czyta bez blokad, więc nie przeszkadza równoległym sesjom;
 - nie montuje dysku Time Machine;
-- z `.dom` czyta tylko daty: `kopia/stan.json` i rejestr `kopie-zapasowe.json` (sekretów nie czyta).
+- z `.dom` czyta tylko daty: stan kopii dokumentów tym samym odczytem co `kopia.py` (`kopia/stan.json`, a bez niego
+  pierwsza paczka `paczka-*.json`) i rejestr `kopie-zapasowe.json` (sekretów nie czyta).
+
+Brak gita, uszkodzony `stan.json` albo uszkodzony rejestr nie kończą się wyjątkiem: pozycja (`repo:*`, `dokumenty`,
+`rejestr`) dostaje ⚠ albo ✗ z opisem, co poprawić. `potwierdz` przy uszkodzonym rejestrze nic nie zapisuje (kod 1).
 
 Kod wyjścia to 0 także wtedy, gdy są ⚠ i ✗, bo to wynik kontroli. Kod 1 oznacza błąd narzędzia. Testy:
 `python3 tools/test_kopie.py`.

@@ -8,7 +8,8 @@
 Time Machine tylko `tmutil destinationinfo` (bez montowania), z `.dom` czyta tylko `kopia/stan.json` i rejestr `kopie-zapasowe.json` (daty) – sekretów nie czyta.
 `potwierdz` zapisuje wyłącznie datę w rejestrze `<hub>/.dom/kopie-zapasowe.json`.
 Pozycja: ✓ aktualna · ⚠ po terminie albo z zaległością (niewypchnięte commity, zmiany od kopii) · ✗ brak kopii · ℹ informacja.
-Kod wyjścia 0 także przy ⚠/✗ (to wynik kontroli, nie błąd); 1 = błąd narzędzia.
+Kod wyjścia 0 także przy ⚠/✗ (to wynik kontroli, nie błąd); 1 = błąd narzędzia. Brak gita albo uszkodzony plik stanu
+lub rejestru → pozycja z czytelnym opisem (co poprawić), nie wyjątek.
 """
 import argparse
 import json
@@ -49,18 +50,35 @@ def dni_od(d: str, dzis: date) -> int:
     return (dzis - date.fromisoformat(d[:10])).days
 
 
+class BladRejestru(ValueError):
+    pass
+
+
 def wczytaj_rejestr(hub: Path) -> dict:
     p = hub / ".dom" / REJESTR
-    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+    if not p.exists():
+        return {}
+    try:
+        rejestr = json.loads(p.read_text(encoding="utf-8"))
+    except (ValueError, OSError) as e:
+        raise BladRejestru(f"uszkodzony rejestr .dom/{REJESTR} ({e}) – popraw plik albo przywróć go z kopii") from e
+    if not isinstance(rejestr, dict) or not all(isinstance(v, str) for v in rejestr.values()):
+        raise BladRejestru(f"rejestr .dom/{REJESTR} ma zły układ – oczekiwany {{\"pozycja\": \"RRRR-MM-DD\"}}")
+    return rejestr
 
 
 def dokumenty(hub: Path, dzis: date) -> dict:
-    """Kopia dokumentów Mac → Dysk (kopia.py) – odczyt stan.json i porównanie bez zapisu."""
-    p = hub / ".dom" / "kopia" / "stan.json"
-    if not p.exists():
-        return poz("dokumenty", "✗", "dokumenty budowy → Dysk", "Dysk (Dom/_Kopie)", None, "kopia.py nie był uruchamiany")
-    stan = json.loads(p.read_text(encoding="utf-8"))
+    """Kopia dokumentów Mac → Dysk (kopia.py) – ten sam odczyt stanu z zapasem co kopia.py i porównanie bez zapisu."""
+    opis, gdzie = "dokumenty budowy → Dysk", "Dysk (Dom/_Kopie)"
+    katalog = kopia.STAN_DIR if hub == kopia.HUB else hub / ".dom" / "kopia"
+    try:
+        stan = kopia.wczytaj_stan(katalog)
+    except (ValueError, OSError, KeyError, TypeError) as e:
+        return poz("dokumenty", "✗", opis, gdzie, None,
+                   f"uszkodzony stan kopii .dom/kopia ({e}) – sprawdź `python3 tools/kopia.py stan`")
     kiedy = stan.get("potwierdzono")
+    if not kiedy and not stan.get("potwierdzone"):
+        return poz("dokumenty", "✗", opis, gdzie, None, "kopia.py nie był uruchamiany")
     potwierdzone = {k: v for k, v in (stan.get("potwierdzone") or {}).items() if kopia.dozwolony(k)}
     teraz = kopia.skanuj(hub, {**(stan.get("potwierdzone") or {}), **(stan.get("ostatni_skan") or {})})
     r = kopia.roznice(potwierdzone, teraz)
@@ -73,28 +91,39 @@ def dokumenty(hub: Path, dzis: date) -> dict:
         s = "⚠"
     else:
         s = "✓"
-    return poz("dokumenty", s, "dokumenty budowy → Dysk", "Dysk (Dom/_Kopie)", kiedy, szczegol)
+    return poz("dokumenty", s, opis, gdzie, kiedy, szczegol)
 
 
 def git(katalog: Path, *args) -> subprocess.CompletedProcess:
-    return subprocess.run(["git", "--no-optional-locks", "-C", str(katalog), *args],
-                          capture_output=True, text=True, timeout=30)
+    try:
+        return subprocess.run(["git", "--no-optional-locks", "-C", str(katalog), *args],
+                              capture_output=True, text=True, timeout=30)
+    except subprocess.TimeoutExpired:
+        return subprocess.CompletedProcess(args, 124, "", "git nie odpowiedział w 30 s")
 
 
-def repozytoria(hub: Path, dysk_zewn: str = None) -> list:
+def repozytoria(hub: Path, dysk_zewn: str = None, dysk_stan: str = "✓") -> list:
     """Każdy katalog w <hub>/AI: git ze zdalnym, bez niewypchniętych commitów i zmian. Bez `git fetch`.
-    Katalog bez zdalnej kopii jest ✓, gdy aktualna kopia na dysku zewnętrznym (dysk_zewn = jej data)."""
+    Katalog bez zdalnej kopii: kopia na dysku zewnętrznym (dysk_zewn = jej data, dysk_stan = jej stan) aktualna → ✓,
+    po terminie → ⚠, nigdy niepotwierdzona → ✗."""
     out = []
     baza = hub / "AI"
     if not baza.is_dir():
         return out
+    if not shutil.which("git"):
+        return [poz("repo:*", "⚠", "katalogi AI/* – nie sprawdzono", "", None,
+                    "brak programu git na tym komputerze (zainstaluj: xcode-select --install)")]
     for d in sorted(x for x in baza.iterdir() if x.is_dir() and not x.name.startswith(".")):
         klucz = f"repo:{d.name}"
         zdalne = git(d, "remote").stdout.split() if (d / ".git").exists() else []
         if not zdalne:
             opis = f"AI/{d.name} – " + ("git bez zdalnego repozytorium" if (d / ".git").exists() else "bez gita")
-            out.append(poz(klucz, "✓", opis, "dysk zewnętrzny", dysk_zewn) if dysk_zewn else
-                       poz(klucz, "✗", opis, "tylko na Macu", None, "prywatne repozytorium albo dysk zewnętrzny"))
+            if not dysk_zewn:
+                out.append(poz(klucz, "✗", opis, "tylko na Macu", None, "prywatne repozytorium albo dysk zewnętrzny"))
+            elif dysk_stan == "✓":
+                out.append(poz(klucz, "✓", opis, "dysk zewnętrzny", dysk_zewn))
+            else:
+                out.append(poz(klucz, "⚠", opis, "dysk zewnętrzny", dysk_zewn, "kopia na dysku zewnętrznym po terminie"))
             continue
         uwagi = []
         if git(d, "rev-parse", "--abbrev-ref", "@{u}").returncode == 0:
@@ -155,11 +184,13 @@ def wolne_miejsce(hub: Path) -> dict:
 
 
 def zbierz(hub: Path, dzis: date) -> list:
-    rejestr = wczytaj_rejestr(hub)
-    rn = reczne(rejestr, dzis)
-    dysk_zewn = next((p["kiedy"] for p in rn if p["klucz"] == "dysk-zewnetrzny" and p["stan"] == "✓"), None)
-    return ([dokumenty(hub, dzis)] + repozytoria(hub, dysk_zewn) + [kosztorys(hub, dzis)]
-            + rn + [time_machine(), wolne_miejsce(hub)])
+    try:
+        rn = reczne(wczytaj_rejestr(hub), dzis)
+    except BladRejestru as e:
+        rn = [poz("rejestr", "✗", "rejestr kopii ręcznych", szczegol=str(e))]
+    dysk = next((p for p in rn if p["klucz"] == "dysk-zewnetrzny"), {})
+    return ([dokumenty(hub, dzis)] + repozytoria(hub, dysk.get("kiedy"), dysk.get("stan", "✗"))
+            + [kosztorys(hub, dzis)] + rn + [time_machine(), wolne_miejsce(hub)])
 
 
 def linia_cicha(pozycje: list) -> str:
@@ -192,7 +223,11 @@ def main(argv=None):
             print(f"✗ data {kiedy} – podaj RRRR-MM-DD, nie z przyszłości")
             return 1
         p = HUB / ".dom" / REJESTR
-        rejestr = wczytaj_rejestr(HUB)
+        try:
+            rejestr = wczytaj_rejestr(HUB)
+        except BladRejestru as e:
+            print(f"✗ {e}")
+            return 1
         rejestr[a.pozycja] = kiedy
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(json.dumps(rejestr, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
