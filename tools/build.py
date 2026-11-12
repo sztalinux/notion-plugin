@@ -127,6 +127,8 @@ def waliduj() -> list:
                 bledy.append(f"{d.name}: brak description")
             elif len(desc) > 1024:
                 bledy.append(f"{d.name}: description ma {len(desc)} znaków (max 1024)")
+            if desc and desc[0] not in "\"'" and (": " in desc or " #" in desc):
+                bledy.append(f"{d.name}: description z „: ” albo „ #” bez cudzysłowu to niepoprawny YAML – ujmij w \"…\"")
             if d.name != kontekst:
                 if f"plugins/{pl.name}/skills/{d.name}/SKILL.md" not in agents:
                     bledy.append(f"{d.name}: brak w tabeli procedur w AGENTS.md (plugins/{pl.name}/skills/{d.name}/SKILL.md)")
