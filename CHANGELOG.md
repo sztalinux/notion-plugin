@@ -4,6 +4,21 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.14.5] – 2026-11-12
+
+Domknięcie czterech spraw odłożonych przy scalaniu nocy 11/12.11 (wymagały próby albo pomiaru).
+- `wiedza`: `karty --do` liczy m jako trafienia poza **kartami pytań** (linia „trafienia poza kartami pytań: m”) – karty
+  czynności obejmują całą bazę, więc „poza wszystkimi kartami” było zawsze 0 i próg trybu głębokiego m > 15 nie działał
+  (W08-36). Pomiar na 176 zapytaniach z logu szukania: przed 0/176, po 35/176 (tematy bez karty pytań, np. instalacje).
+  Procedury (`pytanie-do-bazy.md`, `tryb-gleboki.md`, `karty.md`, `indeks.md`) i `docs/system-wiedzy.md` z nową nazwą linii.
+- `tools/wiedza.py publikuj --narzedzia ŚCIEŻKA/runner.py ŚCIEŻKA/pytania.py`: narzędzia trybu głębokiego do `narzedzia/`
+  repo kopii (tylko te dwie nazwy, tylko repo prywatne, wysyłka przy różnym sha, sprawdzenie po niej); runbook, krok 4.
+  Test `tools/test_wiedza_narzedzia.py`. Runner z W08-37 i `pytania.py` z W08-7 zsynchronizowane 12.11.
+- Kontrola prywatności (`tools/build.py`): kwoty także z „tys.”, „mln”, „mld”, „k”, „złotych”, „zl”, „pln” (bez względu na
+  wielkość liter; przykłady pisz „N tys. zł”), adresy z „al.” i „os.”, telefon stacjonarny („NN NNN NN NN”, także z +48)
+  i numery z „0048” (P05-13). W drzewie 0 nowych trafień, w historii bez zmian (24 znane stare commity). Test
+  `tools/test_build_wzorce.py`.
+
 ## dom-budowa [3.14.4] – 2026-11-12
 
 Scalenie gałęzi nocnej samonaprawy z 11/12.11 (`noc/2026-11-11-*-przeglad`, `-13-wdrozenie`) na main po POM; zmiany z nocy
@@ -36,6 +51,12 @@ naniesione w układzie po POM (np. `budowa/references/wieczorem.md`).
   dla eksportów i multimediów; brak listy słów zakazanych zatrzymuje walidację (świadomie bez listy – `DOM_BEZ_LISTY=1`);
   description z „: ” albo „ #” bez cudzysłowu odrzucany; odesłania `references/` sprawdzane we wszystkich plikach .md
   pluginów; blokada dwóch buildów naraz.
+
+## ja [1.13.6] – 2026-11-12
+
+- `wpisy` (`references/pytania.md`, A): technika zapisu okienka ❓ – blok wpisu zastąpiony w całości blokiem z okienkiem jako
+  dzieckiem (sprawdzone 12.11 w Notion: zamiana akapitu na `<p>` z `<callout>` i punkt listy z wciętym okienkiem działają;
+  doklejenie wciętego okienka za tekstem akapitu wpisuje znaczniki jako tekst) (D04-12).
 
 ## ja [1.13.5] – 2026-11-12
 
