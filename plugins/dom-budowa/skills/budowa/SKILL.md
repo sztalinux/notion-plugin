@@ -68,7 +68,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    |---|---|---|
    | ustalenie, decyzja, pytanie, ryzyko, pomysł, doczytać | `notatka` | ustalenie z wiedzą techniczną → także `wiedza`, sekcja F |
    | zadanie z terminem, „do piątku dam znać…” | `harmonogram` (D) → TASKS, Kto = Ja, Obszar = Dom | |
-   | ktoś ma coś zrobić / przyjść / dostarczyć w dniu X | `harmonogram` (D) → TASKS WAITING; krok budowy → Harmonogram | |
+   | ktoś ma coś zrobić / przyjść / dostarczyć w dniu X; nowy termin albo przesunięcie kroku („przesuwamy płytę o tydzień”) | `harmonogram` (D) → TASKS WAITING; krok budowy → Harmonogram (przesunięcie – C) | bez inwestora Termin kroku zmienia tylko wpis o tempie prac (C.4); inaczej pytanie pod wpisem z propozycją nowego terminu i skutków (C.2–C.3) |
    | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia) | `zakupy` (0) | 🧱 Zakupy budowy; zadanie w TASKS tylko przy zakupie „na już” |
    | relacja z budowy, dostawa, usterka, godziny własne, roboty dodatkowe („ekipa chce dopłatę za…”) | `dziennik` (dopłata – B) | dopłata to nie wydatek: do 💸 dopiero uzgodniona kwota jako plan (`koszty` B3), zapłata jako wydatek (`koszty` B); położenie z miarą („zapisz w książce…”, „zawór 1,2 m od narożnika”) → także `ksiazka-domu` B |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |

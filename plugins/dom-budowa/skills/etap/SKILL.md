@@ -79,7 +79,8 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
    z kierownikiem budowy; asystent nie odbiera.
 5. Zapis: usterki → TASKS (Kto = Ekipa, When = termin usunięcia) i Notatnik (Typ „Ryzyko” lub „Pytanie”, Do kogo = Ekipa,
    bez Kiedy – link do zadania; `harmonogram`, Zasady); wpis z odbioru →
-   procedura `dziennik`; dokumenty (WZ betonu, atesty stali, karty produktów, protokoły prób) → folder budowy (`dokumenty`).
+   procedura `dziennik`; dokumenty (WZ betonu, atesty stali, karty produktów, protokoły prób) → folder budowy (`dokumenty`);
+   sprawdzone punkty „✅ Checklisty budowy” z kroku 2 → Zrobione, wynik w Uwagach (usterka – punkt zostaje, link do zadania).
 6. **Płatność za etap dopiero po odbiorze** – przekaż do `koszty` (transza wg umowy, zatrzymanie), z linkiem do protokołu.
 7. **Harmonogram i gwarancja:** krok w Harmonogramie → Status „Zrobione”; odbiór końcowy umowy → w Umowach i gwarancjach
    Odbiór = data protokołu, Gwarancja do / Rękojmia do (z umowy; rękojmia ustawowo 5 lat dla budynku, jeśli umowa jej

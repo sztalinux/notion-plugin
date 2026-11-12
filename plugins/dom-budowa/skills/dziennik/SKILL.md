@@ -31,7 +31,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    | ustalenie, pytanie, ryzyko, decyzja | `notatka` – Notatnik budowy z Etapem i Do kogo |
    | usterka do poprawy, rzecz do zrobienia z terminem | `notatka` – TASKS (When), Kto = Ekipa |
    | „ekipa chce dopłatę za…” (roboty dodatkowe) | sekcja B |
-   | koniec kroku / etapu, „jutro betonujemy” | `etap` – odbiór albo bramka; Harmonogram – Status kroku (W trakcie / Zrobione) |
+   | koniec kroku / etapu, „jutro betonujemy” | `etap` – odbiór albo bramka; Harmonogram – Status kroku „W trakcie”, „Zrobione” dopiero z odbiorem (`etap` C.7) |
    | przesunięcie, opóźnienie ekipy, nowy termin, „nie skończyliśmy – jutro kontynuujemy”, „nie robili (deszcz)” | `harmonogram`, sekcja C (pkt 4 – terminy kroków przesuwasz od razu) |
    | wiedza od wykonawcy („mówi, że…”) | `wiedza` (Rozmowy i źródła), jeśli to coś więcej niż ustalenie na dziś |
 3. **Zdjęcia:** inwestor wysyła je w rozmowie albo pisze, że wgrał → wskaż folder kroku na Dysku (link z pola „Zdjęcia”
