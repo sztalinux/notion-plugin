@@ -42,7 +42,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     tools/kopie.py                    ← kontrola kopii zapasowych: co ma kopię, gdzie i z kiedy, tylko odczyt (docs/kopie-zapasowe.md; test_kopie.py)
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
     tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google, gotówka po miesiącach (docs/wydatki-arkusz.md)
-    tools/pomysly_wersje.py           ← wersje z CHANGELOG dla POM-n (kontrola „status pomysłu ↔ wdrożenie” w przeglądzie dnia; test_pomysly_wersje.py)
+    tools/pomysly_wersje.py           ← wersje z CHANGELOG (gałąź main) dla POM-n (kontrola „status pomysłu ↔ wdrożenie” w przeglądzie dnia; test_pomysly_wersje.py)
     docs/                             ← opisy systemów dla człowieka: wiedza (mapa, runbook, rejestr decyzji), wydatki → arkusz
 ```
 
