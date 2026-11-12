@@ -128,7 +128,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    Rozmowa” w nazwie, Obszar Dziecko lub Prywatne) DONE (wiersze kroku 5)
    ↔ temat w „💬 Do przegadania” na stronie osoby. Tylko pytanie „❓” z kluczem `KS-R…` (wspólny limit 5 z 5a); po ☑ dopisek
    „✅ przegadane” pod tematem, nic się nie przenosi. Treści tematów nie wypisuj; licznik „rozjazdy” jak w 5a.
-6. **Jutro – sprawy osobiste** (odczyt; jedyny zapis – zadanie z suplementami, niżej): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
+6. **Jutro – sprawy osobiste** (odczyt; jedyne zapisy – suplementy, niżej): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
    (When < dziś, niezakończone – widok „📅 Dziś”, ID w mapie), suplementy z Buy = tak (licznik – **bez** Statusu BREAK / SUSPENDED,
    te to „do sprawdzenia”, niżej), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)
@@ -139,11 +139,15 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    zbiorcze pytanie „❓ Odznaczyć Buy?” (klucz `KS-S1-…`, propozycja: tak); pola Buy nie zmieniaj bez ☑ inwestora.
    Reguły, klucze i obsługa odpowiedzi: `references/kontrola-spojnosci-suple.md`.
 
+   **Suplementy po zamkniętym zadaniu** (przed licznikiem): zadanie „Zamówić suple” DONE od poprzedniego wieczornego przeglądu
+   (wiersze z widoku kroku 5, bez ucinania do dziś) → Buy = nie suplementom wymienionym w nim (Name i treść strony; jedna
+   edycja na wiersz), w linii „🤖” „suple: Buy odznaczone n”; ARCHIVED → Buy zostaje. Inaczej następny krok założy nowe
+   zadanie z tą samą listą.
    **Suplementy do zamówienia:** gdy jest choć jeden z Buy = tak (i Status inny niż BREAK / SUSPENDED), poszukaj w TASKS (wyszukiwarka z parametrem bazy, „suple”,
    wśród niezakończonych) otwartego zadania „Zamówić suple”. Jest → dopisz do niego brakujące suplementy (Name i treść strony),
    bez dublowania. Brak → załóż jedno zbiorcze: Name „Zamówić suple: <nazwy>”, Obszar Prywatne, Kategoria Zakup, Kto Ja,
    Priority Medium, Status TO DO, When = dzień przeglądu + 3 dni (najpóźniej, nigdy dalej), Desc jedno zdanie, lista (nazwa,
-   kto, link) w treści strony. Nie ruszaj pola Buy ani bazy 🛒 Zakupy – odznaczenie robi `suple` po „kupiłem”, a zadanie
+   kto, link) w treści strony. Poza akapitem wyżej nie ruszaj pola Buy ani bazy 🛒 Zakupy – odznaczenie robi `suple` po „kupiłem”, a zadanie
    zamyka `zadania` po „zamówiłem” / „zrobione”. Dopisz „zadanie: zamówić suple (<termin>)” albo „suple: zadanie już jest”
    w „Jutro – plan” wpisu (krok 8) i w linii „🤖” (krok 9). Tylko tryb wieczorny; szybki przebieg bez zmian.
 7. **Research** (baza 🔎 Research, RES-n; widok „🔎 Do zrobienia” – ID w `ja/references/notion-mapa.md`): weź max 2 najstarsze.

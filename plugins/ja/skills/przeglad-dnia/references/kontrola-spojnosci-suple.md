@@ -37,6 +37,6 @@ znów się liczy.
 
 ## Czego nie robić
 
-- Nie zmieniaj Buy, Status ani innych pól suplementu bez ☑ inwestora.
+- Nie zmieniaj Buy, Status ani innych pól suplementu bez ☑ inwestora (osobny przypadek: zamknięte zadanie „Zamówić suple” – `przeglad-dnia`, B.6).
 - Nie zakładaj ani nie zamykaj zadań z tego powodu; nie ruszaj bazy 🛒 Zakupy.
 - Nie wypisuj nazw suplementów poza linkami / wzmiankami w logu zadania (dane o zdrowiu – `ja`, zasada 5; w odpowiedzi „bez treści emocji i notatek o dziecku – liczby i linki”).
