@@ -9,6 +9,12 @@ edycja komórek). Trzy formaty:
 | czegoś spoza wpisów: RES-n, luki w zadaniach z przeglądu dnia | Dziennik „❓ Czeka na Twoją odpowiedź”, strona RES-n („### ❓ Pytania”), strona pomysłu | B |
 | problemu, którego nie wywołał żaden wpis (automat Maca, skrypt, błąd kolejki 💸) | zwijany nagłówek „🔔 Komunikaty asystenta” w „📝 Wpisy” | C |
 
+**Co w ogóle pytać.** Sprawy techniczne (harness, skrypty, automaty, scalanie, struktura Notion, warianty naprawy ZP)
+rozstrzyga asystent sam i tylko odnotowuje wynik – inwestor ufa mu w tym i nie ma czasu na takie pytania. Pytaj o budowę
+(termin, materiał, ekipa, pieniądze) i o rzeczy, których asystent fizycznie nie zrobi (kliknięcie na telefonie, odświeżenie
+pluginów, decyzja finansowa). Krótko, kilka naraz najwyżej. **Każda sprawa, która czeka na inwestora, ma ślad w „📝 Wpisy”**
+(okienko A albo blok 🔔 z C) – osobna strona, baza czy raport z pytaniami nie wystarczy, bo tam inwestor nie zagląda.
+
 ## A. Okienko pod wpisem („📝 Wpisy”)
 
 Krótko i w jednym miejscu: inwestor ma od razu zobaczyć, czego brakuje, i dopisać odpowiedź pod spodem.
@@ -100,6 +106,9 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    (`rozwoj-harnessu`, D; ten sam problem już jest → zaktualizuj Ostatnio i treść), w okienku zamiast `✍️` linia
    `→ ZP-n (<status>)`. Blok zostaje, dopóki wiersz nie ma Statusu „Rozwiązany” albo „Zostaje” – wtedy do „Przetworzone”
    (`→ ZP-n rozwiązany` / `zostaje`); statusy ZP sprawdza tylko przebieg wieczorny.
+   Wiersz ZP ze Statusem „Czeka na mnie” bez bloku 🔔 (założony albo zmieniony w Claude Code, nocą, ręcznie) → dodaj blok
+   `🔔 <dd.mm> · ZP-n – <Problem>` z okienkiem: pogrubione pytanie z „Co zrobić” (z propozycją domyślną) i linia `✍️`;
+   odpowiedź przepisz do treści strony ZP („ustalenia z odpowiedzi inwestora”) i ustaw Status „Nowy” – naprawi Claude Code.
 6. **Blok bez odpowiedzi nie jest nowym wpisem** – tryb szybki go pomija (`przeglad-dnia`, A.2); zmienia go tylko nowa lista
    od automatu, odpowiedź albo zmiana stanu (pkt 2–5).
 

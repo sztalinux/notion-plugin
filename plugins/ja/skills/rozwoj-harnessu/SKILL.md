@@ -144,7 +144,9 @@ Treść strony: objaśnienie, wystąpienia z datą, ustalenia z odpowiedzi inwes
 - **Naprawa** – w Claude Code na „zrób ZP-n” (albo po zaznaczeniu „Pomysły” na liście startowej, gdy inwestor wskaże ZP):
   przeczytaj stronę, ustal przyczynę (log, `stan.json`, skrypt), napraw; zmiana harnessu → kroki B.2–B.8. Na końcu Status
   „Rozwiązany”, Rozwiązano w wersji (albo „skrypt poza repo, data”), w treści linia „Naprawione (data): przyczyna, co
-  zmieniono”. Nie da się albo nie warto → Status „Czeka na mnie” z pytaniem (format B) albo „Zostaje” po decyzji inwestora.
+  zmieniono”. Wybór wariantu technicznego rozstrzygnij sam (domyślny z „Co zrobić”) – nie pytaj. Naprawa naprawdę wymaga
+  inwestora (dostęp, kliknięcie, decyzja budowlana) → Status „Czeka na mnie” i od razu blok 🔔 w „📝 Wpisy” z pytaniem
+  (`wpisy/references/pytania.md`, C.5) – sam status w bazie nie wystarczy; nie warto → „Zostaje”.
 - Komunikat 🔔 z linią `→ ZP-n` znika z „Wpisów”, gdy wiersz jest „Rozwiązany” albo „Zostaje” (sprawdza przebieg wieczorny).
 
 ## Nowa procedura – minimum

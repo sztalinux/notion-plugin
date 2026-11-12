@@ -77,7 +77,8 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
    Komunikaty 🔔 z linią `→ ZP-n`: sprawdź Status tych wierszy „🧯 Znane problemy” (wyszukiwarka z parametrem bazy) –
-   „Rozwiązany” albo „Zostaje” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5).
+   „Rozwiązany” albo „Zostaje” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze ZP „Czeka na mnie”
+   (widok „🧯 Otwarte”) bez bloku 🔔 → dodaj blok (tamże, C.5).
 2. **Pomysły na rozwój** – `rozwoj-harnessu`, sekcja C: Status Nowy lub pusty → analiza (max 3, najstarsze pierwsze);
    „Pytania do mnie” z odpowiedzią → analizuj dalej. Niczego nie wdrażaj.
    **Kontrola spójności pomysłów (grupa P)** – z jednego odczytu całej tablicy pomysłów (wszystkie statusy, nie tylko „Nowy”): „Zrobione” bez „Zrobiono
