@@ -16,6 +16,7 @@ albo zmienna DOM_HUB; w czacie podaje się --db <katalog>/wiedza.sqlite.
     python3 tools/wiedza.py duplikaty [--od RRRR-MM-DD] [--prog 0.84] [--temat NAZWA] [--sens | --slowa]
     python3 tools/wiedza.py stan                          # liczniki, daty synchronizacji i publikacji
     python3 tools/wiedza.py publikuj [--teraz] [--wymus] [--reset]   # kopia indeksu do prywatnego repo GITHUB_REPO
+    python3 tools/wiedza.py publikuj --narzedzia ŚCIEŻKA/runner.py ŚCIEŻKA/pytania.py   # narzedzia/ trybu głębokiego
 
 Opcje wspólne (także po podkomendzie): --db ŚCIEŻKA, --cicho (tylko zmiany i błędy), --json.
 publikuj: --teraz bez odstępu 60 min; --wymus wysyła plik indeksu także bez zmian danych (np. po odtworzeniu
@@ -1340,6 +1341,51 @@ def opublikuj(conn: sqlite3.Connection, sciezka: Path, sekrety: dict, teraz: boo
     return ok
 
 
+NARZEDZIA = ("runner.py", "pytania.py")  # narzedzia/ w repo kopii: runner trybu głębokiego (Actions) i pytania.py
+
+
+def opublikuj_narzedzia(pliki: list, sekrety: dict) -> bool:
+    """`publikuj --narzedzia PLIK …`: lokalne źródła trybu głębokiego do `narzedzia/<nazwa>` repo kopii (nazwy tylko
+    z NARZEDZIA; ścieżki podaje wołający – harness nie zna katalogu automatów). Tylko repo prywatne; plik wysyłany,
+    gdy jego sha różni się od zdalnego, a po wysyłce sha sprawdzane ponownie. Indeksu nie dotyka. False = błąd."""
+    zle = [str(f) for f in pliki if f.name not in NARZEDZIA or not f.is_file()]
+    if zle:
+        blad(f"--narzedzia: dozwolone pliki {', '.join(NARZEDZIA)} (istniejące) – nie: {', '.join(zle)}")
+        return False
+    token, repo = sekrety.get("GITHUB_TOKEN_SYNC"), sekrety.get("GITHUB_REPO")
+    if not token or not repo or not WZORZEC_REPO.fullmatch(repo):
+        print(f"[wiedza] brak GITHUB_TOKEN_SYNC albo GITHUB_REPO w .dom/{SEKRETY.name} – narzędzia pominięte")
+        return False
+    ukryj = repo.split("/")
+    naglowki = {"Authorization": "Bearer " + token, "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": GITHUB_WERSJA}
+    wyslane, zgodne, ok = [], [], True
+    try:
+        if galaz_prywatnego_repo(repo, naglowki, None) is None:
+            blad("GITHUB_REPO wskazuje repo, które nie jest prywatne – narzędzia wstrzymane")
+            return False
+        for f in pliki:
+            nazwa, bajty = f"narzedzia/{f.name}", f.read_bytes()
+            sha = git_blob_sha(bajty)
+            zdalny = sha_na_githubie(repo, naglowki, nazwa, None)
+            if zdalny == sha:
+                zgodne.append(f.name)
+                continue
+            if (wyslij_plik(repo, naglowki, nazwa, base64.b64encode(bajty).decode("ascii"), sha, zdalny,
+                            f"narzędzia trybu głębokiego {lokalnie(teraz_iso())}", None)
+                    and sha_na_githubie(repo, naglowki, nazwa, None) == sha):
+                wyslane.append(f.name)
+            else:
+                blad(f"{nazwa}: po wysyłce zdalny plik różni się od lokalnego")
+                ok = False
+    except (BladHttp, BladSieci) as e:
+        blad(f"GitHub: {tekst_bledu(e, sekrety, ukryj)} – narzędzia przerwane")
+        return False
+    print(f"[wiedza] narzędzia: wysłano {len(wyslane)}" + (f" ({', '.join(wyslane)})" if wyslane else "")
+          + (f" · zgodne {', '.join(zgodne)}" if zgodne else ""))
+    return ok
+
+
 def cmd_publikuj(a) -> int:
     """Samodzielna publikacja pod własną blokadą. Kody: 0 – wysłano albo nie było czego, zajęta blokada;
     1 – worktree, brak .dom, tokena albo repo, repo nieprywatne, brak lub inny schemat pliku indeksu, błąd wysyłki."""
@@ -1350,6 +1396,8 @@ def cmd_publikuj(a) -> int:
         print("[wiedza] brak katalogu .dom w hubie (np. worktree) – publikacja pominięta, nic nie utworzono")
         return 1
     sekrety = wczytaj_sekrety(SEKRETY)
+    if a.narzedzia:
+        return 0 if opublikuj_narzedzia([Path(p).expanduser() for p in a.narzedzia], sekrety) else 1
     sciezka = sciezka_bazy(a)
     # tylko odczyt: zapis przy innej wersji schematu skasowałby tabele, a brak pliku by go utworzył
     otworz_db(sciezka, zapis=False).close()
@@ -2726,6 +2774,9 @@ def zbuduj_parser() -> argparse.ArgumentParser:
                    help="plik indeksu i README także bez zmiany danych (np. po odtworzeniu prywatnego repo)")
     p.add_argument("--reset", action="store_true",
                    help="historia repo od nowa: jeden commit bez rodzica z czterema plikami (gdy `stan` ostrzega)")
+    p.add_argument("--narzedzia", nargs="+", metavar="PLIK",
+                   help=f"zamiast indeksu: pliki trybu głębokiego ({', '.join(NARZEDZIA)}) do narzedzia/ repo kopii, "
+                        "gdy różnią się od zdalnych")
     return ap
 
 

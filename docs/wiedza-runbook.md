@@ -52,6 +52,9 @@ dane indeksu, definicje kart, zbiory oceny, prywatne repo kopii, automaty launch
 4. **Prywatne repo kopii.** Załóż **prywatne** repo (program odmówi publikacji do publicznego), wpisz je w `GITHUB_REPO`. Wgraj do niego workflow
    trybu głębokiego i runner (pliki z katalogu automatów – lokalizacja w `README-lokalne.md`), dodaj sekret repo `CLAUDE_CODE_OAUTH_TOKEN`
    (długoterminowy token Claude Code, wystawiony poleceniem `claude setup-token`).
+   Runner i `pytania.py` leżą w repo kopii w `narzedzia/`; po każdej zmianie ich lokalnych źródeł (katalog automatów) wyślij je
+   `python3 tools/wiedza.py publikuj --narzedzia <ścieżka>/runner.py <ścieżka>/pytania.py` – zwykłe `publikuj` wysyła tylko pliki
+   indeksu, a bez tego Actions liczą starą wersją. Wysyła tylko pliki różne od zdalnych i sprawdza sha po wysyłce.
 5. **Ollama i model.** Zainstaluj Ollamę, `ollama pull bge-m3`; konfiguracja opcjonalna w `.dom/sens.json` (`{"zrodlo": "ollama", "model": "bge-m3"}`,
    `"zrodlo": "brak"` wyłącza odciski). Bez Ollamy wszystko działa po słowach.
 6. **Pierwszy indeks.** `python3 tools/wiedza.py sync --pelny` (kilka minut; zbuduje `.dom/wiedza/wiedza.sqlite`), potem
