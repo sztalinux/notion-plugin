@@ -8,7 +8,8 @@
    „🤖 Decyzja wpisana – do domknięcia”) wg `wiedza/references/sprzecznosci.md`, „Bez inwestora” – jedyny zapis tego kroku. Z konektorem Dysku: „zdjęcia: w `_nowe` czeka n” (bez rozkładania – `docs/zdjecia-i-kopia.md`, 6).
 2. **Jutro** (odczyt): kroki Harmonogramu startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zadania), dostawy
    jutro, 🧱 Zakupy budowy z „Zamówić do” = jutro lub po terminie (bez Dostarczone i Nieaktualne) albo w oknie przypomnienia wg Rodzaju
-   (`zakupy`, „Przypomnienie”), TASKS Dom z When = jutro, WAITING z terminem jutro lub po; **ostrzeżenie pogodowe** tylko w dniu roboty wrażliwej wpisanej z datą w Uwagach kroku
+   (`zakupy`, „Przypomnienie”), TASKS Dom z When = jutro, WAITING z terminem jutro lub po, otwarte wpisy
+   Notatnika z Kiedy = jutro lub po terminie; **ostrzeżenie pogodowe** tylko w dniu roboty wrażliwej wpisanej z datą w Uwagach kroku
    i przez 7 dni pielęgnacji betonu po niej, gdy próg przekroczony – Uwagi kroków z Terminem od jutra − 7 dni do jutra, także
    „Zrobione” (`etap/references/pogoda.md`, „Odczyt”); codziennej prognozy nie ma.
 3. **Wpis w „📆 Przeglądy dzienne – budowa”** (`3f8f5982-09e7-815e-8b03-eacaa74db190`, strona na DOM) – gdy dziś albo jutro coś jest
