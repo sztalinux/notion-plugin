@@ -34,4 +34,4 @@ może się zmienić, a bez Notion nie da się jej sprawdzić; telefon pisze, co 
    docelowego, „Zrobić” z linii to intencja inwestora (termin, adresat, etap) – nadrzędna wobec domysłów, nie wobec schematu bazy.
 3. Po zapisie przenieś linię do „## Przetworzone” jako `- [x] ~~…~~ → <gdzie>: <link>` (jedna edycja dokumentu na przebieg);
    niejasna → okienko ❓ we „Wpisach” jak w `wpisy` krok 4, w Skrzynce `→ ❓ Wpisy`. Nie usuwaj pozycji.
-4. Ślad: w linii „🤖” i w odpowiedzi „Skrzynka n”. „Przetworzone” czyści przegląd tygodnia (pozycje starsze niż 14 dni).
+4. Ślad: w linii „🤖” i w odpowiedzi „Skrzynka n”.
