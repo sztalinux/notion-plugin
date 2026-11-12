@@ -31,6 +31,9 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 | Wpisy pisane w treści „Wpisów” albo jako osobne strony | 📝 Wpisy (pod Dziennikiem) – bloki w treści i podstrony = nowe wpisy; niejasne czekają tu z okienkiem ❓; nagłówek „🔔 Komunikaty asystenta” z blokami pod nim – nie wpisy | `3faf5982-09e7-80b2-9b33-c48745d67a4f` | – |
 | Wpisy z widgetu „nowa strona” (telefon) | najwyższy poziom Private – każda strona spoza listy stałych stron niżej (lista stron prywatnych) | – | – |
 | Przegląd dnia – sprawy osobiste (dziś / jutro; ręczne „(ręczne)”) | 📆 Przeglądy dzienne (pod Dziennikiem) | `3faf5982-09e7-81df-a361-cc65fddb81f4` | – |
+| Plan dnia (strona do czytania rano; nadpisywana co wieczór) | ☀️ Dziś (najwyższy poziom Private, w Ulubionych) | `416f5982-09e7-81b3-b96d-ddd19086bc5b` | zakładki: 🧭 Przegląd · 🏗 Budowa · 🏠 Prywatne · 💼 Praca · 📊 Wczoraj (`przeglad-dnia/references/uklad-wpisu.md`, D) |
+| Zadania z pracy do planu dnia (tryb view; **tylko ten widok – treści strony 💼 WORK nie czytaj**, są tam dane dostępowe) | 💼 WORK → baza 🔨 TASKS → „🤖 Plan dnia – otwarte i zamknięte w 7 dni” | `collection://330e462e-ae97-42f4-92e4-12b1d6ea1c89`, `view://416f5982-09e7-81aa-a76d-000c4a563877` | Name, Status, When, Priority, Project, Ticket, Last edited time; nic tam nie zapisuj |
+| Archiwum przeglądów dziennych (wpisy > 14 dni; tylko przegląd tygodnia) | 🗃 Przeglądy dzienne – archiwum (podstrona 📆 Przeglądy dzienne) | `416f5982-09e7-812d-bd16-d625d7da668f` | – |
 | Przegląd tygodnia – sprawy osobiste | 📅 Przeglądy tygodniowe (pod Dziennikiem) | `3faf5982-09e7-81e3-a6af-e3786ca4a074` | – |
 | Widoki do przeglądu tygodnia (tryb view) | TASKS „🤖 Tydzień – prywatne”, Wpisy emocji „🤖 Ostatni tydzień”, Dziennik produktywności „🤖 Ostatni tydzień” | `view://3faf5982-09e7-81b5-ad0a-000c1cfabfa0`, `view://3faf5982-09e7-81ec-83af-000c8b518d37`, `view://3faf5982-09e7-81af-9ea1-000cbe3dd643` | – |
 | Widok do przeglądu dnia (tryb view) | TASKS „🤖 Zmiany – od wczoraj (przegląd dnia)” – wszystkie obszary, ostatnia edycja od wczoraj, najnowsze pierwsze; czasy w UTC, dzień tnie procedura (`przeglad-dnia`, krok 5) | `view://3fef5982-09e7-81ec-b46b-000c107597a5` | Name, Obszar, Status, When, Priority, Kategoria, Kto, Desc, Harmonogram, Research, Last edited time |
@@ -66,6 +69,8 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 każda inna strona na tym poziomie to nowy wpis z widgetu, `wpisy`):**
 - 📌 DASHBOARD `8ef0a264-9b9e-4463-8e2e-2c64887f110d` – strona startowa w zakładkach, 🗺 Mapa Notion, 📘 Instrukcja obsługi;
 - 🛖 DOM `24af5982-09e7-806b-821a-e157ff33be42` – budowa (plugin dom-budowa);
+- ☀️ Dziś `416f5982-09e7-81b3-b96d-ddd19086bc5b` – plan dnia w zakładkach (Przegląd, Budowa, Prywatne, Praca, Wczoraj),
+  co wieczór nadpisywany przez `przeglad-dnia` (B.8); **nigdy nie przetwarzaj go jako wpisu** i nie dopisuj tam nic poza tym krokiem;
 - 📓 Dziennik `3f8f5982-09e7-80c8-a154-c59aeb844e8f` – wejście na wszystko (schemat wyżej);
 - ✅ Zadania `3faf5982-09e7-8188-8bbd-ce6f8f691cdd` – zakładki (📅 Dziś i tydzień, 🛒 Zakupy, 🏠 Prywatne, 🏗 Budowa, 👪 Dziecko), pod nimi baza TASKS
   (wszystkie obszary) i jej widoki, bazy 🛒 Zakupy i 🔎 Research; na DOM tylko widok zadań budowy;

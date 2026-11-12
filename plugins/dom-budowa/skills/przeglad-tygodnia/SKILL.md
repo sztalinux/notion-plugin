@@ -118,11 +118,10 @@ Znajdź i zaproponuj – nie wykonuj bez zgody; po „tak” wykonaj wsadowo (za
 - Informacje „Nowe” starsze niż 30 dni → „Przejrzane” albo „Nieaktualne”;
 - otwarte sprawy zakończonego etapu → przenieść do bieżącego albo zamknąć;
 - rozjazdy z punktu „Spójność” → dopisać relację Wiedza / Informację (`wiedza`, F), uzgodnić statusy, poprawić „W skrócie”.
-- wpisy w „📆 Przeglądy dzienne – budowa” starsze niż 14 dni → przenieść na podstronę archiwum tej strony (tak samo jak
-  w `przeglad-tygodnia-osobisty`, D – tam opis przeniesienia).
 Niczego nie usuwaj – porządek tylko statusami i scalaniem (z dopiskiem, co scalono).
 Bez pytania: na stronie „📆 Przeglądy dzienne – budowa” napraw zepsute nagłówki dni (`uklad-wpisu.md`, A, „Naprawa raz
-w tygodniu”) – to tylko format, treść bez zmian.
+w tygodniu”) – to tylko format, treść bez zmian – i przenieś wpisy starsze niż 14 dni na podstronę „🗃 Przeglądy dzienne
+budowy – archiwum” (ID w mapie; przeniesienie jak w `przeglad-tygodnia-osobisty`, D).
 
 Zapis: dopisz przegląd na górze strony Notion „Przeglądy tygodniowe” (pod DOM, `3f4f5982-09e7-8144-af5e-f9521a52ea9d`)
 jako zwijany nagłówek z tytułem tygodnia – **jedno wywołanie**. W rozmowie podaj ten sam tekst. Gdy wywołał cię przegląd

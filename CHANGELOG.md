@@ -4,6 +4,29 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.14.0] – 2026-11-12
+
+Plan dnia do czytania rano – strona „☀️ Dziś” w zakładkach (prośba inwestora 12.11; część porządków z POM-25).
+- `przeglad-dnia` B.8: wieczór nadpisuje stronę ☀️ Dziś (najwyższy poziom Private, w Ulubionych) planem na dzień planu
+  (= dzień przeglądu + 1): ramka z max 3 najważniejszymi sprawami i zakładki 🧭 Przegląd (po terminie, czeka na Ciebie,
+  najbliższe 7 dni), 🏗 Budowa, 🏠 Prywatne, 💼 Praca (zadania z bazy na stronie WORK – tylko widok – i ściąga na daily),
+  📊 Wczoraj (liczby dnia). Historia: ten sam plan jako wpis na górze „📆 Przeglądy dzienne”, wstawiany bez czytania strony.
+  Układ i szablon: `przeglad-dnia/references/uklad-wpisu.md`, D.
+- B.6: jeden widok TASKS „🗓 Tydzień (7 dni)” zamiast „📅 Jutro – wszystko” i „📅 Dziś”; zakres liczony od dnia planu.
+- `przeglad-tygodnia-osobisty` D: wpisy „📆 Przeglądy dzienne” starsze niż 14 dni idą do „🗃 Przeglądy dzienne – archiwum”
+  bez pytania (wcześniej tylko propozycja).
+- Mapa `ja`: strona ☀️ Dziś (na liście stałych stron – nigdy wpis z widgetu), widok bazy zadań z pracy, archiwum przeglądów.
+
+## dom-budowa [3.15.0] – 2026-11-12
+
+Plan dnia – część budowy (razem z ja 1.14.0).
+- `budowa`, „Wieczorem”: najbliższe 7 dni z nowego widoku Harmonogramu „🤖 Najbliższe 7 dni (plan dnia)” (mały odczyt),
+  zakupy budowy z „Zamówić do” w 7 dni; zwrot do przeglądu dnia z punktami zakładki 🏗 (dziś na budowie, najbliższe kroki,
+  do zamówienia, decyzje) i jednym punktem do ramki planu.
+- `przeglad-tygodnia`: wpisy „📆 Przeglądy dzienne – budowa” starsze niż 14 dni idą do „🗃 Przeglądy dzienne budowy –
+  archiwum” bez pytania.
+- Mapa `budowa`: widok Harmonogramu i archiwum przeglądów budowy.
+
 ## dom-budowa [3.14.5] – 2026-11-12
 
 Domknięcie czterech spraw odłożonych przy scalaniu nocy 11/12.11 (wymagały próby albo pomiaru).

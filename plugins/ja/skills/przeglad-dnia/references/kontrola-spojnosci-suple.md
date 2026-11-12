@@ -30,9 +30,9 @@ znów się liczy.
    wymienionym; wybór pojedynczych → dopisek pod punktem. Propozycja domyślna: tak.
    Klucz: `KS-S1-` + ostatnie 6 znaków ID pierwszego (alfabetycznie) suplementu na liście; lista zmienia się → nowy klucz.
    Pomiń pytanie, gdy ten sam zestaw ma klucz już w „❓” (czeka) albo w „Przetworzone” (rozpatrzony – dopóki wpis tam jest,
-   pozycje nadal pokazuj w „Jutro – plan” jako „do sprawdzenia”, ale nie pytaj ponownie). Liczy się do wspólnego limitu
+   pozycje nadal pokazuj w zakładce 🏠 planu („Kupić”) jako „do sprawdzenia”, ale nie pytaj ponownie). Liczy się do wspólnego limitu
    5 nowych flag na przebieg (`KS-…`).
-4. **Wynik w przeglądzie** (krok 8–9): w „Jutro – plan” `kupić: n suplementów (+ k do sprawdzenia)`; do licznika „spójność /
+4. **Wynik w przeglądzie** (krok 8–9): w zakładce 🏠 planu („Kupić”) `kupić: n suplementów (+ k do sprawdzenia)`; do licznika „spójność /
    rozjazdy” w linii „🤖” dolicz 1, gdy dopisano pytanie, a „wykonanych” – gdy Buy odznaczono.
 
 ## Czego nie robić

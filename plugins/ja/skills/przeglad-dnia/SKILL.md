@@ -1,6 +1,6 @@
 ---
 name: przeglad-dnia
-description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę w ciągu dnia) rozkłada nowe wpisy z „📓 Dziennika” (i strony z widgetu na najwyższym poziomie Private) na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan na jutro – sprawy osobiste w „📆 Przeglądy dzienne” pod Dziennikiem, budowa osobno w „📆 Przeglądy dzienne – budowa” na DOM (z odnośnikiem między nimi) – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów i rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
+description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę w ciągu dnia) rozkłada nowe wpisy z „📓 Dziennika” (i strony z widgetu na najwyższym poziomie Private) na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), budowa dodatkowo w „📆 Przeglądy dzienne – budowa” na DOM – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów i rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
 ---
 
 # Przegląd dnia – tryb szybki i wieczorny
@@ -12,9 +12,10 @@ w rozmowie, te same zasady:
 | Zadanie | Kiedy | Polecenie | Co robi |
 |---|---|---|---|
 | Dziennik – szybki przebieg | co godzinę 8:05–22:05 i 22:30 | „Dziennik – szybki przebieg (skill przeglad-dnia z pluginu ja, tryb szybki)” | rozkłada nowe wpisy; pusto → koniec bez zapisów |
-| Przegląd dnia | raz wieczorem, 22:45 | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + podsumowanie dnia + zmiany w zadaniach + plan na jutro + pomysły |
+| Przegląd dnia | raz wieczorem, 22:45 | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + zmiany w zadaniach + pomysły + plan dnia na stronie ☀️ Dziś |
 
-Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia” / „podsumuj dzień” = tryb wieczorny.
+Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia” / „podsumuj dzień” = tryb wieczorny, „plan dnia” = tylko
+krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
 
 ## Zasady trybu bez inwestora (oba tryby)
 
@@ -92,11 +93,12 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    („Bez inwestora”), technika → `analiza-techniczna`, oferta → `oferta`, terminy → `harmonogram`; osobiste – skill `ja` obszaru.
    Wynik = sekcja „🧠 Rozkminka: <temat>”: budowa → krok 3, reszta → krok 8. Bez zapisów do baz – nowe pytania, zadania
    i decyzje → jedno „❓” w Dzienniku (`wpisy/references/pytania.md`, B). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
-3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i jutro budowy i dopisuje wpis
+3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i najbliższe 7 dni budowy (zwraca punkty do zakładki 🏗) i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze); najpierw domyka sprzeczności z Decyzją wpisaną
    przez inwestora; ostrzeżenie pogodowe dopisuje tylko przy przekroczonym progu w dniu roboty wrażliwej wpisanej w Uwagach
    kroku i w 7 dniach pielęgnacji betonu (`etap/references/pogoda.md`; codziennej prognozy nie ma – inwestor patrzy sam) –
-   to „poranny brief” bez osobnego zadania. Weź z niego link do wpisu, 1 linię skrótu (z ⚠️ pogodowym, jeśli jest) i liczbę domkniętych SP.
+   to „poranny brief” bez osobnego zadania. Weź z niego link do wpisu, 1 linię skrótu (z ⚠️ pogodowym, jeśli jest), liczbę domkniętych SP
+   i punkty do zakładki 🏗 planu (`budowa/references/wieczorem.md`, krok 4).
 4. **Dziś – sprawy osobiste** (tylko odczyt): blok dzisiejszego dnia w „Przetworzone” (wpisy obszarów innych niż Budowa,
    liczby per obszar), dzień pracy z Dziennika produktywności, liczba wpisów emocji z dziś (bez treści), nowe punkty na stronie
    dziecka, wpisy z okienkiem ❓ we „Wpisach”, bloki pod „🔔 Komunikaty asystenta” (liczba) i pozycje „❓” Dziennika. Zadania zmienione dziś – krok 5.
@@ -128,8 +130,9 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    Rozmowa” w nazwie, Obszar Dziecko lub Prywatne) DONE (wiersze kroku 5)
    ↔ temat w „💬 Do przegadania” na stronie osoby. Tylko pytanie „❓” z kluczem `KS-R…` (wspólny limit 5 z 5a); po ☑ dopisek
    „✅ przegadane” pod tematem, nic się nie przenosi. Treści tematów nie wypisuj; licznik „rozjazdy” jak w 5a.
-6. **Jutro – sprawy osobiste** (odczyt; jedyne zapisy – suplementy, niżej): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie
-   (When < dziś, niezakończone – widok „📅 Dziś”, ID w mapie), suplementy z Buy = tak (licznik – **bez** Statusu BREAK / SUSPENDED,
+6. **Plan – najbliższe 7 dni** (odczyt; jedyne zapisy – suplementy, niżej): TASKS „🗓 Tydzień (7 dni)” (wszystkie obszary,
+   z zaległymi; zastępuje „📅 Jutro – wszystko” i „📅 Dziś”) – zakres i „po terminie” licz od **dnia planu** (`references/uklad-wpisu.md`, D);
+   zadania z pracy – widok bazy 🔨 TASKS ze strony 💼 WORK (tylko widok, ID w mapie); suplementy z Buy = tak (licznik – **bez** Statusu BREAK / SUSPENDED,
    te to „do sprawdzenia”, niżej), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)
    sprawdź ID, jeśli któryś odczyt się nie powiedzie.
@@ -149,7 +152,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    Priority Medium, Status TO DO, When = dzień przeglądu + 3 dni (najpóźniej, nigdy dalej), Desc jedno zdanie, lista (nazwa,
    kto, link) w treści strony. Poza akapitem wyżej nie ruszaj pola Buy ani bazy 🛒 Zakupy – odznaczenie robi `suple` po „kupiłem”, a zadanie
    zamyka `zadania` po „zamówiłem” / „zrobione”. Dopisz „zadanie: zamówić suple (<termin>)” albo „suple: zadanie już jest”
-   w „Jutro – plan” wpisu (krok 8) i w linii „🤖” (krok 9). Tylko tryb wieczorny; szybki przebieg bez zmian.
+   w zakładce 🏠 „Kupić” planu (krok 8) i w linii „🤖” (krok 9). Tylko tryb wieczorny; szybki przebieg bez zmian.
 7. **Research** (baza 🔎 Research, RES-n; widok „🔎 Do zrobienia” – ID w `ja/references/notion-mapa.md`): weź max 2 najstarsze.
    Dla każdego przeczytaj zlecenie i powiązany zakup / zadanie, zrób research w sieci (aktualne źródła, ceny i sklepy w Polsce)
    i dopisz w treści strony „## Wynik (asystent, data)”: Rekomendacja (1–2 zdania), Opcje (tabela: co, cena orientacyjna,
@@ -159,11 +162,12 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    Status „Pytania do mnie”, a w Dzienniku „❓” linię „RES-n: <pytanie> (wzmianka)”. Research nie podejmuje decyzji i nie
    zmienia statusów zakupów ani zadań. **Zabezpieczenie** (tylko wieczorem – szybki ma być tani): każda linia RES-n w „❓”,
    której research nie ma już Statusu „Pytania do mnie”, idzie do „Przetworzone” z dopiskiem „→ rozwiązane poza Dziennikiem”.
-8. **Wpis w „📆 Przeglądy dzienne”** (`3faf5982-09e7-81df-a361-cc65fddb81f4`, pod Dziennikiem) – **codziennie**, także
-   w spokojny dzień: zwijany nagłówek h2 „Przegląd dnia – <dzień tygodnia> <data>” na górze strony (najnowszy pierwszy).
-   Zapis, sprawdzenie przed zapisem i szablon: `references/uklad-wpisu.md` – sekcje z punktami: ⚠ Na teraz (po terminie,
-   czeka na Ciebie) · Jutro – plan („kupić: …”) · Dziś (emocje tylko liczbą) · Zadania (liczby z kroku 5) · Pomysły i research ·
-   🏗 Budowa (skrót + wzmianka albo „bez zmian”) · 🧠 Rozkminka (tylko z kroku 2a) · na końcu linia o nieudanych odczytach.
+8. **Plan dnia na stronie ☀️ Dziś + historia** – **codziennie**, także w spokojny dzień; układ, zasady i szablon:
+   `references/uklad-wpisu.md`, D. Najpierw nadpisz treść strony ☀️ Dziś (`416f5982-09e7-81b3-b96d-ddd19086bc5b`) planem na dzień
+   planu – ramka „najważniejsze” i zakładki 🧭 Przegląd · 🏗 Budowa (z kroku 3) · 🏠 Prywatne (kroki 6–7, 2a) · 💼 Praca · 📊 Wczoraj
+   (kroki 1, 4, 5, 2). Potem ta sama treść jako historia na górze „📆 Przeglądy dzienne” (`3faf5982-09e7-81df-a361-cc65fddb81f4`):
+   zwijany nagłówek h2 „Plan dnia – <dzień tygodnia> <data planu>”, zakładki jako pogrubione etykiety (`uklad-wpisu.md`, C) –
+   **wstawienie na początku strony bez jej odczytu** (strona jest długa; archiwum robi przegląd tygodnia).
    **Ręczny przebieg** (prośba w rozmowie) = osobny wpis z tą samą datą i dopiskiem „(ręczne)”, kolejne „(ręczne 2)”… –
    tak samo w przeglądzie budowy. Nigdy nie nadpisuj wcześniejszego wpisu – sprostowanie to jedna linia kursywą na jego
    górze z odesłaniem.
@@ -180,7 +184,8 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 
 Każdy przebieg to osobna sesja – nawet pusty zużywa limit konta na start (instrukcje, opisy skilli, narzędzia Notion) i jeden
 odczyt Dziennika. Dlatego tryb szybki ma wyjście w kroku A.2 bez dalszych odczytów i zapisów, a strona Dziennik ma zostać
-krótka (przegląd tygodnia przenosi „Przetworzone” starsze niż 14 dni do archiwum). Godziny ustawia launchd (README automatów); rzadszy szybki = zmiana tam, nie tutaj.
+krótka (przegląd tygodnia przenosi „Przetworzone” i wpisy obu stron „📆 Przeglądy dzienne” starsze niż 14 dni do archiwum;
+wieczór nie czyta stron przeglądów – tylko dopisuje na górze). Godziny ustawia launchd (README automatów); rzadszy szybki = zmiana tam, nie tutaj.
 
 ## Rozszerzanie
 

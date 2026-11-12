@@ -72,8 +72,8 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    naprawione nagłówki: n
    ```
    Pusty tydzień → krótki wpis „spokojny tydzień” z linią budowy. Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
-5. **Porządki bez pytania** (sekcja D, pierwsza lista) – **zawsze, także w zaplanowanym przebiegu**: bloki dni starsze
-   niż 14 dni do archiwum – zrób to **przed zapisem wpisu z kroku 4**, żeby wpis od razu miał liczbę i zakres dni w linii
+5. **Porządki bez pytania** (sekcja D, pierwsza lista) – **zawsze, także w zaplanowanym przebiegu**: bloki dni i wpisy
+   przeglądów dziennych starsze niż 14 dni do archiwum – zrób to **przed zapisem wpisu z kroku 4**, żeby wpis od razu miał liczbę i zakres dni w linii
    „Porządki” (jedna edycja strony – `ja`, zasada 2; brak takich dni → „archiwum: nic”, także w pustym tygodniu).
    Pozostałe porządki tylko proponujesz: jeden punkt w „❓” Dziennika w formacie B (`wpisy/references/pytania.md`;
    `❓ asystent (data) · porządki tygodnia <RRRR-Www> – ☑ = tak`, jedno to-do na porządek), w tej samej edycji Dziennika
@@ -86,15 +86,14 @@ Bez pytania (także w zaplanowanym przebiegu – to tylko ślad, linki są w doc
 - bloki dni w „Przetworzone” w Dzienniku starsze niż 14 dni → **przenieś** (nie usuwaj) na podstronę Dziennika
   „🗃 Przetworzone – archiwum” (ID w `ja/references/notion-mapa.md`): najpierw wklej te same zwijane bloki na górę archiwum
   (najnowszy dzień na górze), sprawdź, że są, dopiero potem zdejmij je z Dziennika (jedna edycja każdej strony);
-- podstrony w „🗃 Przetworzone podstrony” zostają – nie ruszaj.
+- podstrony w „🗃 Przetworzone podstrony” zostają – nie ruszaj;
+- wpisy w „📆 Przeglądy dzienne” starsze niż 14 dni → podstrona „🗃 Przeglądy dzienne – archiwum” (ID w mapie), tak samo
+  (najpierw wklej na górę archiwum, sprawdź, potem zdejmij; podstronę archiwum na dole strony zostaw – przy zamianie treści
+  przepisz jej znacznik `<page>` bez zmian). Stronę budowy archiwizuje tak samo `przeglad-tygodnia` (porządki).
 Do zatwierdzenia (propozycja w przeglądzie):
 - wpisy z okienkiem ❓ i pozycje „❓” bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
 - TASKS prywatne po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze);
-- wpisy w „📆 Przeglądy dzienne” starsze niż 14 dni → przenieść na podstronę „🗃 Przeglądy dzienne – archiwum” (pod
-  „📆 Przeglądy dzienne”): przy pierwszym zatwierdzeniu utwórz ją i zgłoś jej ID do mapy przez skrzynkę (`rozwoj-harnessu`, A);
-  przeniesienie jak bloków „Przetworzone” wyżej (najpierw wklej na górę archiwum, sprawdź, potem zdejmij). Ta sama
-  propozycja dla strony budowy idzie w porządkach `przeglad-tygodnia`.
 Odpowiedź (☑ albo dopisek pod to-do) czyta najbliższy przebieg dnia (`przeglad-dnia` A.2) – wykonaj wtedy
 zatwierdzone porządki wsadowo (`ja`, zasada 2), punkt do „Przetworzone”. Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.
