@@ -59,7 +59,7 @@ Gdy procedura wskazuje inne źródło – czytaj je, nie powtarzaj tutaj.
 
 ## 6. Odbiór, usterki, spór z ekipą
 
-- Procedura `etap` (tryb C) i `references/odbiory.md`. Do rozmowy: protokół z listą usterek i terminem, płatność
+- Procedura `etap` (tryb C) i `etap/references/odbiory.md`. Do rozmowy: protokół z listą usterek i terminem, płatność
   dopiero po odbiorze, roboty dodatkowe tylko po pisemnej wycenie (`dziennik`).
 
 ## 7. Urząd, nadzór budowlany, gestor sieci
