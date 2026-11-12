@@ -34,7 +34,8 @@ Przypomnienie jest linią w przeglądzie dnia, nie powiadomieniem na telefon; pi
    Zadanie w TASKS dodaj tylko przy zakupie „na już” (na dziś–najbliższe dni albo blokuje pracę ekipy); w Uwagach zakupu
    wzmianka o zadaniu. Zwykły zakup żyje wyłącznie w 🧱 Zakupach budowy.
 3. „Kupiłem X na budowę” → Status **Dostarczone**, Dostawa = data; wydatek → `koszty`, sekcja B (wiersz w „💸 Wydatki → arkusz”);
-   materiał z WZ / deklaracją właściwości → sekcja C.1. „Zamówiłem” → Zamówione.
+   materiał z WZ / deklaracją właściwości → sekcja C.1. „Zamówiłem” → Zamówione, Dostawa = umówiony dzień dostawy, gdy
+   znany (z niego biorą „dostawy jutro / w 7 dni” przegląd dnia i tygodnia budowy); po dostawie Dostawa = dzień faktyczny.
 
 ## A. Lista zakupów na etap („co kupić na ściany parteru”)
 
