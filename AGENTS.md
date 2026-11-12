@@ -36,6 +36,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 | Przegląd tygodnia budowy, „co nowego” | `plugins/dom-budowa/skills/przeglad-tygodnia/SKILL.md` |
 | Przegląd dnia (automat launchd na Macu – szybki i wieczorny; jedyna droga): Dziennik, zmiany w zadaniach, pomysły, plan dnia na stronie ☀️ Dziś | `plugins/ja/skills/przeglad-dnia/SKILL.md` |
 | Przegląd tygodnia – sprawy osobiste (z odnośnikiem do przeglądu budowy), porządki w Dzienniku, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne) | `plugins/ja/skills/przeglad-tygodnia-osobisty/SKILL.md` |
+| Budżet domowy: zamknięcie miesiąca z wyciągów, Allegro i list wydatków, strona decyzji, „przenieś decyzje budżetu RRRR-MM” | `plugins/ja/skills/budzet/SKILL.md` |
 | Zmiana samego harnessu (nowa procedura, poprawka), pomysł na rozwój setupu, „zrób POM-n”, znany problem „zrób ZP-n” | `plugins/ja/skills/rozwoj-harnessu/SKILL.md` |
 
 ## Zasady, które obowiązują zawsze

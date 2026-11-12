@@ -1,0 +1,420 @@
+<title>Decyzje budżetu domowego</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Układ: księga miesiąca – braki i podsumowanie u góry, karty decyzji w grupach, na dole to, co wejdzie samo i co już jest. */
+:root {
+  --bg: #f5f7f6; --surface: #ffffff; --sunk: #eaefed; --line: #d6dfdb;
+  --ink: #17231f; --muted: #5b6b65; --accent: #1f6f5c; --accent-soft: #d9ece5;
+  --in: #1d7a46; --warn: #9a6a12; --warn-soft: #f7ecd6; --toast: #17231f; --toast-ink: #f5f7f6;
+  --f-display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Inter", system-ui, -apple-system, sans-serif;
+  --f-num: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111816; --surface: #18211e; --sunk: #0d1311; --line: #2a3632;
+  --ink: #e4ece8; --muted: #94a59e; --accent: #5cc3a5; --accent-soft: #1d3a32;
+  --in: #6fd29a; --warn: #e5b45a; --warn-soft: #3a2f19; --toast: #e4ece8; --toast-ink: #111816; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111816; --surface: #18211e; --sunk: #0d1311; --line: #2a3632;
+  --ink: #e4ece8; --muted: #94a59e; --accent: #5cc3a5; --accent-soft: #1d3a32;
+  --in: #6fd29a; --warn: #e5b45a; --warn-soft: #3a2f19; --toast: #e4ece8; --toast-ink: #111816; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 90px }
+.wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 22px }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0 }
+h1 { font-size: 1.7rem; letter-spacing: -.01em }
+h2 { font-size: 1.05rem; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap }
+h2 small { font: 500 .8rem var(--f-body); color: var(--muted) }
+.top { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap }
+.sub { color: var(--muted); font-size: .85rem }
+select, input[type=search], input[type=text] { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden }
+.stat { background: var(--surface); padding: 12px 14px; display: grid; gap: 2px; align-content: start }
+.stat b { font: 600 1.35rem var(--f-num); font-variant-numeric: tabular-nums }
+.stat span { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em }
+.bar { height: 4px; background: var(--sunk); border-radius: 2px; overflow: hidden; margin-top: 4px }
+.bar i { display: block; height: 100%; background: var(--accent); transition: width .3s }
+@media (max-width: 560px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+.state { font-size: .82rem; padding: 6px 10px; border-radius: 8px; background: var(--sunk); color: var(--muted) }
+.state.ok { background: var(--accent-soft); color: var(--accent) }
+.state.warn { background: var(--warn-soft); color: var(--warn) }
+.braki { background: var(--warn-soft); color: var(--ink); border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px }
+.braki b { color: var(--warn) }
+.braki ul { margin: 0; padding-left: 20px }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden }
+.seg button { border: 0; background: var(--surface); color: var(--muted); padding: 6px 14px; font: 500 .85rem var(--f-body); cursor: pointer }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface) }
+section { display: grid; gap: 10px }
+.sechead { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap }
+.hint { color: var(--muted); font-size: .85rem; margin: -4px 0 0 }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 10px }
+.card.done { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent) }
+.row1 { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: start }
+.when { display: grid; gap: 2px; font-size: .78rem; color: var(--muted); min-width: 64px }
+.acct { font: 600 .7rem var(--f-num); color: var(--muted); background: var(--sunk); border-radius: 4px; padding: 1px 5px; justify-self: start; white-space: nowrap }
+.what { min-width: 0; display: grid; gap: 2px }
+.what b { font-weight: 600; overflow-wrap: anywhere }
+.what .note { font-size: .8rem; color: var(--muted) }
+.what .note.warn { color: var(--warn) }
+.what ul { margin: 2px 0 0; padding-left: 18px; font-size: .84rem }
+.amt { font: 600 1rem var(--f-num); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right }
+.amt.in { color: var(--in) }
+.chips { display: flex; flex-wrap: wrap; gap: 6px }
+.chip { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 5px 12px; font: 500 .84rem var(--f-body); cursor: pointer; line-height: 1.3; text-align: left }
+.chip:hover { border-color: var(--accent) }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface) }
+.chip.ghost { border-style: dashed; color: var(--muted) }
+.chip.ghost[aria-pressed="true"] { background: var(--muted); border-color: var(--muted); border-style: solid; color: var(--surface) }
+.chip.prop::before { content: "★ "; color: var(--accent) }
+.chip.prop[aria-pressed="true"]::before { color: var(--surface) }
+.chip.row { border-color: var(--warn); }
+.chip.row[aria-pressed="true"] { background: var(--warn); border-color: var(--warn); color: var(--surface) }
+.chip:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.desc { display: flex; gap: 8px; align-items: center }
+.desc input { flex: 1; min-width: 0; font-size: .85rem }
+.btn { border: 1px solid var(--accent); background: var(--accent); color: var(--surface); border-radius: 8px; padding: 7px 14px; font: 600 .85rem var(--f-body); cursor: pointer }
+.btn.sec { background: var(--surface); color: var(--accent) }
+.btn:disabled { opacity: .45; cursor: default }
+.empty { color: var(--muted); font-size: .9rem; padding: 14px; border: 1px dashed var(--line); border-radius: 12px; text-align: center }
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px }
+summary { cursor: pointer; font: 700 .95rem var(--f-display) }
+.tbl { overflow-x: auto; margin-top: 10px }
+table { border-collapse: collapse; width: 100%; font-size: .84rem }
+td, th { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top }
+th { font-weight: 600; color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .04em }
+td.n { font-family: var(--f-num); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums }
+td .f { display: block; color: var(--muted); font-size: .72rem; white-space: normal; overflow-wrap: anywhere; max-width: 260px; margin-left: auto }
+.summary { background: var(--surface); border: 1px solid var(--accent); border-radius: 12px; padding: 14px; display: grid; gap: 10px }
+.summary ul { margin: 0; padding-left: 20px }
+.foot { display: grid; gap: 8px; background: var(--sunk); border-radius: 12px; padding: 14px }
+.cmd { display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
+.cmd code { font: 600 .9rem var(--f-num); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; user-select: all }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--toast); color: var(--toast-ink);
+  border-radius: 10px; padding: 8px 8px 8px 14px; display: flex; gap: 12px; align-items: center; font-size: .88rem; max-width: calc(100vw - 32px); box-shadow: 0 6px 24px rgb(0 0 0 / .25); z-index: 20 }
+.toast span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.toast button { border: 0; background: transparent; color: inherit; font: 700 .88rem var(--f-body); text-decoration: underline; cursor: pointer; padding: 4px 6px }
+dialog { border: 1px solid var(--line); border-radius: 14px; padding: 0; width: min(560px, calc(100vw - 32px)); max-height: min(80vh, 680px); background: var(--surface); color: var(--ink) }
+dialog::backdrop { background: rgb(0 0 0 / .35) }
+.dlg { display: grid; grid-template-rows: auto auto minmax(0, 1fr); max-height: min(80vh, 680px) }
+.dlg header { padding: 14px 16px 8px; display: grid; gap: 4px }
+.dlg header .sub { overflow-wrap: anywhere }
+.dlg .search { padding: 0 16px 10px; display: flex; gap: 8px }
+.dlg .search input { flex: 1; min-width: 0 }
+.tree { overflow-y: auto; padding: 0 16px 16px; display: grid; gap: 12px }
+.grp { display: grid; gap: 6px }
+.grp h3 { font: 600 .75rem var(--f-body); color: var(--muted); text-transform: uppercase; letter-spacing: .06em }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1 id="tytul">Budżet</h1>
+      <div class="sub" id="gen"></div>
+    </div>
+    <label class="sub">Miesiąc <select id="mies"></select></label>
+  </div>
+
+  <div class="stats" id="stats"></div>
+  <div id="braki"></div>
+  <div id="podsumowanie"></div>
+  <div class="state" id="stan">Łączę z zapisem decyzji…</div>
+
+  <div class="filters">
+    <div class="seg" role="group" aria-label="Pokaż">
+      <button id="f-otwarte" aria-pressed="true">Bez decyzji</button>
+      <button id="f-wszystkie" aria-pressed="false">Wszystkie</button>
+    </div>
+    <input type="search" id="szukaj" placeholder="Szukaj sklepu lub kwoty" aria-label="Szukaj">
+    <button class="btn sec" id="cofnij" disabled>↶ Cofnij</button>
+  </div>
+
+  <div id="listy"></div>
+
+  <details id="auto"><summary></summary><div class="tbl"></div></details>
+  <details id="juz"><summary></summary><div class="tbl"></div></details>
+  <details id="pomin"><summary></summary><div class="tbl"></div></details>
+
+  <div class="foot">
+    <b>Kiedy skończysz</b>
+    <div class="sub">Decyzje zapisują się od razu, a „Cofnij” odwraca ostatnie kliknięcia. Potem wpisz w Claude Code poniższe polecenie: wpiszę wszystko do arkusza i dostaniesz tu podsumowanie miesiąca.</div>
+    <div class="cmd"><code id="polecenie"></code><button class="btn sec" id="kopiuj">Kopiuj</button><span class="sub" id="skopiowano"></span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden><span id="toast-t"></span><button id="toast-u">Cofnij</button></div>
+
+<dialog id="dlg">
+  <div class="dlg">
+    <header><h2 id="dlg-t">Wybierz kategorię</h2><div class="sub" id="dlg-s"></div></header>
+    <div class="search"><input type="search" id="dlg-q" placeholder="np. paliwo, prezent, dziecko" aria-label="Szukaj kategorii"><button class="btn sec" id="dlg-x">Zamknij</button></div>
+    <div class="tree" id="dlg-tree"></div>
+  </div>
+</dialog>
+
+<script src="dane.js"></script>
+<script>
+(() => {
+  const D = (window.BUDZET && window.BUDZET.miesiace) || {};
+  const MIES_PL = ['styczeń','luty','marzec','kwiecień','maj','czerwiec','lipiec','sierpień','wrzesień','październik','listopad','grudzień'];
+  const DNI = ['sty','lut','mar','kwi','maj','cze','lip','sie','wrz','paź','lis','gru'];
+  const fmt = new Intl.NumberFormat('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const INNE = { typ: 'Wydatek', kat: 'Inne wydatki', pod: 'Inne wydatki: inne', etykieta: 'Inne wydatki › Inne wydatki: inne' };
+  const $ = s => document.querySelector(s);
+  const el = (tag, attrs = {}, ...kids) => {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === 'class') e.className = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+      else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+    }
+    for (const k of kids.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
+    return e;
+  };
+  const mLabel = m => { const [y, mm] = m.split('-'); return `${MIES_PL[+mm - 1]} ${y}`; };
+  const dLabel = d => { if (!d) return ''; const [, mm, dd] = d.split('-'); return `${+dd} ${DNI[+mm - 1]}`; };
+  const zl = v => fmt.format(v) + ' zł';
+  const wLabel = w => `wiersz ${w.wiersz} · ${dLabel(w.data)} · ${zl(w.kwota)} · ${w.kategoria}`;
+
+  const miesiace = Object.keys(D).sort();
+  let mies = miesiace[miesiace.length - 1];
+  try { const z = localStorage.getItem('budzet-mies'); if (z && D[z]) mies = z; } catch (e) {}
+  let filtr = 'otwarte', szukaj = '';
+  const dec = {};
+  const historia = [];
+  let db = null, zapisOk = false, toastT = null;
+
+  for (const m of miesiace) $('#mies').append(el('option', { value: m, selected: m === mies }, mLabel(m)));
+  $('#mies').addEventListener('change', e => { mies = e.target.value; try { localStorage.setItem('budzet-mies', mies); } catch (er) {} render(); });
+  $('#f-otwarte').onclick = () => { filtr = 'otwarte'; render(); };
+  $('#f-wszystkie').onclick = () => { filtr = 'wszystkie'; render(); };
+  $('#szukaj').addEventListener('input', e => { szukaj = e.target.value.toLowerCase(); render(); });
+
+  function stan(txt, cls) { const s = $('#stan'); s.textContent = txt; s.className = 'state ' + (cls || ''); }
+  const kopia = o => o ? JSON.parse(JSON.stringify(o)) : null;
+
+  async function zapiszDb(id) {
+    if (!db) return;
+    try { const ref = db.doc('decyzje/' + id); if (dec[id]) await ref.set(dec[id]); else await ref.delete(); }
+    catch (e) { stan('Nie udało się zapisać ostatniej zmiany (' + (e && e.code || 'błąd') + '). Spróbuj ponownie za chwilę.', 'warn'); }
+  }
+  function opisDecyzji(v) {
+    if (!v) return 'cofnięto wybór';
+    return v.akcja === 'kategoria' ? v.etykieta : v.akcja === 'pomin' ? 'pominięte' : v.akcja === 'juz' ? 'już jest w arkuszu' : v.etykieta || 'zapisano';
+  }
+  function toast(txt) {
+    $('#toast-t').textContent = txt; $('#toast').hidden = false; $('#toast-u').hidden = !historia.length;
+    clearTimeout(toastT); toastT = setTimeout(() => { $('#toast').hidden = true; }, 6000);
+  }
+  // zmiana jednej lub wielu pozycji naraz; każda trafia do historii (cofanie)
+  async function zmien(zmiany, opisToastu) {
+    historia.push(zmiany.map(([id]) => [id, kopia(dec[id])]));
+    for (const [id, wartosc] of zmiany) {
+      if (wartosc) dec[id] = Object.assign({ miesiac: mies, at: new Date().toISOString() }, dec[id] && dec[id].opis ? { opis: dec[id].opis } : {}, wartosc);
+      else if (dec[id] && dec[id].opis) dec[id] = { miesiac: mies, opis: dec[id].opis, at: new Date().toISOString() };
+      else delete dec[id];
+    }
+    render(); toast(opisToastu);
+    for (const [id] of zmiany) await zapiszDb(id);
+  }
+  async function cofnij() {
+    const krok = historia.pop(); if (!krok) return;
+    for (const [id, prev] of krok) { if (prev) dec[id] = prev; else delete dec[id]; }
+    render(); toast(krok.length > 1 ? `Cofnięto ${krok.length} decyzji` : 'Cofnięto');
+    $('#toast-u').hidden = !historia.length;
+    for (const [id] of krok) await zapiszDb(id);
+  }
+  $('#cofnij').onclick = cofnij;
+  $('#toast-u').onclick = cofnij;
+
+  const zdecydowane = it => !!(dec[it.id] && dec[it.id].akcja);
+  const wybor = o => ({ akcja: 'kategoria', typ: o.typ, kat: o.kat, pod: o.pod, etykieta: o.etykieta });
+  const ustaw = (it, v) => {
+    const d = dec[it.id];
+    const ten = d && d.akcja === v.akcja && (d.etykieta || '') === (v.etykieta || '') && (d.wiersz || 0) === (v.wiersz || 0) && (d.cel || '') === (v.cel || '');
+    zmien([[it.id, ten ? null : v]], ten ? 'Odznaczono' : 'Zapisano: ' + opisDecyzji(v));
+  };
+  const wcisniety = (it, v) => { const d = dec[it.id]; return String(!!(d && d.akcja === v.akcja && (d.etykieta || '') === (v.etykieta || '') && (d.wiersz || 0) === (v.wiersz || 0) && (d.cel || '') === (v.cel || ''))); };
+
+  function karta(it) {
+    const d = dec[it.id];
+    const wej = it.kwota > 0;
+    const notes = [];
+    if (it.produkty) notes.push(el('ul', {}, it.produkty.map(p => el('li', {}, p))));
+    if (it.skladniki) notes.push(el('span', { class: 'note' }, 'składniki: ' + it.skladniki.map(x => fmt.format(x)).join(' + ')));
+    if (it.uwaga) notes.push(el('span', { class: 'note' + (it.moze_juz ? ' warn' : '') }, it.uwaga));
+    if (it.budowa) notes.push(el('span', { class: 'note warn' }, 'Budowa: ' + it.budowa));
+    const chips = el('div', { class: 'chips' });
+    // zwroty: pomniejsz zakup
+    for (const c of it.cele || []) {
+      if (c.wiersz) { const v = { akcja: 'odejmij', cel: c.id, wiersz: c.wiersz.wiersz, etykieta: `odjąć od wiersza ${c.wiersz.wiersz}` };
+        chips.append(el('button', { class: 'chip row', 'aria-pressed': wcisniety(it, v), onclick: () => ustaw(it, v) }, `Odejmij od zakupu ${dLabel(c.data)} (${zl(-c.kwota)}) – ${wLabel(c.wiersz)}`)); }
+      else if (c.kandydaci && c.kandydaci.length) for (const k of c.kandydaci) { const v = { akcja: 'odejmij', cel: c.id, wiersz: k.wiersz, etykieta: `odjąć od wiersza ${k.wiersz}` };
+        chips.append(el('button', { class: 'chip row', 'aria-pressed': wcisniety(it, v), onclick: () => ustaw(it, v) }, `Zakup ${dLabel(c.data)} (${zl(-c.kwota)}) może być w: ${wLabel(k)} – odejmij od niego`)); }
+      else { const v = { akcja: 'odejmij', cel: c.id, etykieta: `odjąć od zakupu z ${dLabel(c.data)}` };
+        chips.append(el('button', { class: 'chip row', 'aria-pressed': wcisniety(it, v), onclick: () => ustaw(it, v) }, `Odejmij od zakupu ${dLabel(c.data)} (${zl(-c.kwota)}) – ${c.opis.slice(0, 40)}`)); }
+    }
+    // ręczne sumy, w których może już być ta płatność
+    for (const k of it.kandydaci || []) { const v = { akcja: 'juz', wiersz: k.wiersz };
+      chips.append(el('button', { class: 'chip row', 'aria-pressed': wcisniety(it, v), onclick: () => ustaw(it, v) }, `Jest w: ${wLabel(k)}`)); }
+    const opcje = (it.opcje || []).slice();
+    if (d && d.akcja === 'kategoria' && !opcje.some(o => o.etykieta === d.etykieta)) opcje.push({ typ: d.typ, kat: d.kat, pod: d.pod, etykieta: d.etykieta });
+    if (!opcje.some(o => o.etykieta === INNE.etykieta)) opcje.push(INNE);
+    for (const o of opcje) { const v = wybor(o);
+      chips.append(el('button', { class: 'chip' + (it.propozycja && it.propozycja.etykieta === o.etykieta ? ' prop' : ''), 'aria-pressed': wcisniety(it, v), onclick: () => ustaw(it, v) }, o.etykieta)); }
+    chips.append(el('button', { class: 'chip ghost', onclick: () => otworzDrzewo(it) }, 'Inna kategoria…'));
+    if (!(it.kandydaci && it.kandydaci.length)) { const v = { akcja: 'juz' };
+      chips.append(el('button', { class: 'chip ghost', 'aria-pressed': wcisniety(it, v), onclick: () => ustaw(it, v) }, 'Już jest w arkuszu')); }
+    { const v = { akcja: 'pomin' }; chips.append(el('button', { class: 'chip ghost', 'aria-pressed': wcisniety(it, v), onclick: () => ustaw(it, v) }, 'Pomiń')); }
+    const pokazOpis = !(it.opcje || []).length || (d && d.opis);
+    const inp = el('input', { type: 'text', id: 'opis-' + it.id, placeholder: 'Na co? (trafi do kolumny Opis – uwagi dla mnie też przeczytam)', value: (d && d.opis) || '' });
+    inp.addEventListener('change', async () => {
+      const v = inp.value.trim();
+      historia.push([[it.id, kopia(dec[it.id])]]);
+      if (dec[it.id]) { dec[it.id].opis = v; if (!v && !dec[it.id].akcja) delete dec[it.id]; }
+      else if (v) dec[it.id] = { miesiac: mies, opis: v, at: new Date().toISOString() };
+      toast(v ? 'Zapisano opis' : 'Usunięto opis');
+      await zapiszDb(it.id);
+    });
+    const opisRow = el('div', { class: 'desc', hidden: !pokazOpis }, inp);
+    if (!pokazOpis) chips.append(el('button', { class: 'chip ghost', onclick: e => { opisRow.hidden = false; e.currentTarget.remove(); inp.focus(); } }, '+ opis'));
+    const kiedy = it.zrodlo === 'lista' ? 'lista' : dLabel(it.data);
+    return el('article', { class: 'card' + (zdecydowane(it) ? ' done' : ''), id: 'k-' + it.id },
+      el('div', { class: 'row1' },
+        el('div', { class: 'when' }, el('span', {}, kiedy), el('span', { class: 'acct' }, (it.konto || '').replace(/^\[(.)\] /, '$1 · ')), it.pay ? el('span', { class: 'acct' }, 'Allegro Pay') : null),
+        el('div', { class: 'what' }, el('b', {}, it.opis), notes),
+        el('div', { class: 'amt' + (wej ? ' in' : '') }, (wej ? '+' : '−') + fmt.format(Math.abs(it.kwota)))),
+      chips, opisRow);
+  }
+
+  let dlgItem = null;
+  function otworzDrzewo(it) {
+    dlgItem = it;
+    $('#dlg-s').textContent = `${it.opis} · ${(it.kwota > 0 ? '+' : '−') + zl(Math.abs(it.kwota))}`;
+    $('#dlg-q').value = '';
+    rysujDrzewo('');
+    const dlg = $('#dlg');
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    setTimeout(() => $('#dlg-q').focus(), 30);
+  }
+  function rysujDrzewo(q) {
+    const t = $('#dlg-tree'); t.replaceChildren();
+    const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ł/g, 'l');
+    const nq = norm(q);
+    let n = 0;
+    for (const k of D[mies].kategorie) {
+      const opcje = k.pod.length ? k.pod.map(p => ({ typ: k.typ, kat: k.kat, pod: p, etykieta: `${k.kat} › ${p}` })) : [{ typ: k.typ, kat: k.kat, pod: '', etykieta: k.kat }];
+      const pas = opcje.filter(o => !nq || norm(o.etykieta + ' ' + o.typ).includes(nq));
+      if (!pas.length) continue;
+      n += pas.length;
+      t.append(el('div', { class: 'grp' }, el('h3', {}, `${k.typ} · ${k.kat}`),
+        el('div', { class: 'chips' }, pas.map(o => el('button', { class: 'chip', onclick: () => { ustaw(dlgItem, wybor(o)); zamknij(); } }, o.pod || o.kat)))));
+    }
+    if (!n) t.append(el('div', { class: 'empty' }, 'Nie ma takiej kategorii. Wybierz najbliższą i dopisz w opisie, jakiej brakuje – dodam ją.'));
+  }
+  function zamknij() { const dlg = $('#dlg'); if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
+  $('#dlg-q').addEventListener('input', e => rysujDrzewo(e.target.value));
+  $('#dlg-x').onclick = zamknij;
+
+  function sekcja(tytul, opis, items, akcja) {
+    const wszystkie = items.length, otwarte = items.filter(it => !zdecydowane(it)).length;
+    if (!wszystkie) return null;
+    let widoczne = items.filter(it => filtr === 'wszystkie' || !zdecydowane(it));
+    if (szukaj) widoczne = widoczne.filter(it => (it.opis + ' ' + (it.produkty || []).join(' ') + ' ' + fmt.format(Math.abs(it.kwota)) + ' ' + Math.abs(it.kwota)).toLowerCase().includes(szukaj));
+    return el('section', {},
+      el('div', { class: 'sechead' }, el('h2', {}, tytul, el('small', {}, otwarte ? `${otwarte} z ${wszystkie} bez decyzji` : `wszystkie ${wszystkie} gotowe`)), akcja && otwarte ? akcja : null),
+      opis ? el('p', { class: 'hint' }, opis) : null,
+      widoczne.length ? widoczne.map(karta) : el('div', { class: 'empty' }, otwarte ? 'Nic nie pasuje do wyszukiwania.' : 'Gotowe. Przełącz na „Wszystkie”, żeby zmienić wybór.'));
+  }
+  function przyciskPropozycji(items) {
+    const otw = items.filter(i => !zdecydowane(i) && i.propozycja);
+    if (!otw.length) return null;
+    return el('button', { class: 'btn', onclick: () => zmien(otw.map(it => [it.id, wybor(it.propozycja)]), `Zatwierdzono ${otw.length} propozycji`) }, `Zatwierdź propozycje (${otw.length})`);
+  }
+
+  function tabela(naglowki, wiersze) {
+    return el('table', {}, el('thead', {}, el('tr', {}, naglowki.map(h => el('th', {}, h)))), el('tbody', {}, wiersze));
+  }
+
+  function render() {
+    const M = D[mies];
+    if (!M) { $('#listy').replaceChildren(el('div', { class: 'empty' }, 'Brak danych miesiąca.')); return; }
+    $('#tytul').textContent = 'Budżet · ' + mLabel(mies);
+    $('#gen').textContent = 'Dane z wyciągów, Allegro i list, przygotowane ' + M.wygenerowano.replace(/^(\d{4})-(\d\d)-(\d\d)/, '$3.$2.$1');
+    $('#f-otwarte').setAttribute('aria-pressed', String(filtr === 'otwarte'));
+    $('#f-wszystkie').setAttribute('aria-pressed', String(filtr === 'wszystkie'));
+    $('#cofnij').disabled = !historia.length;
+    const its = M.decyzje;
+    const gotowe = its.filter(zdecydowane).length;
+    const sumAuto = M.wiersze.reduce((s, w) => s + (w.typ === 'Przychód' || w.kwota == null ? 0 : w.kwota), 0);
+    $('#stats').replaceChildren(
+      el('div', { class: 'stat' }, el('span', {}, 'Wejdzie samo'), el('b', {}, String(M.wiersze.length)), el('div', { class: 'sub' }, 'wierszy, wydatki ' + zl(sumAuto))),
+      el('div', { class: 'stat' }, el('span', {}, 'Do decyzji'), el('b', {}, `${its.length - gotowe}`), el('div', { class: 'bar' }, el('i', { style: `width:${its.length ? 100 * gotowe / its.length : 100}%` }))),
+      el('div', { class: 'stat' }, el('span', {}, 'Już w arkuszu'), el('b', {}, String(M.juz.length)), el('div', { class: 'sub' }, 'z numerem wiersza – na dole')),
+      el('div', { class: 'stat' }, el('span', {}, 'Pominięte'), el('b', {}, String(M.pominiete.length)), el('div', { class: 'sub' }, 'przelewy własne, opłacone zamówienia')));
+    $('#braki').replaceChildren(...(M.braki && M.braki.length ? [el('div', { class: 'braki' }, el('b', {}, 'Brakuje, żeby zamknąć miesiąc'), el('ul', {}, M.braki.map(b => el('li', {}, b))),
+      el('span', { class: 'sub' }, 'Wrzuć do Dysku (Finanse → Wyciągi) albo uzupełnij w arkuszu i daj znać – przeliczę stronę.'))] : []));
+    const P = M.podsumowanie;
+    $('#podsumowanie').replaceChildren(...(P ? [el('div', { class: 'summary' }, el('h2', {}, 'Podsumowanie miesiąca'),
+      P.tekst ? el('p', { style: 'margin:0' }, P.tekst) : null,
+      P.punkty ? el('ul', {}, P.punkty.map(p => el('li', {}, p))) : null,
+      P.kategorie ? el('div', { class: 'tbl' }, tabela(['Kategoria', 'Ten miesiąc', 'Średnio 3 mies.'], P.kategorie.map(k => el('tr', {}, el('td', {}, k.kat), el('td', { class: 'n' }, fmt.format(k.kwota)), el('td', { class: 'n' }, k.srednio == null ? '' : fmt.format(k.srednio)))))) : null)] : []));
+
+    const bank = its.filter(i => i.zrodlo === 'wyciąg');
+    const zwykle = bank.filter(i => i.propozycja), wyb = bank.filter(i => !i.propozycja && i.opcje.length), bez = bank.filter(i => !i.propozycja && !i.opcje.length);
+    const allegro = its.filter(i => i.zrodlo === 'allegro'), zwroty = its.filter(i => i.zrodlo === 'zwrot'), lista = its.filter(i => i.zrodlo === 'lista');
+    const sekcje = [
+      sekcja('Z propozycją', '★ to propozycja z reguły – kliknij albo zatwierdź wszystkie. Żółte przyciski „Jest w: wiersz …” pokazują ręczne sumy, w których ta płatność może już siedzieć.', zwykle, przyciskPropozycji(zwykle)),
+      sekcja('Zakupy z Allegro', 'Liczą się zamówienia z listy (data zamówienia, bez zwróconych). Płatności Allegro w banku i karta podarunkowa są pomijane, żeby nic się nie zdublowało.', allegro, przyciskPropozycji(allegro)),
+      sekcja('Zwroty', 'Zwrot pomniejsza zakup, którego dotyczy (formuła „zakup − zwrot”), zamiast osobnego wiersza.', zwroty),
+      sekcja('Do wyboru', 'Ten sklep bywa różnymi kategoriami. „Inna kategoria…” otwiera wszystkie – wybór dopiszę potem do opcji sklepu.', wyb),
+      sekcja('Bez podpowiedzi', 'BLIK-i, nowe sklepy i rzeczy „ze wszystkim”. Wybierz kategorię i, jeśli warto, dopisz, na co to było.', bez),
+      sekcja(M.etykieta_listy || 'Listy wydatków', 'Nieznane skróty i nietypowo duże kwoty.', lista, przyciskPropozycji(lista)),
+    ].filter(Boolean);
+    $('#listy').replaceChildren(...(sekcje.length ? sekcje : [el('div', { class: 'empty' }, 'W tym miesiącu wszystko weszło samo.')]));
+
+    const a = $('#auto');
+    a.querySelector('summary').textContent = `Wejdzie automatycznie: ${M.wiersze.length} wierszy`;
+    a.querySelector('.tbl').replaceChildren(tabela(['Data', 'Konto', 'Kategoria', 'Opis', 'Kwota'],
+      M.wiersze.map(w => el('tr', {}, el('td', {}, dLabel(w.data)), el('td', {}, w.konto || '—'), el('td', {}, `${w.typ} · ${w.kat}${w.pod ? ' › ' + w.pod : ''}`),
+        el('td', {}, w.opis || w.uwaga || ''), el('td', { class: 'n' }, w.kwota == null ? 'formuła' : fmt.format(w.kwota), w.formula ? el('span', { class: 'f' }, w.formula) : null)))));
+    const j = $('#juz');
+    j.querySelector('summary').textContent = `Już w arkuszu: ${M.juz.length}`;
+    j.querySelector('.tbl').replaceChildren(tabela(['Data', 'Płatność', 'Kwota', 'Gdzie w arkuszu'],
+      M.juz.map(x => el('tr', {}, el('td', {}, dLabel(x.data)), el('td', {}, x.opis), el('td', { class: 'n' }, fmt.format(x.kwota)),
+        el('td', {}, `${x.sposob} → ${wLabel(x.w)}`)))));
+    const p = $('#pomin');
+    p.querySelector('summary').textContent = `Pominięte: ${M.pominiete.length}`;
+    p.querySelector('.tbl').replaceChildren(tabela(['Data', 'Konto', 'Opis', 'Powód', 'Kwota'],
+      M.pominiete.map(x => el('tr', {}, el('td', {}, dLabel(x.data)), el('td', {}, x.konto), el('td', {}, x.opis), el('td', {}, x.powod), el('td', { class: 'n' }, fmt.format(x.kwota))))));
+    $('#polecenie').textContent = `przenieś decyzje budżetu ${mies}`;
+  }
+
+  $('#kopiuj').onclick = () => {
+    const txt = $('#polecenie').textContent;
+    try { navigator.clipboard.writeText(txt).then(() => { $('#skopiowano').textContent = 'Skopiowano'; },
+      () => { getSelection().selectAllChildren($('#polecenie')); $('#skopiowano').textContent = 'Zaznaczone – skopiuj ręcznie'; }); }
+    catch (e) { getSelection().selectAllChildren($('#polecenie')); }
+  };
+
+  render();
+
+  const timer = setTimeout(() => { if (!zapisOk) stan('Brak połączenia z zapisem – wybory zostaną tylko w tej karcie. Odśwież stronę później.', 'warn'); }, 10000);
+  (async () => {
+    if (!window.claude || !window.claude.use) { clearTimeout(timer); stan('Podgląd bez zapisu – otwórz stronę w claude.ai, żeby zapisywać decyzje.', 'warn'); return; }
+    db = await window.claude.use('db');
+    if (!db) { clearTimeout(timer); stan('Zapis decyzji niedostępny (zaloguj się w claude.ai). Wybory zostaną tylko w tej karcie.', 'warn'); return; }
+    db.collection('decyzje').onSnapshot(snap => {
+      clearTimeout(timer); zapisOk = true;
+      for (const k of Object.keys(dec)) delete dec[k];
+      for (const doc of snap.docs) if (doc.exists) dec[doc.id] = Object.assign({}, doc.data());
+      stan('Decyzje zapisują się na bieżąco.', 'ok');
+      const ae = document.activeElement;
+      if (!(ae && ae.tagName === 'INPUT' && ae.type === 'text')) render();
+    }, err => { clearTimeout(timer); stan('Błąd odczytu decyzji (' + (err && err.code || 'nieznany') + ').', 'warn'); });
+  })();
+})();
+</script>

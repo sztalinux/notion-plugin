@@ -41,6 +41,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     tools/zdjecia.py, tools/kopia.py  ← rozkładanie zdjęć i dokumentów z telefonu, kopia dokumentów Mac → Dysk (plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md; testy test_*.py)
     tools/kopie.py                    ← kontrola kopii zapasowych: co ma kopię, gdzie i z kiedy, tylko odczyt (docs/kopie-zapasowe.md; test_kopie.py)
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
+    tools/budzet/                     ← budżet domowy: import wyciągów, Allegro i list → strona decyzji → Transakcje (procedura budzet; dane poza repo w .dom/budzet)
     tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google, gotówka po miesiącach (docs/wydatki-arkusz.md)
     tools/pomysly_wersje.py           ← wersje z CHANGELOG (gałąź main) dla POM-n (kontrola „status pomysłu ↔ wdrożenie” w przeglądzie dnia; test_pomysly_wersje.py)
     docs/                             ← opisy systemów dla człowieka: wiedza (mapa, runbook, rejestr decyzji), wydatki → arkusz
@@ -79,6 +80,7 @@ z ⚠ i inwestor o tym wie.
 | Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają w Dzienniku i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json`; po zalogowaniu pierwszy udany przebieg zostawia tylko ślad „ustąpiło” w „Przetworzone” Dziennika, bez bloku 🔔 – w trakcie widać go wyłącznie w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
 | Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
 | Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
+| Google Sheets / Drive + strona decyzji (artefakt, procedura `budzet`) | budżet domowy: odczyt Transakcji, zapis wierszy, decyzje inwestora | wynik `przenies.py` (`miesiace/RRRR-MM-zapis.json`) wkleja się ręcznie; decyzje można podać w czacie zamiast na stronie |
 | Google Sheets / Drive | liczby z żywego arkusza, zmiany układu | kopia `Kosztorys_google.json` (Apps Script z sekretem), eksport od inwestora, `wydatki.py migruj` (`docs/wydatki-arkusz.md`) |
 | Google Drive (zdjęcia, dokumenty z telefonu, kopia) | rozkładanie `Zdjęcia/_nowe`, odczyt dokumentów z Dysku na czacie | skrypt lokalnie (z aplikacją Dysku albo po pobraniu `_nowe` / AirDropie), kopia paczką przez przeglądarkę, „prośba o dokument” jak dotąd; wgrywanie z telefonu działa zawsze (`plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`, 5) |
 | Notion – „📘 Książka domu” (procedura `ksiazka-domu`) | rozdziały etapów, „gdzie co biegnie” | szkic rozdziału jako Markdown w folderze budowy (`Książka domu/`), punkty z telefonu przez Skrzynkę; ostatni eksport PDF i zdjęcia na Dysku działają bez Notion i bez asystenta |
