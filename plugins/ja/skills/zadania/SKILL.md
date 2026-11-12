@@ -78,6 +78,9 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
    Kategorii Zakup pozycję znajdź wyszukiwarką z parametrem bazy Zakupów po rzeczy z nazwy „Kupić X”) – w tej samej pracy pozycja: DONE → Kupione + Kupione dnia,
    ARCHIVED → Odpuszczone (sekcja „Zakupy”, pkt 4, w drugą stronę); w śladzie obie wzmianki. Wyjątek: zadanie „Zamówić
    suple” – Buy zostaje (`przeglad-dnia`, B.6).
+   Zadanie zakupu budowy „na już” (pozycja w 🧱 Zakupach budowy ma w Uwagach wzmiankę o zadaniu; znajdź ją wyszukiwarką
+   z parametrem bazy 🧱 po rzeczy z nazwy) – przy DONE w tej samej pracy zmień też Status pozycji wg `zakupy` (plugin
+   `dom-budowa`, 0.3): kupione → Dostarczone + Dostawa = data, tylko zamówione → Zamówione; w śladzie obie wzmianki.
 3. Brak trafienia także wśród świeżo zamkniętych → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4): „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
 4. Kilka trafień → pytanie pod wpisem z nazwami do wyboru (max 3, z terminem).
 
