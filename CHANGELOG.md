@@ -4,6 +4,18 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.7] – 2026-11-12
+
+Nocna samonaprawa, obszar 08-wiedza:
+- `wiedza/references/karty.md`: wybór inkluzywny w porcjach po ok. 110 tez, jak w kodzie (było 160).
+- Runbook 2, `docs/system-wiedzy.md`, README: plik indeksu (ok. 13 MB) nie mieści się w limicie `sync --cicho` – idzie z `publikuj` po wieczornym przebiegu (limit procesu 360 s) i z `aktualizuj --publikuj`.
+- `pytanie-do-bazy` 2.5 i `indeks.md`: kolejność końca karty jak w kodzie – Ciekawostki, dopełnienie z szukania, otwarte sprzeczności.
+- `docs/system-wiedzy.md`, Znane długi: nocna kolejka sprawdza logowanie MCP przed startem.
+- Runbook 5.4 i `indeks-awarie.md`: po przebudowie indeksu listy podobnych odbudowuje `wiedza_sens.py przelicz --pelny`.
+- `tools/wiedza.py`: komunikat o odłożonej wysyłce wskazuje `publikuj` (automat po wieczornym przebiegu) albo `sync --publikuj` bez `--cicho`.
+- `wiedza/references/ocena-zrodla.md`: „Producent” i „Sprzedawca / dystrybutor” to opcje Typu autora, nie Konfliktu interesów.
+- `tools/wiedza_jakosc.py`: `pokaz --help` – `--pytania` domyślnie 30 (`sedzia` bierze wszystkie); „ostatni” zestaw oceny ręcznej wybierany po czasie zmiany, nie po nazwie pliku.
+
 ## ja [1.12.5] – 2026-11-12
 
 Nocna samonaprawa, obszar 04-dziennik:
