@@ -4,6 +4,12 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.9] – 2026-11-12
+
+Nocna samonaprawa, obszar 07-budowa:
+- `dziennik` A.1: „?” przy brakujących danych tylko w polach tekstowych – pola liczbowe (Ekipa – osób, Godziny własne) i „Zdjęcia” zostają puste; „?” w polu liczbowym API Notion odrzuca cały wpis dnia, a w „Zdjęciach” pulpit liczy go jako zdjęcie.
+- `budowa`, zasada 7: to samo dla wszystkich procedur budowy – „?” tylko w polu tekstowym, pole liczby albo daty puste (daty „?” również odrzucają cały zapis).
+
 ## dom-budowa [3.12.8] – 2026-11-12
 
 Nocna samonaprawa, obszar 12-dystrybucja:
