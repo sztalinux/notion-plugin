@@ -38,6 +38,7 @@ branżą i adresatem, tak żeby dało się ją filtrować i zamknąć.
    Przy 1–3 oczywistych wpisach zapisz od razu; przy więcej lub przy niepewnej klasyfikacji – poproś o „ok”.
 4. **Zapisz jednym wywołaniem na bazę** (wiele stron w jednej operacji; zasada 6 z `budowa`), wartości pól dokładnie
    wg `references/notion-schematy.md`. Źródło = skąd to wiadomo (rozmowa z X dnia RRRR-MM-DD, PT KT.03, oferta Y).
+   Wpis dotyczy konkretnego kroku Harmonogramu → relacja Krok (pulpit grupuje po niej sprawy kroku); zadanie TASKS – relacja Harmonogram.
 5. **Krytyczne sprawy przed etapem** (blokują start etapu): Priorytet „Krytyczne” i Etap = bieżący etap – wtedy wpis
    sam pojawia się w sekcji „🔴 Do zamknięcia przed …” na stronie DOM (widok Notatnika). Niczego tam nie dopisuj
    ani nie odhaczaj ręcznie; sprawę zamyka Status wpisu.
