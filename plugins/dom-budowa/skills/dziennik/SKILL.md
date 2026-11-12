@@ -19,7 +19,8 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    w Harmonogramie; nie wiadomo który – pytanie), kto na budowie (ekipa – ile osób; ja – ile godzin; kierownik;
    geotechnik; dostawa), co zrobiono (konkretnie: „ściany piwnicy – zbrojenie osi A–C”), pogoda (temperatura,
    opady – ważne przy betonie, murowaniu, zasypce), dostawy (co, ile, od kogo, dokument), problemy, ustalenia z ekipą.
-   Brakujące dane → `?` i wymień w podsumowaniu (`budowa`, zasada 7). Nie dopowiadaj faktów.
+   Brakujące dane → `?` i wymień w podsumowaniu (`budowa`, zasada 7); pola liczbowe (Ekipa – osób, Godziny własne)
+   i „Zdjęcia” zostaw wtedy puste – `?` w liczbie odrzuca cały zapis, w „Zdjęciach” pulpit liczy go jako zdjęcie. Nie dopowiadaj faktów.
    Datę względną („dziś”, „wczoraj”) przelicz na datę. Zanim zapiszesz, sprawdź w bazie, czy wpis z tą datą już jest –
    jeśli tak, zaktualizuj go.
 2. **Wyłuskaj to, co idzie dalej** (jedno wywołanie na bazę – `budowa`, zasada 6):
