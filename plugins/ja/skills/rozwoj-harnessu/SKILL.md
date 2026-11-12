@@ -44,9 +44,9 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
    - **Treść do wdrożenia:** gotowy tekst reguły w trybie rozkazującym, tak jak ma trafić do procedury,
    - **Dlaczego:** 1–2 zdania kontekstu z rozmowy (data).
 2. Sprawdź w skrzynce, czy podobny wpis już nie czeka – jeśli tak, uzupełnij go zamiast dublować.
-3. Zapisz jednym wywołaniem, Status „Do wdrożenia”. Od tej chwili zmiana obowiązuje wszędzie
-   (procedura `budowa`, sekcja „Na starcie”).
-4. Potwierdź jedną linią: „Zapisane jako HZ-n – obowiązuje od teraz, wejdzie do repo, gdy zaznaczysz „Skrzynka zmian” na starcie sesji Claude Code”.
+3. Zapisz jednym wywołaniem, Status „Do wdrożenia”. Od tej chwili zmiana obowiązuje w rozmowach (procedura `budowa`,
+   sekcja „Na starcie”); automaty Maca (przebiegi launchd) skrzynki nie czytają – stosują ją dopiero po wdrożeniu (sekcja B).
+4. Potwierdź jedną linią: „Zapisane jako HZ-n – w rozmowach obowiązuje od teraz, w automatach Maca po wdrożeniu; wejdzie do repo, gdy zaznaczysz „Skrzynka zmian” na starcie sesji Claude Code”.
 
 ## B. Wdrożenie (tylko Claude Code w folderze repo)
 
