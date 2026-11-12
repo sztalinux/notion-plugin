@@ -4,6 +4,53 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.14.4] – 2026-11-12
+
+Scalenie gałęzi nocnej samonaprawy z 11/12.11 (`noc/2026-11-11-*-przeglad`, `-13-wdrozenie`) na main po POM; zmiany z nocy
+naniesione w układzie po POM (np. `budowa/references/wieczorem.md`).
+- `budowa`: zwrot pieniędzy w trasowaniu (→ `koszty` B.7a); luźny wpis o przesunięciu kroku → `harmonogram` C; „Wieczorem”: jutro
+  także otwarte wpisy Notatnika z Kiedy, a wieczorem wpisy budowy z kroku 1 tego przebiegu (`przeglad-dnia` B.9).
+- `koszty`: brak daty wydatku = dzień wpisu bez pytania; duplikat (ta sama data i kwota) tylko z tego samego źródła; kol. P (VAT %)
+  wśród chronionych przy korekcie wiersza. `tools/wydatki.py wycofaj` działa też z id strony bez myślników. Kod Apps Script bez zmian.
+- `dziennik`: narzędzia także do 🧱; plan robót dodatkowych = cała pozycja; ślad WZ także w wierszu 🧱. Problemy w Dzienniku
+  budowy: pole to historia, otwarte problemy liczone z Notatnika i TASKS; widok „⚠️ Problemy (wg dni)” (dawniej „⚠️ Otwarte problemy”).
+- **Przeniesienie:** `docs/zdjecia-i-kopia.md` → `plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md` – reguły zdjęć
+  i dokumentów z telefonu są teraz w paczce pluginu (claude.ai); odesłania poprawione w repo i w narzędziach.
+- `harmonogram`: „co mnie czeka” obejmuje otwarte wpisy Notatnika z Kiedy, bez zakupów Dostarczone i Nieaktualne; „Przesunięte”
+  tylko dla przesuniętego kroku do potwierdzenia z ekipą (potem „Potwierdzone”), kroki zależne bez zmiany Statusu.
+- `etap` B.3: nieodhaczone punkty bramek już wykonanych kroków → pytanie zbiorcze, nie blokada.
+- `notatka`: bez Notion zapis do Skrzynki zamiast tabeli do wklejenia; relacja Krok przy wpisie o konkretnym kroku. „Do kogo”:
+  opcje Geodeta / geotechnik, Dostawca, Urząd / gestor (mapa i schemat).
+- `oferta` (`umowa.md`): zakres do umowy z wybranej oferty ekipy, nie z Cennika.
+- `zakupy`: duplikat sprawdzany w widoku „🛒 Do zamówienia”; „zamówiłem” ustawia umówiony dzień dostawy.
+- `dokumenty`: „Zmieniona treść” także dla dokumentów z przewodnika (bez .json), kopia przejmuje opis usuniętego oryginału,
+  blokada indeksu przy równoległych sesjach, „Fotowoltaika” i „_Kopie umów” w indeksie, pliki tymczasowe Worda poza nim;
+  nowa umowa → pole Dokument w Umowach; `_Przychodzące/` jedną linią w A.1.
+- `wiedza`: pomiar kart na rdzeniu; dopełnienie karty bez powtórzeń rdzenia; listy podobnych od nowa po przebudowie indeksu
+  i bez terminu, gdy poprzedni przebieg ich nie dokończył; tryb głęboki bez „Mac uśpiony”; droga zapasowa pomija Rejestr
+  „Nieaktualne”; runbook – zaplanowane zadania claude.ai to martwa droga. `wiedza_karty.py aktualizuj` kończy się kodem 1 przy
+  samych błędach modelu (test `tools/test_wiedza_karty.py`).
+- `przeglad-tygodnia`: `publikuj --teraz` dopiero przy kopii starszej niż 26 h; `historia_mb` ponad 500 → `publikuj --reset`.
+- Kontrola prywatności (`tools/build.py`, hooki): ścieżki z polskimi znakami, treść plików bez względu na rozszerzenie (UTF-16,
+  cp1250), commity scalenia, NFC w imionach, słowa bez ogonków i przy wielu spacjach, linie „#” w wiadomości; `.gitignore`
+  dla eksportów i multimediów; brak listy słów zakazanych zatrzymuje walidację (świadomie bez listy – `DOM_BEZ_LISTY=1`);
+  description z „: ” albo „ #” bez cudzysłowu odrzucany; odesłania `references/` sprawdzane we wszystkich plikach .md
+  pluginów; blokada dwóch buildów naraz.
+
+## ja [1.13.5] – 2026-11-12
+
+Scalenie gałęzi nocnej samonaprawy z 11/12.11 – jak dom-budowa 3.14.4.
+- `rozwoj-harnessu`: odrzucony wpis skrzynki dostaje Status „Odrzucone”; zmiana kodu Apps Script → krok dla inwestora
+  w podsumowaniu i CHANGELOG; zgłoszenie obowiązuje w rozmowach od teraz, w automatach Maca po wdrożeniu (A.3–4).
+- `zadania` B.2: status kroku Harmonogramu po „zrobiłem” zmienia odbiór / relacja z końca kroku; jak znaleźć pozycję 🛒
+  z poziomu zadania; zadanie zakupu budowy „na już” DONE → Status pozycji w 🧱 (Dostarczone albo Zamówione); zadanie „Zamówić
+  suple” DONE → Buy = nie wymienionym suplementom, ARCHIVED → Buy zostaje (także `przeglad-dnia` krok 6). Zakupy pkt 4:
+  „kupiłem X” bez pozycji w 🛒 – bez zakładania, ślad „zakup bez pozycji na liście”.
+- `przeglad-dnia`: godziny przebiegów z launchd; krok 3 dostaje wpisy budowy z kroku 1.
+- `przeglad-tygodnia-osobisty`: porządki do zatwierdzenia jako to-do w „❓” Dziennika; archiwum przed zapisem wpisu (jedna edycja).
+- `wpisy`: zamiany tylko w przenoszonym bloku i odczyt kontrolny Dziennika po edycji; godziny przebiegów; `skrzynka.md` bez
+  obietnicy czyszczenia „Przetworzone” przez przegląd tygodnia.
+
 ## dom-budowa [3.14.3] – 2026-11-12
 
 - `koszty` / `tools/wydatki.py gotowka`: kolumna „z rezerwą” nie dolicza rezerwy do etapu 08 (bez rezerwy od rezerwy); materiał i „Inne” etapu obcinane do zera osobno – przekroczony materiał nie zjada niewydanych „Inne”; 2 testy.
