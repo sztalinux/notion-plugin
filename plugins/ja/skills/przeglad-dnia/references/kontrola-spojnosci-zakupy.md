@@ -25,8 +25,9 @@ Nigdy nie zmieniaj Status zakupu ani zadania bez ☑ inwestora; nie zakładaj za
 ## Odczyt (tylko widoki, `ja` zasada 3)
 
 1. Widok bazy 🛒 Zakupy „🤖 Spójność – zamknięte zakupy (przegląd dnia)” – ID w `ja/references/notion-mapa.md`: Kupione i
-   Odpuszczone dodane w ostatnim miesiącu (Dodano), z kolumnami Kupione dnia, Zadanie, Research, Uwagi i czasem ostatniej edycji
-   (brak kolumny w widoku → właściwości strony zakupu, tylko dla wierszy Kupione bez daty i z Research). Daje Z1, Z3, Z4.
+   Odpuszczone dodane w ostatnim miesiącu (Dodano), z kolumnami Kupione dnia, Zadanie, Research, Uwagi i czasem ostatniej edycji.
+   Brak kolumny w widoku → właściwości strony zakupu: ostatnia edycja dla wierszy Kupione bez daty (Z3), Uwagi dla wierszy
+   z Research (Z4); te odczyty wliczają się do limitu 12 stron z punktu 3. Daje Z1, Z3, Z4.
 2. „🛒 Do kupienia” (wynik z kroku 6 użyj ponownie) i „📦 Zamówione – czekam” – tylko wiersze z niepustą relacją Zadanie (Z2).
 3. Stan powiązanych zadań i researchów: strony z relacji, pojedynczo, **razem max 12 stron na przebieg** (zaczynaj od
    wierszy z relacją Zadanie, potem Research; reszta następnego dnia). Status zadania i jego edycja to właściwości strony.

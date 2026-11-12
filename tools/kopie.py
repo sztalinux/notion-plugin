@@ -76,6 +76,8 @@ def dokumenty(hub: Path, dzis: date) -> dict:
     except (ValueError, OSError, KeyError, TypeError) as e:
         return poz("dokumenty", "✗", opis, gdzie, None,
                    f"uszkodzony stan kopii .dom/kopia ({e}) – sprawdź `python3 tools/kopia.py stan`")
+    if not isinstance(stan, dict):
+        return poz("dokumenty", "✗", opis, gdzie, None, "uszkodzony stan kopii .dom/kopia (zły układ stan.json)")
     kiedy = stan.get("potwierdzono")
     if not kiedy and not stan.get("potwierdzone"):
         return poz("dokumenty", "✗", opis, gdzie, None, "kopia.py nie był uruchamiany")
