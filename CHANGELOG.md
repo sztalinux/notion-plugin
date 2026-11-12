@@ -4,6 +4,13 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.12.5] – 2026-11-12
+
+Nocna samonaprawa, obszar 04-dziennik:
+- `przeglad-dnia` A.4: kolejne linie „🤖” tego dnia na górze bloku dnia, nad wcześniejszymi – jak w `wpisy` krok 7 i w Dzienniku (było „pod spodem”).
+- `wpisy` krok 6 i schemat: zwijany blok dnia jako `<toggle>` zamiast `<details>`, którego Notion nie przyjmuje (ostrzeżenie „legacy Markdown”).
+- `wpisy/references/pytania.md` B: „Szczegóły” w `<toggle>`, treść po pustej linii – dziecko wcięte bez pustej linii zlewa się z tytułem.
+
 ## dom-budowa [3.12.6] – 2026-11-12
 
 Nocna samonaprawa, obszar 09-dokumenty:
