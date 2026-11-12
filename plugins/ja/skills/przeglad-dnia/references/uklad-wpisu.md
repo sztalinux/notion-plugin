@@ -77,7 +77,8 @@ w ciągu dnia (prośba „plan dnia”) = plan na dziś, z dopiskiem „(ręczne
 - Limity: ramka max 3 punkty; każda lista max 5, reszta „+k” z odesłaniem do zakładki; „Najbliższe 7 dni” max 4 na dzień,
   dni bez spraw pomiń. Pusta sekcja → pomiń; pusta zakładka → jedna linia („Nic na najbliższe dni.”).
 - Emocje i notatki o dziecku – tylko liczby; zadania dziecka nazwą (to zadania, nie notatki).
-- Weekend (dzień planu sob./nd.): zakładka 💼 jedną linią „Weekend – w poniedziałek n otwartych, w tym m pilnych”.
+- Weekend (dzień planu sob./nd. – przebieg w piątek i sobotę): **pracy nie rób** – bez odczytów Jiry, pliku pracy i WORK,
+  zakładki 💼 nie ma, w 🧭 nic z pracy. Plan na poniedziałek (przebieg w niedzielę) – pełna zakładka, „Wczoraj” = piątek.
 - Informacje techniczne (nieudany odczyt) – tylko kursywą na końcu zakładki 📊.
 
 **Ramka – co do niej trafia (max 3, w tej kolejności):** krok bez odwrotu albo bramka w dniu planu · sprawa z godziną w dniu
@@ -182,7 +183,7 @@ Wczoraj
 </tabs>
 ```
 
-**Zakładka 💼 Praca** (POM-27) – trzy źródła, każde opcjonalne (brak → jedna linia kursywą w 📊 „Praca: Jira – brak odczytu”):
+**Zakładka 💼 Praca** (POM-27; tylko gdy dzień planu to pon.–pt.) – trzy źródła, każde opcjonalne (brak → jedna linia kursywą w 📊 „Praca: Jira – brak odczytu”):
 - **Jira** – serwer MCP `atlassian` (tylko odczyt); strona i `cloudId` w `.dom/praca.json` w folderze budowy (poza repo – nazw
   projektu ani klienta nie wpisuj do repo). Dwa zapytania, pola tylko `summary, status, priority, issuetype, updated`, format
   markdown: (1) `assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC, updated DESC`, max 15;

@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.15.1] – 2026-11-12 (POM-27)
+
+- Praca w planie dnia tylko na dni robocze: w piątek i sobotę wieczorem bez odczytów Jiry, PR-ów i WORK (zakładki 💼 nie ma);
+  w niedzielę plan na poniedziałek z „Wczoraj” = piątek (prośba inwestora 12.11).
+
 ## ja [1.15.0] – 2026-11-12 (POM-27)
 
 Zakładka 💼 Praca planu dnia z Jiry, kodu i PR-ów.
