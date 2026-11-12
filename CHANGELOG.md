@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.15.0] – 2026-11-12 (POM-27)
+
+Zakładka 💼 Praca planu dnia z Jiry, kodu i PR-ów.
+- `przeglad-dnia` B.6 i `uklad-wpisu.md`, D: trzy źródła – Jira przez serwer MCP `atlassian` (dwa zapytania, tylko odczyt,
+  strona w lokalnej konfiguracji `.dom/praca.json`), plik `.dom/praca/dzien.json` z commitami i PR-ami Azure DevOps (skrypt
+  poza repo, przed wieczornym przebiegiem) i lista WORK; sprawy łączone po numerze zgłoszenia. Sekcje: Na dziś, Na daily
+  (wczoraj / dziś / blokery), PR-y, Pozostałe otwarte, w poniedziałek Tydzień. Nic w tych systemach nie jest zmieniane.
+
 ## ja [1.14.1] – 2026-11-12 (POM-26)
 
 - `przeglad-dnia/references/uklad-wpisu.md`, D: szablon rozpisany dla każdej zakładki (pogrubiona sekcja i punkty pod nią,

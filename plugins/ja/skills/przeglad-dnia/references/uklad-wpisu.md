@@ -182,9 +182,27 @@ Wczoraj
 </tabs>
 ```
 
-**Zakładka 💼 Praca** – źródła: widok bazy 🔨 TASKS ze strony 💼 WORK „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (ID
-w `ja/references/notion-mapa.md`; **treści samej strony WORK nie czytaj**) i TASKS z Obszar = Praca (widok kroku B.6).
-„Na dziś”: IN PROGRESS, potem TO DO z When ≤ dzień planu, potem Highest / High (max 5). „Na daily” – gotowa ściąga do
-powiedzenia: **Wczoraj** = DONE z ostatnią edycją od początku poprzedniego dnia roboczego (w poniedziałek – od piątku) ·
-**Dziś** = pierwsze 2–3 z „Na dziś” · **Blokery** = WAITING / ON HOLD. Pole Project pokazuj jako znacznik w nawiasie. Nic
-w tych bazach nie zmieniaj.
+**Zakładka 💼 Praca** (POM-27) – trzy źródła, każde opcjonalne (brak → jedna linia kursywą w 📊 „Praca: Jira – brak odczytu”):
+- **Jira** – serwer MCP `atlassian` (tylko odczyt); strona i `cloudId` w `.dom/praca.json` w folderze budowy (poza repo – nazw
+  projektu ani klienta nie wpisuj do repo). Dwa zapytania, pola tylko `summary, status, priority, issuetype, updated`, format
+  markdown: (1) `assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC, updated DESC`, max 15;
+  (2) `assignee = currentUser() AND updated >= "<od>" ORDER BY updated DESC`, max 10 (`od` z pliku niżej). Opisów zgłoszeń nie czytaj.
+- **Kod i PR-y** – plik `.dom/praca/dzien.json` (skrypt `AI/automaty/praca.py` przed przebiegiem): `commity` od początku
+  ostatniego dnia roboczego (`od`), `pr_moje`, `pr_do_recenzji` (z `moj_glos`), `pr_zamkniete`, `bledy`.
+- **Lista WORK** – widok bazy 🔨 TASKS „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (ID w `ja/references/notion-mapa.md`;
+  **treści samej strony WORK nie czytaj**) i TASKS z Obszar = Praca (krok B.6).
+
+Łączenie: jedna sprawa = jedno zgłoszenie (numer `ABC-123` z Jiry, commita, gałęzi, PR-a i pola Ticket w WORK); pokazuj
+numer i tytuł, link do zgłoszenia albo PR-a. Sekcje:
+- **Na dziś** (max 5): PR do mojej recenzji bez mojego głosu → moje zgłoszenia w toku (statusy kategorii „In Progress”,
+  np. w realizacji, code review – z PR-em i jego stanem) → Highest / High otwarte → WORK IN PROGRESS i TO DO z When ≤ dzień planu.
+- **Na daily** – gotowa ściąga do powiedzenia: **Wczoraj** = zgłoszenia z commitami lub zmianą od `od` + PR-y utworzone /
+  zamknięte + DONE z WORK (po jednym punkcie na zgłoszenie, max 5) · **Dziś** = pierwsze 2–3 z „Na dziś” ·
+  **Blokery** = zgłoszenia On Hold / WAITING w WORK, moje PR-y czekające na recenzję dłużej niż 2 dni robocze.
+- **PR-y** (tylko gdy są): moje otwarte z liczbą głosów i celem gałęzi; do mojej recenzji.
+- **Pozostałe otwarte: n** (licznik zgłoszeń Jiry i WORK).
+- **Tydzień** – tylko gdy dzień planu to poniedziałek: zgłoszenia otwarte wg statusu (liczby), PR-y czekające, 3 najważniejsze
+  na tydzień (najwyższy priorytet, potem najdłużej bez ruchu).
+
+Nic w Jirze, Azure DevOps ani WORK nie zmieniaj. Treści kodu, opisów i komentarzy nie przepisuj do Notion – tylko numery,
+tytuły, statusy i linki.

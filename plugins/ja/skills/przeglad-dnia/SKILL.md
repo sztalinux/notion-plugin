@@ -132,7 +132,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    „✅ przegadane” pod tematem, nic się nie przenosi. Treści tematów nie wypisuj; licznik „rozjazdy” jak w 5a.
 6. **Plan – najbliższe 7 dni** (odczyt; jedyne zapisy – suplementy, niżej): TASKS „🗓 Tydzień (7 dni)” (wszystkie obszary,
    z zaległymi; zastępuje „📅 Jutro – wszystko” i „📅 Dziś”) – zakres i „po terminie” licz od **dnia planu** (`references/uklad-wpisu.md`, D);
-   zadania z pracy – widok bazy 🔨 TASKS ze strony 💼 WORK (tylko widok, ID w mapie); suplementy z Buy = tak (licznik – **bez** Statusu BREAK / SUSPENDED,
+   praca – Jira (MCP `atlassian`, tylko odczyt), plik `.dom/praca/dzien.json` (commity, PR-y) i widok bazy 🔨 TASKS ze strony 💼 WORK (`uklad-wpisu.md`, D); suplementy z Buy = tak (licznik – **bez** Statusu BREAK / SUSPENDED,
    te to „do sprawdzenia”, niżej), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)
    sprawdź ID, jeśli któryś odczyt się nie powiedzie.
