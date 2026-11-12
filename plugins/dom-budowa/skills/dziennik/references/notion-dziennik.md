@@ -31,7 +31,9 @@ Stan: obowiązuje od 1.0.0. Baza pod stroną DOM.
 ## Widoki na stronie DOM
 
 - „📓 Ostatnie 7 dni” (filtr Data od tygodnia wstecz, sortowanie malejąco) – do przeglądu tygodnia.
-- „⚠️ Otwarte problemy” (Problemy / usterki niepuste, sortowanie po Dacie malejąco).
+- „⚠️ Problemy (wg dni)” (dawniej „⚠️ Otwarte problemy”; Problemy / usterki niepuste, sortowanie po Dacie malejąco) – historia
+  zgłoszeń, nie stan: pole nie ma zamknięcia. Problem żyje w Notatniku budowy albo w TASKS (`dziennik`, tabela trasowania);
+  „otwarte problemy” licz z otwartych wpisów Notatnika i zadań TASKS, nie z tego widoku.
 - „🧮 Godziny własne” (suma per Etap, do porównania „sam vs ekipa”) – nie utworzony: narzędzie nie obsługuje
   agregacji w widoku; sumę podaj w odpowiedzi z zapytania (procedura `dziennik`, sekcja C).
 

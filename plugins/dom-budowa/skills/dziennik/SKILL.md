@@ -66,7 +66,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
 ## D. „Co się działo” (pytanie o okres)
 
 Pobierz wpisy z okresu jednym zapytaniem; odpowiedz chronologicznie: dni pracy ekipy / własne, postęp per krok,
-dostawy i koszty gotówkowe, otwarte problemy, zdjęcia (foldery). Nie interpretuj ponad to, co w wpisach.
+dostawy i koszty gotówkowe, problemy (otwarte – wg Notatnika i TASKS, nie wg pola we wpisie), zdjęcia (foldery). Nie interpretuj ponad to, co w wpisach.
 
 ## E. Zdjęcia na Dysku – „rozłóż zdjęcia”, ślad w Dzienniku
 

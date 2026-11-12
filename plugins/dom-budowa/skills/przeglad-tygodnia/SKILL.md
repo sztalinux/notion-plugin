@@ -43,7 +43,8 @@ Pobierz w jak najmniejszej liczbie zapytań:
 7. **Harness i pomysły** – nie tutaj: skrzynkę zmian i „Pomysły na rozwój” raportuje przegląd osobisty
    (`przeglad-tygodnia-osobisty`, plugin `ja`).
 8. **Dziennik budowy** (ID: `dziennik/references/notion-dziennik.md`): wpisy z 7 dni – dni pracy ekipy
-   i własne, otwarte problemy, kroki zakryte bez zdjęć („Przed zakryciem OK” odznaczone).
+   i własne, problemy z pola „Problemy / usterki”, kroki zakryte bez zdjęć („Przed zakryciem OK” odznaczone). Otwarte
+   problemy licz z otwartych wpisów Notatnika i zadań TASKS powiązanych z problemem (pole w Dzienniku nie ma zamknięcia).
 9. **Dziennik – sprawy budowy:** wpisy o budowie z okienkiem ❓ bez odpowiedzi na stronie „📝 Wpisy”
    (`3faf5982-09e7-80b2-9b33-c48745d67a4f`, pod „📓 Dziennikiem”) – wymień wpis i pytanie. Pozostałe wpisy, porządki w Dzienniku
    i jego „Przetworzone” – przegląd osobisty (`przeglad-tygodnia-osobisty`, plugin `ja`).
