@@ -84,7 +84,7 @@ w ciągu dnia (prośba „plan dnia”) = plan na dziś, z dopiskiem „(ręczne
 planu · zamówienie z terminem ⏰ w dniu planu · zadanie Highest / High po terminie · zadanie z When = dzień planu. Nic → „Spokojny
 dzień – nic pilnego.”
 
-**Szablon** (przykłady zmyślone; `<…>` – wzmianki):
+**Szablon** (przykłady zmyślone; `<…>` – wzmianki). Każda sekcja = pogrubiony akapit i punkty pod nim (sekcja B) – w każdej zakładce, nigdy jedna linia z kilkoma sekcjami:
 
 ```
 <callout icon="☀️" color="blue_bg">
@@ -128,17 +128,50 @@ Budowa
 
 - 🔒 <krok> – 19.11 (szacunek) · kto
 
-**Do zamówienia** · **Decyzje i pytania** · → <wzmianka wpisu z „📆 Przeglądy dzienne – budowa”>
+**Do zamówienia**
+
+- ⏰ <zakup budowy> – zamówić do 17.11
+
+**Decyzje i pytania**
+
+- <SP-n> – czeka na Ciebie (do 18.11)
+
+Szczegóły dnia budowy: <wzmianka wpisu z „📆 Przeglądy dzienne – budowa”>
 </tab>
 <tab icon="🏠">
 Prywatne
 
-**Dziś** · **W tygodniu** · **Kupić** (suple, zakupy z terminem) · **Gotowe do przeczytania** (research, rozkminka, pomysł przeanalizowany)
+**Dziś**
+
+- 10:00 <zadanie> · <zadanie dziecka> 👪
+
+**W tygodniu**
+
+- **sob 15.11** · <zadanie>
+
+**Kupić**
+
+- 4 suplementy – <zadanie „Zamówić suple”> (13.11) · <zakup> (termin 14.11)
+
+**Gotowe do przeczytania**
+
+- <RES-n> – rekomendacja w jednym zdaniu · <POM-n> przeanalizowany
 </tab>
 <tab icon="💼">
 Praca
 
-**Na dziś** · **Na daily** (Wczoraj: … · Dziś: … · Blokery: …) · **Pozostałe otwarte: n**
+**Na dziś**
+
+- <zadanie> (projekt) – w toku
+- <zadanie> (projekt) – Highest
+
+**Na daily**
+
+- Wczoraj: <zadanie>, <zadanie>
+- Dziś: <zadanie>
+- Blokery: <zadanie WAITING> – czekam na odpowiedź
+
+**Pozostałe otwarte: 6** (najstarsze bez ruchu: <zadanie>)
 </tab>
 <tab icon="📊">
 Wczoraj

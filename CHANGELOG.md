@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.14.1] – 2026-11-12 (POM-26)
+
+- `przeglad-dnia/references/uklad-wpisu.md`, D: szablon rozpisany dla każdej zakładki (pogrubiona sekcja i punkty pod nią,
+  nigdy kilka sekcji w jednej linii); README i `AGENTS.md` opisują plan dnia zamiast „planu na jutro”.
+
 ## ja [1.14.0] – 2026-11-12 (POM-26)
 
 Plan dnia do czytania rano – strona „☀️ Dziś” w zakładkach (prośba inwestora 12.11; część porządków z POM-25).
