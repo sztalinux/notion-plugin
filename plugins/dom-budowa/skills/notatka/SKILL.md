@@ -1,6 +1,6 @@
 ---
 name: notatka
-description: Zapis notatek, ustaleń, decyzji, pytań, ryzyk i zadań budowy do Notion (Notatnik budowy, TASKS). Używaj, gdy użytkownik dyktuje lub wkleja notatkę z budowy, rozmowy z projektantem/ekipą, mówi „zapisz”, „zanotuj”, „dodaj do Notion”, „przypomnij mi”, „ustaliliśmy że…”, „decyzja: …”, albo gdy inna procedura wygenerowała otwarte pytania lub decyzje.
+description: "Zapis notatek, ustaleń, decyzji, pytań, ryzyk i zadań budowy do Notion (Notatnik budowy, TASKS). Używaj, gdy użytkownik dyktuje lub wkleja notatkę z budowy, rozmowy z projektantem/ekipą, mówi „zapisz”, „zanotuj”, „dodaj do Notion”, „przypomnij mi”, „ustaliliśmy że…”, „decyzja: …”, albo gdy inna procedura wygenerowała otwarte pytania lub decyzje."
 ---
 
 # Notatka → Notion

@@ -1,6 +1,6 @@
 ---
 name: zakupy
-description: Zakupy na budowę – wszystko, co idzie na działkę albo do budynku (materiał, drobnica, narzędzia, wynajem) w bazie 🧱 Zakupy budowy: pojedyncza rzecz „kupić X na budowę”, lista z kosztorysu z ilościami i zapasem, zapytania do hurtowni, porównanie ofert dostawców, terminy zamówień z wyprzedzeniem, dostawy i stan materiału na budowie. Używaj, gdy użytkownik pyta „co muszę kupić na…”, „ile zamówić”, „zrób listę zakupów”, „porównaj oferty hurtowni”, „kiedy zamawiać okna / stal / dachówkę”, „co zamówić już teraz”, wkleja ofertę składu budowlanego, mówi „kupić taśmę / geowłókninę na budowę”, „kupiłem X na działkę” albo „przyjechała dostawa”.
+description: "Zakupy na budowę – wszystko, co idzie na działkę albo do budynku (materiał, drobnica, narzędzia, wynajem) w bazie 🧱 Zakupy budowy: pojedyncza rzecz „kupić X na budowę”, lista z kosztorysu z ilościami i zapasem, zapytania do hurtowni, porównanie ofert dostawców, terminy zamówień z wyprzedzeniem, dostawy i stan materiału na budowie. Używaj, gdy użytkownik pyta „co muszę kupić na…”, „ile zamówić”, „zrób listę zakupów”, „porównaj oferty hurtowni”, „kiedy zamawiać okna / stal / dachówkę”, „co zamówić już teraz”, wkleja ofertę składu budowlanego, mówi „kupić taśmę / geowłókninę na budowę”, „kupiłem X na działkę” albo „przyjechała dostawa”."
 ---
 
 # Zakupy – materiały i sprzęt
