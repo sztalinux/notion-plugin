@@ -57,7 +57,7 @@ nieaktualny. Polecenia uruchamiaj z katalogu repo:
   tylko zmierzone, `+r więcej` = tezy rozszerzenia (pokrewne, poza rdzeniem; `karta KOD --wiecej`), przykładowe pytanie tylko karta pytań; `tez 0 (K 0) · ~0 tys. zn. · 0 cz.` = karta jeszcze niezbudowana. `karty --do "A" "B" "C"`
   zamiast spisu drukuje `## Dopasowanie do pytania (trafień w karcie / N)` (N ≤ 60 pierwszych trafień szukania): do 12 kart, najlepsza pierwsza
   (wg wagi trafień – wyższe pozycje wyniku ważą więcej – nie zawsze wg liczby), każda jako `trafień n/N · <linia karty jak wyżej>`; potem
-  `trafienia poza wszystkimi kartami: m – WI-…` (do 15 numerów, dalej „… (+k)”) i `## Pozostałe karty` z samymi kodami; gdy żadna karta nie
+  `trafienia poza kartami pytań: m – WI-…` (karty czynności się nie liczą – razem obejmują całą bazę) (do 15 numerów, dalej „… (+k)”) i `## Pozostałe karty` z samymi kodami; gdy żadna karta nie
   ma trafień: „żadna karta nie ma trafień – użyj szukaj”. Nagłówek (`# indeks: stan … · karty: n (pytania a, czynności b) · zbudowano …`)
   przypomina, by wybierać karty do ok. 75 tys. znaków razem.
 - `python3 tools/wiedza.py karta KOD [KOD2 …] --pytanie "A" "B" "C" --czesc k` – treść karty w częściach po ok. 25 tys. znaków (kilka kodów =

@@ -23,12 +23,12 @@ brakujące pliki, a `/tmp` bywa pusty); strony dostępu nie czytaj drugi raz. Cl
    ławie”, „drenaż opaskowy”), po 2–4 słowa treściowe, bez zdania i spójników. Służą do wyboru kart i do dopełnienia z szukania.
 2. **Lista kart:** `karty --do "A" "B" "C"` drukuje zamiast spisu `## Dopasowanie do pytania (trafień w karcie / N)` (N ≤ 60 pierwszych
    trafień szukania): do 12 kart, najlepsza pierwsza (wg wagi trafień – wyższe pozycje szukania ważą więcej – nie zawsze wg liczby), linie
-   `trafień n/N · <linia karty>` (pola – `indeks.md`); potem `trafienia poza wszystkimi kartami: m` i `## Pozostałe karty` (same kody).
+   `trafień n/N · <linia karty>` (pola – `indeks.md`); potem `trafienia poza kartami pytań: m` i `## Pozostałe karty` (same kody).
 3. **Wybierz karty:** (a) jedną **kartę pytań** (jej linia ma `np. „…”` – przykładowe pytanie; karta czynności go nie ma), gdy pytanie należy
    do jej rodziny (nazwa, opis i przykładowe pytanie pasują) – zwykle najwyższą na liście, a przy zbliżonej liczbie trafień tę z **bieżącego etapu** budowy (strona DOM; w okresie stanu zero
    karty stanu zero przed kartami „Cała budowa” i SSO); (b) gdy żadna karta pytań nie pasuje – **2–4 karty
    czynności** najwyżej na liście (małe, do pytań wąskich i nietypowych); (c) łącznie do ok. 75 tys. znaków – więcej niż 3 części to za dużo,
-   zawęź: tyle czat na telefonie czyta w całości, resztę tylko przegląda. „Trafienia poza wszystkimi kartami” m > 15 (linia kończy się
+   zawęź: tyle czat na telefonie czyta w całości, resztę tylko przegląda. „Trafienia poza kartami pytań” m > 15 (linia kończy się
    „… (+k)”) → pytanie wykracza poza karty: użyj trybu głębokiego (pkt 2.7), a gdy jest niedostępny – dołóż poziom „normalnie” z pkt 3.
 4. **Czytaj:** `karta KOD [KOD2 …] --pytanie "A" "B" "C" --czesc 1`, potem `--czesc 2` … – **wszystkie części, każdą w całości**
    (zwykle 1–3). Nagłówek kończy się „część k/n – dalej --czesc k+1”, ostatnia część – „część n/n (ostatnia)”. Kilka kodów = suma bez

@@ -2363,7 +2363,8 @@ def cmd_karty(a) -> int:
         w_top = set(top)
         trafione = [(sum(punkty[wi] for wi in k["wi"] & w_top), len(k["wi"] & w_top), k) for k in wybrane]
         najlepsze = [t for t in sorted(trafione, key=lambda t: (-t[0], -t[1])) if t[1]][:KARTY_DOPASOWANYCH]
-        w_kartach = set().union(*(k["wi"] for k in wybrane))
+        # m liczy się poza kartami pytań: karty czynności razem pokrywają całą bazę, więc poza wszystkimi m = 0 (W08-36)
+        w_kartach = set().union(*(k["wi"] for k in wybrane if k["rodzaj"] == "pytanie"))
         kody_najlepszych = {k["kod"] for _, _, k in najlepsze}
         dopasowanie = {"zapytania": a.do, "top": len(top),
                        "karty": [{"kod": k["kod"], "trafien": n, "waga": round(waga, 4)} for waga, n, k in najlepsze],
@@ -2393,7 +2394,7 @@ def cmd_karty(a) -> int:
     if not najlepsze:
         print("żadna karta nie ma trafień – użyj szukaj")
     poza = dopasowanie["poza"]
-    print(f"trafienia poza wszystkimi kartami: {len(poza)}"
+    print(f"trafienia poza kartami pytań: {len(poza)}"
           + (" – " + ", ".join(f"WI-{wi}" for wi in poza[:KARTY_POZA]) if poza else "")
           + (f" … (+{len(poza) - KARTY_POZA})" if len(poza) > KARTY_POZA else ""))
     if dopasowanie["pozostale"]:

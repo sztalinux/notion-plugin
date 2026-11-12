@@ -64,7 +64,7 @@ zmierzyć), a pytanie spoza dziesięciu może potrzebować tez, których wzorzec
   (2) `zbuduj --karty KOD`; (3) `ocen --karty KOD --zastosuj`; (4) `pomiar --zapisz`, gdy karta ma wzorzec; (5) `zapisz --publikuj`. `zbuduj` kosztuje (dwa przebiegi modelu przez
   całą bazę, USD i limit tygodnia) – zaproponuj kartę inwestorowi (nazwa, rodzina pytań), zanim ją zbudujesz.
 - **Kiedy dodać kartę pytań:** pytanie inwestora powtarza się albo żadna karta pytań nie pasuje, a pytanie jest szerokie (czat składa je
-  z kart czynności albo „trafienia poza wszystkimi kartami” > 15); pytanie, które poszło trybem głębokim (`tryb-gleboki.md`), to kandydat
+  z kart czynności albo „trafienia poza kartami pytań” > 15); pytanie, które poszło trybem głębokim (`tryb-gleboki.md`), to kandydat
   na nową kartę pytań. Wąskie pytanie o fakt zostaw szukaniu. Powód: karta pytań to koszt budowy i pomiaru, a kilkanaście kart wystarcza,
   gdy każda ma wyraźną rodzinę pytań.
 

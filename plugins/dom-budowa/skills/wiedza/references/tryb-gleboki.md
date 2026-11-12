@@ -11,7 +11,7 @@ Zostaw pytanie Macowi, gdy zachodzi którykolwiek z warunków:
 1. `karty --do` nie wskazuje karty pytań pasującej rodziną do pytania (`pytanie-do-bazy.md`, pkt 2.3), a pytanie jest złożone – łączy
    etapy albo zagadnienia;
 2. inwestor prosi wprost: „tryb głęboki”, „przeczytaj całą bazę”, „dokładnie wszystko”;
-3. `karty --do` pokazuje dużo trafień poza kartami: `trafienia poza wszystkimi kartami: m`, m > 15 (ten sam próg co w `pytanie-do-bazy.md`,
+3. `karty --do` pokazuje dużo trafień poza kartami pytań: `trafienia poza kartami pytań: m`, m > 15 (ten sam próg co w `pytanie-do-bazy.md`,
    pkt 2.3; linia kończy się wtedy „… (+k)”).
 
 Nie dla faktów wąskich (wystarczy `szukaj`) ani dla pytań, które karta pokrywa – to 3–6 minut i 1–2 USD za odpowiedź, którą karta daje od razu.

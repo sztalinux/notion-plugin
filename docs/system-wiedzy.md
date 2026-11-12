@@ -59,11 +59,11 @@ Czat na telefonie (claude.ai, pluginy ja + dom-budowa): karty → odpowiedź z n
 
 ## Droga pytania z telefonu
 
-1. `karty --do "A" "B" "C"` – spis kart dopasowanych do pytania (trafienia w kartach i poza nimi).
+1. `karty --do "A" "B" "C"` – spis kart dopasowanych do pytania (trafienia w kartach i poza kartami pytań).
 2. Jedna karta pytań albo 2–4 karty czynności (do ok. 75 tys. znaków), wszystkie części w całości; pod nimi dopełnienie z szukania i otwarte
    sprzeczności. Nagłówek karty podaje jej **pokrycie** wobec wzorca (albo „niemierzone”).
 3. Odpowiedź z numerami WI, zasięgiem („czego baza nie wie”) i sekcją „📚 Na czym się opieram” (`zrodla`).
-4. Pytanie złożone bez pasującej karty albo ponad 15 trafień poza kartami → tryb głęboki (wstępna odpowiedź z karty od razu).
+4. Pytanie złożone bez pasującej karty albo ponad 15 trafień poza kartami pytań → tryb głęboki (wstępna odpowiedź z karty od razu).
 5. Karty niedostępne w kopii (stara kopia) → droga zapasowa: poziomy szukania szybko / normalnie / dokładnie.
 
 ## Pomiary (ostatnie, do 29.10.2026)
