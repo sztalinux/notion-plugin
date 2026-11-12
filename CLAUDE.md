@@ -30,7 +30,7 @@ pytanie z listą wielokrotnego wyboru (narzędzie AskUserQuestion, `multiSelect`
   - **Indeks wiedzy** – `python3 tools/wiedza.py sync --publikuj --cicho`, potem `python3 tools/wiedza_jakosc.py przypomnij --cicho`;
     wynik w jednej linii.
   - **Zdjęcia i kopia** – `python3 tools/zdjecia.py stan`, `python3 tools/kopia.py stan` i `python3 tools/kopie.py stan --cicho` (kopie zapasowe, `docs/kopie-zapasowe.md`); z konektorem Dysku policz pliki
-    w `Zdjęcia/_nowe` i – gdy coś jest – zaproponuj „rozłóż zdjęcia” (`docs/zdjecia-i-kopia.md`, 8); wynik w jednej linii.
+    w `Zdjęcia/_nowe` i – gdy coś jest – zaproponuj „rozłóż zdjęcia” (`plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`, 8); wynik w jednej linii.
 
 Wykonaj tylko to, co inwestor zaznaczył. Brak zaznaczenia, odrzucenie pytania albo „nic” = nic z listy, od razu zadanie
 z pierwszej wiadomości. Przed wyborem nie czytaj Notion i nie uruchamiaj skryptów (opisy opcji bez liczb). Gdy pytanie jest

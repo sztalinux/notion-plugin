@@ -96,7 +96,7 @@ Przegląd budowy – tydzień <RRRR-Www> (<data>)
 **Gwarancje (60 dni):** <umowa – do kiedy>
 **Budowa w tym tygodniu:** dni ekipy / własne, problemy otwarte, braki zdjęć przed zakryciem
 **Zdjęcia tygodnia:** <dzień> – <NN Krok> (<n>, link) … (z pola „Zdjęcia” Dziennika budowy) · w `_nowe` starsze niż 3 dni: n
-  · kroki zakryte bez kompletu ujęć: … · kopia dokumentów: <data potwierdzonej> / paczka do wgrania (`docs/zdjecia-i-kopia.md`)
+  · kroki zakryte bez kompletu ujęć: … · kopia dokumentów: <data potwierdzonej> / paczka do wgrania (`dziennik/references/zdjecia-i-kopia.md`)
 **Zamówić / zapłacić do 14 dni:** <pozycja – do kiedy – skąd>
 **Gotówka:** <miesiąc> N (z rezerwą M) · <następny miesiąc> N (z rezerwą M) · bez daty N – brutto, wg kopii arkusza z <data>
 **Do ponownej weryfikacji:** WI-x <cena/przepis z roku …>

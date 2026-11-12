@@ -12,7 +12,7 @@ Foldery kopiowane (lista dozwolona): DOZWOLONE niżej. Nigdy: `.dom`, `AI`, `Wie
 Stan: `<hub>/.dom/kopia/stan.json` – potwierdzone pliki (ścieżka, rozmiar, sha256) i paczki czekające na wgranie.
 Paczka niewgrana → następna zawiera też jej zmiany (porównanie zawsze z ostatnim potwierdzonym stanem).
 Tryb wykrywany sam: lokalny folder Dysku w `~/Library/CloudStorage/GoogleDrive-*/Mój dysk|My Drive/Dom`
-albo zmienna DYSK_DOM; brak → paczka. Pełny opis: docs/zdjecia-i-kopia.md.
+albo zmienna DYSK_DOM; brak → paczka. Pełny opis: plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md.
 """
 import argparse
 import hashlib

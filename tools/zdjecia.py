@@ -9,7 +9,7 @@
     python3 tools/zdjecia.py wg-dni                       # Mac: Zdjęcia/_wg dni/RRRR-MM-DD/ z dowiązaniami
     python3 tools/zdjecia.py stan                         # kroki, ostatni przebieg, blokada, liczba ruchów
 
-Reguły (pełny opis dla agentów: docs/zdjecia-i-kopia.md):
+Reguły (pełny opis dla agentów: plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md):
 - Nic nie jest kasowane ani nadpisywane. Kolizja nazwy przy innej treści → dopisek `_2`; ta sama nazwa i rozmiar →
   duplikat do `_Archiwum/Duplikaty/`. Pusty folder po rozłożeniu → `_Archiwum/Puste foldery/`.
 - Data zrobienia: EXIF (tylko lokalnie, `mdls`) → nazwa pliku z telefonu (PXL_ w UTC, IMG_/VID_/RRRRMMDD_ lokalnie) →

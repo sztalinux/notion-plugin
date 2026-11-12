@@ -11,7 +11,7 @@ przeglądzie tygodnia. Dziennik inwestora nie zastępuje dziennika budowy prowad
 
 Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęcia/<etap>/<NN krok>/`, pliki
 `RRRR-MM-DD_<oryginał>`; inwestor wgrywa z telefonu do folderu kroku albo do `Zdjęcia/_nowe` – rozkładanie, tryby i reguły:
-`docs/zdjecia-i-kopia.md` (repo harnessu). W Dzienniku tylko link folderu i liczba – zdjęć nie wstawiaj do treści wpisu.
+`references/zdjecia-i-kopia.md` (w pluginie – czyta go też czat z konektorem Dysku). W Dzienniku tylko link folderu i liczba – zdjęć nie wstawiaj do treści wpisu.
 
 ## A. Wpis z dnia / wizyty
 
@@ -71,7 +71,7 @@ dostawy i koszty gotówkowe, otwarte problemy, zdjęcia (foldery). Nie interpret
 ## E. Zdjęcia na Dysku – „rozłóż zdjęcia”, ślad w Dzienniku
 
 Rozkładanie `Zdjęcia/_nowe` (konektor Dysku albo skrypt, plan na sucho, dziennik ruchów, cofanie) – wyłącznie wg
-`docs/zdjecia-i-kopia.md`, sekcja 8; tam też tryby bez aplikacji/konektora i przypadki brzegowe. Ślad (raport
+`references/zdjecia-i-kopia.md`, sekcja 8; tam też tryby bez aplikacji/konektora i przypadki brzegowe. Ślad (raport
 `python3 tools/zdjecia.py slad <plan>`), jednym wywołaniem na dzień zrobienia (nie wgrania):
 - wpis z tego dnia jest → uzupełnij; nie ma → wpis minimalny (Data, Etap, Krok, Zdjęcia); dwa wpisy → ten z pasującym krokiem;
 - „Zdjęcia” = `<łącznie> zdj.: <NN Krok> (<n>) <link folderu>; …` – liczba zawsze na początku (czyta ją pulpit);
@@ -81,7 +81,7 @@ Rozkładanie `Zdjęcia/_nowe` (konektor Dysku albo skrypt, plan na sucho, dzienn
   zaznacz tylko przy komplecie, inaczej wymień braki w podsumowaniu.
 Ślad dopiero po udanym ruchu pliku; nieudany zapis do Notion ponów przy następnym przebiegu.
 „Gdzie są zdjęcia X” → link z pola „Zdjęcia” kroku i liczba plików; „cofnij ostatnie rozłożenie” → `zdjecia.py cofnij`
-(plan, „ok”, `--zrobione`) – oba wg `docs/zdjecia-i-kopia.md`, 8.
+(plan, „ok”, `--zrobione`) – oba wg `references/zdjecia-i-kopia.md`, 8.
 
 ## Wynik w rozmowie
 

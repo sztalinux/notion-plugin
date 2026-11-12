@@ -5,7 +5,7 @@
     python3 tools/teczka.py zbierz --etap "<Etap>" --od … --do … --wykonaj                          # składa folder
 
 Okres (--od, --do) to daty pierwszego i ostatniego kroku etapu z Harmonogramu – podaje je asystent, skrypt nie czyta Notion.
-Źródła w folderze budowy (DOM_HUB), wybór wg układu folderów (docs/zdjecia-i-kopia.md):
+Źródła w folderze budowy (DOM_HUB), wybór wg układu folderów (plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md):
   Umowy/Protokoły/       protokoły – data w nazwie od --od do --do + --zapas dni (odbiór bywa po ostatnim kroku)
   Faktury/RRRR/          faktury – data w nazwie w okresie
   Dziennik budowy KB/    wpisy kierownika – data w nazwie w okresie

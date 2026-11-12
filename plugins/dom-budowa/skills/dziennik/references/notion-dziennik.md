@@ -23,7 +23,7 @@ Stan: obowiązuje od 1.0.0. Baza pod stroną DOM.
 | Krok harmonogramu | relacja → Harmonogram (zwrotna „Dziennik budowy”) | kroki, których dotyczy dzień i w których przybyły zdjęcia |
 | Ujęcia przed zakryciem | tekst | które ujęcia z listy `etap` B są w `przed zakryciem/`, których brakuje |
 | Przed zakryciem OK | checkbox | tylko przy komplecie ujęć z miarą dla elementów, które ten krok zakrywa |
-| Dokumenty z dnia | tekst | linki do faktur, WZ, wpisów KB z tego dnia (`docs/zdjecia-i-kopia.md`, 4) |
+| Dokumenty z dnia | tekst | linki do faktur, WZ, wpisów KB z tego dnia (`dziennik/references/zdjecia-i-kopia.md`, 4) |
 | Powiązane | relacja → Notatnik budowy | wpisy, które powstały z tego dnia |
 | Zadania | relacja → TASKS | usterki / rzeczy do zrobienia |
 | Dodano | czas utworzenia | auto |

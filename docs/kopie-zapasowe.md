@@ -2,7 +2,7 @@
 
 Dla inwestora i agentów. Cel: na pytanie „co stracę, jeśli jutro padnie Mac, konto Google, Notion albo dostęp do
 asystenta” odpowiedź brzmi „nic ważnego”. Ten dokument mówi, **co** ma kopię, **gdzie** i **jak często**. Stan
-sprawdza `tools/kopie.py`. Kopia dokumentów na Dysk ma osobny opis: `docs/zdjecia-i-kopia.md`, 7.
+sprawdza `tools/kopie.py`. Kopia dokumentów na Dysk ma osobny opis: `plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`, 7.
 
 Stan wdrożenia (11.11.2026): plan, kontrola i wpięcie w przegląd tygodnia są gotowe. Kopie robi inwestor ręcznie, według
 rytmu z sekcji 4. Asystent tylko sprawdza i przypomina. Czynności asystenta, które czekają na decyzje inwestora, opisuje

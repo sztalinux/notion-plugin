@@ -29,7 +29,7 @@ Rzeczy bez daty (pytania, „pamiętać”) zostają w Notatniku – do TASKS tr
    (dojrzewanie betonu, schnięcie) – `zakupy/references/wyprzedzenia.md`; nieznane → szacunek z oznaczeniem.
 3. Pokaż plan jako tabelę (Nr | Krok | od–do | Kto | zależy od | bez odwrotu) i zapisz po „ok” jednym wywołaniem.
    Nowy krok → folder zdjęć `Dom/Zdjęcia/<Etap>/<Krok>` na Dysku (konektor; bez konektora – przy najbliższej sesji Claude
-   Code) i jego link w polu „Zdjęcia” kroku. Zmiana nazwy kroku nie zmienia folderu (`docs/zdjecia-i-kopia.md`, 3).
+   Code) i jego link w polu „Zdjęcia” kroku. Zmiana nazwy kroku nie zmienia folderu (`dziennik/references/zdjecia-i-kopia.md`, 3).
 4. Od razu pokaż **terminy pochodne** (sekcja B) – jako propozycję, bez zapisu do TASKS.
 
 ## B. Terminy pochodne (po każdym nowym lub przesuniętym kroku)

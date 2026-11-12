@@ -22,7 +22,7 @@ Repozytorium mówi tylko **jak** pracować. Dane są w Notion, liczby w arkuszu 
 Dom/                              ← folder budowy (centrum dokumentów, poza gitem)
   _Przychodzące/                  ← tu wrzucasz nowe pliki od projektantów i wykonawców
   _Do claude.ai/                  ← paczka (generowana): przewodnik po dokumentach → wiedza projektu „Dom” na claude.ai (kopia awaryjna)
-  Zdjęcia/                        ← zdjęcia z budowy – źródłem jest Dysk Google (Dom/Zdjęcia/<etap>/<krok>/), docs/zdjecia-i-kopia.md
+  Zdjęcia/                        ← zdjęcia z budowy – źródłem jest Dysk Google (Dom/Zdjęcia/<etap>/<krok>/), plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md
   _Na Dysk/                       ← paczki kopii dokumentów do wgrania na Dysk (tools/kopia.py)
   .dom/                           ← indeks dokumentów, stan wgrania, lista słów zakazanych w repo
     wiedza/                       ← dane indeksu wiedzy (.dom/wiedza/) – poza repo, nigdy w git
@@ -38,7 +38,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     tools/build.py                    ← walidacja (w tym dane osobowe) + dowiązania skilli + paczki dist/ (po jednej na plugin)
     tools/dokumenty.py                ← indeks folderu budowy i paczka dla claude.ai
     tools/teczka.py                   ← teczka etapu / transzy do banku: składa dokumenty etapu w Teczki/<Etap>/ ze spisem braków (etap D; testy test_teczka.py)
-    tools/zdjecia.py, tools/kopia.py  ← rozkładanie zdjęć i dokumentów z telefonu, kopia dokumentów Mac → Dysk (docs/zdjecia-i-kopia.md; testy test_*.py)
+    tools/zdjecia.py, tools/kopia.py  ← rozkładanie zdjęć i dokumentów z telefonu, kopia dokumentów Mac → Dysk (plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md; testy test_*.py)
     tools/kopie.py                    ← kontrola kopii zapasowych: co ma kopię, gdzie i z kiedy, tylko odczyt (docs/kopie-zapasowe.md; test_kopie.py)
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
     tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google, gotówka po miesiącach (docs/wydatki-arkusz.md)
@@ -80,7 +80,7 @@ z ⚠ i inwestor o tym wie.
 | Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
 | Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
 | Google Sheets / Drive | liczby z żywego arkusza, zmiany układu | kopia `Kosztorys_google.json` (Apps Script z sekretem), eksport od inwestora, `wydatki.py migruj` (`docs/wydatki-arkusz.md`) |
-| Google Drive (zdjęcia, dokumenty z telefonu, kopia) | rozkładanie `Zdjęcia/_nowe`, odczyt dokumentów z Dysku na czacie | skrypt lokalnie (z aplikacją Dysku albo po pobraniu `_nowe` / AirDropie), kopia paczką przez przeglądarkę, „prośba o dokument” jak dotąd; wgrywanie z telefonu działa zawsze (`docs/zdjecia-i-kopia.md`, 5) |
+| Google Drive (zdjęcia, dokumenty z telefonu, kopia) | rozkładanie `Zdjęcia/_nowe`, odczyt dokumentów z Dysku na czacie | skrypt lokalnie (z aplikacją Dysku albo po pobraniu `_nowe` / AirDropie), kopia paczką przez przeglądarkę, „prośba o dokument” jak dotąd; wgrywanie z telefonu działa zawsze (`plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`, 5) |
 | Notion – „📘 Książka domu” (procedura `ksiazka-domu`) | rozdziały etapów, „gdzie co biegnie” | szkic rozdziału jako Markdown w folderze budowy (`Książka domu/`), punkty z telefonu przez Skrzynkę; ostatni eksport PDF i zdjęcia na Dysku działają bez Notion i bez asystenta |
 | Artifact / ArtifactData (pulpit budowy, Claude Code) | publikacja pulpitu, odczyt zaznaczeń inwestora (procedura `pulpit`) | ⚠ brak zapasu dla samej strony pulpitu: nie odświeża się, a nowych zaznaczeń nie da się odczytać; nic nie ginie – źródłem prawdy jest Notion (Notatnik, Harmonogram, Checklista), decyzje wpisuje się tam wprost |
 
@@ -138,7 +138,7 @@ i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600
 Trzy kanały użycia i ograniczenia: `plugins/dom-budowa/skills/wiedza/references/indeks.md`.
 Całość systemu wiedzy (części, kto co uruchamia, pomiary, decyzje): `docs/system-wiedzy.md`; instrukcja odtworzenia i naprawy (automaty, konektor Notion, rozjechany indeks, tokeny): `docs/wiedza-runbook.md`; rejestr decyzji – co wybrano, co sprawdzono i odrzucono, z liczbami z pomiarów: `docs/decyzje-system-wiedzy.md`.
 Wydatki z Notion do arkusza Google z kosztorysem (jak działa, konfiguracja krok po kroku, kod Apps Script): `docs/wydatki-arkusz.md`.
-Zdjęcia z budowy, dokumenty z telefonu i kopia dokumentów na Dysk Google (reguły, tryby, przypadki brzegowe): `docs/zdjecia-i-kopia.md`.
+Zdjęcia z budowy, dokumenty z telefonu i kopia dokumentów na Dysk Google (reguły, tryby, przypadki brzegowe): `plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`.
 Kopie zapasowe wszystkiego (Mac, Dysk, Notion, repozytoria, dane asystenta) – plan, rytm, kontrola `tools/kopie.py`, odtworzenie: `docs/kopie-zapasowe.md`.
 `tools/wiedza_jakosc.py` obserwuje jakość wyszukiwania (log zapytań `szukaj`, zbiory oceny, raport tygodniowy z alarmami,
 ocena ręczna, miesięczne porównanie z Notion; pytania wymyślone: `tools/wiedza_jakosc_pytania.json`) – dane w `.dom/wiedza/`; opis: `plugins/dom-budowa/skills/wiedza/references/indeks-jakosc.md`.
@@ -210,7 +210,7 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
   Ręcznie: „przerób dziennik”. Chcesz, żeby asystent coś przemyślał („przygotuj mi pytania na jutrzejsze spotkanie”, „porównaj…”)
   – napisz to we wpisie; wynik będzie rano w przeglądzie dnia, w sekcji „🧠 Rozkminka” (bez prośby asystent rozkminek nie robi).
 - Poprawki „na przyszłość” z telefonu trafiają do skrzynki w Notion; Claude Code wdroży je po zaznaczeniu „Skrzynka zmian” na starcie sesji.
-- Dzień na budowie → powiedz asystentowi, co się działo (telefon wystarczy) – trafi do Dziennika budowy, a „nie skończyliśmy, jutro kontynuujemy” przesunie kroki Harmonogramu; zdjęcia wgraj z telefonu na Dysk do `Dom/Zdjęcia/<etap>/<krok>/` albo do `Zdjęcia/_nowe` w folderze z nazwą, co na nich jest, i powiedz w Claude Code „rozłóż zdjęcia” (`docs/zdjecia-i-kopia.md`, 9).
+- Dzień na budowie → powiedz asystentowi, co się działo (telefon wystarczy) – trafi do Dziennika budowy, a „nie skończyliśmy, jutro kontynuujemy” przesunie kroki Harmonogramu; zdjęcia wgraj z telefonu na Dysk do `Dom/Zdjęcia/<etap>/<krok>/` albo do `Zdjęcia/_nowe` w folderze z nazwą, co na nich jest, i powiedz w Claude Code „rozłóż zdjęcia” (`plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`, 9).
 - Przed krokiem „bez odwrotu” (beton, zasypka, tynki) zapytaj „co sprawdzić przed …” – dostaniesz bramkę z listą zdjęć do zrobienia.
 - Każda zmiana w repo = podbita wersja zmienionego pluginu w `plugins/<plugin>/.claude-plugin/plugin.json` (inaczej claude.ai
   jej nie pobierze). Po pushu odśwież pluginy na claude.ai (o ile nie działa synchronizacja) – `rozwoj-harnessu/references/claude-ai-projekt.md`.

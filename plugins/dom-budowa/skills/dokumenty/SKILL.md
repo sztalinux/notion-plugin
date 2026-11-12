@@ -90,7 +90,7 @@ i sprawy osobiste z `ja/references/notion-mapa.md`, plugin `ja`).
 
 ## D. Dokumenty z telefonu i kopia na Dysku Google
 
-Pełne reguły, tryby bez aplikacji/konektora i przypadki brzegowe: `docs/zdjecia-i-kopia.md` (sekcje 4 i 7; tryby – 5; przypadki brzegowe – 11).
+Pełne reguły, tryby bez aplikacji/konektora i przypadki brzegowe: `dziennik/references/zdjecia-i-kopia.md` (sekcje 4 i 7; tryby – 5; przypadki brzegowe – 11).
 - **Z telefonu** (faktura papierowa, WZ, wpis kierownika, protokół – zdjęcie w `Dom/Zdjęcia/_nowe`, najlepiej w folderze
   „faktura …”, „WZ …”, „dziennik KB”): rozkłada go to samo „rozłóż zdjęcia” (`dziennik`, E). Faktury → `Faktury/RRRR/`
   (`RRRR-MM-DD_sprzedawca_numer`), WZ / karty / deklaracje → `Dostawy/<Etap>/`, wpisy kierownika → `Dziennik budowy KB/`,
@@ -98,10 +98,10 @@ Pełne reguły, tryby bez aplikacji/konektora i przypadki brzegowe: `docs/zdjeci
   nie tworzy wydatku** – wydatek tylko na wyraźną prośbę (`koszty`, B).
 - **Kopia Mac → Dysk** („zrób kopię dokumentów”, „wgrałem kopię”): `python3 tools/kopia.py stan` → `paczka` (na sucho) →
   `paczka --wykonaj`; inwestor przeciąga `_Na Dysk/<data>` do `Dom/_Kopie` i mówi „wgrałem kopię” → `kopia.py wgrane`,
-  potem (z konektorem) rozłóż paczkę wg `docs/zdjecia-i-kopia.md`, 7. Działa aplikacja Dysku → `kopia.py aplikacja`.
+  potem (z konektorem) rozłóż paczkę wg `dziennik/references/zdjecia-i-kopia.md`, 7. Działa aplikacja Dysku → `kopia.py aplikacja`.
   Na Dysk nigdy: `.dom`, `AI`, `Wiedza…`, `_Przychodzące`, `_Do claude.ai`.
 - **„Aplikacja Dysku nie działa”** – nic do naprawiania (Mac służbowy – sprawa dla IT inwestora, nie obchodź zabezpieczeń);
-  zdjęcia i dokumenty idą konektorem, kopia paczką (`docs/zdjecia-i-kopia.md`, 5 i 8). `kopia.py aplikacja` dopiero, gdy
+  zdjęcia i dokumenty idą konektorem, kopia paczką (`dziennik/references/zdjecia-i-kopia.md`, 5 i 8). `kopia.py aplikacja` dopiero, gdy
   inwestor potwierdzi, że aplikacja działa.
 - Nic nie kasuj ani nie nadpisuj – stare wersje i usunięte na Macu idą do `_Archiwum` na Dysku.
 
