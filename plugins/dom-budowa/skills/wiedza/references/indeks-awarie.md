@@ -26,7 +26,8 @@ w worktree też jest zamierzony: `sync --cicho` nic tam nie robi.
 
 1. Uruchom `python3 tools/wiedza.py sync` – domyślny plik zostanie odłożony jako `wiedza.sqlite.uszkodzony-RRRRMMDD-GGMMSS`
    (program trzyma dwa najnowsze) i zbudowany od nowa pełnym sync.
-2. Sprawdź `python3 tools/wiedza.py stan`; po `sync --publikuj` kopia dla czatu dostaje czysty plik.
+2. Sprawdź `python3 tools/wiedza.py stan`; po `sync --publikuj` kopia dla czatu dostaje czysty plik. Nowy plik ma puste listy
+   podobnych („listy podobnych: 0 wierszy”) – odbuduj je `python3 tools/wiedza_sens.py przelicz --pelny` (sam `przelicz` ich nie odtworzy).
 3. Kasuj odłożone pliki dopiero, gdy nie potrzebujesz ich do diagnozy – zawierają dane z Bazy wiedzy.
 
 ## Odnowienie tokenów

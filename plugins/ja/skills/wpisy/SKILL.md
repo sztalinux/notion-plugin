@@ -14,7 +14,7 @@ jeszcze nie widział):
 
 ```
 📓 Dziennik
-	▸ Jak używać (zwijany blok)
+	<toggle> Jak używać </toggle>
 	- nowy wpis inwestora (albo podstrona)              ← NOWE: pierwszy poziom; po przebiegu pusto
 	▸ ### ❓ Czeka na Twoją odpowiedź (zwijany nagłówek)  ← tylko pytania spoza wpisów (RES-n, luki w zadaniach); wpisów tu nie trzymaj
 	▸ ### Przetworzone (zwijany nagłówek)

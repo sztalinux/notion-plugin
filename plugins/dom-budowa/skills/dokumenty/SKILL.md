@@ -1,6 +1,6 @@
 ---
 name: dokumenty
-description: Porządek w dokumentach budowy (folder budowy na komputerze inwestora) i paczka aktualnych plików dla claude.ai. Używaj, gdy raport „[dokumenty]” (z listy startowej) pokazuje nowe lub zmienione pliki, gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co mam wgrać do claude.ai”, „wgrałem” (paczka), albo pyta, gdzie jest dany dokument lub która wersja jest aktualna. Także dokumenty z telefonu i kopia na Dysk Google: „wgrałem fakturę / WZ / wpis kierownika”, „zrób kopię dokumentów”, „wgrałem kopię”, „aplikacja Dysku nie działa”.
+description: "Porządek w dokumentach budowy (folder budowy na komputerze inwestora), przewodnik po nich na stronie Notion (czyta go claude.ai) i paczka dla claude.ai (kopia awaryjna). Używaj, gdy raport „[dokumenty]” (z listy startowej) pokazuje nowe lub zmienione pliki, gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co mam wgrać do claude.ai”, „wgrałem” (paczka), albo pyta, gdzie jest dany dokument lub która wersja jest aktualna. Także dokumenty z telefonu i kopia na Dysk Google: „wgrałem fakturę / WZ / wpis kierownika”, „zrób kopię dokumentów”, „wgrałem kopię”, „aplikacja Dysku nie działa”."
 ---
 
 # Dokumenty budowy
@@ -39,7 +39,7 @@ nie ma go albo tekst nieczytelny (rysunki) → poproś jak wyżej.
 
 1. Lista: raport ze startu sesji albo `python3 tools/dokumenty.py lista --nowe`.
 2. Dla każdego pliku ustal: co to jest (nazwa, folder, w razie wątpliwości pierwsza strona), kategorię, czy jest
-   nowszą wersją czegoś, co już jest w paczce.
+   nowszą wersją czegoś, co już jest w przewodniku (`lista` – wpisy z „zawartość”) albo w paczce.
 3. **Przewodnik (`--zawartosc`)** – każdy dokument przydatny agentom, w **jednej, najnowszej** wersji: projekty
    (architektura, konstrukcja, instalacje – najlepiej komplet w jednym PDF), opinie geotechniczne, warunki
    i uzgodnienia, oferty i wyceny, umowy, karty techniczne produktów, stare kosztorysy Excel (dziś kosztorys żyje w arkuszu Google). Przeczytaj dokument (duże PDF-y

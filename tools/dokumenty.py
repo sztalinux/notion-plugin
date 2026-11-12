@@ -110,7 +110,10 @@ def skanuj() -> dict:
             if n.startswith(".") or n.startswith("~$"):
                 continue
             p = k / n
-            st = p.stat()
+            try:  # zepsute dowiązanie – pomijamy, zamiast wywracać cały przebieg
+                st = p.stat()
+            except OSError:
+                continue
             out[nfc(p.relative_to(HUB).as_posix())] = (st.st_size, int(st.st_mtime))
     return out
 
@@ -209,9 +212,12 @@ def dane_wrazliwe(p: Path) -> str:
             import openpyxl  # noqa: PLC0415
         except ImportError:
             return NIESPRAWDZONE + "brak openpyxl (pip3 install --user openpyxl)"
-        wb = openpyxl.load_workbook(p, data_only=True, read_only=True)
-        n = sum(1 for ws in wb.worksheets for r in ws.iter_rows(values_only=True)
-                for v in r if isinstance(v, str) and KONTAKT.search(v))
+        try:  # uszkodzony albo zabezpieczony hasłem arkusz nie może wywracać całego przebiegu
+            wb = openpyxl.load_workbook(p, data_only=True, read_only=True)
+            n = sum(1 for ws in wb.worksheets for r in ws.iter_rows(values_only=True)
+                    for v in r if isinstance(v, str) and KONTAKT.search(v))
+        except Exception as e:  # noqa: BLE001
+            return NIESPRAWDZONE + f"arkusz nieczytelny ({type(e).__name__})"
         return f"{n} komórek z e-mailem/telefonem" if n else ""
     try:
         t = tekst(p)
@@ -415,7 +421,11 @@ def cmd_ustaw(a):
     ind = wczytaj(INDEKS, {"pliki": {}})
     sciezka = Path(a.sciezka).expanduser()
     if sciezka.is_absolute():
-        sciezka = sciezka.resolve().relative_to(HUB)
+        try:
+            sciezka = sciezka.resolve().relative_to(HUB)
+        except ValueError:
+            print(f"Poza folderem budowy ({HUB}): {a.sciezka}")
+            return 1
     klucz = nfc(sciezka.as_posix())
     if klucz not in ind["pliki"]:
         aktualizuj_indeks(ind)

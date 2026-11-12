@@ -78,6 +78,8 @@ dane indeksu, definicje kart, zbiory oceny, prywatne repo kopii, automaty launch
 **Dzień (samo):** launchd uruchamia szybki przebieg Dziennika co godzinę (8:05–22:05, plus 22:30); każdy przebieg zaczyna od trzech kroków przygotowania:
 `wiedza.py sync --publikuj --cicho` (indeks z Notion i kopia dla telefonu), `migawka.py --cicho` (Notatnik i zadania), `wiedza_karty.py aktualizuj --cicho --publikuj`
 (nowe tezy → karty). Wieczorny przegląd o 22:45, tygodniowy w niedzielę wieczorem. Gdy nic nowego – przebieg kończy się bez zapisów.
+Plik indeksu (ponad ok. 13 MB) nie mieści się w limicie 110 s `sync --cicho` – ten wysyła tylko kod, gdy się zmienił, a indeks jedzie z `wiedza.py publikuj --cicho`
+po wieczornym przebiegu (bez limitu 110 s; proces do 360 s) i z `aktualizuj --publikuj`, gdy dopisze nowe tezy do kart.
 
 **Sesja Claude Code w repo:** lista wyboru na starcie, domyślnie nic (`CLAUDE.md`). „Indeks wiedzy” = `sync --publikuj --cicho` + `wiedza_jakosc.py przypomnij --cicho`.
 Po zapisie wiedzy do Notion w sesji interaktywnej: `python3 tools/wiedza.py sync --publikuj`.
@@ -187,6 +189,8 @@ Objawy: wiersz usunięty w Notion wciąż jest w wynikach; `stan` – `zbudowano
 2. `python3 tools/wiedza.py sync --pelny` – pełny listing i usunięcie wierszy nieobecnych w Notion (zwykły `sync` pobiera tylko zmiany; pełny idzie sam co 7 dni).
 3. `python3 tools/wiedza.py publikuj --teraz` (bez odstępu 60 min).
 4. Odciski i podobne: `python3 tools/wiedza_sens.py stan`, brak lub zaległości → `python3 tools/wiedza_sens.py przelicz`. Wymaga działającej Ollamy.
+   „listy podobnych: 0 wierszy” (np. po przebudowie indeksu w punkcie 7 albo po zmianie schematu) → `przelicz --pelny` (ok. 2 min) – zwykły `przelicz`
+   uznaje listy za policzone, bo odciski w `wektory.sqlite` zostały, i niczego nie odbuduje.
 5. Karty: `python3 tools/wiedza_karty.py aktualizuj --publikuj` (nowe tezy) albo `zapisz --publikuj` (stan kart → indeks po przebudowie indeksu).
 6. Sprawdzenie: `python3 tools/wiedza_jakosc.py zloty`; alarm po scaleniu/archiwizacji wierszy zbioru kontrolnego jest spodziewany → `zloty --odnowa`.
 7. Uszkodzony plik: `indeks-awarie.md`, sekcja „Uszkodzony indeks” (`sync` odkłada zepsuty plik i buduje od nowa).

@@ -1331,7 +1331,7 @@ def opublikuj(conn: sqlite3.Connection, sciezka: Path, sekrety: dict, teraz: boo
         usun_plik(kopia)
     if odlozone:
         print(f"[wiedza] publikacja: {', '.join(odlozone)} odłożone – wysyłka nie mieści się w limicie czasu startu "
-              "(zrobi ją następny sync --publikuj albo publikuj)")
+              "(wyśle je publikuj – automat po wieczornym przebiegu – albo sync --publikuj bez --cicho)")
     if wyslane or not cicho:
         opis = ", ".join(f"{n} {rozmiar_opis(len(pliki[n]))}" for n in wyslane)
         czas = f"{time.monotonic() - start:.1f}".replace(".", ",")

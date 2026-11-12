@@ -113,7 +113,7 @@ Kroki 1–4 (dziś, jutro z zakupami i pogodą, wpis w „📆 Przeglądy dzienn
    z parametrem bazy → rows → SQL (sql i rows mają wspólny limit workspace'u, view – nie); błąd „usage limit” → bez
    ponawiania na view/wyszukiwarkę. Szczegóły i rollupy: `references/notion-odczyt.md`.
 7. **Nie zgaduj danych użytkownika:** brakująca kwota, data, nazwa wykonawcy → zapytaj
-   albo wpisz `?` i wymień to w podsumowaniu. Brakuje treści dokumentu (projekt, opinia, oferta, umowa, Excel) →
+   albo wpisz `?` (tylko w polu tekstowym – pole liczby albo daty zostaw puste, `?` odrzuca cały zapis) i wymień to w podsumowaniu. Brakuje treści dokumentu (projekt, opinia, oferta, umowa, Excel) →
    poproś jawnie o konkretny plik z przewodnika po dokumentach (nazwa, ścieżka, strona/arkusz, po co) – procedura
    `dokumenty`, „Prośba o dokument”. W Claude Code przeczytaj go z folderu budowy.
 8. **Dane kontaktowe** (telefony, e-maile) – tylko w Notion: DOM → 👷 Wykonawcy → „📇 Kontakty – kluczowe role”

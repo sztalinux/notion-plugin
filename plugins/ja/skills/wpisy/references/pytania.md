@@ -64,7 +64,11 @@ Inwestor ma móc zaznaczyć jedno pole, zamiast pisać.
 ```
 ❓ asystent (12.10) · wybór wariantu – ☑ = tak, inaczej dopisz pod punktem
 	- [ ] Wariant B zamiast A
-		▸ Szczegóły (zwijany blok `<toggle>`): dlaczego B, co zmieni, co zrobię po odpowiedzi
+		<toggle>
+		Szczegóły
+
+		dlaczego B, co zmieni, co zrobię po odpowiedzi
+		</toggle>
 	- [ ] Termin do piątku → wpisz pod spodem
 ```
 

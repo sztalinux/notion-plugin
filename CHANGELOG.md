@@ -4,6 +4,14 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.14.2] – 2026-11-12
+
+- Ponowne scalenie gałęzi pomysłów z main po kolejnej nocy samonaprawy (wydania 3.12.6–3.12.10 niżej). Konflikty tylko w numerach wersji, CHANGELOG i zapisie zwijanych bloków w `wpisy` (zostaje zapis z `<toggle>` z main i krok o rozkminkach z gałęzi pomysłów).
+
+## ja [1.13.3] – 2026-11-12
+
+- Scalenie z main (ja 1.12.5) – jak dom-budowa 3.14.2.
+
 ## dom-budowa [3.14.1] – 2026-11-11
 
 - Scalenie gałęzi pomysłów `pom/2026-11-11-razem` (wydanie 3.13.0 niżej) z nocną samonaprawą na main (wydania 3.12.2–3.12.5 niżej). Bez zmian treści poza tym, co wnoszą obie strony. Numer wyżej niż obie strony i wyżej niż numery robocze gałęzi POM (do 3.14.0), żeby się z nimi nie mylił.
@@ -161,6 +169,51 @@ w `budowa/references/wieczorem.md`, szczegóły limitu odczytów Notion (zasada 
 przywrócony opis pluginu w `plugin.json` (zgubiony przy scalaniu POM-4). Poprawka: `tools/teczka.py --dodaj` sprawdza
 wykluczenie `AI/` i plików ukrytych po rozwinięciu ścieżki – pełna ścieżka, `ai/` ani dowiązanie do `.dom` nie trafią już
 do teczki; `tools/kopie.py` i `docs/kopie-zapasowe.md` – opis odczytu `.dom` zgodny z kodem (czyta tylko daty).
+## dom-budowa [3.12.10] – 2026-11-12
+
+- `docs/wydatki-arkusz.md`, `tools/wydatki.py`: kod Apps Script do schowka przez `LANG=en_US.UTF-8 pbcopy` – bez ustawionego LANG `pbcopy` czyta wejście jako MacRoman i psuje polskie znaki (np. lista typów kosztu), a wklejony kod odrzuca wtedy wydatki z „Materiał”, „Do zapłaty” itp.
+
+## dom-budowa [3.12.9] – 2026-11-12
+
+Nocna samonaprawa, obszar 07-budowa:
+- `dziennik` A.1: „?” przy brakujących danych tylko w polach tekstowych – pola liczbowe (Ekipa – osób, Godziny własne) i „Zdjęcia” zostają puste; „?” w polu liczbowym API Notion odrzuca cały wpis dnia, a w „Zdjęciach” pulpit liczy go jako zdjęcie.
+- `budowa`, zasada 7: to samo dla wszystkich procedur budowy – „?” tylko w polu tekstowym, pole liczby albo daty puste (daty „?” również odrzucają cały zapis).
+
+## dom-budowa [3.12.8] – 2026-11-12
+
+Nocna samonaprawa, obszar 12-dystrybucja:
+- `description` w cudzysłowie w 6 skillach (`zakupy`, `notatka`, `przeglad-tygodnia`, `wiedza`, `dokumenty`, `dziennik`) – „: ” w wartości bez cudzysłowu to niepoprawny YAML frontmatteru; ścisły parser (claude.ai, Gemini CLI) mógł pominąć skill albo jego opis. Treść opisów bez zmian.
+- `dokumenty`, opis: głównym wynikiem jest przewodnik na stronie Notion (czyta go claude.ai), paczka `_Do claude.ai/` to kopia awaryjna.
+- `przygotowanie/references/sytuacje.md` 6: odesłanie do `etap/references/odbiory.md` (było `references/odbiory.md` – plik nie istnieje w `przygotowanie`).
+
+## dom-budowa [3.12.7] – 2026-11-12
+
+Nocna samonaprawa, obszar 08-wiedza:
+- `wiedza/references/karty.md`: wybór inkluzywny w porcjach po ok. 110 tez, jak w kodzie (było 160).
+- Runbook 2, `docs/system-wiedzy.md`, README: plik indeksu (ok. 13 MB) nie mieści się w limicie `sync --cicho` – idzie z `publikuj` po wieczornym przebiegu (limit procesu 360 s) i z `aktualizuj --publikuj`.
+- `pytanie-do-bazy` 2.5 i `indeks.md`: kolejność końca karty jak w kodzie – Ciekawostki, dopełnienie z szukania, otwarte sprzeczności.
+- `docs/system-wiedzy.md`, Znane długi: nocna kolejka sprawdza logowanie MCP przed startem.
+- Runbook 5.4 i `indeks-awarie.md`: po przebudowie indeksu listy podobnych odbudowuje `wiedza_sens.py przelicz --pelny`.
+- `tools/wiedza.py`: komunikat o odłożonej wysyłce wskazuje `publikuj` (automat po wieczornym przebiegu) albo `sync --publikuj` bez `--cicho`.
+- `wiedza/references/ocena-zrodla.md`: „Producent” i „Sprzedawca / dystrybutor” to opcje Typu autora, nie Konfliktu interesów.
+- `tools/wiedza_jakosc.py`: `pokaz --help` – `--pytania` domyślnie 30 (`sedzia` bierze wszystkie); „ostatni” zestaw oceny ręcznej wybierany po czasie zmiany, nie po nazwie pliku.
+
+## ja [1.12.5] – 2026-11-12
+
+Nocna samonaprawa, obszar 04-dziennik:
+- `przeglad-dnia` A.4: kolejne linie „🤖” tego dnia na górze bloku dnia, nad wcześniejszymi – jak w `wpisy` krok 7 i w Dzienniku (było „pod spodem”).
+- `wpisy` krok 6 i schemat: zwijany blok dnia jako `<toggle>` zamiast `<details>`, którego Notion nie przyjmuje (ostrzeżenie „legacy Markdown”).
+- `wpisy/references/pytania.md` B: „Szczegóły” w `<toggle>`, treść po pustej linii – dziecko wcięte bez pustej linii zlewa się z tytułem.
+
+## dom-budowa [3.12.6] – 2026-11-12
+
+Nocna samonaprawa, obszar 09-dokumenty:
+- `dokumenty` A.2: nowy plik porównywany z przewodnikiem (wpisy z zawartością w `lista`), nie tylko z paczką, która domyślnie jest pusta.
+- `tools/dokumenty.py`: zepsute dowiązanie w folderze budowy jest pomijane – wcześniej każdy przebieg kończył się „Błąd skryptu” bez zapisu indeksu (plik bez prawa odczytu nadal daje błąd, indeks zostaje nietknięty).
+- `tools/dokumenty.py`: uszkodzony albo zabezpieczony hasłem arkusz `.xlsx` w paczce – „nie sprawdzono – arkusz nieczytelny” zamiast wywrócenia przebiegu.
+- `tools/dokumenty.py ustaw`: ścieżka bezwzględna spoza folderu budowy – komunikat i kod 1 zamiast wyjątku z kodem 0.
+- `README.md`, schemat: „Dokumenty budowy” daje przewodnik na stronie Notion, paczka `_Do claude.ai/` to kopia awaryjna.
+
 ## dom-budowa [3.12.5] – 2026-11-11
 
 Nocna samonaprawa, obszar 03-koszty:
