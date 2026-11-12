@@ -24,6 +24,10 @@ import subprocess
 import sys
 import unicodedata
 import zipfile
+try:
+    import fcntl  # blokada builda (macOS/Linux); na Windows bez blokady
+except ImportError:
+    fcntl = None
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -407,9 +411,12 @@ def main() -> int:
     print("Walidacja OK (" + ", ".join(f"{pl.name}: {len(skille(pl))}" for pl in pluginy()) + " procedur).")
     if a.tylko_walidacja:
         return 0
+    DIST.mkdir(exist_ok=True)
+    blokada = open(DIST / ".build.lock", "w")  # równoległe sesje: drugi build czeka, zamiast psuć dist/ i dowiązania
+    if fcntl:
+        fcntl.flock(blokada, fcntl.LOCK_EX)
     odswiez_dowiazania(kopiuj=a.kopiuj_dowiazania)
     wersja = json.loads((PLUGIN / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))["version"]
-    DIST.mkdir(exist_ok=True)
     for pl in pluginy():
         print("Zbudowano:", zbuduj_plugin(pl).relative_to(ROOT))
     print("Zbudowano:", zbuduj_gem(wersja).relative_to(ROOT), "(instrukcje.md + wiedza/)")
