@@ -54,7 +54,8 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
    dla elementów tego kroku + kontrole z `references/odbiory.md`
    + parametry z projektu. Każdy punkt ma mieć: **co**, **jak sprawdzić** (pomiar, dokument, zdjęcie), **kto**.
 3. Sprawdź też **poprzednie bramki** ze strony „Stan zero – punkty bez odwrotu”: niezamknięty punkt wcześniejszej bramki
-   to też blokada tego kroku.
+   to też blokada tego kroku – chyba że jej krok jest już wykonany (Harmonogram „W trakcie” / „Zrobione”): wtedy jedno
+   pytanie zbiorcze „odhaczyć / świadomie pominięte?” z listą punktów, bez „Nie betonować, dopóki…”.
 4. Oznacz stan każdego punktu: ✅ zamknięte / ❌ otwarte / ⏭ świadomie pominięte (z powodem – zapisz jako Decyzja).
 5. Punkt ❌ o priorytecie Krytyczne → napisz wprost: **„Nie betonować / nie zasypywać, dopóki …”**.
 6. **Pogoda na dzień kroku:** temperatura (dzień i noc), opady, wiatr – progi z `references/pogoda.md` `[opinia]`
