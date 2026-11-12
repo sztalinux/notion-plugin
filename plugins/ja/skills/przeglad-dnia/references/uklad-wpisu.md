@@ -93,7 +93,7 @@ _Odczyty: strona dziecka – nie sprawdzono._
 ```
 
 Przegląd dnia budowy (`budowa`, „Wieczorem”, krok 3) – te same zasady, sekcje w tej kolejności: **⚠ Na teraz** (po terminie,
-SP i pytania czekające na decyzję), **Jutro – plan** (z linią „Pogoda jutro” przy robotach – `etap/references/pogoda.md`), **Dziś**, **Decyzje i pytania** (SP domknięte dziś), **🧠 Rozkminka**
+SP i pytania czekające na decyzję), **Jutro – plan** (z linią „⚠️ Pogoda jutro” tylko przy przekroczonym progu – `etap/references/pogoda.md`), **Dziś**, **Decyzje i pytania** (SP domknięte dziś), **🧠 Rozkminka**
 (tylko przekazana z `przeglad-dnia`, B.2a), linia odczytów. Tytuł: „Przegląd dnia budowy – <dzień tygodnia> <data>”.
 
 Przeglądy tygodnia – szablony w ich procedurach, zapisane według sekcji A i B: zwijany nagłówek h2 z tytułem tygodnia,

@@ -22,7 +22,7 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 | Kto robi (Sam / Ekipa), ilości | Harmonogram (pole Kto); umowa z ekipą i ilości – arkusz kosztorysu, Etapy i Kosztorys (`koszty/references/arkusze.md`) |
 | Zakres umowy z ekipą | arkusz kosztorysu: Etapy kol. „Umowa z ekipą” + umowa w folderze budowy (`dokumenty`) |
 | Formalności i obecność osób | `references/formalnosci.md` |
-| Progi pogodowe robót, prognoza na jutro | `references/pogoda.md` |
+| Progi pogodowe robót, ostrzeżenie wieczorem | `references/pogoda.md` |
 
 ## A. Plan etapu („zaczynamy stan zero / SSO”, „ekipa wchodzi za 2 tygodnie”)
 
@@ -58,7 +58,7 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 4. Oznacz stan każdego punktu: ✅ zamknięte / ❌ otwarte / ⏭ świadomie pominięte (z powodem – zapisz jako Decyzja).
 5. Punkt ❌ o priorytecie Krytyczne → napisz wprost: **„Nie betonować / nie zasypywać, dopóki …”**.
 6. **Pogoda na dzień kroku:** temperatura (dzień i noc), opady, wiatr – progi z `references/pogoda.md` `[opinia]`
-   (prognozę na jutro podaje też wieczorny przegląd budowy, `budowa`, „Wieczorem”); jeśli prognoza nie pasuje,
+   (wieczorny przegląd ostrzega tylko, gdy robota ma datę w Uwagach kroku, a próg jest przekroczony); jeśli prognoza nie pasuje,
    zaproponuj przesunięcie.
 7. **Zdjęcia przed zakryciem:** lista ujęć z miarą (od stałych punktów), które mają powstać zanim krok zakryje
    instalacje, zbrojenie, izolację – to jedyna dokumentacja na lata. Inwestor wgrywa je do `przed zakryciem/` w folderze

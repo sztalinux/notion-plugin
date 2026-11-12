@@ -93,7 +93,8 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    i decyzje → jedno „❓” w Dzienniku (`wpisy/references/pytania.md`, B). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
 3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i jutro budowy i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze); najpierw domyka sprzeczności z Decyzją wpisaną
-   przez inwestora; gdy jutro są roboty na budowie, dopisuje prognozę pogody i ostrzeżenia wg progów (`etap/references/pogoda.md`) –
+   przez inwestora; ostrzeżenie pogodowe dopisuje tylko przy przekroczonym progu w dniu roboty wrażliwej wpisanej w Uwagach
+   kroku i w 7 dniach pielęgnacji betonu (`etap/references/pogoda.md`; codziennej prognozy nie ma – inwestor patrzy sam) –
    to „poranny brief” bez osobnego zadania. Weź z niego link do wpisu, 1 linię skrótu (z ⚠️ pogodowym, jeśli jest) i liczbę domkniętych SP.
 4. **Dziś – sprawy osobiste** (tylko odczyt): blok dzisiejszego dnia w „Przetworzone” (wpisy obszarów innych niż Budowa,
    liczby per obszar), dzień pracy z Dziennika produktywności, liczba wpisów emocji z dziś (bez treści), nowe punkty na stronie
