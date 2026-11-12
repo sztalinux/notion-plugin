@@ -4,6 +4,13 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.8] – 2026-11-12
+
+Nocna samonaprawa, obszar 12-dystrybucja:
+- `description` w cudzysłowie w 6 skillach (`zakupy`, `notatka`, `przeglad-tygodnia`, `wiedza`, `dokumenty`, `dziennik`) – „: ” w wartości bez cudzysłowu to niepoprawny YAML frontmatteru; ścisły parser (claude.ai, Gemini CLI) mógł pominąć skill albo jego opis. Treść opisów bez zmian.
+- `dokumenty`, opis: głównym wynikiem jest przewodnik na stronie Notion (czyta go claude.ai), paczka `_Do claude.ai/` to kopia awaryjna.
+- `przygotowanie/references/sytuacje.md` 6: odesłanie do `etap/references/odbiory.md` (było `references/odbiory.md` – plik nie istnieje w `przygotowanie`).
+
 ## dom-budowa [3.12.7] – 2026-11-12
 
 Nocna samonaprawa, obszar 08-wiedza:
