@@ -13,7 +13,7 @@ bazy (fetch data source) i zaktualizuj ten plik.
 | Priorytet | select | Krytyczne, Ważne, Zwykłe |
 | Etap | select | Projekt i formalności, Stan zero, SSO, Deweloperski, Wykończenie, Teren i ogród, Cała budowa |
 | Branża | multi-select | Konstrukcja, Grunt i woda, Hydroizolacja, Drenaż, Elektryka, Wod-kan, Ogrzewanie, Wentylacja, Dach, Okna i drzwi, Elewacja, Ściany, Wnętrza, Smart home, Ogród, Formalności, Energooszczędność, Organizacja |
-| Do kogo | select | Konstruktor, Architekt, Geotechnik, Kierownik budowy, Ekipa, Instalator, Dekarz, Ja |
+| Do kogo | select | Konstruktor, Architekt, Geotechnik, Kierownik budowy, Ekipa, Instalator, Dekarz, Geodeta / geotechnik, Dostawca, Urząd / gestor, Ja (trzy przedostatnie – te same nazwy co Kto w TASKS) |
 | Kiedy | data | termin lub moment budowy |
 | Notatka | tekst | jedno zdanie: o co chodzi / co ustalono; szczegóły, kontekst i dopiski – w treści strony |
 | Źródło | tekst | skąd to wiem |

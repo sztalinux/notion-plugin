@@ -77,7 +77,7 @@ Pulpit budowy (artefakt claude.ai; procedura `pulpit`) czyta Notatnik, Harmonogr
 
 **Słowniki.** Etap: Projekt i formalności / Stan zero / SSO / Deweloperski / Wykończenie / Teren i ogród / Cała budowa.
 Notatnik – Typ: Pamiętać/Pytanie/Decyzja/Ryzyko/Doczytać/Pomysł; Status: Otwarte/Do omówienia/Ustalone/Zrobione/Odrzucone;
-Priorytet: Krytyczne/Ważne/Zwykłe; Do kogo: Konstruktor/Architekt/Geotechnik/Kierownik budowy/Ekipa/Instalator/Dekarz/Ja.
+Priorytet: Krytyczne/Ważne/Zwykłe; Do kogo: Konstruktor/Architekt/Geotechnik/Kierownik budowy/Ekipa/Instalator/Dekarz/Geodeta / geotechnik/Dostawca/Urząd / gestor/Ja.
 Pełne schematy: `notatka/references/notion-schematy.md`, `wiedza/references/notion-wiedza.md`, `dziennik/references/notion-dziennik.md`.
 Liczby (kosztorys, wydatki) – arkusz Google „Kosztorys budowy”; 💸 Wydatki → arkusz to tylko kolejka, a inne kwoty w Notion są
 pomocnicze – przy rozbieżności wygrywa arkusz.
