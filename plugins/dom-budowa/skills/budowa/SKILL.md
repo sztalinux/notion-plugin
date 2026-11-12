@@ -129,7 +129,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    i wspomnij o limicie raz. Rollupy (np. Potwierdzenia, Data informacji) w rows/view przychodzą jako
    odnośniki, nie wartości – gdy są potrzebne, pobierz pojedyncze strony (`fetch`) albo napisz, że ich nie sprawdziłeś.
 7. **Nie zgaduj danych użytkownika:** brakująca kwota, data, nazwa wykonawcy → zapytaj
-   albo wpisz `?` i wymień to w podsumowaniu. Brakuje treści dokumentu (projekt, opinia, oferta, umowa, Excel) →
+   albo wpisz `?` (tylko w polu tekstowym – pole liczby albo daty zostaw puste, `?` odrzuca cały zapis) i wymień to w podsumowaniu. Brakuje treści dokumentu (projekt, opinia, oferta, umowa, Excel) →
    poproś jawnie o konkretny plik z przewodnika po dokumentach (nazwa, ścieżka, strona/arkusz, po co) – procedura
    `dokumenty`, „Prośba o dokument”. W Claude Code przeczytaj go z folderu budowy.
 8. **Dane kontaktowe** (telefony, e-maile) – tylko w Notion: DOM → 👷 Wykonawcy → „📇 Kontakty – kluczowe role”
