@@ -4,7 +4,7 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
-## ja [1.14.0] – 2026-11-12
+## ja [1.14.0] – 2026-11-12 (POM-26)
 
 Plan dnia do czytania rano – strona „☀️ Dziś” w zakładkach (prośba inwestora 12.11; część porządków z POM-25).
 - `przeglad-dnia` B.8: wieczór nadpisuje stronę ☀️ Dziś (najwyższy poziom Private, w Ulubionych) planem na dzień planu
@@ -17,7 +17,7 @@ Plan dnia do czytania rano – strona „☀️ Dziś” w zakładkach (prośba 
   bez pytania (wcześniej tylko propozycja).
 - Mapa `ja`: strona ☀️ Dziś (na liście stałych stron – nigdy wpis z widgetu), widok bazy zadań z pracy, archiwum przeglądów.
 
-## dom-budowa [3.15.0] – 2026-11-12
+## dom-budowa [3.15.0] – 2026-11-12 (POM-26)
 
 Plan dnia – część budowy (razem z ja 1.14.0).
 - `budowa`, „Wieczorem”: najbliższe 7 dni z nowego widoku Harmonogramu „🤖 Najbliższe 7 dni (plan dnia)” (mały odczyt),
