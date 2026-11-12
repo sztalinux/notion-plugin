@@ -498,6 +498,12 @@ def pobierz(k: dict, gdy_starsza_h: float = 0) -> Path:
 HARMONOGRAM = "d7a479ab-1e23-453f-8f59-55f4097f7d04"   # Notion → Harmonogram (kroki budowy w czasie)
 BEZ_DATY = "bez daty"
 KOD_ETAPU = re.compile(r"^(P?\d{1,2})\s")
+ETAP_REZERWY = "08"   # etap „Rezerwa i roboty dodatkowe” – sam jest rezerwą, bez rezerwy od niego
+
+
+def numer_etapu(etap: str) -> str:
+    m = KOD_ETAPU.match(str(etap).strip() + " ")
+    return m.group(1) if m else ""
 
 
 def kwota(x) -> float:
@@ -558,20 +564,24 @@ def licz_gotowke(arkusze: dict, kroki: list, dzis: str) -> dict:
     - Wydatki „Do zapłaty” – miesiąc z kolumny Data;
     - transza ekipy etapu = Etapy „Do zapłaty ekipie” (bez umowy: plan ekipy − wydane) − „Do zapłaty” ekipy tego etapu,
       w miesiącu końca ostatniego kroku etapu w Harmonogramie (płatność po odbiorze);
-    - materiał i inne etapu = plan − wydane − „Do zapłaty” tego typu, w miesiącu startu pierwszego kroku etapu;
+    - materiał i inne etapu = (plan − wydane) materiału i (plan − wydane) „Inne”, każda część obcięta do zera osobno
+      (przekroczenie materiału nie zjada niewydanych „Inne”), minus „Do zapłaty” tego typu, w miesiącu startu pierwszego kroku;
     - termin już minął, a pieniądze nie wyszły → bieżący miesiąc („po terminie”); etap bez kroków z datą → „bez daty”;
-    - rezerwa – stawka z Podsumowania („Rezerwa…”), doliczona do każdego miesiąca w kolumnie „z rezerwą”."""
+    - rezerwa – stawka z Podsumowania („Rezerwa…”), doliczona do każdego miesiąca w kolumnie „z rezerwą”, z pominięciem
+      etapu 08 (sam jest rezerwą – bez rezerwy od rezerwy)."""
     teraz = dzis[:7]
     wyniki, po_terminie, gotowka_znana = {}, {}, {}
 
-    def dodaj(mies: str, rodzaj: str, ile: float):
+    def dodaj(mies: str, rodzaj: str, ile: float, etap: str = ""):
         if ile <= 0:
             return
         if mies and mies < teraz:
             po_terminie[teraz] = po_terminie.get(teraz, 0) + ile
             mies = teraz
-        wiersz = wyniki.setdefault(mies or BEZ_DATY, {"do_zaplaty": 0.0, "ekipa": 0.0, "material": 0.0})
+        wiersz = wyniki.setdefault(mies or BEZ_DATY, {"do_zaplaty": 0.0, "ekipa": 0.0, "material": 0.0, "rezerwa_etap": 0.0})
         wiersz[rodzaj] += ile
+        if numer_etapu(etap) == ETAP_REZERWY:
+            wiersz["rezerwa_etap"] += ile
 
     nag, wiersze = tabela(arkusze, "Wydatki")
     k_data, k_status, k_kwota = kolumna(nag, "Data"), kolumna(nag, "Status"), kolumna(nag, "Kwota")
@@ -582,7 +592,7 @@ def licz_gotowke(arkusze: dict, kroki: list, dzis: str) -> dict:
             continue
         ile = kwota(pole(w, k_kwota))
         mies = miesiac(pole(w, k_data))
-        dodaj(mies, "do_zaplaty", ile)
+        dodaj(mies, "do_zaplaty", ile, str(pole(w, k_etap)))
         if str(pole(w, k_sposob)).strip() == "Gotówka" and ile > 0:
             m = max(mies, teraz) if mies else BEZ_DATY
             gotowka_znana[m] = gotowka_znana.get(m, 0) + ile
@@ -617,13 +627,14 @@ def licz_gotowke(arkusze: dict, kroki: list, dzis: str) -> dict:
             continue
         ekipa = (kwota(pole(w, k_do_zaplaty)) if kwota(pole(w, k_umowa)) > 0
                  else kwota(pole(w, plan[1])) - kwota(pole(w, wyd[1]))) - zalegle.get((etap, "ekipa"), 0)
-        material = (kwota(pole(w, plan[0])) - kwota(pole(w, wyd[0])) + kwota(pole(w, plan[2])) - kwota(pole(w, wyd[2]))
+        material = (max(0.0, kwota(pole(w, plan[0])) - kwota(pole(w, wyd[0])))
+                    + max(0.0, kwota(pole(w, plan[2])) - kwota(pole(w, wyd[2])))
                     - zalegle.get((etap, "material"), 0))
         t = terminy.get(m.group(1))
         if not t and (ekipa > 0 or material > 0):
             bez_terminu.append(m.group(1))
-        dodaj(miesiac(t["do"]) if t else "", "ekipa", ekipa)
-        dodaj(miesiac(t["od"]) if t else "", "material", material)
+        dodaj(miesiac(t["do"]) if t else "", "ekipa", ekipa, etap)
+        dodaj(miesiac(t["od"]) if t else "", "material", material, etap)
 
     rezerwa = 0.0
     for w in arkusze.get("Podsumowanie") or []:
@@ -633,7 +644,7 @@ def licz_gotowke(arkusze: dict, kroki: list, dzis: str) -> dict:
             break
     for wiersz in wyniki.values():
         wiersz["razem"] = wiersz["do_zaplaty"] + wiersz["ekipa"] + wiersz["material"]
-        wiersz["z_rezerwa"] = wiersz["razem"] * (1 + rezerwa)
+        wiersz["z_rezerwa"] = wiersz["razem"] + (wiersz["razem"] - wiersz.pop("rezerwa_etap")) * rezerwa
     kolejnosc = sorted(m for m in wyniki if m != BEZ_DATY) + ([BEZ_DATY] if BEZ_DATY in wyniki else [])
     return {"miesiace": [dict(wyniki[m], miesiac=m, po_terminie=po_terminie.get(m, 0.0),
                               gotowka=gotowka_znana.get(m, 0.0)) for m in kolejnosc],
