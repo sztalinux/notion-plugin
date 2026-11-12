@@ -51,6 +51,8 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 3. **Zadanie w TASKS dołóż tylko** przy terminie, „na już”, „pilnie”, „szybko” albo gdy skończyło się coś codziennego:
    Name „Kupić X”, Kategoria Zakup, Obszar jak w zakupie, relacja Zadanie w Zakupach.
 4. „Kupiłem X” → Zakupy: Status Kupione + Kupione dnia (rzecz na budowę lub działkę → `zakupy` z `dom-budowa`, sekcja 0); powiązane zadanie DONE (sekcja B). „Zamówiłem X” → Zamówione.
+   Pozycji X nie ma w 🛒 (szukanie jak w pkt 1) → nie zakładaj jej; w śladzie „→ zakup bez pozycji na liście” – lista zakupów
+   to plan, nie historia wydatków.
    „Odpuszczam X” → Odpuszczone (powiązane zadanie ARCHIVED). Ręczne zmiany inwestora w Notion (status zakupu, zamknięcie zadania)
    wyrównuje wieczorem `przeglad-dnia`, krok 5b – pytaniem „❓”, nie samowolnie.
 5. Odczyt „co kupić”: widok „🛒 Do kupienia” (grupy wg Gdzie), „📦 Zamówione – czekam”, „✅ Kupione” (ID w `ja/references/notion-mapa.md`);
