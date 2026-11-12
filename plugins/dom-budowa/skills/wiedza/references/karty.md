@@ -41,7 +41,8 @@ data ostatniego zapisu) i jadą do czatu razem z publikacją indeksu.
   a `zbuduj` je zeruje); pozostałe flagi: `pomiar --help`.
 - `zapisz [--publikuj]` – wyniki doboru (`karty.json`) do SQLite; `--publikuj` wysyła kopię dla czatu.
 - `aktualizuj [--cicho] [--publikuj]` – nowe tezy → tagi czynności, wybór i ocena ścisła względem każdej karty pytań (2 → rdzeń,
-  1 → rozszerzenie, 0 → wypada) → zapis → publikacja.
+  1 → rozszerzenie, 0 → wypada) → zapis → publikacja. Same błędy modelu (nic nie otagowano, nie dopisano ani nie oceniono) →
+  kod 1, żeby automat to zgłosił (test: `tools/test_wiedza_karty.py`).
 
 ## Pokrycie – co znaczy i czego nie znaczy
 

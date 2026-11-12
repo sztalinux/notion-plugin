@@ -1462,6 +1462,14 @@ def ocen_zalegle(pr: "Przebieg", tezy: dict, pytania: list, stan: dict, m: Miejs
         zastosuj_przyrost(stan, oceny, pary)
 
 
+def kod_aktualizacji(kod: int, wynik: dict) -> int:
+    """Kod wyjścia `aktualizuj`: same błędy modelu (nic nie otagowano, nie dopisano ani nie oceniono) → 1, żeby automat
+    zgłosił, że karty przestały się aktualizować; stop limitu albo zajęty indeks zostawia swój kod."""
+    if kod == 0 and wynik.get("bledy") and not (wynik.get("otagowane") or wynik.get("dopisane") or wynik.get("ocenione")):
+        return 1
+    return kod
+
+
 def cmd_aktualizuj(a, m: Miejsca) -> int:
     """Nowe WI (bez Statusu „Nieaktualne”, spoza `ocenione`): tagi czynności, wybór do kart pytań, zapis do indeksu,
     z --publikuj publikacja. Budżet czasu – nowej porcji nie zaczyna (reszta za godzinę). Zaległy zapis (karty w stanie
@@ -1537,7 +1545,7 @@ def cmd_aktualizuj(a, m: Miejsca) -> int:
               + (f" · błędy: {wynik['bledy']}" if wynik["bledy"] else "")
               + (" · zapisano do indeksu" if wynik["zapisano"] else "")
               + (f" · stop: {wynik['stop']}" if wynik["stop"] else ""))
-    return kod
+    return kod_aktualizacji(kod, wynik)
 
 
 def data_wzorca(wzorzec: dict, plik: Path) -> str:
