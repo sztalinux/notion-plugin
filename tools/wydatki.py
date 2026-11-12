@@ -6,7 +6,7 @@
     python3 tools/wydatki.py pobierz [--cicho] [--gdy-starsza H]   # wartości arkusza (JSON) do <hub>/Koszty/Kosztorys_google.json
     python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (i Cennika), w Notion „Nie wysyłać”
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
-    python3 tools/wydatki.py kod | pbcopy               # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
+    python3 tools/wydatki.py kod | LANG=en_US.UTF-8 pbcopy             # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
     python3 tools/wydatki.py migruj <zmiany.json>        # zmiana układu na arkuszu (cofanie: Plik → Historia wersji)
 
 Przepływ: przebieg Dziennika (agent) albo inwestor dodaje w Notion wiersz z Arkusz = „Do arkusza”; `sync` wysyła takie

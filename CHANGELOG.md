@@ -4,6 +4,10 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.12.10] – 2026-11-12
+
+- `docs/wydatki-arkusz.md`, `tools/wydatki.py`: kod Apps Script do schowka przez `LANG=en_US.UTF-8 pbcopy` – bez ustawionego LANG `pbcopy` czyta wejście jako MacRoman i psuje polskie znaki (np. lista typów kosztu), a wklejony kod odrzuca wtedy wydatki z „Materiał”, „Do zapłaty” itp.
+
 ## dom-budowa [3.12.9] – 2026-11-12
 
 Nocna samonaprawa, obszar 07-budowa:

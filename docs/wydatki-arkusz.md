@@ -117,7 +117,7 @@ Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
 | `pobierz [--gdy-starsza H]` | wartości wszystkich zakładek → `<hub>/Koszty/Kosztorys_google.json` (limit odczytu 300 s); z `--gdy-starsza` tylko, gdy kopia jest starsza niż H godzin | przebieg wieczorny, szybki (ponowienie); przed analizą liczb |
 | `wycofaj <id>…` | czyści wiersz w Wydatkach / Cenniku albo „Plan ręczny” (gdy stoi tam kwota z tej strony), w Notion „Nie wysyłać” | agent na prośbę |
 | `sprawdz` | sekrety, dostęp do bazy i arkusza, wersja kodu | ręcznie, przy problemach |
-| `kod` | kod Apps Script z sekcji 9 (z `\| pbcopy` – do schowka) | przy aktualizacji kodu |
+| `kod` | kod Apps Script z sekcji 9 (z `\| LANG=en_US.UTF-8 pbcopy` – do schowka; bez LANG polskie znaki się psują) | przy aktualizacji kodu |
 | `migruj <zmiany.json>` | zmiana układu na żywym arkuszu (sekcja 8) | agent w Claude Code |
 
 Kody wyjścia: 0 OK, 1 błąd polecenia (linie `✗` pod podsumowaniem, np. timeout arkusza, Notion), 2 brak konfiguracji.
@@ -152,7 +152,7 @@ blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 
 1. Arkusz Google na **prywatnym** koncie; Plik → Ustawienia: Polska, strefa (GMT+01:00) Warsaw. Arkusza nie importuje się
    ponownie – zastąpienie pliku kasuje wydatki dopisane od tamtej pory.
-2. Rozszerzenia → Apps Script → `Kod.gs` = kod z sekcji 9 (`python3 tools/wydatki.py kod | pbcopy`), zapisz.
+2. Rozszerzenia → Apps Script → `Kod.gs` = kod z sekcji 9 (`python3 tools/wydatki.py kod | LANG=en_US.UTF-8 pbcopy`), zapisz.
 3. Ustawienia projektu → Właściwości skryptu → `SEKRET` = `python3 -c "import secrets; print(secrets.token_urlsafe(32))"`.
 4. Wdróż → Nowe wdrożenie → Aplikacja internetowa, Wykonaj jako **Ja**, dostęp **Każdy** (bez sekretu odpowiedź „zły
    sekret”). Autoryzuj (skrypt prosi tylko o ten arkusz). Skopiuj adres `/exec`.
