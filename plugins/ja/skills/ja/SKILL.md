@@ -95,7 +95,7 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
    zdarzenia, które trzeba omówić, zanim się rozmyje (nie ogólny temat wychowawczy, relacyjny ani praca nad sobą), załóż
    dodatkowo zadanie w TASKS (`zadania`): „Porozmawiać z <dzieckiem / partnerką> o <temat>”, Obszar Dziecko albo Prywatne,
    When = data wpisu + 3 dni, w treści odnośnik do strony osoby – inaczej rozmowa na świeżo przepada. Zadanie zamknięte ręcznie zostawia temat na liście – wieczorem pyta o to
-   `przeglad-dnia` (krok 5c). Temat ogólny → tylko
+   `przeglad-dnia` (krok 5c; łapie też ręczne nazwy z „Pogadać” / „Rozmowa”). Temat ogólny → tylko
    strona. Nie da się ocenić, czy to świeże zdarzenie → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4).
 10. **Zakładki zamiast długich stron.** Budując lub porządkując stronę w Notion, używaj zakładek (blok z zakładkami, jak na DOM,
     DASHBOARD i ✅ Zadania), gdy treść dzieli się na równoległe części: obszary, etapy, rodzaje list. Najpierw zakładka
