@@ -63,7 +63,7 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
 4. Dopisz wpis w `CHANGELOG.md` pod nagłówkiem `## <plugin> [wersja] – data` (lista HZ-n z jednym zdaniem każdy);
    zmiana obu pluginów = dwa nagłówki. Wdrożenie pomysłu lub znanego problemu: numer w nagłówku – `## ja [1.2.3] – data (POM-n)` –
    bo z niego przegląd dnia bierze wersję do pola „Zrobiono w wersji” (`przeglad-dnia/references/kontrola-spojnosci-pomysly.md`;
-   `python3 tools/pomysly_wersje.py n` pokazuje, co wyjdzie).
+   `python3 tools/pomysly_wersje.py n` pokazuje, co wyjdzie – czyta gałąź main, więc po scaleniu).
 5. `python3 tools/build.py` – musi przejść walidację, w tym kontrolę prywatności (wzorce + lista słów zakazanych
    `.dom/zakazane-w-repo.txt` w folderze budowy). Hooki w `.githooks/` powtarzają ją przy commicie (pliki, autor,
    wiadomość) i przed pushem (każdy wysyłany commit). Zablokowany hook = popraw dane, nigdy `--no-verify`.
@@ -76,8 +76,9 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
    strona to ramka nad skrzynką i pomysłami – opis procedur jest w README repo); nowa procedura = nowa opcja w polu „Procedura” skrzynki.
    **Dokumentacja dla człowieka – przy każdym wdrożeniu, nie tylko przy zmianie struktury:** przejdź listę z `ja`,
    zasada 8 (repo i Notion), wyszukaj stare określenia, których zmiana dotyczy, i popraw nieaktualne zdania w tym samym
-   wydaniu – zawsze także „📘 Instrukcja obsługi” (pod DASHBOARD; zmienione sekcje z nową linią „Stan:”, potem kopia
-   offline `AI/Instrukcja obsługi.md` w folderze budowy); w podsumowaniu linia „Dokumentacja: <co zaktualizowane> / bez zmian – <dlaczego>”.
+   wydaniu – także „📘 Instrukcja obsługi” (pod DASHBOARD), ale **tylko sekcje, których dotyczy zmiana**, z nową linią „Stan:”
+   (zmiana niewidoczna dla inwestora → instrukcji nie ruszaj); kopii offline `AI/Instrukcja obsługi.md` przy wdrożeniu nie
+   odświeżaj – robi to raz w miesiącu `przeglad-tygodnia-osobisty` (krok 3); w podsumowaniu linia „Dokumentacja: <co zaktualizowane> / bez zmian – <dlaczego>”.
    Zmiana struktury Notion (baza, widok, pole) → zaktualizuj mapę: budowa – `dom-budowa/skills/budowa/references/notion-mapa.md`,
    sprawy osobiste – `ja/skills/ja/references/notion-mapa.md`. Obie trafiają do przewodnika w Notion przy następnym
    `tools/dokumenty.py` – zsynchronizuj go (`dokumenty`, sekcja C). Pełna lista miejsc w repo i w Notion, które trzeba

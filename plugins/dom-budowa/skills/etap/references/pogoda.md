@@ -1,4 +1,4 @@
-# Pogoda przy robotach – progi i prognoza na jutro
+# Pogoda przy robotach – progi i ostrzeżenie wieczorem
 
 Jedno miejsce dla progów pogodowych: `etap` (A.6, B.6), `harmonogram` („Pogoda”) i wieczorny przegląd budowy
 (`budowa`, „Wieczorem”, krok 2) czytają stąd. Progi to typowa praktyka `[opinia]` – **do potwierdzenia z kierownikiem
@@ -19,10 +19,20 @@ spoza tej listy i bazy wiedzy.
 
 Robota spoza tabeli (np. wnętrza po zamknięciu bryły) – bez ostrzeżeń pogodowych.
 
-## Prognoza na jutro (wieczorny przegląd budowy)
+## Ostrzeżenie pogodowe (wieczorny przegląd budowy)
 
-Tylko gdy jutro jest krok Harmonogramu z robotami na budowie (Termin = jutro lub trwa jutro, Status inny niż „Zrobione”,
-Kto = Ekipa albo Sam, robota z tabeli wyżej). Inaczej nie szukaj prognozy – przebieg ma być tani.
+Inwestor sam codziennie sprawdza pogodę – przegląd **nie podaje codziennej prognozy**. Ostrzega tylko przy robocie wrażliwej
+na pogodę, którą inwestor wpisał z datą w Uwagach kroku Harmonogramu (np. „betonowanie 20.11”), gdy jutro jest:
+- **dzień tej roboty** (próg z wiersza roboty w tabeli wyżej), albo
+- **jeden z 7 dni pielęgnacji** po betonowaniu (wiersz „Beton po wylaniu”: mróz w nocy, upał).
+
+Inne dni, robota bez daty w Uwagach albo robota spoza tabeli → nic: bez prognozy, bez linii i bez dopisku „bez robót
+wrażliwych”. Krok „Zrobione” nie wyłącza dni pielęgnacji. Przebieg ma być tani.
+
+**Odczyt:** widok Harmonogramu „📅 Oś czasu” (ID w `budowa/references/notion-mapa.md`; ten sam odczyt co reszta kroku 2
+wieczoru) – kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra, **także ze Statusem „Zrobione”**; w ich
+Uwagach szukaj roboty z tabeli z datą. Widok nie pokazuje Uwag → strony tych kroków pojedynczo, max 5. Nic nie pasuje →
+koniec, bez szukania prognozy.
 
 1. **Miejscowość** weź ze ściągi (Notion → DOM → „📐 Dane projektu”). Do wyszukiwania w sieci podaj **tylko miejscowość** –
    bez adresu, numeru działki i innych danych. Miejscowości w ściądze brak → pomiń prognozę, dopisz linię
@@ -30,9 +40,10 @@ Kto = Ekipa albo Sam, robota z tabeli wyżej). Inaczej nie szukaj prognozy – p
 2. **Prognoza** z sieci (aktualne źródło z podaniem nazwy i godziny odczytu), na jutro: temperatura min. i maks., opady
    (mm / prawdopodobieństwo), wiatr. Oznacz `[internet]` – to prognoza, nie fakt. Brak wyniku → „pogoda: nie udało się pobrać
    prognozy”, bez ponawiania i bez blokowania reszty przeglądu.
-3. **Porównaj z progami** dla robót jutra. Linia w sekcji „Jutro – plan” wpisu budowy:
-   `Pogoda jutro [internet, <źródło> <godzina>]: <min>–<maks> °C, opady <…>, wiatr <…> – <OK dla <robota> | ⚠️ <robota>: <próg przekroczony> → <propozycja>>`.
-   Krok „bez odwrotu” z przekroczonym progiem = ostrzeżenie na górze „Jutro – plan” (razem z przypomnieniem bramki wg `etap`, B).
+3. **Porównaj z progami** roboty albo pielęgnacji. Próg **nieprzekroczony → nic nie pisz.** Przekroczony → jedna linia na
+   górze sekcji „Jutro – plan” wpisu budowy:
+   `⚠️ Pogoda jutro [internet, <źródło> <godzina>]: <robota | pielęgnacja betonu, dzień n/7> – <próg przekroczony: wartość> → <propozycja>`.
+   Krok „bez odwrotu” – razem z przypomnieniem bramki wg `etap`, B.
 4. Przegląd niczego nie przesuwa i nie zakłada zadań – to informacja dla inwestora; przesunięcie kroku robi `harmonogram`
    na jego polecenie.
 5. W linii skrótu dla przeglądu dnia (`budowa`, „Wieczorem”, krok 4) dopisz „pogoda: ⚠️ …” tylko przy przekroczonym progu.

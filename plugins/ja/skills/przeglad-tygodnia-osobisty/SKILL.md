@@ -39,7 +39,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    - Dziennik produktywności widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81af-9ea1-000cbe3dd643`): dni zapisane,
      średnia ocena, najczęstsze przeszkadzajki;
    - strona dziecka: nowe punkty w „💬 Do przegadania” i „🎁 Prezenty” z tygodnia (licznik + tytuły tematów);
-   - zadania „Porozmawiać z…” zamknięte w tygodniu a temat nadal na liście „💬 Do przegadania” – pytania „❓” z kluczem `KS-R…`
+   - zadania rozmowy („Porozmawiać / Pogadać / Rozmowa” w nazwie, Obszar Dziecko lub Prywatne) zamknięte w tygodniu a temat nadal na liście „💬 Do przegadania” – pytania „❓” z kluczem `KS-R…`
      (`przeglad-dnia/references/kontrola-spojnosci-rozmowy.md`; tylko licznik, bez treści tematów);
    - strona „💍 Wesele”: nowe punkty i zadania „Wesele:” z terminem w 30 dni;
    - Suple: Buy = tak (licznik, nazwy);
@@ -49,7 +49,8 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    (przypomnienie: uruchom Claude Code); „Pomysły na rozwój” – nowe bez analizy i „Pytania do mnie”. Pierwszy przegląd
    w miesiącu (dzień ≤ 7): strona „📘 Instrukcja obsługi” (ID w `ja/references/notion-mapa.md`) – sekcje z linią „Stan:”
    starszą niż 60 dni wymień w „Czeka na Ciebie” („Instrukcja: n sekcji do sprawdzenia – …”); tokeny z datą ważności
-   w sekcji „Utrzymanie” wygasające w 30 dni – też tam.
+   w sekcji „Utrzymanie” wygasające w 30 dni – też tam. W tym samym przebiegu nadpisz kopię offline `AI/Instrukcja obsługi.md`
+   w folderze budowy treścią pobranej strony (jedyne odświeżenie kopii; bez dostępu do plików → „kopia instrukcji: do odświeżenia”).
    **Kopie zapasowe:** `python3 tools/kopie.py stan --cicho` (tylko odczyt; brak wyjścia = wszystko aktualne; polecenie
    niedostępne → „niesprawdzone”). Pozycje ⚠/✗ → jeden komunikat 🔔 z kluczem `kopie-zapasowe` we „Wpisach”
    (`wpisy/references/pytania.md`, C; kolejny tydzień – aktualizacja bloku, wszystko ✓ → „ustąpiło”), w okienku

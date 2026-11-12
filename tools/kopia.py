@@ -96,12 +96,14 @@ def roznice(potwierdzone: dict, teraz: dict) -> dict:
     return {"nowe": nowe, "zmienione": zmienione, "przeniesione": przeniesione, "usuniete": usuniete}
 
 
-def wczytaj_stan() -> dict:
-    p = STAN_DIR / "stan.json"
+def wczytaj_stan(katalog: Path = None) -> dict:
+    """stan.json, a bez niego zapas: pierwsza paczka (paczka-*.json) jako punkt wyjścia. Czyta też `kopie.py`."""
+    katalog = katalog or STAN_DIR
+    p = katalog / "stan.json"
     if p.exists():
         return json.loads(p.read_text(encoding="utf-8"))
     stan = {"potwierdzone": {}, "potwierdzono": None, "paczki": []}
-    for start in sorted(STAN_DIR.glob("paczka-*.json")):  # pierwsza paczka (10.11.2026) jako punkt wyjścia
+    for start in sorted(katalog.glob("paczka-*.json")):  # pierwsza paczka (10.11.2026) jako punkt wyjścia
         d = json.loads(start.read_text(encoding="utf-8"))
         for f in d.get("pliki") or []:
             stan["potwierdzone"][nfc(f["sciezka"])] = {"rozmiar": f["rozmiar"], "mtime": None, "sha256": f["sha256"]}

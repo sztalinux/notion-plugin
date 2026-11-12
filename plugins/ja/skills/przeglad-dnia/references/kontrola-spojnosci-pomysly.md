@@ -31,7 +31,8 @@ Kilka nagłówków jednego POM (kolejne etapy) → wpisz wszystkie wersje po prz
    Status „Zrobione” i pole „Zrobiono w wersji” z nagłówka CHANGELOG; dopisek „zostaje” / „częściowo” → nic nie zmieniaj;
    dopisek z wersją przy P1 → wpisz ją w pole. Rozpatrzony punkt idzie do „Przetworzone” z kluczem i dopiskiem „→ KS: <wykonano | zostaje>”.
 2. **Wersje z CHANGELOG** – tylko gdy jest kandydat P1, P3 albo P4: `python3 tools/pomysly_wersje.py <n> <n> …` (z folderu repo;
-   wypisuje „nagłówki” = jednoznaczne i „tylko w treści” = niejednoznaczne). Bez dostępu do `CHANGELOG.md` (przebieg poza
+   czyta CHANGELOG z gałęzi main, czyli to, co wdrożone – linia „⚠ … czytam plik z dysku” = gałęzi main nie ma, wynik może
+   obejmować niescalone zmiany, więc P1 i P4 zamień na pytania; wypisuje „nagłówki” = jednoznaczne i „tylko w treści” = niejednoznaczne). Bez dostępu do `CHANGELOG.md` (przebieg poza
    repo, Bash niedozwolony, claude.ai) albo gdy nie możesz go przeczytać – pomiń P3 i P4, a P1 zamień na pytanie; P2 działa
    wyłącznie na danych z Notion i zostaje.
 3. **Zapisz P1 i P4** (jedna edycja strony pomysłu, tylko pole „Zrobiono w wersji”, format „<plugin> <wersja>[, …]”) – bez pytania,

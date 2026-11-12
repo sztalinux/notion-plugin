@@ -94,7 +94,8 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    i decyzje → jedno „❓” w Dzienniku (`wpisy/references/pytania.md`, B). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
 3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i jutro budowy i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze); najpierw domyka sprzeczności z Decyzją wpisaną
-   przez inwestora; gdy jutro są roboty na budowie, dopisuje prognozę pogody i ostrzeżenia wg progów (`etap/references/pogoda.md`) –
+   przez inwestora; ostrzeżenie pogodowe dopisuje tylko przy przekroczonym progu w dniu roboty wrażliwej wpisanej w Uwagach
+   kroku i w 7 dniach pielęgnacji betonu (`etap/references/pogoda.md`; codziennej prognozy nie ma – inwestor patrzy sam) –
    to „poranny brief” bez osobnego zadania. Weź z niego link do wpisu, 1 linię skrótu (z ⚠️ pogodowym, jeśli jest) i liczbę domkniętych SP.
 4. **Dziś – sprawy osobiste** (tylko odczyt): blok dzisiejszego dnia w „Przetworzone” (wpisy obszarów innych niż Budowa,
    liczby per obszar), dzień pracy z Dziennika produktywności, liczba wpisów emocji z dziś (bez treści), nowe punkty na stronie
@@ -120,9 +121,11 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.
    Tylko pytania w „❓” (max 5), żadnych zmian bez ☑ inwestora; licznik „rozjazdy” idzie do kroku 8 i linii „🤖”.
    **5b. Kontrola spójności zakupów** – `references/kontrola-spojnosci-zakupy.md`: zakup Kupione / Odpuszczone ↔ zadanie „Kupić X”
-   (flagi „❓” z kluczem `KS-Z…`, wspólny limit 5 z 5a, zmiana statusu dopiero po ☑ inwestora) oraz bezpieczne uzupełnienia „Kupione dnia”
-   i researchu Zamknięty. Liczniki „rozjazdy” i „zakupy” idą do kroku 8 i linii „🤖”.
-   **5c. Kontrola spójności: rozmowy** – `references/kontrola-spojnosci-rozmowy.md`: zadanie „Porozmawiać z…” DONE (wiersze kroku 5)
+   (flagi „❓” z kluczem `KS-Z…`, wspólny limit 5 z 5a, zmiana statusu dopiero po ☑ inwestora) oraz pytanie o „Kupione dnia”
+   z proponowaną datą (tylko zakupy zmienione od wczoraj) i bezpieczne uzupełnienie researchu Zamknięty. Liczniki „rozjazdy”
+   i „zakupy” idą do kroku 8 i linii „🤖”.
+   **5c. Kontrola spójności: rozmowy** – `references/kontrola-spojnosci-rozmowy.md`: zadanie rozmowy („Porozmawiać / Pogadać /
+   Rozmowa” w nazwie, Obszar Dziecko lub Prywatne) DONE (wiersze kroku 5)
    ↔ temat w „💬 Do przegadania” na stronie osoby. Tylko pytanie „❓” z kluczem `KS-R…` (wspólny limit 5 z 5a); po ☑ dopisek
    „✅ przegadane” pod tematem, nic się nie przenosi. Treści tematów nie wypisuj; licznik „rozjazdy” jak w 5a.
 6. **Jutro – sprawy osobiste** (odczyt; jedyny zapis – zadanie z suplementami, niżej): TASKS „📅 Jutro – wszystko” bez Obszaru Dom i zadania prywatne po terminie

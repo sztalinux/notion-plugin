@@ -11,6 +11,7 @@ import tempfile
 import unittest
 from datetime import date, timedelta
 from pathlib import Path
+from unittest import mock
 
 HUB = Path(tempfile.mkdtemp(prefix="kopie-test-"))
 os.environ["DOM_HUB"] = str(HUB)
@@ -75,6 +76,18 @@ class Repozytoria(unittest.TestCase):
         self.assertEqual(w["repo:lokalne"]["kiedy"], "2026-11-18")
         self.assertEqual(w["repo:przed"]["stan"], "⚠")  # dysk zewnętrzny nie zastępuje pushu
 
+    def test_zalegly_dysk_zewnetrzny_to_ostrzezenie(self):
+        w = {p["klucz"]: p for p in K.repozytoria(HUB, "2026-10-01", "⚠")}
+        self.assertEqual(w["repo:lokalne"]["stan"], "⚠")
+        self.assertIn("po terminie", w["repo:lokalne"]["szczegol"])
+        self.assertEqual(w["repo:archiwum"]["stan"], "⚠")
+
+    def test_brak_gita_bez_wyjatku(self):
+        with mock.patch.object(K.shutil, "which", return_value=None):
+            w = K.repozytoria(HUB)
+        self.assertEqual([p["klucz"] for p in w], ["repo:*"])
+        self.assertIn("brak programu git", w[0]["szczegol"])
+
     def test_bez_blokady_indeksu(self):
         self.assertFalse((HUB / "AI" / "czyste" / ".git" / "index.lock").exists())
 
@@ -88,6 +101,21 @@ class Reczne(unittest.TestCase):
         self.assertEqual(w["zdjecia"], "✓")
         self.assertEqual(w["sekrety"], "✓")  # jednorazowe – bez terminu
         self.assertEqual(w["dysk-zewnetrzny"], "✗")
+
+
+class Rejestr(unittest.TestCase):
+    def test_uszkodzony_rejestr_czytelny_komunikat(self):
+        hub = Path(tempfile.mkdtemp(prefix="kopie-rej-"))
+        (hub / ".dom").mkdir()
+        (hub / ".dom" / K.REJESTR).write_text("{zepsute")
+        with self.assertRaises(K.BladRejestru):
+            K.wczytaj_rejestr(hub)
+        w = {p["klucz"]: p for p in K.zbierz(hub, DZIS)}
+        self.assertEqual(w["rejestr"]["stan"], "✗")
+        self.assertIn("uszkodzony rejestr", w["rejestr"]["szczegol"])
+        (hub / ".dom" / K.REJESTR).write_text("[1, 2]")
+        with self.assertRaises(K.BladRejestru):
+            K.wczytaj_rejestr(hub)
 
 
 class Kosztorys(unittest.TestCase):
@@ -114,6 +142,27 @@ class Dokumenty(unittest.TestCase):
         self.assertIn("zmian od kopii: 1", w["szczegol"])
         self.assertEqual(st.read_bytes(), przed)
         self.assertEqual(K.dokumenty(HUB, date(2026, 11, 5))["stan"], "✓")
+
+    def test_zapas_pierwsza_paczka_jak_w_kopia(self):
+        hub = Path(tempfile.mkdtemp(prefix="kopie-paczka-"))
+        (hub / ".dom" / "kopia").mkdir(parents=True)
+        (hub / "Projekty").mkdir()
+        (hub / "Projekty" / "a.pdf").write_text("x")
+        (hub / ".dom" / "kopia" / "paczka-2026-11-10.json").write_text(json.dumps(
+            {"utworzono": "2026-11-10", "pliki": [{"sciezka": "Projekty/a.pdf", "rozmiar": 1,
+                                                   "sha256": K.kopia.sha(hub / "Projekty" / "a.pdf")}]}))
+        w = K.dokumenty(hub, DZIS)
+        self.assertEqual(w["stan"], "✓")
+        self.assertEqual(w["kiedy"], "2026-11-10")
+        self.assertIn("zmian od kopii: 0", w["szczegol"])
+
+    def test_uszkodzony_stan_bez_wyjatku(self):
+        hub = Path(tempfile.mkdtemp(prefix="kopie-stan-"))
+        (hub / ".dom" / "kopia").mkdir(parents=True)
+        (hub / ".dom" / "kopia" / "stan.json").write_text("{zepsute")
+        w = K.dokumenty(hub, DZIS)
+        self.assertEqual(w["stan"], "✗")
+        self.assertIn("uszkodzony stan kopii", w["szczegol"])
 
 
 class Cicho(unittest.TestCase):

@@ -83,6 +83,20 @@ class Gotowka(unittest.TestCase):
         a = arkusz([etap("P1 Działka", 0, (0, 0, 100), (0, 0, 150), 0)])
         self.assertEqual(WY.licz_gotowke(a, [], "2026-11-05")["miesiace"], [])
 
+    def test_rezerwa_bez_etapu_08(self):
+        a = arkusz([etap("03 Płyta", 0, (1000, 0, 0), (0, 0, 0), 0), etap("08 Rezerwa", 0, (0, 0, 500), (0, 0, 0), 0)],
+                   [["2026-12-15", "Do zapłaty", 200, "08 Rezerwa", "08.1 Dodatkowe", "Inne", "", "", "", ""]])
+        m = po_miesiacu(WY.licz_gotowke(a, [{"nr": "03", "od": "2026-12-01", "do": "2026-12-20"}], "2026-11-05"))
+        self.assertEqual(m["2026-12"]["razem"], 1200)        # 1000 materiału 03 + 200 „Do zapłaty” z etapu 08
+        self.assertEqual(m["2026-12"]["z_rezerwa"], 1300)    # rezerwa 10% tylko od 1000, nie od etapu 08
+        self.assertEqual(m[WY.BEZ_DATY]["material"], 300)    # 500 − 200 już w „Do zapłaty”
+        self.assertEqual(m[WY.BEZ_DATY]["z_rezerwa"], 300)
+
+    def test_przekroczenie_materialu_nie_zjada_innych(self):
+        a = arkusz([etap("03 Płyta", 0, (500, 0, 200), (700, 0, 50), 0)])
+        m = po_miesiacu(WY.licz_gotowke(a, [{"nr": "03", "od": "2026-12-01", "do": "2026-12-20"}], "2026-11-05"))
+        self.assertEqual(m["2026-12"]["material"], 150)      # materiał −200 → 0, „Inne” 200 − 50 zostaje
+
     def test_kolumny_po_naglowkach(self):
         a = arkusz([])
         a["Etapy"][3] = [n for n in NAG_ETAPY if n != "Umowa z ekipą"]

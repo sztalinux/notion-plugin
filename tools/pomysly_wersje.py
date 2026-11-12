@@ -2,7 +2,8 @@
 """Wersje pluginów z CHANGELOG.md dla pomysłów POM-n – podstawa kontroli spójności „status POM ↔ stan wdrożenia”.
 
 Reguła (rozwoj-harnessu, sekcja B.4): wpis wdrożenia ma nagłówek `## <plugin> [wersja] – data (POM-n)`.
-Narzędzie czyta tylko CHANGELOG.md (stdlib, bez sieci) i dla każdego POM-n podaje:
+Narzędzie czyta CHANGELOG.md z gałęzi main (`git show main:CHANGELOG.md` – to, co wdrożone, a nie stan bieżącej gałęzi
+roboczej; brak gałęzi main albo gita → ostrzeżenie i plik z dysku; stdlib, bez sieci) i dla każdego POM-n podaje:
   - „nagłówki” – wersje z nagłówków z numerem POM (jednoznaczne: z nich wolno uzupełnić pole „Zrobiono w wersji”),
   - „tylko w treści” – wersje, w których treści POM-n jest wspomniany, a nagłówek go nie ma (niejednoznaczne –
     wzmianka bywa tylko odwołaniem; tego nie wpisuj do pola, najwyżej zapytaj inwestora).
@@ -13,6 +14,7 @@ Narzędzie czyta tylko CHANGELOG.md (stdlib, bez sieci) i dla każdego POM-n pod
 """
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -56,6 +58,22 @@ def mapa_pomyslow(tekst: str) -> dict:
     return wynik
 
 
+def czytaj_changelog() -> tuple:
+    """(tekst, ostrzeżenie): CHANGELOG z gałęzi main; bez niej – plik z dysku z ostrzeżeniem; brak obu → (None, błąd)."""
+    try:
+        r = subprocess.run(["git", "-C", str(ROOT), "show", "main:CHANGELOG.md"], capture_output=True, timeout=30)
+        if r.returncode == 0:
+            return r.stdout.decode("utf-8"), ""
+        powod = r.stderr.decode("utf-8", "replace").strip().splitlines()[-1:] or ["nieznany błąd"]
+    except (OSError, subprocess.SubprocessError) as e:
+        powod = [str(e)]
+    plik = ROOT / "CHANGELOG.md"
+    ostrzezenie = f"⚠ nie da się odczytać CHANGELOG.md z gałęzi main ({powod[0]}) – czytam plik z dysku"
+    if not plik.exists():
+        return None, ostrzezenie.replace("czytam plik z dysku", "brak też CHANGELOG.md na dysku")
+    return plik.read_text(encoding="utf-8"), ostrzezenie
+
+
 def numer(arg: str) -> int:
     m = re.fullmatch(r"(?:POM-)?(\d+)", arg.strip(), re.IGNORECASE)
     if not m:
@@ -66,11 +84,12 @@ def numer(arg: str) -> int:
 def main(argv: list) -> int:
     json_out = "--json" in argv
     argv = [a for a in argv if a != "--json"]
-    plik = ROOT / "CHANGELOG.md"
-    if not plik.exists():
-        print("brak CHANGELOG.md", file=sys.stderr)
+    tekst, ostrzezenie = czytaj_changelog()
+    if ostrzezenie:
+        print(ostrzezenie, file=sys.stderr)
+    if tekst is None:
         return 1
-    mapa = mapa_pomyslow(plik.read_text(encoding="utf-8"))
+    mapa = mapa_pomyslow(tekst)
     try:
         chciane = sorted({numer(a) for a in argv}) if argv else sorted(mapa)
     except ValueError as e:

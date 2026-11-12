@@ -82,8 +82,8 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
      plik ze starym określeniem (np. dawna nazwa narzędzia; wyszukaj w `plugins/`, `docs/`, `README.md`, `AGENTS.md`);
      mapy `ja/references/notion-mapa.md` i `budowa/references/notion-mapa.md`, README, `docs/` (opisy dla człowieka), CHANGELOG;
    - Notion: w Dzienniku „Jak używać” i „🧭 Dla asystenta”; „🗺 Mapa Notion” (schemat, kroki, tabela struktury);
-     „📘 Instrukcja obsługi” (pod DASHBOARD – sekcje, których dotyczy zmiana, i ich linia „Stan:”; po zmianie Claude Code
-     nadpisuje jej kopię offline `AI/Instrukcja obsługi.md` w folderze budowy treścią pobranej strony);
+     „📘 Instrukcja obsługi” (pod DASHBOARD – **tylko** sekcje, których dotyczy zmiana, z nową linią „Stan:”; reszty nie ruszaj;
+     kopię offline `AI/Instrukcja obsługi.md` odświeża raz w miesiącu przegląd tygodnia razem z kontrolą „Stan:”, nie wdrożenie);
      strona „🤖 Asystent AI” (jedyne miejsce z wersją pluginów) i jej podstrony-instrukcje (np. „💸 Wydatki → arkusz
      Google”); opis na stronie, której dotyczy zmiana; przewodnik (`dokumenty`, C).
    Strony Notion zmieniaj punktowo (zamiana fragmentu), nigdy całą treścią – mają osadzone bazy i bloki, których odczyt
@@ -95,7 +95,7 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
    zdarzenia, które trzeba omówić, zanim się rozmyje (nie ogólny temat wychowawczy, relacyjny ani praca nad sobą), załóż
    dodatkowo zadanie w TASKS (`zadania`): „Porozmawiać z <dzieckiem / partnerką> o <temat>”, Obszar Dziecko albo Prywatne,
    When = data wpisu + 3 dni, w treści odnośnik do strony osoby – inaczej rozmowa na świeżo przepada. Zadanie zamknięte ręcznie zostawia temat na liście – wieczorem pyta o to
-   `przeglad-dnia` (krok 5c). Temat ogólny → tylko
+   `przeglad-dnia` (krok 5c; łapie też ręczne nazwy z „Pogadać” / „Rozmowa”). Temat ogólny → tylko
    strona. Nie da się ocenić, czy to świeże zdarzenie → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4).
 10. **Zakładki zamiast długich stron.** Budując lub porządkując stronę w Notion, używaj zakładek (blok z zakładkami, jak na DOM,
     DASHBOARD i ✅ Zadania), gdy treść dzieli się na równoległe części: obszary, etapy, rodzaje list. Najpierw zakładka

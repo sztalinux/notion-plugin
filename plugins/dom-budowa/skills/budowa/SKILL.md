@@ -81,7 +81,7 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
 ## Wieczorem (przegląd dnia budowy)
 
 `przeglad-dnia` (plugin `ja`) wywołuje tę sekcję wieczorem; ręcznie: „przegląd dnia budowy” (osobno od spraw osobistych).
-Kroki 1–4 (dziś, jutro z zakupami i pogodą, wpis w „📆 Przeglądy dzienne – budowa”, zwrot do przeglądu dnia) – wczytaj
+Kroki 1–4 (dziś, jutro z zakupami i ostrzeżeniem pogodowym, wpis w „📆 Przeglądy dzienne – budowa”, zwrot do przeglądu dnia) – wczytaj
 `references/wieczorem.md` i wykonaj je w całości; jedyny zapis poza wpisem to domknięcie decyzji wpisanych w Rejestrze (krok 1).
 
 ## Zasady pracy (obowiązują we wszystkich procedurach)
