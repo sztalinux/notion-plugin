@@ -43,6 +43,11 @@ oddać rzecz do sklepu do tygodnia
 
 Wpis będący punktem listy – okienko wcięte pod punktem tak samo.
 
+Technika: blok wpisu zastąp w całości blokiem z okienkiem jak w przykładzie (`<p>` … `</p>`; punkt listy – ten sam
+punkt z wciętym okienkiem). Nie doklejaj okienka z wcięciem do samego tekstu wpisu – Notion wpisze wtedy znaczniki do
+treści akapitu jako tekst (`\<callout…>`, `<br />`), a okienka nie będzie. Po zapisie sprawdź odczytem, że `<callout>`
+jest dzieckiem wpisu.
+
 ### Odczyt odpowiedzi
 
 - Tekst w okienku poza linią pytania i samym `✍️` = odpowiedź (zwykle `✍️ <odpowiedź>`). Blok dopisany pod okienkiem
