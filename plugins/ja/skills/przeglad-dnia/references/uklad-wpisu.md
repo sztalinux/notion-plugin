@@ -95,7 +95,7 @@ dzień – nic pilnego.”
 - 10:00 <zadanie: wizyta u lekarza>
 - ⏰ <zakup budowy: beton> – zamówić dziś
 
-_Przegląd z 12.11, 22:51 · historia: <wzmianka 📆 Przeglądy dzienne>_
+_Przegląd dnia 12.11 (przebieg 13.11, 2:07) · historia: <wzmianka 📆 Przeglądy dzienne>_
 </callout>
 
 <tabs>
@@ -193,13 +193,17 @@ Wczoraj
 - **Lista WORK** – widok bazy 🔨 TASKS „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (ID w `ja/references/notion-mapa.md`;
   **treści samej strony WORK nie czytaj**) i TASKS z Obszar = Praca (krok B.6).
 
+- **Twoje wpisy o pracy** – Dziennik produktywności (widok „🤖 Ostatni tydzień”, ID w mapie `ja`): wiersze od `od` do dnia
+  przeglądu – „Opis pracy” (jak poszło, co zrobione) i „Przerwy i przeszkadzajki” (to, co blokuje). Treść streść, numery
+  zgłoszeń zachowaj.
+
 Łączenie: jedna sprawa = jedno zgłoszenie (numer `ABC-123` z Jiry, commita, gałęzi, PR-a i pola Ticket w WORK); pokazuj
 numer i tytuł, link do zgłoszenia albo PR-a. Sekcje:
 - **Na dziś** (max 5): PR do mojej recenzji bez mojego głosu → moje zgłoszenia w toku (statusy kategorii „In Progress”,
   np. w realizacji, code review – z PR-em i jego stanem) → Highest / High otwarte → WORK IN PROGRESS i TO DO z When ≤ dzień planu.
-- **Na daily** – gotowa ściąga do powiedzenia: **Wczoraj** = zgłoszenia z commitami lub zmianą od `od` + PR-y utworzone /
-  zamknięte + DONE z WORK (po jednym punkcie na zgłoszenie, max 5) · **Dziś** = pierwsze 2–3 z „Na dziś” ·
-  **Blokery** = zgłoszenia On Hold / WAITING w WORK, moje PR-y czekające na recenzję dłużej niż 2 dni robocze.
+- **Na daily** – gotowa ściąga do powiedzenia: **Wczoraj** = najpierw jedno zdanie z Twojego wpisu o pracy (jak poszło), potem zgłoszenia
+  z commitami lub zmianą od `od` + PR-y utworzone / zamknięte + DONE z WORK (po jednym punkcie na zgłoszenie, max 5) · **Dziś** = pierwsze 2–3 z „Na dziś” ·
+  **Blokery** = to, co we wpisie blokuje lub przeszkadza w pracy, zgłoszenia On Hold / WAITING w WORK, moje PR-y czekające na recenzję dłużej niż 2 dni robocze.
 - **PR-y** (tylko gdy są): moje otwarte z liczbą głosów i celem gałęzi; do mojej recenzji.
 - **Pozostałe otwarte: n** (licznik zgłoszeń Jiry i WORK).
 - **Tydzień** – tylko gdy dzień planu to poniedziałek: zgłoszenia otwarte wg statusu (liczby), PR-y czekające, 3 najważniejsze

@@ -4,6 +4,16 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.16.0] – 2026-11-12 (POM-22, POM-27)
+
+- Nowa procedura `budzet` (POM-22, commit a2ba9ec): zamknięcie miesiąca budżetu domowego – import wyciągów, listy zamówień
+  i list skrótów, dopasowanie do arkusza, strona decyzji, przeniesienie decyzji do Transakcji, nauka reguł; narzędzia
+  `tools/budzet`, dane prywatne poza repo.
+- Przegląd dnia w nocy o 2:00 zamiast 22:45 (prośba inwestora 12.11; plist poza repo): przebieg przed 18:00 dotyczy
+  poprzedniego dnia i pisze plan na bieżący; krok 5 tnie zmiany zadań do dnia przeglądu z linii „Teraz”.
+- Zakładka 💼: czwarte źródło – Twoje wpisy o pracy z Dziennika produktywności (Opis pracy → pierwsze zdanie „Wczoraj” na
+  daily, przeszkadzajki → Blokery); obszar „Praca – produktywność” rozpoznaje też „praca:”, „jak mi poszło”, podsumowania dnia.
+
 ## ja [1.15.1] – 2026-11-12 (POM-27)
 
 - Praca w planie dnia tylko na dni robocze: w piątek i sobotę wieczorem bez odczytów Jiry, PR-ów i WORK (zakładki 💼 nie ma);

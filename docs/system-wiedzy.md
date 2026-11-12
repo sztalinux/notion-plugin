@@ -44,7 +44,7 @@ Czat na telefonie (claude.ai, pluginy ja + dom-budowa): karty → odpowiedź z n
 
 1. **Start sesji Claude Code w repo** – lista wyboru (`CLAUDE.md`), domyślnie nic. Pozycja „Indeks wiedzy” = `sync --publikuj --cicho`
    i przypomnienie obserwatora.
-2. **Automaty launchd (samo)** – szybki przebieg co godzinę w ciągu dnia (8:05–22:05 i 22:30), wieczorny 22:45, tygodniowy w niedzielę
+2. **Automaty launchd (samo)** – szybki przebieg co godzinę w ciągu dnia (8:05–22:05 i 22:30), przegląd dnia o 2:00 w nocy, tygodniowy w niedzielę
    wieczorem. Każdy zaczyna od `sync --publikuj`, `migawka.py` i `wiedza_karty.py aktualizuj --publikuj` (nowe tezy → tagi
    czynności, wybór do kart pytań, ocena ścisła, zapis, publikacja); plik indeksu, który nie mieści się w limicie czasu `sync --cicho`,
    wysyła `publikuj` po wieczornym przebiegu. Mac uśpiony = przebieg przesunięty do wybudzenia, wyłączony = przepada

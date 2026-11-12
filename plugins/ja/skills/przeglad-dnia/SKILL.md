@@ -12,7 +12,7 @@ w rozmowie, te same zasady:
 | Zadanie | Kiedy | Polecenie | Co robi |
 |---|---|---|---|
 | Dziennik – szybki przebieg | co godzinę 8:05–22:05 i 22:30 | „Dziennik – szybki przebieg (skill przeglad-dnia z pluginu ja, tryb szybki)” | rozkłada nowe wpisy; pusto → koniec bez zapisów |
-| Przegląd dnia | raz wieczorem, 22:45 | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + zmiany w zadaniach + pomysły + plan dnia na stronie ☀️ Dziś |
+| Przegląd dnia | raz w nocy, 2:00 (przegląd poprzedniego dnia) | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + zmiany w zadaniach + pomysły + plan dnia na stronie ☀️ Dziś |
 
 Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia” / „podsumuj dzień” = tryb wieczorny, „plan dnia” = tylko
 krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
@@ -105,8 +105,9 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 5. **Zadania – zmiany dnia i luki w kolumnach** (wszystkie obszary; inwestor zmienia statusy i kończy zadania sam w Notion,
    więc nie ma ich we wpisach). Odczyt: widok TASKS „🤖 Zmiany – od wczoraj (przegląd dnia)” (tryb view, ID w
    `ja/references/notion-mapa.md`; `has_more` → następna strona). Widok daje dwa dni, bo „dziś” w filtrze Notion zależy od
-   strefy konta – **dzień utnij sam**: zostaw wiersze z `Last edited time` od północy czasu polskiego (czasy w wyniku są w UTC:
-   północ to 22:00 UTC poprzedniego dnia latem, 23:00 zimą). Notion nie trzyma historii – nie pisz „z X na Y”, klasyfikuj po
+   strefy konta – **dzień utnij sam**: zostaw wiersze z `Last edited time` w **dniu przeglądu** (linia „Teraz” w poleceniu;
+   przebieg rusza o 2:00, więc to wczorajsza data kalendarza): od jego północy do następnej północy czasu polskiego (czasy
+   w wyniku są w UTC: północ to 22:00 UTC poprzedniego dnia latem, 23:00 zimą). Notion nie trzyma historii – nie pisz „z X na Y”, klasyfikuj po
    stanie bieżącym:
    - zamknięte: Status DONE albo ARCHIVED (osobne liczby); w toku / czeka: IN PROGRESS, WAITING, BLOCKED, ON HOLD;
      dodane lub zmienione: pozostałe (TO DO, PLANNED, SOMEDAY);
