@@ -52,8 +52,10 @@ Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kro
 
 ## C. Przesunięcie („płyta przesunięta o tydzień”, „ekipa spóźni się 3 dni”)
 
-1. Zmień Termin kroku (Status „Przesunięte”, w Uwagach powód i data zmiany).
-2. Przelicz kroki, które od niego zależą (relacja Blokuje), i pokaż ich terminy pochodne (propozycja, sekcja B).
+1. Zmień Termin kroku (Status „Przesunięte”, w Uwagach powód i data zmiany). „Przesunięte” trzyma tylko krok, którego
+   termin zmieniłeś, do potwierdzenia nowego terminu z ekipą – wtedy „Potwierdzone”.
+2. Przelicz kroki, które od niego zależą (relacja Blokuje), i pokaż ich terminy pochodne (propozycja, sekcja B); ich Status
+   zostaje bez zmian.
 3. Pokaż zestawienie „było → jest” i co trzeba **odwołać lub przesunąć u innych** (dostawa, kierownik, pompa) – to są
    istniejące zadania i zamówienia powiązane z krokiem – ich nowe terminy zapisz po „ok”; nowych zadań nie zakładaj.
 4. **Wpis z budowy o tempie prac** („nie skończyliśmy, jutro kontynuujemy”, „przez deszcz nie robili”, „skończyli dzień
