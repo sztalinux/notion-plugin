@@ -177,7 +177,8 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
 1. Repo sklonowane do `Dom/AI/dom` (folder budowy = dwa poziomy wyżej; inny – zmienna `DOM_HUB`),
    `git config core.hooksPath .githooks`, `git config user.email <id>+<login>@users.noreply.github.com`
    (autor commitów jest publiczny; imię inwestora dozwolone, e-mail tylko noreply). Lista słów zakazanych: `Dom/.dom/zakazane-w-repo.txt`
-   (nazwiska, firmy, miejscowość – po jednym w linii; plik poza repo).
+   (nazwiska, firmy, miejscowość – po jednym w linii; plik poza repo; bez niej walidacja i hooki zatrzymują się kodem 1 –
+   świadomie same wzorce: `DOM_BEZ_LISTY=1`).
 2. Python 3 + `pip3 install --user openpyxl pypdf` (kontrola danych wrażliwych w paczce).
 3. W `Dom/AI/dom` uruchom `claude`. `/mcp` – jeśli jest zalogowany serwer `notion` (lokalny, krok 5), gotowe.
 4. claude.ai → Customize → Plugins → Add marketplace → `sztalinux/notion-plugin` → zainstaluj `ja` i `dom-budowa`,

@@ -208,7 +208,10 @@ def zakazane_slowa() -> list:
     # wariant bez ogonków („zolw” dla „żółw”) – w wiadomościach i nazwach plików polskie znaki często znikają
     out += [w for w in {bez_ogonkow(x) for x in out} if w not in out]
     if not out:
-        print(f"UWAGA: brak listy {ZAKAZANE} – sprawdzam tylko wzorce (telefon, e-mail, działka, kod, adres, PESEL, konto, NIP, KW, token, kwota)")
+        if os.environ.get("DOM_BEZ_LISTY") != "1":
+            sys.exit(f"✗ brak listy słów zakazanych {ZAKAZANE} (zły DOM_HUB, inny komputer?) – kontrola prywatności "
+                     "zatrzymana. Odtwórz listę albo świadomie sprawdzaj same wzorce: DOM_BEZ_LISTY=1")
+        print(f"UWAGA: brak listy {ZAKAZANE} (DOM_BEZ_LISTY=1) – sprawdzam tylko wzorce (telefon, e-mail, działka, kod, adres, PESEL, konto, NIP, KW, token, kwota)")
     return out
 
 
