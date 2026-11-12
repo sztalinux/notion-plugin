@@ -170,10 +170,13 @@ def kontrola_odeslan() -> list:
 POMIJANE_KATALOGI = {".git", "dist", "dane", "__pycache__", "node_modules", ".agents", ".idea", ".maister"}
 WZORCE = [
     (re.compile(r"(?<![\w-])(\+48[\s-]?)?\d{3}[\s-]?\d{3}[\s-]?\d{3}(?![\w-])"), "numer telefonu"),
+    # stacjonarny „NN NNN NN NN” / „(NN) NNN-NN-NN” (z +48 albo 0048) i komórkowy z „0048” (P05-13)
+    (re.compile(r"(?<![\w-])(?:(?:\+48|0048)[\s-]?)?(?:\(\d{2}\)|\d{2})[\s-]\d{3}[\s-]\d{2}[\s-]\d{2}(?![\w-])"
+                r"|(?<![\w-])0048[\s-]?\d{3}[\s-]?\d{3}[\s-]?\d{3}(?![\w-])"), "numer telefonu"),
     (re.compile(r"[\w.+-]+@[\w-]+\.[a-z]{2,}", re.I), "adres e-mail"),
     (re.compile(r"\b(dz\.?|działk\w*|nr ew\w*)\s*(nr\s*)?\d+/\d+", re.I), "numer działki"),
     (re.compile(r"\b\d{2}-\d{3}\b"), "kod pocztowy"),
-    (re.compile(r"\b(ul\.|ulica)\s+[A-ZĄĆĘŁŃÓŚŹŻ]", re.U), "adres"),
+    (re.compile(r"\b(ul\.|ulica|al\.|aleja|alei|os\.|osiedle|osiedlu)\s+[A-ZĄĆĘŁŃÓŚŹŻ]", re.U), "adres"),
     (re.compile(r"PESEL\D{0,5}\d{11}", re.I), "PESEL"),
     (re.compile(r"(?<![\w.-])\d{11}(?![\w.-])"), "PESEL (11 cyfr)"),
     (re.compile(r"(?<!\w)(?:PL ?)?\d{2}(?:[ ]?\d{4}){6}(?!\w)"), "numer konta"),
@@ -182,8 +185,10 @@ WZORCE = [
     (re.compile(r"\b(secre[t]_|n[t]n_|gh[pousr]_|github_pa[t]_|sk-ant-|xox[bp]-)[A-Za-z0-9_-]{16,}"
                 r"|\bAIza[0-9A-Za-z_-]{35}|-----BEGIN [A-Z ]*PRIVATE KEY-----"),
      "token / klucz API"),
-    # kwoty z „zł” albo „PLN” (z odstępami tysięcy i groszami); przykłady w procedurach pisz „N zł”
-    (re.compile(r"(?<![\w.,])\d(?:[\d \u00a0.,]*\d)?\s?(?:zł|PLN)(?!\w)|\bPLN\s?\d"), "kwota"),
+    # kwoty z „zł”, „złotych”, „zl” albo „PLN” (z odstępami tysięcy, groszami, „k”, „tys.”, „mln”, „mld”; wielkość liter
+    # bez znaczenia – P05-13); przykłady w procedurach pisz „N zł”, „N tys. zł”
+    (re.compile(r"(?<![\w.,])\d(?:[\d \u00a0.,]*\d)?\s?(?:k|tys\.?|mln|mld)?\s?(?:zł(?:otych|ote|oty)?|zl|pln)(?!\w)|\bpln\s?\d",
+                re.I), "kwota"),
 ]
 DOZWOLONE = [re.compile(r"noreply@anthropic\.com"),            # stopka Co-Authored-By
              re.compile(r"[\w.+-]+@users\.noreply\.github\.com")]  # anonimowy adres GitHuba
