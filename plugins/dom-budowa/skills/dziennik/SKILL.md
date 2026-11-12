@@ -76,6 +76,7 @@ Rozkładanie `Zdjęcia/_nowe` (konektor Dysku albo skrypt, plan na sucho, dzienn
 - wpis z tego dnia jest → uzupełnij; nie ma → wpis minimalny (Data, Etap, Krok, Zdjęcia); dwa wpisy → ten z pasującym krokiem;
 - „Zdjęcia” = `<łącznie> zdj.: <NN Krok> (<n>) <link folderu>; …` – liczba zawsze na początku (czyta ją pulpit);
 - „Krok harmonogramu” = kroki, w których przybyły zdjęcia; „Dokumenty z dnia” = linki faktur, WZ, wpisów KB;
+  WZ / karta dostawy → też wiersz 🧱 tej dostawy: „Dokumenty” = link, „Dokumenty dostawy” zaznaczone (`zakupy` C.1);
 - „Ujęcia przed zakryciem” = które ujęcia z listy `etap` B są w `przed zakryciem/`, których brakuje; „Przed zakryciem OK”
   zaznacz tylko przy komplecie, inaczej wymień braki w podsumowaniu.
 Ślad dopiero po udanym ruchu pliku; nieudany zapis do Notion ponów przy następnym przebiegu.
