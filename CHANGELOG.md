@@ -4,6 +4,21 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.14.3] – 2026-11-12
+
+- `koszty` / `tools/wydatki.py gotowka`: kolumna „z rezerwą” nie dolicza rezerwy do etapu 08 (bez rezerwy od rezerwy); materiał i „Inne” etapu obcinane do zera osobno – przekroczony materiał nie zjada niewydanych „Inne”; 2 testy.
+- `etap` / `budowa` / `harmonogram`: bez codziennej prognozy w wieczornym przeglądzie – ostrzeżenie (jedna linia, tylko przy przekroczonym progu) w dniu roboty wrażliwej wpisanej z datą w Uwagach kroku i przez 7 dni pielęgnacji betonu.
+- `przeglad-tygodnia`: kontrola kroków pomija zadania i kroki w koszu; H2 z wyborem DONE albo ARCHIVED.
+- `AGENTS.md`: wariant techniczny asystent wybiera sam – blok 🛑 tylko dla decyzji budowlanych, kolizji i niejasnych wpisów.
+
+## ja [1.13.4] – 2026-11-12
+
+- Pytania do inwestora (`wpisy/references/pytania.md`): sprawy techniczne rozstrzyga asystent; pytania tylko o budowę i czynności, których asystent nie zrobi; każda sprawa czekająca na inwestora ma ślad w „📝 Wpisy”. ZP „Czeka na mnie” → od razu blok 🔔 (`rozwoj-harnessu` D, `przeglad-dnia` uzupełnia brakujące wieczorem).
+- `przeglad-dnia` (kontrola spójności): H – kosz pomijany, H2 DONE albo ARCHIVED; R – „porozmawia / pogada / rozmow” w dowolnym miejscu nazwy (Dziecko, Prywatne); Z3 – pytanie ☑ z proponowaną datą, tylko zakupy zmienione od wczoraj; Z4 – „przeniesione do 🧱” → research zamknięty z dopiskiem „zakup przeniesiony”.
+- `tools/pomysly_wersje.py`: CHANGELOG z gałęzi main (`git show`), zapas – plik z ostrzeżeniem; testy.
+- `tools/kopie.py`: stan kopii dokumentów odczytem z zapasem jak `kopia.py`; zaległy dysk zewnętrzny dla `AI/*` → ⚠; brak gita i uszkodzony rejestr albo stan – komunikat zamiast wyjątku; testy.
+- `ja` zasada 8, `rozwoj-harnessu` B.7: przy wdrożeniu tylko sekcje „📘 Instrukcji obsługi”, których dotyczy zmiana; kopia offline raz w miesiącu (`przeglad-tygodnia-osobisty`).
+
 ## dom-budowa [3.14.2] – 2026-11-12
 
 - Ponowne scalenie gałęzi pomysłów z main po kolejnej nocy samonaprawy (wydania 3.12.6–3.12.10 niżej). Konflikty tylko w numerach wersji, CHANGELOG i zapisie zwijanych bloków w `wpisy` (zostaje zapis z `<toggle>` z main i krok o rozkminkach z gałęzi pomysłów).
