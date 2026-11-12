@@ -25,7 +25,8 @@ Przypomnienie jest linią w przeglądzie dnia, nie powiadomieniem na telefon; pi
 
 ## 0. Pojedyncza rzecz („kupić X na budowę”, wpis z Dziennika)
 
-1. Sprawdź duplikat (wyszukiwarka z parametrem bazy, 1–2 słowa, wśród niedostarczonych); jest → uzupełnij.
+1. Sprawdź duplikat wśród niedostarczonych: widok „🛒 Do zamówienia” (tryb view – widzi też wiersze sprzed minut,
+   wyszukiwarka ich jeszcze nie zna), wyszukiwarka z parametrem bazy (1–2 słowa) tylko jako dopełnienie; jest → uzupełnij.
 2. Nowy wiersz jednym wywołaniem: Pozycja (krótko), Status **Do kupienia** (drobnica, rzecz z marketu lub internetu – bez
    etapu zapytania) albo **Do zapytania** (materiał z hurtowni, betoniarni – sekcja B), Rodzaj, Sposób zakupu, Ilość
    (z jednostką), Specyfikacja (parametr z projektu, gdy dotyczy konstrukcji, izolacji, betonu), Link, Etap, Kto zamawia
