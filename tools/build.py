@@ -141,7 +141,24 @@ def waliduj() -> list:
             for ref in re.findall(r"`(references/[\w\-./]+)`", sk.read_text(encoding="utf-8")):
                 if not (d / ref).exists():
                     bledy.append(f"{d.name}: odwołanie do nieistniejącego {ref}")
+    bledy += kontrola_odeslan()
     bledy += kontrola_prywatnosci()
+    return bledy
+
+
+def kontrola_odeslan() -> list:
+    """Odesłania `references/x.md` i `<skill>/references/x.md` we wszystkich plikach .md pluginów (nie tylko w SKILL.md):
+    gołe – względem własnego skilla, z nazwą – względem skilla o tej nazwie w dowolnym pluginie."""
+    skille_wszystkie = {d.name: d for pl in pluginy() for d in skille(pl)}
+    bledy = []
+    for d in skille_wszystkie.values():
+        for f in sorted(d.rglob("*.md")):
+            for m in re.finditer(r"`(?:([a-z0-9-]+)/)?(references/[\w\-./]+\.md)`", f.read_text(encoding="utf-8")):
+                nazwa, ref = m.groups()
+                if nazwa and nazwa not in skille_wszystkie:
+                    continue  # inny zapis ścieżki (np. dom-budowa/skills/…)
+                if not ((skille_wszystkie[nazwa] if nazwa else d) / ref).exists():
+                    bledy.append(f"{f.relative_to(ROOT)}: odwołanie do nieistniejącego {m.group(0)}")
     return bledy
 
 
