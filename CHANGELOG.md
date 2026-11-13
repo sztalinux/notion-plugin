@@ -5,6 +5,11 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## ja [1.16.5] – 2026-11-13 (POM-22)
+
+- `budzet`: wpływy na konta drugiej osoby mają jej imię w kolumnie Osoba; wiersz „do dodania” w zakładce roku odejmuje je
+  sam, więc nie liczą się podwójnie z przychodem z sald.
+
 ## ja [1.16.4] – 2026-11-13 (POM-22)
 
 - `budzet`: dopasowanie ≈1:1 (ręczny wpis do złotówki różnicy, ±3 dni) – import nie dubluje zaokrąglonych wpisów; zasady
