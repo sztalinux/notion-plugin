@@ -27,7 +27,8 @@ Artifact i ArtifactData nie działają w `claude -p` – procedura tylko w sesji
 4. `get_values Transakcje!A1:O2500` → zapisz wynik jako `DANE/miesiace/transakcje-<data>.json`.
 5. `python3 tools/budzet/importuj.py --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>.json --zen wyciagi/zen.csv
    --mbank wyciagi/mbank.csv --allegro listy/allegro-<data>.json --lista listy/RRRR-MM-<lista>.txt --gotowka listy/RRRR-MM-gotowka.txt`
-   (pomiń brakujące; ścieżki względem DANE).
+   (pomiń brakujące; ścieżki względem DANE; `--salda-wpisane`, gdy salda drugiej osoby są już w Konta). W listach skrótów
+   kwota może być działaniem („5300-580 wyn”) – w arkuszu zostaje formuła.
 6. `python3 tools/budzet/strona.py --dist <folder w katalogu roboczym sesji albo scratchpad>` i publikuj na adres
    `strona_url`: Artifact `file_path=<dist>/index.html`, `files={"dane.js": "<dist>/dane.js"}` – zawsze oba; z nowej
    sesji najpierw `Artifact read` strony. Decyzje inwestora w db (`decyzje/<id>`) zostają między publikacjami.

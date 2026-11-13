@@ -4,6 +4,11 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.16.1] – 2026-11-13 (POM-22)
+
+- `budzet`: kwoty z odejmowaniem w listach skrótów (formuła w arkuszu), flaga `--salda-wpisane`, strona decyzji ukrywa
+  końcówki numerów kart.
+
 ## ja [1.16.0] – 2026-11-12 (POM-22, POM-27)
 
 - Nowa procedura `budzet` (POM-22, commit a2ba9ec): zamknięcie miesiąca budżetu domowego – import wyciągów, listy zamówień

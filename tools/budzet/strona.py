@@ -21,6 +21,7 @@ DIST.mkdir(parents=True, exist_ok=True)
 def czysc(opis):
     o = re.sub(r',?\s*\w{3} CARD: MASTERCARD \*\d+', '', opis)
     o = re.sub(r'CARD: MASTERCARD \*\d*', '', o)
+    o = re.sub(r',?\s*Card \*+\d+', '', o, flags=re.I)
     o = re.sub(r'\b[\dA-F-]{24,}\b', '…', o, flags=re.I)
     o = re.sub(r'\d{10,}', '…', o)
     o = re.sub(r'(Od|Do): ?\S+', '', o)

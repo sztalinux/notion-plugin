@@ -4,7 +4,7 @@
 
     python3 tools/budzet/importuj.py --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>.json \
         [--zen wyciagi/zen.csv] [--mbank wyciagi/mbank.csv] [--allegro listy/allegro-<data>.json] \
-        [--lista listy/RRRR-MM-lista.txt] [--gotowka listy/RRRR-MM-gotowka.txt]
+        [--lista listy/RRRR-MM-lista.txt] [--gotowka listy/RRRR-MM-gotowka.txt] [--salda-wpisane]
 
 Ścieżki względne liczą się od folderu danych (wspolne.DANE). Wynik: miesiace/RRRR-MM.json – wiersze (pewne, po scaleniu),
 auto, decyzje (strona), pominiete, juz (z numerem wiersza), braki, salda.
@@ -22,6 +22,7 @@ from wspolne import DANE, DRZEWO, U, arkusz, kw, norm, opcja, rozbij, wczytaj, w
 ap = argparse.ArgumentParser()
 for a in ('miesiac', 'arkusz', 'zen', 'mbank', 'allegro', 'lista', 'gotowka'):
     ap.add_argument('--' + a)
+ap.add_argument('--salda-wpisane', action='store_true', help='salda drugiej osoby są już w zakładce Konta')
 A = ap.parse_args()
 sciezka = lambda p: p and str(p if Path(p).is_absolute() else DANE / p)
 MIES = A.miesiac
@@ -315,13 +316,14 @@ def czytaj_liste(plik, domyslne_konto):
         l = l.strip()
         if not l or l.startswith('#'):
             continue
-        m = re.match(r'^(\+?)\s*([\d.,]+(?:\s*\+\s*[\d.,]+)*)\s*(.*)$', l)
+        m = re.match(r'^(\+?)\s*(\d[\d.,]*(?:\s*[+-]\s*\d[\d.,]*)*)\s*(.*)$', l)
         if not m:
             k = l.split()[0].lower()
             konto, kid = KONTA.get(k, l), KONTA_ID.get(k, KONTA.get(k, l))
             continue
         n += 1
-        plus, liczby, kod = m.group(1), [kw(x) for x in re.split(r'\s*\+\s*', m.group(2))], m.group(3).strip().lower()
+        plus, kod = m.group(1), m.group(3).strip().lower()
+        liczby = [-kw(x) if z == '-' else kw(x) for z, x in re.findall(r'([+-]?)\s*(\d[\d.,]*)', m.group(2))]
         suma = round(sum(liczby), 2)
         tid = 'l' + hashlib.sha1(f'{MIES}|{kid}|{n}|{l}'.encode()).hexdigest()[:10]
         b = dict(id=tid, data=f'{MIES}-01', konto=konto, osoba=U.get('osoba_listy'), kwota=suma if plus else -suma,
@@ -370,8 +372,9 @@ if ps:
     wiersze.append(dict(data=KONIEC.isoformat(), konto='', osoba='', typ='Przychód', kat=ps['kategoria'], pod='', kwota=None,
                         formula=f"=(Konta!${kol(M + 1)}${w}-Konta!${kol(M)}${w})+XLOOKUP(\"{ps['etykieta_roku']}\", '{R}'!A:A, '{R}'!{kol(M + 2)}:{kol(M + 2)})",
                         opis='', zrodla=[], uwaga=f'liczy się z sald w zakładce Konta (kolumna „{M + 1}”)'))
-    braki.append(f'salda kont drugiej osoby w zakładce Konta, kolumna „{M + 1}” (stan na 1. dzień następnego miesiąca) – '
-                 f'z nich liczy się wiersz {ps["kategoria"]}')
+    if not A.salda_wpisane:
+        braki.append(f'salda kont drugiej osoby w zakładce Konta, kolumna „{M + 1}” (stan na 1. dzień następnego miesiąca) – '
+                     f'z nich liczy się wiersz {ps["kategoria"]}')
 
 # ---------- salda kont z wyciągów (do zakładki Konta, kolumna następnego miesiąca)
 salda = {}
