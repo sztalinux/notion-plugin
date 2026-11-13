@@ -49,21 +49,32 @@ dnia bez inwestora (szczegóły niżej, „Bez inwestora”).
 Przegląd dnia (wieczorem: `budowa`, „Wieczorem”; wpisy „SP-n: …” – każdy przebieg `wpisy`) domyka decyzję, którą inwestor
 **sam napisał**. Asystent nadal niczego nie wybiera za niego.
 
-- **Jasna** = da się ją jednoznacznie przypisać do jednej opcji z pola Opcje albo do jednego stanowiska (np. „Niedopuszczalne”
-  przy dylemacie „dopuszczalne czy niedopuszczalne” = stanowisko B) albo sama opisuje, co robimy. Wtedy kroki 3–5 wyżej:
-  - **Decyzja i Uzasadnienie – słowa inwestora zostają na początku bez zmian**; dopisz po nich ` — = opcja X: <treść opcji
-    w jednym zdaniu> (dopisek asystenta, <data>)`. Część opcji, której inwestor wprost nie wybrał (np. zapis w umowie,
-    dodatkowy zakup), idzie do Konsekwencji jako propozycja, nie do Decyzji. Puste Uzasadnienie – „(nie podano)” i argumenty
-    z Rekomendacji jako „za tym przemawia: …”.
+**Tekst w polu Decyzja to odpowiedź inwestora** – nie czeka na drugą w ❓. Domyślnie jest jasna; inwestor pisze swoimi
+słowami i nie musi trafić w literę opcji.
+
+- **Jasna** = mówi, co robimy: jedna opcja lub stanowisko (np. „Niedopuszczalne” przy dylemacie „dopuszczalne czy
+  niedopuszczalne” = stanowisko B), **własny wariant** (opcja z dodanym warunkiem, połączenie opcji, coś spoza listy),
+  albo **rozstrzyga tylko część** dylematu. Słowa „myślę”, „raczej”, „chyba” przy treści, która mówi, co robimy, nie czynią
+  jej niejasną. Wtedy kroki 3–5 wyżej:
+  - **Decyzja i Uzasadnienie – słowa inwestora zostają na początku bez zmian**; dopisz po nich jedno z:
+    ` — = opcja X: <treść opcji w jednym zdaniu>`, ` — = własny wariant, najbliżej opcji X: <różnica w jednym zdaniu>`,
+    ` — rozstrzyga część: <co>` – zawsze z „(dopisek asystenta, <data>)”. Nierozstrzygnięta część dylematu idzie do
+    Konsekwencji jako „do ustalenia (propozycja): …”, nie blokuje domknięcia. Część opcji, której inwestor wprost nie
+    wybrał (np. zapis w umowie, dodatkowy zakup), też idzie do Konsekwencji jako propozycja, nie do Decyzji. Puste
+    Uzasadnienie – „(nie podano)” i argumenty z Rekomendacji jako „za tym przemawia: …”.
   - Data decyzji = data wpisu w Dzienniku albo data ostatniej edycji wiersza Rejestru; Status „Rozstrzygnięte”.
   - Notatnik: **najpierw istniejący wpis** z tym dylematem (relacja „Karta (Notatnik)”, wzmianka w Kontekście, wyszukiwarka
     2–3 słowa w Notatniku) → Status „Ustalone”, Typ „Decyzja”, dopisek w treści; dopiero gdy go nie ma – nowy wpis Typ „Decyzja”.
   - Wiersze wiedzy, „W skrócie” tematu i sekcja „Sprzeczności i rozstrzygnięcia” – jak krok 4–5.
   - **Bez nowych zadań w TASKS i bez zmian w arkuszu kosztów** – skutki do zrobienia (umowa, zamówienie, pytanie do
     projektanta, pozycja w arkuszu) wypisz w Konsekwencjach jako „do zrobienia (propozycja): …”.
-- **Niejasna** (pasuje do kilku opcji, sprzeczna z polem Opcje, „?”, „może”, „raczej”) → nic nie zmieniaj w wierszu;
-  pytanie „SP-n: wpisałeś »…« – czy to znaczy opcję X?” z propozycją, w formacie `wpisy/references/pytania.md` (plugin `ja`)
+- **Niejasna – tylko gdy** tekst jest pytaniem („?”), mówi „nie wiem” / „zastanowię się”, zostawia wybór otwarty („A albo B”
+  bez kryterium) albo sam sobie przeczy, albo nie odpowiada na dylemat. Wtedy nic nie zmieniaj w wierszu; pytanie
+  „SP-n: wpisałeś »…« – czy to znaczy opcję X?” z propozycją, w formacie `wpisy/references/pytania.md` (plugin `ja`)
   (w Dzienniku „❓”; wpis „SP-n: …” – okienko pod nim). Ten sam wiersz nie dostaje drugiego pytania, dopóki pierwsze czeka.
+- **Każdy przebieg ocenia od nowa** wszystkie wiersze widoku „🤖 Decyzja wpisana – do domknięcia”, także te z czekającym
+  pytaniem (inwestor mógł zmienić Decyzję). Domknięty wiersz z pytaniem w ❓ → pytanie przenieś do „Przetworzone” jako
+  `~~…~~ → rozstrzygnięte z pola Decyzja (data): <wzmianka>` (`wpisy`, „Sprzątanie pytań”).
 - „Zapytam konstruktora / projektanta” w polu Decyzja albo we wpisie → krok 2 (to nie decyzja; pole Decyzja wyczyść
   i przenieś jego treść na początek Konsekwencji z datą).
 - Ślad: „SP-n rozstrzygnięte (<opcja>) – <link>” w bloku dnia „Przetworzone” i licznik „SP: n domknięte” w linii „🤖”.

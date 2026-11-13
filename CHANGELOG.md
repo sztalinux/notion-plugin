@@ -4,6 +4,20 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.15.1] – 2026-11-13
+
+- Rejestr sprzeczności: tekst w polu Decyzja to odpowiedź inwestora – własny wariant, połączenie opcji albo rozstrzygnięcie
+  części dylematu przegląd dnia domyka (Status, Uzasadnienie, Data decyzji, Konsekwencje, Notatnik, wiedza) z dopiskiem
+  asystenta; pytanie w ❓ tylko przy „?”, „nie wiem”, otwartym „A albo B” lub sprzeczności; każdy przebieg ocenia wiersze
+  od nowa, także z czekającym pytaniem (zgłoszenie inwestora 13.11 – decyzje wpisane 10.11 trzy noce bez zmian).
+- HZ-14: Harmonogram aktualizowany od razu, gdy z rozmowy, wpisu lub innej procedury wynika zmiana terminu, kolejności
+  lub zakresu kroku – Uwagi „Było X–Y”, data inwestora „Uzgodnione ustnie”, kroki zależne jako „Szacunek”, tabela „było → jest”.
+
+## ja [1.16.2] – 2026-11-13
+
+- Przegląd dnia i `wpisy`: ta sama granica „niejasnej” decyzji SP co w `wiedza` (dom-budowa 3.15.1); wyjątek bez inwestora
+  dla terminu kroku podanego przez inwestora we wpisie (HZ-14).
+
 ## ja [1.16.1] – 2026-11-13 (POM-22)
 
 - `budzet`: kwoty z odejmowaniem w listach skrótów (formuła w arkuszu), flaga `--salda-wpisane`, strona decyzji ukrywa

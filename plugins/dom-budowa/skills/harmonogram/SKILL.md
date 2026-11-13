@@ -52,10 +52,19 @@ Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kro
 
 ## C. Przesunięcie („płyta przesunięta o tydzień”, „ekipa spóźni się 3 dni”)
 
+**Aktualizuj od razu, bez osobnej prośby** (HZ-14): gdy z rozmowy, wpisu z Dziennika albo innej procedury (dziennik,
+notatka, zakupy, etap, oferta) wynika zmiana terminu, kolejności lub zakresu kroku (umówiona dostawa betonu, inny dzień
+wykopu, krok bez uziomu, bez XPS) – w tej samej pracy zmień w Harmonogramie Termin, nazwę kroku (zakres), Status
+(Przesunięte / Potwierdzone / W trakcie) i Pewność terminu, a w Uwagach **na początku** dopisz „<data>: <powód>. Było X–Y”
+(starej treści nie usuwaj). Datę podaną przez inwestora zapisz jako „Uzgodnione ustnie” – także w przebiegu bez inwestora
+(to fakt, nie decyzja). Kroki zależne przelicz wg 2 jako „Szacunek” (bez inwestora – tylko wg 4) i pokaż tabelę „było → jest”.
+Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym, co w niej padło.
+
 1. Zmień Termin kroku (Status „Przesunięte”, w Uwagach powód i data zmiany). „Przesunięte” trzyma tylko krok, którego
    termin zmieniłeś, do potwierdzenia nowego terminu z ekipą – wtedy „Potwierdzone”.
-2. Przelicz kroki, które od niego zależą (relacja Blokuje), i pokaż ich terminy pochodne (propozycja, sekcja B); ich Status
-   zostaje bez zmian.
+2. Przelicz kroki, które od niego zależą (relacja Blokuje): nowy Termin z Pewnością „Szacunek” (krok z terminem
+   potwierdzonym przez innych lub „Bez odwrotu” – tylko propozycja w tabeli), i pokaż ich terminy pochodne (propozycja,
+   sekcja B); ich Status zostaje bez zmian.
 3. Pokaż zestawienie „było → jest” i co trzeba **odwołać lub przesunąć u innych** (dostawa, kierownik, pompa) – to są
    istniejące zadania i zamówienia powiązane z krokiem – ich nowe terminy zapisz po „ok”; nowych zadań nie zakładaj.
 4. **Wpis z budowy o tempie prac** („nie skończyliśmy, jutro kontynuujemy”, „przez deszcz nie robili”, „skończyli dzień
