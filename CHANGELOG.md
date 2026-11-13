@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.15.2] – 2026-11-13
+
+- Rejestr sprzeczności: pytanie o niejasną decyzję z pola Decyzja trafia do „📝 Wpisy” (blok pod „🔔 Komunikaty asystenta”
+  z okienkiem ❓ i ✍️), a nie do Dziennika „❓” – inwestor odpowiada tam asynchronicznie; odpowiedź domyka wiersz
+  (prośba inwestora 13.11).
+
+## ja [1.16.3] – 2026-11-13
+
+- `wpisy/references/pytania.md` (format C) i przegląd dnia: blok 🔔 dla niejasnej decyzji SP-n (klucz `SP-n`), odpowiedź
+  przy ✍️ = domknięcie wg `wiedza`, sekcja C.
+
 ## dom-budowa [3.15.1] – 2026-11-13
 
 - Rejestr sprzeczności: tekst w polu Decyzja to odpowiedź inwestora – własny wariant, połączenie opcji albo rozstrzygnięcie

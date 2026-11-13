@@ -70,11 +70,13 @@ słowami i nie musi trafić w literę opcji.
     projektanta, pozycja w arkuszu) wypisz w Konsekwencjach jako „do zrobienia (propozycja): …”.
 - **Niejasna – tylko gdy** tekst jest pytaniem („?”), mówi „nie wiem” / „zastanowię się”, zostawia wybór otwarty („A albo B”
   bez kryterium) albo sam sobie przeczy, albo nie odpowiada na dylemat. Wtedy nic nie zmieniaj w wierszu; pytanie
-  „SP-n: wpisałeś »…« – czy to znaczy opcję X?” z propozycją, w formacie `wpisy/references/pytania.md` (plugin `ja`)
-  (w Dzienniku „❓”; wpis „SP-n: …” – okienko pod nim). Ten sam wiersz nie dostaje drugiego pytania, dopóki pierwsze czeka.
+  „SP-n: wpisałeś »…« – czy to znaczy opcję X?” z propozycją – **zawsze w „📝 Wpisy”**, gdzie inwestor odpowiada
+  asynchronicznie: decyzja z pola Decyzja → blok pod „🔔 Komunikaty asystenta” z okienkiem ❓ i `✍️` (`wpisy/references/pytania.md`,
+  C, klucz `SP-n`; plugin `ja`), wpis „SP-n: …” → okienko pod wpisem (A). Nie w Dzienniku „❓”. Ten sam wiersz nie dostaje
+  drugiego pytania, dopóki pierwsze czeka. Odpowiedź przy `✍️` = odpowiedź inwestora: domknij wiersz krokami wyżej.
 - **Każdy przebieg ocenia od nowa** wszystkie wiersze widoku „🤖 Decyzja wpisana – do domknięcia”, także te z czekającym
-  pytaniem (inwestor mógł zmienić Decyzję). Domknięty wiersz z pytaniem w ❓ → pytanie przenieś do „Przetworzone” jako
-  `~~…~~ → rozstrzygnięte z pola Decyzja (data): <wzmianka>` (`wpisy`, „Sprzątanie pytań”).
+  pytaniem (inwestor mógł zmienić Decyzję). Domknięty wiersz z czekającym pytaniem → blok 🔔 (albo stare pytanie w Dzienniku
+  „❓”) przenieś do „Przetworzone” jako `~~…~~ → rozstrzygnięte z pola Decyzja (data): <wzmianka>` (`wpisy`, „Sprzątanie pytań”).
 - „Zapytam konstruktora / projektanta” w polu Decyzja albo we wpisie → krok 2 (to nie decyzja; pole Decyzja wyczyść
   i przenieś jego treść na początek Konsekwencji z datą).
 - Ślad: „SP-n rozstrzygnięte (<opcja>) – <link>” w bloku dnia „Przetworzone” i licznik „SP: n domknięte” w linii „🤖”.

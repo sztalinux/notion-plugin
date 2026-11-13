@@ -27,7 +27,7 @@ krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
 - Decyzję, którą inwestor **sam napisał** – wpis „SP-n: …” albo „decyzja: …”, pole Decyzja w Rejestrze sprzeczności –
   domknij ze wszystkimi skutkami (Status, data, Notatnik, wiedza, temat) wg `wiedza/references/sprzecznosci.md` (plugin
   dom-budowa), „Bez inwestora”. Tekst w polu Decyzja jest odpowiedzią – własny wariant, połączenie opcji albo rozstrzygnięcie
-  części dylematu też domykasz (z dopiskiem asystenta); pytanie tylko przy „?”, „nie wiem”, otwartym „A albo B” lub sprzeczności.
+  części dylematu też domykasz (z dopiskiem asystenta); pytanie tylko przy „?”, „nie wiem”, otwartym „A albo B” lub sprzeczności – blok pod 🔔 w „📝 Wpisy”, nie Dziennik „❓”.
   Pole Decyzja sprawdza wieczór (krok 3) – każdy przebieg od nowa, także wiersze z czekającym pytaniem.
 - Bez planu do akceptacji; zapisy wsadowo (`ja`, zasada 2); odczyt baz przez zapisane widoki i wyszukiwarkę (`ja`, zasada 3), nie SQL.
 - Błąd zapisu (brak uprawnień, limit) → nie ponawiaj w kółko; odnotuj „nie zapisano: …” i zakończ.

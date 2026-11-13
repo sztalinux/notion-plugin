@@ -7,7 +7,7 @@ edycja komórek). Trzy formaty:
 |---|---|---|
 | konkretnego wpisu (Dziennik, „Wpisy”, podstrona, widget, Skrzynka) | okienko pod wpisem w „📝 Wpisy” (`wpisy`, krok 4) | A |
 | czegoś spoza wpisów: RES-n, luki w zadaniach z przeglądu dnia | Dziennik „❓ Czeka na Twoją odpowiedź”, strona RES-n („### ❓ Pytania”), strona pomysłu | B |
-| problemu, którego nie wywołał żaden wpis (automat Maca, skrypt, błąd kolejki 💸) | zwijany nagłówek „🔔 Komunikaty asystenta” w „📝 Wpisy” | C |
+| problemu, którego nie wywołał żaden wpis (automat Maca, skrypt, błąd kolejki 💸), niejasnej decyzji SP-n wpisanej w pole Decyzja Rejestru | zwijany nagłówek „🔔 Komunikaty asystenta” w „📝 Wpisy” | C |
 
 **Co w ogóle pytać.** Sprawy techniczne (harness, skrypty, automaty, scalanie, struktura Notion, warianty naprawy ZP)
 rozstrzyga asystent sam i tylko odnotowuje wynik – inwestor ufa mu w tym i nie ma czasu na takie pytania. Pytaj o budowę
@@ -92,14 +92,17 @@ w „Przetworzone”), reszta zostaje. Zaznaczony checkbox liczy się jako odpow
 Problemy asynchroniczne – nikt o nie nie pytał we wpisie, a inwestor powinien o nich wiedzieć: przebieg na Macu się nie udał
 albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błąd, kopie zapasowe po terminie
 (`przeglad-tygodnia-osobisty`, klucz `kopie-zapasowe`), wpis kolejki 💸 nie trafił do arkusza
-(`koszty`, E). Wszystkie w jednym miejscu: zwijany nagłówek „🔔 Komunikaty asystenta” na górze treści „📝 Wpisy”
+(`koszty`, E), decyzja wpisana w pole Decyzja Rejestru sprzeczności jest niejasna (`wiedza/references/sprzecznosci.md`,
+„Bez inwestora”; plugin dom-budowa). Wszystkie w jednym miejscu: zwijany nagłówek „🔔 Komunikaty asystenta” na górze treści „📝 Wpisy”
 (nad wpisami). Nagłówek zostaje także pusty – nie usuwaj go; brak → utwórz przy pierwszym komunikacie.
 
 1. **Jeden problem = jeden blok** pod nagłówkiem: akapit `🔔 <dd.mm gg:mm> · <skąd> – <co się stało, jedno zdanie>`
    (od drugiego razu dopisek `(od <dd.mm>, n razy)`), na końcu klucz problemu w kodzie (`` `przebieg-wieczorny` ``; z listy
    automatu – dosłownie, 💸 – wzmianka strony kolejki zamiast klucza). Pod akapitem okienko jak w A: ❓, żółte tło,
    pogrubione „Co możesz zrobić” z propozycją (do ok. 20 słów, np. „Nic – ponowię sam; napisz »log«, a zajrzę do logu”),
-   linia `✍️`. 💸: format z `koszty`, E – tylko miejsce się zmienia.
+   linia `✍️`. 💸: format z `koszty`, E – tylko miejsce się zmienia. SP-n: akapit `🔔 <dd.mm> · SP-n – wpisałeś „<Decyzja>”`
+   z wzmianką wiersza Rejestru i kluczem `` `SP-n` ``, w okienku pogrubione pytanie z propozycją opcji („czy to znaczy B?”),
+   linia `✍️`; odpowiedź (pkt 4) = domknięcie wg `wiedza`, sekcja C (plugin dom-budowa), blok do „Przetworzone”.
 2. **Ten sam problem po raz kolejny** (ten sam klucz albo ta sama strona 💸) → zaktualizuj istniejący blok (data, „od”,
    licznik), nie dodawaj drugiego.
 3. **Ustąpiło samo** (automat podał „ustąpiło”, strona 💸 nie jest już „Błąd”) → blok do „Przetworzone” jako
