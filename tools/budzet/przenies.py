@@ -120,6 +120,8 @@ if A.zapisz_reguly:
                 tok = []
                 for x in o.split(' '):
                     if re.search(r'\d', x) or len(tok) == 2:
+                        if not tok and '*' in x:
+                            tok.append(x.split('*')[0])
                         break
                     tok.append(x)
                 k = ' '.join(tok) or o[:20]
