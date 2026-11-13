@@ -69,3 +69,7 @@ Artifact i ArtifactData nie działają w `claude -p` – procedura tylko w sesji
 - Pensja w arkuszu brutto (przelew + pakiety jako osobne wiersze) – przelew z banku nie jest wtedy nowym wierszem.
 - Pary pomijane razem (np. wydatek oddany tego samego dnia) – `ustawienia.json` → `pary_pomijane`.
 - Pytaj tylko o to, czego nie da się ustalić z danych; jedna lista braków zamiast serii pytań.
+- Już w arkuszu: ID w kolumnie O, potem 1:1, potem ≈1:1 (ręczny wpis do złotówki różnicy, ±3 dni, jedyny kandydat), potem sumy.
+  Przed zapisem sprawdź, czy wpływy na konta drugiej osoby (świadczenia, zwroty) nie są już w jej przychodzie liczonym z sald.
+- Zakładka roku (np. „2026”): kolory wierszy daje formatowanie warunkowe po kolumnach A–C (typ / kategoria / podkategoria) –
+  nie koloruj ręcznie. Sumuje podkategorie po samej nazwie, więc nazwa podkategorii musi być unikalna w całym arkuszu.

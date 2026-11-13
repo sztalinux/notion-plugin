@@ -66,6 +66,14 @@ for r in nasze:
         t = min(k, key=lambda t: abs((t['data'] - r['data']).days) if r['data'] else 0)
         para[t['id']] = (r, '1:1')
         r['uzyty'] = True
+for r in nasze:  # ręcznie wpisane z zaokrągleniem albo literówką: do złotówki różnicy, ±3 dni, jedyny kandydat
+    if r.get('uzyty') or r['typ'] == 'Przelew' or not r['data']:
+        continue
+    k = [t for t in pozbank[(r['konto'], r['mies'])] if t['id'] not in para and pasuje(r, t)
+         and abs(abs(t['kwota']) - r['kwota']) <= 1.0 and abs((t['data'] - r['data']).days) <= 3]
+    if len(k) == 1:
+        para[k[0]['id']] = (r, f"≈1:1 (w arkuszu {r['kwota']:.2f})")
+        r['uzyty'] = True
 for r in nasze:
     if r.get('uzyty') or r['typ'] == 'Przelew' or not r['data']:
         continue
@@ -87,9 +95,9 @@ for r in nasze:
 
 
 def kandydaci(t, n=3):
-    """Ręczne sumy w arkuszu, które mogą zawierać tę transakcję (to samo konto i miesiąc, ±3 dni, kwota ≥, niewykorzystane)."""
+    """Ręczne sumy w arkuszu, które mogą zawierać tę transakcję (to samo konto i miesiąc, ±3 dni, kwota ≥ minus złotówka, niewykorzystane)."""
     k = [r for r in nasze if r['konto'] == t['konto'] and r['data'] and r['mies'] == t['mies'] and not r.get('uzyty')
-         and abs((r['data'] - t['data']).days) <= 3 and r['kwota'] >= abs(t['kwota']) - 0.005 and pasuje(r, t) and r['typ'] != 'Przelew']
+         and abs((r['data'] - t['data']).days) <= 3 and r['kwota'] >= abs(t['kwota']) - 1.0 and pasuje(r, t) and r['typ'] != 'Przelew']
     k.sort(key=lambda r: (abs((r['data'] - t['data']).days), r['kwota']))
     return [wiersz_info(r) for r in k[:n]]
 

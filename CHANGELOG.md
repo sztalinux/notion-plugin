@@ -4,6 +4,12 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+
+## ja [1.16.4] – 2026-11-13 (POM-22)
+
+- `budzet`: dopasowanie ≈1:1 (ręczny wpis do złotówki różnicy, ±3 dni) – import nie dubluje zaokrąglonych wpisów; zasady
+  o wpływach na konta drugiej osoby i o zakładce roku (kolory z formatowania warunkowego, unikalne podkategorie).
+
 ## dom-budowa [3.15.2] – 2026-11-13
 
 - Rejestr sprzeczności: pytanie o niejasną decyzję z pola Decyzja trafia do „📝 Wpisy” (blok pod „🔔 Komunikaty asystenta”
