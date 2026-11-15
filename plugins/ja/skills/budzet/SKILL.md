@@ -97,6 +97,10 @@ Przychód z jej Osobą**. Wiersz w Transakcjach (kategoria `przychod_z_sald`) ma
   z dni po końcu miesiąca dodaj do odczytanego salda, wpływy odejmij (formuła w komórce Konta, np. `=1000+250`), i zapisz.
 - Pytanie „czy przychód jest dobrze policzony” → rozpisz miesiąc: zmiana salda każdego konta, wydatki, przelewy, wpływy,
   obok dwóch poprzednich miesięcy; sprawdź kontrolę (C.8) i datę odczytu sald. Formuły zgadzają się zawsze – sprawdzaj dane.
+- „Oszczędności” w dashboardzie (Przychód − Koszt − Wydatki − Inwestycje) ≠ zmiana sald „Razem wolne” w Konta → rozbij
+  różnicę po stronie pierwszej osoby (u drugiej zgadza się z definicji): saldo ZEN w Konta inne niż w wyciągu (wpisuj saldo
+  PLN z wyciągu), karta podarunkowa Allegro kupiona, a niewydana, zakupy Allegro Pay spłacane w kolejnym miesiącu, zwrot
+  odjęty od zakupu, a zaksięgowany w kolejnym miesiącu, wymiana walut, puste salda w Konta (wtedy porównanie nic nie mówi).
 
 ## Zasady
 

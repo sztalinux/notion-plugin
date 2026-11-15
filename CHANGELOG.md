@@ -5,6 +5,11 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## ja [1.17.1] – 2026-11-15 (POM-22)
+
+- `budzet` D: skąd biorą się różnice między oszczędnościami w dashboardzie a zmianą sald (ZEN, karta podarunkowa, Allegro Pay,
+  zwroty po końcu miesiąca, puste salda) – jak je rozbić.
+
 ## ja [1.17.0] – 2026-11-15 (POM-22, POM-28)
 
 - `budzet` jako całość: lista „co przygotowuje inwestor”, wydatki na bieżąco, zamknięcie, kontrola i przychód drugiej osoby
