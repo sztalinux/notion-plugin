@@ -89,7 +89,7 @@ for (dzien, konto, osoba, typ, kat, pod), g in sorted(grupy.items(), key=lambda 
     skl = [x for p in g for x in p['skl']]
     d_ = ('=' + '+'.join(f'{x:.2f}' for x in skl)).replace('+-', '-') if len(skl) > 1 else round(sum(skl), 2)
     opis = ', '.join(dict.fromkeys(p['opis'] for p in g if p['opis']))[:120]
-    wiersze.append([max(p['data'] for p in g), 'Zrealizowane', typ, d_, kat, pod, konto, osoba, opis, '', TAG, '', '', '',
+    wiersze.append([max(p['data'] for p in g), 'Zrealizowane', typ, d_, kat, pod, konto, '' if typ == 'Przelew' else osoba, opis, '', TAG, '', '', '',
                     ','.join(i for p in g for i in p['ids'])])
 for w in D['wiersze']:
     if U.get('przychod_z_sald') and w['kat'] == U['przychod_z_sald']['kategoria']:

@@ -367,7 +367,7 @@ for a in auto:
 wiersze = []
 for (dzien, konto, typ, kat, pod), g in sorted(grupy.items(), key=lambda x: (max(a['data'] for a in x[1]), x[0][1] or '')):
     skl = [x for a in g for x in (a['skladniki'] if a.get('skladniki') else [a['kwota_ark']])]
-    wiersze.append(dict(data=max(a['data'] for a in g), konto=konto, osoba=g[0]['osoba'], typ=typ, kat=kat, pod=pod,
+    wiersze.append(dict(data=max(a['data'] for a in g), konto=konto, osoba='' if typ == 'Przelew' else g[0]['osoba'], typ=typ, kat=kat, pod=pod,
                         kwota=round(sum(skl), 2), formula=('=' + '+'.join(f'{x:.2f}' for x in skl)).replace('+-', '-') if len(skl) > 1 else None,
                         opis=', '.join(sorted({a['regula'] for a in g})), zrodla=[a['id'] for a in g],
                         uwaga='; '.join(a['budowa'] for a in g if a.get('budowa'))))
