@@ -5,6 +5,7 @@ from pathlib import Path
 os.environ['BUDZET_DANE'] = tempfile.mkdtemp()
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'budzet'))
 import allegro  # noqa: E402
+import wpis  # noqa: E402
 import wspolne  # noqa: E402
 
 WAL = "z" + "\u0142"  # waluta sklejana, żeby walidator nie brał przykładów za kwoty
@@ -63,6 +64,27 @@ class Testy(unittest.TestCase):
         t = wspolne.wyciagi(zen=p)
         self.assertEqual((t[0]['kwota'], t[0]['saldo'], t[0]['kier'], t[0]['no']), (-12.5, 100.0, 'wypływ', 'SKLEP TESTOWY POL'))
         self.assertEqual(t[0]['id'], wspolne.wyciagi(zen=p)[0]['id'])
+
+    def test_wpis(self):
+        wspolne.U.update(skroty_kont={'pra': 'K-praca', 'z': 'K-bank'}, skroty_osob={'o': 'Osoba B', 'a': 'Osoba A'},
+                         konta_list={'praca': 'K-praca'}, gotowka_konto='Gotówka', osoba_listy='Osoba B', osoba_wyciagi='Osoba A',
+                         konto_zen='K-bank')
+        sk = {'zam': ['Koszt', 'Praca', 'Zamówienia'], 'dom': ['Inwestycja', 'Dom', '']}
+        w = wpis.parsuj('200, pra, o, zam, przykład', sk)
+        self.assertEqual((w['kwota'], w['konto'], w['osoba'], w['kat'], w['pod'], w['opis']),
+                         (-200.0, 'K-praca', 'Osoba B', 'Praca', 'Zamówienia', 'przykład'))
+        w = wpis.parsuj('150, z, a, dom, test', sk)
+        self.assertEqual((w['konto'], w['osoba'], w['typ'], w['kat']), ('K-bank', 'Osoba A', 'Inwestycja', 'Dom'))
+        w = wpis.parsuj('12,50, zam', sk)  # bez konta: gotówka i druga osoba; przecinek dziesiętny
+        self.assertEqual((w['kwota'], w['konto'], w['osoba']), (-12.5, 'Gotówka', 'Osoba B'))
+        w = wpis.parsuj('10, z, o, zam', sk)  # konto z wyciągiem z osobą podaną wprost
+        self.assertEqual(w['osoba'], 'Osoba B')
+        w = wpis.parsuj('+100, pra, nieznany', sk)
+        self.assertEqual((w['kwota'], w['kat'], w['kod']), (100.0, '', 'nieznany'))
+        w = wpis.parsuj('30-5, zam', sk)
+        self.assertEqual((w['kwota'], w['skladniki']), (-25.0, [30.0, -5.0]))
+        with self.assertRaises(ValueError):
+            wpis.parsuj('abc, zam', sk)
 
 
 if __name__ == '__main__':

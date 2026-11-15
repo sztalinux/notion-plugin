@@ -44,8 +44,8 @@ def kwota_ark(kwota, typ):
 pozycje, zmiany, bez, wyjasnij, opisy = [], [], [], [], []
 for a in D['auto']:
     pozycje.append(dict(id=a['id'], data=a['data'], konto=a['konto'], osoba=a['osoba'], typ=a['typ'], kat=a['kat'], pod=a['pod'],
-                        skl=a['skladniki'] if a.get('skladniki') else [a['kwota_ark']], opis=a['regula'], grupa=a['regula'] == 'CASHBACK',
-                        ids=[a['id']] if a['id'].startswith('b') else []))
+                        skl=a['skladniki'] if a.get('skladniki') else [a['kwota_ark']], opis=a.get('opis_w') or a['regula'],
+                        grupa=a['regula'] == 'CASHBACK', ids=([a['id']] if a['id'][0] in 'blw' else []) + a.get('ids_w', [])))
 odejmij = []
 for it in D['decyzje']:
     d = DEC.get(it['id'], {})
@@ -63,10 +63,10 @@ for it in D['decyzje']:
     if it['zrodlo'] == 'allegro':
         opis = d.get('opis') or ('Allegro: ' + ', '.join(it.get('produkty', [])))[:100]
     else:
-        opis = d.get('opis') or it.get('regula') or it['opis'][:30]
+        opis = d.get('opis') or it.get('opis_w') or it.get('regula') or it['opis'][:30]
     pozycje.append(dict(id=it['id'], data=it['data'], konto=it['konto'], osoba=it['osoba'], typ=d['typ'], kat=d['kat'], pod=d['pod'],
                         skl=it['skladniki'] if it.get('skladniki') else [kwota_ark(it['kwota'], d['typ'])], opis=opis, grupa=False,
-                        ids=[it['id']] if it['id'][0] in 'ba' else [], regula=it.get('regula', ''), zrodlo=it['zrodlo'],
+                        ids=[it['id']] if it['id'][0] in 'balw' else [], regula=it.get('regula', ''), zrodlo=it['zrodlo'],
                         etykieta=d['etykieta'], kwota=it['kwota'], opis_banku=it['opis']))
 byid = {p['id']: p for p in pozycje}
 for it, d in odejmij:

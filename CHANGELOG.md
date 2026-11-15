@@ -5,6 +5,23 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## ja [1.17.0] – 2026-11-15 (POM-22, POM-28)
+
+- `budzet` jako całość: lista „co przygotowuje inwestor”, wydatki na bieżąco, zamknięcie, kontrola i przychód drugiej osoby
+  z sald w jednej procedurze; układ arkusza i nowy rok w `references/arkusz.md`.
+- Wydatek z wpisu w skrócie „kwota, konto, osoba, kategoria, opis” → `tools/budzet/wpis.py` (plik miesiąca w folderze
+  danych, działa w przebiegu); zamknięcie miesiąca czyta go: gotówka i konta drugiej osoby jako wiersze z datą i opisem,
+  konta z wyciągiem jako podpowiedź kategorii; ta sama pozycja z listy drugiej osoby jest pomijana.
+- Import nie dubluje pozycji list i wpisów już wpisanych ręcznie (konto, kwota, kategoria) ani zaimportowanych (ID w kolumnie O);
+  ID linii listy nie zależy od jej pozycji. Grudzień: wiersz przychodu z sald zgłaszany jako brak (nowy rok).
+- `tools/budzet/kontrola.py`: kwota tekstem albo pusta, duplikaty, Osoba w wierszach kont drugiej osoby, wpływów i przelewów,
+  złe pary kategorii, brak lub dwa wiersze przychodu z sald w miesiącu.
+
+## dom-budowa [3.15.3] – 2026-11-15 (POM-28)
+
+- `koszty` B.5a: zapłacony wydatek na budowę trafia też do budżetu domowego (procedura `budzet`, sekcja A) jako wydatek
+  na dom – zamknięcie miesiąca nie pyta wtedy „nie ma w kosztorysie”.
+
 ## ja [1.16.6] – 2026-11-15 (POM-22)
 
 - `budzet`: przelewy między osobami zapisywane bez Osoby (import i przeniesienie decyzji) – jak dotychczasowe wiersze.

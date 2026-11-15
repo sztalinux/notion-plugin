@@ -281,7 +281,7 @@ dialog::backdrop { background: rgb(0 0 0 / .35) }
     });
     const opisRow = el('div', { class: 'desc', hidden: !pokazOpis }, inp);
     if (!pokazOpis) chips.append(el('button', { class: 'chip ghost', onclick: e => { opisRow.hidden = false; e.currentTarget.remove(); inp.focus(); } }, '+ opis'));
-    const kiedy = it.zrodlo === 'lista' ? 'lista' : dLabel(it.data);
+    const kiedy = it.zrodlo === 'lista' && !it.wpis ? 'lista' : (it.wpis ? 'wpis ' : '') + dLabel(it.data);
     return el('article', { class: 'card' + (zdecydowane(it) ? ' done' : ''), id: 'k-' + it.id },
       el('div', { class: 'row1' },
         el('div', { class: 'when' }, el('span', {}, kiedy), el('span', { class: 'acct' }, (it.konto || '').replace(/^\[(.)\] /, '$1 · ')), it.pay ? el('span', { class: 'acct' }, 'Allegro Pay') : null),

@@ -4,9 +4,10 @@
 
     python3 tools/budzet/importuj.py --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>.json \
         [--zen wyciagi/zen.csv] [--mbank wyciagi/mbank.csv] [--allegro listy/allegro-<data>.json] \
-        [--lista listy/RRRR-MM-lista.txt] [--gotowka listy/RRRR-MM-gotowka.txt] [--salda-wpisane]
+        [--lista listy/RRRR-MM-lista.txt] [--gotowka listy/RRRR-MM-gotowka.txt] [--wpisy listy/RRRR-MM-wpisy.jsonl] \
+        [--salda-wpisane]
 
-Ścieżki względne liczą się od folderu danych (wspolne.DANE). Wynik: miesiace/RRRR-MM.json – wiersze (pewne, po scaleniu),
+Ścieżki względne liczą się od folderu danych (wspolne.DANE). Wpisy (wpis.py) czyta też bez --wpisy, jeśli plik miesiąca istnieje. Wynik: miesiace/RRRR-MM.json – wiersze (pewne, po scaleniu),
 auto, decyzje (strona), pominiete, juz (z numerem wiersza), braki, salda.
 """
 import argparse, hashlib, json, re, statistics, sys
@@ -17,10 +18,10 @@ from itertools import combinations
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import DANE, DRZEWO, U, arkusz, kw, norm, opcja, rozbij, wczytaj, wyciagi, zapisz  # noqa: E402
+from wspolne import DANE, DRZEWO, U, arkusz, kw, nazwa, norm, opcja, rozbij, wczytaj, wyciagi, zapisz  # noqa: E402
 
 ap = argparse.ArgumentParser()
-for a in ('miesiac', 'arkusz', 'zen', 'mbank', 'allegro', 'lista', 'gotowka'):
+for a in ('miesiac', 'arkusz', 'zen', 'mbank', 'allegro', 'lista', 'gotowka', 'wpisy'):
     ap.add_argument('--' + a)
 ap.add_argument('--salda-wpisane', action='store_true', help='salda drugiej osoby są już w zakładce Konta')
 A = ap.parse_args()
@@ -166,6 +167,19 @@ def decyzja(b, **kw_):
     decyzje.append(d)
 
 
+# --- wydatki z wpisów (wpis.py): konto z wyciągiem -> podpowiedź kategorii dla transakcji; reszta -> jak lista (niżej)
+pw = Path(sciezka(A.wpisy) if A.wpisy else DANE / 'listy' / f'{MIES}-wpisy.jsonl')
+WPISY = [json.loads(l) for l in pw.read_text(encoding='utf-8').splitlines() if l.strip()] if pw.exists() else []
+for w in WPISY:
+    if w['konto'] not in KONTA_A:
+        continue
+    wd = date.fromisoformat(w['data'])
+    k = [t for t in teraz if t['konto'] == w['konto'] and not t.get('wpis') and (t['kwota'] > 0) == (w['kwota'] > 0)
+         and abs(abs(t['kwota']) - abs(w['kwota'])) <= 1.0 and abs((t['data'] - wd).days) <= 4]
+    if k:
+        t = min(k, key=lambda t: (abs(abs(t['kwota']) - abs(w['kwota'])), abs((t['data'] - wd).days)))
+        t['wpis'], w['para'] = w, t['id']
+
 # --- pary pomijane razem (np. wydatek oddany tego samego dnia), przelewy partnera, pensja, zapowiedziane zwroty
 for p in U.get('pary_pomijane', []):
     for t in teraz:
@@ -225,6 +239,12 @@ for t in sorted(teraz, key=lambda t: (t['data'], t['konto'])):
         continue
     if t.get('para'):
         pominiete.append(dict(b, powod=t['para']))
+        continue
+    w = t.get('wpis')
+    if w and w['kat']:
+        auto.append(dict(b, typ=w['typ'], kat=w['kat'], pod=w['pod'], regula=w['kod'], opis_w=w['opis'] or w['kod'],
+                         kwota_ark=kwota_w_arkuszu(t['kwota'], w['typ']), ids_w=[w['id']],
+                         **({'budowa': 'z wpisu – w kosztorysie budowy (💸)'} if w.get('budowa') else {})))
         continue
     g = regula(t)
     if g and g['pewnosc'] == 'Pomiń':
@@ -286,6 +306,8 @@ for t in sorted(teraz, key=lambda t: (t['data'], t['konto'])):
                          kwota_ark=kwota_w_arkuszu(t['kwota'], prop['typ'])))
         continue
     uw = [g['uwaga']] if g and g['uwaga'] else []
+    if w:
+        uw.insert(0, f"wpis: {w['tekst']}")
     if moze_juz:
         uw.insert(0, f"na tym koncie wpisane ręcznie do {ostatnia[t['konto']].strftime('%d.%m')} – sprawdź, czy nie siedzi w sumie")
     decyzja(b, pewnosc='Zwykle' if pew == 'Zawsze' else pew, regula=g['klucz'] if g else '',
@@ -318,8 +340,52 @@ for r in ark:
         hist[(r['konto'], r['kat'], r['pod'])].append(r['kwota'])
 
 
+PS_KAT = U.get('przychod_z_sald', {}).get('kategoria')
+# ręcznie wpisane wiersze tego miesiąca (gotówka, konta drugiej osoby) – lista i wpisy nie mogą ich zdublować
+nasze_l = [r for r in ark if r['konto'] not in KONTA_A and r['mies'] == MIES and r['kwota'] is not None and not r['ids']
+           and r['typ'] != 'Przelew' and r['kat'] != PS_KAT]
+
+
+def juz_w_arkuszu(b, kod):
+    if b['id'] in po_id:
+        return po_id[b['id']], 'zaimportowane wcześniej'
+    kat = SKROTY.get(kod)
+    for r in nasze_l:
+        if not r.get('uzyty') and r['konto'] == b['konto'] and abs(r['kwota'] - abs(b['kwota'])) < 0.005 \
+                and (not kat or nazwa(kat[1]) == r['kat']):
+            r['uzyty'] = True
+            return r, 'wpisane wcześniej ręcznie'
+    return None
+
+
+def pozycja(b, kod, budowa=''):
+    """Jedna pozycja listy albo wpisu (gotówka, konta drugiej osoby): już w arkuszu / pewna / decyzja."""
+    j = juz_w_arkuszu(b, kod)
+    if j:
+        juz.append(dict(b, sposob=j[1], w=wiersz_info(j[0])))
+        return
+    suma, konto = abs(b['kwota']), b['konto']
+    if kod not in SKROTY:
+        decyzja(b, zrodlo='lista', regula=kod, opcje=[rozbij(o) for o in NIEZNANE.get(kod, [])],
+                uwaga='nieznany skrót' if kod else 'wpływ bez opisu')
+        return
+    typ, kat, pod = SKROTY[kod]
+    prop = opcja(typ, kat, pod)
+    h = hist.get((konto, prop['kat'], prop['pod']), [])
+    bud = {'budowa': budowa} if budowa else ({'budowa': w_kosztorysie(suma, b['data'])} if prop['kat'] == 'Dom' else {})
+    if len(h) >= 3 and suma > 1000 and suma > 3 * statistics.median(h):
+        decyzja(b, zrodlo='lista', pewnosc='Zwykle', regula=kod, propozycja=prop, opcje=[prop],
+                uwaga=f'nietypowo duża kwota (zwykle ok. {statistics.median(h):.0f} zł)')
+        decyzje[-1].update(bud)
+    else:
+        auto.append(dict(b, typ=prop['typ'], kat=prop['kat'], pod=prop['pod'], regula=kod, kwota_ark=suma, **bud))
+
+
+WPISY_L = [w for w in WPISY if w['konto'] not in KONTA_A]
+
+
 def czytaj_liste(plik, domyslne_konto):
-    konto, kid, n = domyslne_konto, domyslne_konto, 0
+    konto, kid, n = domyslne_konto, domyslne_konto, Counter()
     for l in Path(plik).read_text(encoding='utf-8').splitlines():
         l = l.strip()
         if not l or l.startswith('#'):
@@ -329,26 +395,19 @@ def czytaj_liste(plik, domyslne_konto):
             k = l.split()[0].lower()
             konto, kid = KONTA.get(k, l), KONTA_ID.get(k, KONTA.get(k, l))
             continue
-        n += 1
+        n[(kid, l)] += 1  # ID nie zależy od pozycji linii – dopisanie linii nie zmienia ID pozostałych
         plus, kod = m.group(1), m.group(3).strip().lower()
         liczby = [-kw(x) if z == '-' else kw(x) for z, x in re.findall(r'([+-]?)\s*(\d[\d.,]*)', m.group(2))]
         suma = round(sum(liczby), 2)
-        tid = 'l' + hashlib.sha1(f'{MIES}|{kid}|{n}|{l}'.encode()).hexdigest()[:10]
+        tid = 'l' + hashlib.sha1(f'{MIES}|{kid}|{l}|{n[(kid, l)]}'.encode()).hexdigest()[:10]
         b = dict(id=tid, data=f'{MIES}-01', konto=konto, osoba=U.get('osoba_listy'), kwota=suma if plus else -suma,
                  opis=l, skladniki=liczby if len(liczby) > 1 else None)
-        if kod in SKROTY:
-            typ, kat, pod = SKROTY[kod]
-            prop = opcja(typ, kat, pod)
-            h = hist.get((konto, prop['kat'], prop['pod']), [])
-            if len(h) >= 3 and suma > 1000 and suma > 3 * statistics.median(h):
-                decyzja(b, zrodlo='lista', pewnosc='Zwykle', regula=kod, propozycja=prop, opcje=[prop],
-                        uwaga=f'nietypowo duża kwota (zwykle ok. {statistics.median(h):.0f} zł)')
-            else:
-                auto.append(dict(b, typ=prop['typ'], kat=prop['kat'], pod=prop['pod'], regula=kod, kwota_ark=suma,
-                                 **({'budowa': w_kosztorysie(suma, b['data'])} if prop['kat'] == 'Dom' else {})))
-        else:
-            decyzja(b, zrodlo='lista', regula=kod, opcje=[rozbij(o) for o in NIEZNANE.get(kod, [])],
-                    uwaga='nieznany skrót' if kod else 'wpływ bez opisu')
+        w = next((w for w in WPISY_L if not w.get('para') and w['konto'] == konto and abs(w['kwota'] - b['kwota']) < 0.005), None)
+        if w:
+            w['para'] = tid
+            pominiete.append(dict(b, powod=f"już z wpisu {w['data']}" + (f" ({w['opis']})" if w['opis'] else '')))
+            continue
+        pozycja(b, kod)
 
 
 if A.lista:
@@ -360,6 +419,16 @@ if A.gotowka:
 else:
     braki.append(f"lista wydatków gotówkowych (Osoba = {U.get('osoba_listy')})")
 
+for w in WPISY:
+    b = dict(id=w['id'], data=w['data'], konto=w['konto'], osoba=w['osoba'], kwota=w['kwota'], opis=w['tekst'],
+             skladniki=w.get('skladniki'), wpis=True, opis_w=w['opis'] or w['kod'])
+    if w['konto'] not in KONTA_A:
+        pozycja(b, w['kod'], 'z wpisu – w kosztorysie budowy (💸)' if w.get('budowa') else '')
+    elif not w.get('para') and not any(t.get('wpis') is w for t in teraz):
+        prop = opcja(w['typ'], w['kat'], w['pod']) if w['kat'] else None
+        decyzja(b, zrodlo='lista', regula=w['kod'], opcje=[prop] if prop else [],
+                uwaga='z wpisu – w wyciągu nie ma takiej płatności (±4 dni); inne konto albo inny miesiąc? Pomiń, jeśli to duplikat')
+
 # ---------- scalanie pewnych: ten sam dzień, konto i kategoria -> formuła; cashback – jeden wiersz na miesiąc
 grupy = defaultdict(list)
 for a in auto:
@@ -369,12 +438,15 @@ for (dzien, konto, typ, kat, pod), g in sorted(grupy.items(), key=lambda x: (max
     skl = [x for a in g for x in (a['skladniki'] if a.get('skladniki') else [a['kwota_ark']])]
     wiersze.append(dict(data=max(a['data'] for a in g), konto=konto, osoba='' if typ == 'Przelew' else g[0]['osoba'], typ=typ, kat=kat, pod=pod,
                         kwota=round(sum(skl), 2), formula=('=' + '+'.join(f'{x:.2f}' for x in skl)).replace('+-', '-') if len(skl) > 1 else None,
-                        opis=', '.join(sorted({a['regula'] for a in g})), zrodla=[a['id'] for a in g],
+                        opis=', '.join(sorted({a.get('opis_w') or a['regula'] for a in g})), zrodla=[a['id'] for a in g],
                         uwaga='; '.join(a['budowa'] for a in g if a.get('budowa'))))
 
 # ---------- koniec miesiąca: przychód liczony z sald (zakładka Konta) i pozycji „do dodania” z zakładki roku
 ps = U.get('przychod_z_sald')
-if ps:
+if ps and M == 12:
+    braki.append(f'grudzień: wiersz {ps["kategoria"]} potrzebuje sald na 1.01 i zakładki nowego roku – '
+                 'dopisz go ręcznie (procedura budzet, references/arkusz.md, „Nowy rok”)')
+elif ps:
     kol = lambda n: chr(ord('A') + n)
     w = ps['wiersz_konta']
     wiersze.append(dict(data=KONIEC.isoformat(), konto='', osoba='', typ='Przychód', kat=ps['kategoria'], pod='', kwota=None,

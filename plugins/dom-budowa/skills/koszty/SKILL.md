@@ -70,6 +70,9 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
    - **Przebieg bez inwestora (`claude -p`):** tylko kolejka – `sync` uruchamia automat po przebiegu.
    - **claude.ai / telefon bez Notion:** Skrzynka (`budowa`, zasada 13) ze wszystkimi danymi z kroku 1 – słowami, bez nazw pól (`wpisy/references/skrzynka.md`); Mac przeniesie.
    Potwierdź jedną linią: „N wydatków: wiersze … w arkuszu” albo „w kolejce – trafią przy najbliższym przebiegu”.
+5a. **Budżet domowy** (Mac – Claude Code albo przebieg): każdy zapłacony wydatek dopisz też do budżetu jako wydatek na dom –
+   procedura `budzet`, sekcja A, kategoria „dom”, `--budowa <id strony 💸>` i `--id <id strony 💸>`. Konto i osoba
+   z wpisu („150, z, a, dom, …”); bez nich gotówka i druga osoba. Bez Maca – pomiń (zamknięcie miesiąca złapie go z wyciągu).
 6. Wiersz z Arkusz = „Błąd” (powód w polu Błąd) wraca do inwestora jako pytanie we „📝 Wpisach” (sekcja E); po poprawce
    pola inwestor albo asystent ustawia znów „Do arkusza”.
 7. Korekta wydatku już w arkuszu („zapłaciłem tę fakturę”, zła kwota) – popraw pola tej samej strony w Notion (np. Płatność
