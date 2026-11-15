@@ -5,6 +5,11 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## ja [1.17.2] – 2026-11-15 (POM-22)
+
+- `budzet`: import liczy korekty salda konta z Allegro (Allegro Pay do spłaty, zwroty z `oczekujace.json` z kwotą,
+  przypomnienie o reszcie karty podarunkowej) – zwrot odjęty wcześniej, niż wpłynął, nie dubluje się w kolejnym miesiącu.
+
 ## ja [1.17.1] – 2026-11-15 (POM-22)
 
 - `budzet` D: skąd biorą się różnice między oszczędnościami w dashboardzie a zmianą sald (ZEN, karta podarunkowa, Allegro Pay,

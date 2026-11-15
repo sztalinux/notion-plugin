@@ -465,6 +465,21 @@ mb = [t for t in teraz if t['konto'] == U.get('konto_mbank')]
 if mb:
     salda[U['konto_mbank']] = dict(zmiana=round(sum(t['kwota'] for t in mb), 2), skad='saldo z poprzedniej kolumny Konta + zmiana w miesiącu')
 
+# korekty salda konta z Allegro: należności i zobowiązania na koniec miesiąca, których nie ma jeszcze w wyciągu
+kor = []
+pay_dlug = round(sum(z['suma'] for z in zam if z['pay'] and not z.get('zwrocony')), 2)
+if pay_dlug:
+    kor.append(dict(kwota=-pay_dlug, opis='zakupy Allegro Pay z tego miesiąca – spłata w kolejnym'))
+NAST = f'{R + (M == 12)}-{M % 12 + 1:02d}'
+for o in oczek:
+    if o['miesiac'] == NAST and o.get('kwota') and o.get('kierunek', 'wpływ') == 'wpływ':
+        kor.append(dict(kwota=o['kwota'], opis='należność: ' + o['powod'][:80]))
+karta = round(sum(-t['kwota'] for t in allegro_bank if A.allegro and KARTA in t['no'] and t['kwota'] < 0), 2)
+if karta:
+    kor.append(dict(kwota=None, opis=f'karta podarunkowa Allegro kupiona za {karta:.2f} – dopisz niewydaną resztę (zapytaj inwestora)'))
+if kor:
+    salda['korekty'] = dict(konto=U.get('konto_zen'), pozycje=kor)
+
 drzewo = [dict(typ=t, kat=k, pod=p) for t, ks in DRZEWO.items() for k, p in ks.items()]
 zapisz(f'miesiace/{MIES}.json', dict(miesiac=MIES, wygenerowano=datetime.now().strftime('%Y-%m-%d %H:%M'), wiersze=wiersze,
                                      auto=auto, decyzje=decyzje, pominiete=pominiete, juz=juz, braki=braki, salda=salda,

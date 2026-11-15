@@ -70,11 +70,16 @@ złotówki różnicy, ±4 dni); budowa z `--budowa` nie pyta „nie ma w kosztor
    O = ID źródeł – po nich kolejny import wie, co już jest), potem formuły M:N skopiuj z wiersza powyżej (wklej tylko
    formuły) i format z wiersza powyżej (wklej tylko format). Wiersz przychodu z sald zawsze ostatni w miesiącu. `zmiany`:
    w istniejącym wierszu dopisz „-kwota” do formuły D (zwrot pomniejsza zakup).
-4. Salda: `salda` z pliku zapisu → zakładka Konta, kolumna następnego miesiąca (ZEN = saldo z wyciągu; mBank = poprzednia
-   kolumna + zmiana). Salda drugiej osoby – od inwestora (sekcja D).
+4. Salda: `salda` z pliku zapisu → zakładka Konta, kolumna następnego miesiąca (ZEN = saldo PLN z wyciągu; mBank =
+   poprzednia kolumna + zmiana). `korekty` dopisz do salda konta w tej samej formule (`=1000+250-80`, przykład
+   zmyślony): Allegro Pay do spłaty (minus), zwrot odjęty od zakupu, a jeszcze niezaksięgowany (plus), niewydana reszta
+   karty podarunkowej (plus – kwotę podaje inwestor). Dzięki temu zmiana sald zgadza się z oszczędnościami (sekcja D).
+   Salda drugiej osoby – od inwestora (sekcja D).
 5. `python3 tools/budzet/przenies.py --miesiac RRRR-MM --zapisz-reguly` – nowe opcje sklepów, nowe sklepy (pewność pusta),
    skróty list i wpisów, sprzedawcy Allegro; odśwież zmienione wiersze zakładki **Reguły** (kolumny F–I, M, N).
-6. Zapowiedziany zwrot („przyjdzie w przyszłym miesiącu, nie licz go”) → wpis w `oczekujace.json`.
+6. Zwrot odjęty od zakupu w tym miesiącu, a pieniądze przyjdą później (albo zapowiedziany zwrot „nie licz go”) → wpis
+   w `oczekujace.json` na miesiąc wpływu: `miesiac`, `klucz` (fragment opisu z wyciągu), `kierunek`, `kwota`, `powod`.
+   Import tamtego miesiąca pominie wpływ (bez dubla), a import tego miesiąca doda kwotę do `korekty` salda.
 7. Zakupy na budowę („Dom”) bez wpisu z `--budowa`: strona pokazuje „w kosztorysie / nie ma w kosztorysie”. Tylko brakujące
    zaproponuj dodać (procedura `koszty`), jedną listą.
 8. **Kontrola:** pobierz Transakcje jeszcze raz (plik jak w B.4) i `python3 tools/budzet/kontrola.py --arkusz <plik> --rok RRRR`.
