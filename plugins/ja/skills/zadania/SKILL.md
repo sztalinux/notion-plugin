@@ -1,12 +1,13 @@
 ---
 name: zadania
-description: Zadania inwestora poza budową (prywatne, dziecko, praca) we wspólnej bazie TASKS w Notion oraz lista zakupów (baza 🛒 Zakupy) – nowe zadanie z terminem albo „kiedyś”, nowa rzecz do kupienia, zmiana statusu po wpisie „zrobiłem X”, „kupiłem X”, „zacząłem”, „czekam na”, „odpuszczam”, odczyt „co mam dziś / jutro / w tym tygodniu”, „co kupić”. Używaj, gdy użytkownik mówi „muszę…”, „trzeba…”, „przypomnij mi…”, „kupić…”, „umówić…”, „zrobiłem…”, „zrobione”, „kupiłem…”, „co mam jutro”, wkleja link do rzeczy do kupienia, albo gdy wpis z Dziennika ma obszar Zadanie, Status zadania lub Zakup. Zadania budowy prowadzą procedury notatka i harmonogram (plugin dom-budowa).
+description: Zadania inwestora poza budową (prywatne, dziecko – baza TASKS; praca – baza 🔨 TASKS na stronie WORK) w Notion oraz lista zakupów (baza 🛒 Zakupy) – nowe zadanie z terminem albo „kiedyś”, nowa rzecz do kupienia, zmiana statusu po wpisie „zrobiłem X”, „kupiłem X”, „zacząłem”, „czekam na”, „odpuszczam”, odczyt „co mam dziś / jutro / w tym tygodniu”, „co kupić”. Używaj, gdy użytkownik mówi „muszę…”, „trzeba…”, „przypomnij mi…”, „kupić…”, „umówić…”, „zrobiłem…”, „zrobione”, „kupiłem…”, „co mam jutro”, wkleja link do rzeczy do kupienia, albo gdy wpis z Dziennika ma obszar Zadanie, Status zadania lub Zakup. Zadania budowy prowadzą procedury notatka i harmonogram (plugin dom-budowa).
 ---
 
 # Zadania (wszystkie obszary poza budową)
 
 Jedna baza **TASKS** (`collection://2a9f5982-09e7-81be-91e8-000b0e10a05e`) dla domu i spraw prywatnych; obszar rozróżnia
-pole **Obszar** (Dom / Prywatne / Dziecko / Praca; puste = Dom – stare wiersze). Zadania budowy i domu (Obszar = Dom)
+pole **Obszar** (Dom / Prywatne / Dziecko; puste = Dom – stare wiersze). **Zadania z pracy** idą do osobnej bazy 🔨 TASKS na
+stronie 💼 WORK (ID i pola w `ja/references/notion-mapa.md`; samej strony WORK poza bazami nie czytaj) – sekcja A, wiersz Obszar. Zadania budowy i domu (Obszar = Dom)
 tworzą procedury `notatka` i `harmonogram` z pluginu `dom-budowa` – tu ich nie dubluj; zmianę statusu („zrobiłem”) obsługujesz
 dla wszystkich obszarów. Rzeczy do kupienia (poza suplementami – `suple` – i wszystkim, co idzie na działkę albo do budynku: materiał, drobnica,
 narzędzia, wynajem, nawet drobiazg z marketu budowlanego – `zakupy` z `dom-budowa`, baza 🧱 Zakupy budowy)
@@ -29,7 +30,7 @@ Bez tej kontroli takie wpisy lądowały w TASKS zamiast na listach i stronach os
    | Pole | Wartość |
    |---|---|
    | Name | krótko, bezokolicznik („Umówić stomatologa”) |
-   | Obszar | Dziecko – gdy dotyczy dziecka; Praca – sprawy zawodowe; inaczej Prywatne. Budowa/działka/dom → nie tu, `budowa` |
+   | Obszar | Dziecko – gdy dotyczy dziecka; inaczej Prywatne. Budowa/działka/dom → nie tu, `budowa`. **Praca** (sprawy zawodowe, numer zgłoszenia `ABC-123`, PR, „w pracy muszę…”) → nie TASKS, tylko baza 🔨 TASKS na WORK: te same Name, When, Status, Priority, Desc + Project (opcja bazy, gdy wynika z wpisu, inaczej puste) i Ticket (link zgłoszenia, gdy podany); bez pól Obszar, Kategoria, Kto |
    | When | termin z wpisu; „do piątku” licz od daty wpisu; brak terminu → puste |
    | Status | z terminem lub „na dniach” → TO DO; „kiedyś” → SOMEDAY (zakup i link do produktu → baza Zakupy, nie zadanie) |
    | Priority | domyślnie Medium; „pilne”, „koniecznie” → High; drobiazg → Low |
@@ -69,7 +70,8 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 | „przesuwam na …”, „w przyszłym tygodniu” | zostaje, When = nowy termin |
 | „odpuszczam”, „nieaktualne” | ARCHIVED |
 
-1. Szukaj we **wszystkich obszarach** wśród niezakończonych (wyszukiwarka z parametrem bazy TASKS – słowa z wpisu, potem porównanie treści i statusu).
+1. Szukaj we **wszystkich obszarach** wśród niezakończonych (wyszukiwarka z parametrem bazy TASKS – słowa z wpisu, potem porównanie treści i statusu;
+   sprawa z pracy albo brak trafienia → także baza 🔨 TASKS na WORK; te same statusy).
    Brak trafienia → sprawdź jeszcze zadania zamknięte (DONE, ARCHIVED) z ostatnią edycją w ostatnich 7 dniach: inwestor zamyka
    zadania także ręcznie w Notion, więc wpis „zrobiłem X” bywa spóźniony. Jest takie → nic nie zmieniaj, w śladzie
    „→ już zamknięte (ręcznie)” z odnośnikiem.

@@ -32,7 +32,7 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 | Wpisy z widgetu „nowa strona” (telefon) | najwyższy poziom Private – każda strona spoza listy stałych stron niżej (lista stron prywatnych) | – | – |
 | Przegląd dnia – sprawy osobiste (dziś / jutro; ręczne „(ręczne)”) | 📆 Przeglądy dzienne (pod Dziennikiem) | `3faf5982-09e7-81df-a361-cc65fddb81f4` | – |
 | Plan dnia (strona do czytania rano; nadpisywana co wieczór) | ☀️ Dziś (najwyższy poziom Private, w Ulubionych) | `416f5982-09e7-81b3-b96d-ddd19086bc5b` | zakładki: 🧭 Przegląd · 🏗 Budowa · 🏠 Prywatne · 💼 Praca · 📊 Wczoraj (`przeglad-dnia/references/uklad-wpisu.md`, D) |
-| Zadania z pracy do planu dnia (tryb view; **tylko ten widok – treści strony 💼 WORK nie czytaj**, są tam dane dostępowe) | 💼 WORK → baza 🔨 TASKS → „🤖 Plan dnia – otwarte i zamknięte w 7 dni” | `collection://330e462e-ae97-42f4-92e4-12b1d6ea1c89`, `view://416f5982-09e7-81aa-a76d-000c4a563877` | Name, Status, When, Priority, Project, Ticket, Last edited time; nic tam nie zapisuj |
+| Zadania z pracy – zapis nowych i zmiana statusu (`zadania`), odczyt do planu dnia | 💼 WORK → sekcja „🎯 Zadania” → baza 🔨 TASKS; widoki „🎯 Na dziś”, „📋 Tablica”, „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (tryb view; **treści strony WORK poza bazami nie czytaj** – w notatkach są dane dostępowe) | `collection://330e462e-ae97-42f4-92e4-12b1d6ea1c89`, `view://41af5982-09e7-8162-9242-000cad5449d4`, `view://41af5982-09e7-8106-b6e9-000cd6f2d81e`, `view://416f5982-09e7-81aa-a76d-000c4a563877` | Name, Status (TO DO / IN PROGRESS / WAITING / ON HOLD / SOMEDAY / DONE / ARCHIVED), When, Priority (Highest / High / Medium / Low), Project (opcje bazy), Ticket (link zgłoszenia), Desc |
 | Archiwum przeglądów dziennych (wpisy > 14 dni; tylko przegląd tygodnia) | 🗃 Przeglądy dzienne – archiwum (podstrona 📆 Przeglądy dzienne) | `416f5982-09e7-812d-bd16-d625d7da668f` | – |
 | Przegląd tygodnia – sprawy osobiste | 📅 Przeglądy tygodniowe (pod Dziennikiem) | `3faf5982-09e7-81e3-a6af-e3786ca4a074` | – |
 | Widoki do przeglądu tygodnia (tryb view) | TASKS „🤖 Tydzień – prywatne”, Wpisy emocji „🤖 Ostatni tydzień”, Dziennik produktywności „🤖 Ostatni tydzień” | `view://3faf5982-09e7-81b5-ad0a-000c1cfabfa0`, `view://3faf5982-09e7-81ec-83af-000c8b518d37`, `view://3faf5982-09e7-81af-9ea1-000cbe3dd643` | – |
@@ -52,7 +52,7 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 | Research do zakupów i spraw (RES-n) | 🔎 Research (na stronie ✅ Zadania) | `collection://02ad37a1-64a4-452a-9eac-a8c2012c867e`; widoki: „🔎 Do zrobienia” `view://3fcf5982-09e7-8117-840c-000cf5543291`, „❓ Pytania do mnie” `view://3fcf5982-09e7-8169-ae28-000c5278adda` | Temat, ID (RES-n), Status (Do zrobienia / Pytania do mnie / Gotowy / Zamknięty), Zlecenie (Wprost / Z wpisu (asystent)), Obszar, Rekomendacja, Zrobiono, Zakup, Zadanie |
 | Emocje (jeden wiersz = jedna emocja) | Dziennik emocji → Wpisy emocji | `collection://41556944-46fa-4155-ae95-5b74b983d7aa` | Wpis (nazwa emocji), Kiedy, Intensywność, Trigger / co się stało, Ciało, Myśl, Potrzeba, Reakcja, Emocja wtórna, Czynniki podatności |
 | Podsumowania dni emocji (tylko na prośbę) | Dziennik emocji → Dni (dziennik emocji) | `collection://15f206a7-3832-472f-9ed6-b01a515193e1` | Dzień, Data, Podsumowanie (opcjonalnie) |
-| Dzień pracy | Dziennik emocji → Dziennik produktywności (praca) | `collection://4b0ef0a5-859e-42e0-98fa-673510b4629c` | Data (tytuł), Początek pracy, Koniec pracy, Ocena produktywności (1–10), Opis pracy, Przerwy i przeszkadzajki, Multitasking |
+| Dzień pracy (od 16.11.2026 na stronie WORK) | 💼 WORK → sekcja „📓 Dziennik pracy” → baza Dziennik produktywności (praca); widok „📓 Ostatnie dni” (`view://41af5982-09e7-8168-a85d-000cc2798dd4`, najnowsze na górze, wszystkie pola) | `collection://4b0ef0a5-859e-42e0-98fa-673510b4629c` | Data (tytuł), Początek pracy, Koniec pracy, Ocena produktywności (1–10), Opis pracy, Przerwy i przeszkadzajki, Multitasking |
 | Notatki o dziecku | Strona dziecka (nazwa = imię) | `241f5982-09e7-8023-9793-fa12d36bdb2e` | sekcje: 💬 Do przegadania, 🎁 Prezenty, 📝 Obserwacje i informacje, 💡 Pomysły (zabawy, wyjazdy, książki), 🩺 Zalecenia (fizjoterapia, przedszkole), 🗄 Archiwum |
 | Książki dla dziecka | strona dziecka → 💡 Pomysły → baza Ksiazki | `collection://32ff5982-09e7-809c-b4ac-000b8a8bf9ac` | Name |
 | Suplementy | Suple | `collection://0771d295-5bc0-46e3-b0cb-def13bccab8d` | Name, Status (TAKING / BREAK / TO START / SUSPENDED), **Buy**, Who, When, Last break, Type |
@@ -80,7 +80,7 @@ każda inna strona na tym poziomie to nowy wpis z widgetu, `wpisy`):**
 - 👨‍👩‍👧 Rodzina `3faf5982-09e7-8134-b482-c6eb748e87a7` – strona dziecka, 💞 Relacja, 💍 Wesele;
 - 🩺 Zdrowie `3faf5982-09e7-81a2-93bd-c85b2ebe040b` – Suplementacja (baza Suple), Examinations, notatki zdrowotne;
 - 🧠 Ja `3faf5982-09e7-81b6-b5b7-e0d5e3fe7ef8` – Personality (Dziennik emocji, Terapie, Wartości…), Hobbies, Inspiration;
-- 💼 WORK `c1dc91d3-5247-4c9b-8ec9-cc431c1b3ebb` – praca;
+- 💼 WORK `c1dc91d3-5247-4c9b-8ec9-cc431c1b3ebb` – praca: na górze ramka, 🎯 Zadania (baza 🔨 TASKS), 📓 Dziennik pracy (Dziennik produktywności), niżej „📒 Notatki i ściągi” inwestora (nie czytaj, nie przepisuj – są tam dane dostępowe);
 - 📚 Wiedza `3faf5982-09e7-8113-a03c-eed243d4adc8` – Knowledge, My Kindle Clippings;
 - 🗂️ Collections `44321b47-fd10-46f8-8d2e-574ac07502ac` – listy i kolekcje, Books, 🎬 Films, Listy do zabrania, Linki do obejrzenia;
 - 🗄 Archiwum `3faf5982-09e7-8100-8725-cc0ca586a23e` – nieużywane strony (tylko do wglądu, nie zapisuj);
@@ -90,5 +90,4 @@ Inwestor dodał nową stałą stronę na tym poziomie → dopisz ją tu (`ja`, z
 Nowa strona w obszarze: zapisuj pod stroną obszaru; nowy rodzaj wpisu z Dziennika – wiersz w bazie Obszary.
 
 **Archiwa (tylko do wglądu, nie zapisuj):** 🗄 Archiwum (ALL TODOS, DONE, stara RESOURCES z Others, kopie zapasowe,
-Quick notes – rozebrany w POM-9, oryginały w jego podstronie „Przetworzone”). Strona WORK ma własną bazę zadań z pracy – nie zapisuj tam; zadania z pracy
-wpisane do Dziennika idą do TASKS z Obszar = Praca.
+Quick notes – rozebrany w POM-9, oryginały w jego podstronie „Przetworzone”). Zadania z pracy (od 16.11.2026) idą do bazy 🔨 TASKS na stronie WORK, nie do TASKS z Obszar = Praca; w notatkach strony WORK nic nie zapisuj.

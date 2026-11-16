@@ -5,6 +5,17 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## ja [1.18.0] – 2026-11-16 (POM-27)
+
+Strona 💼 WORK jako bazowy widok pracy (prośba inwestora 16.11).
+- Dziennik produktywności przeniesiony ze strony Dziennika emocji na WORK (ID bez zmian); na górze WORK ramka z instrukcją,
+  sekcje „🎯 Zadania” (widoki „🎯 Na dziś”, „📋 Tablica”) i „📓 Dziennik pracy” (widok „📓 Ostatnie dni”), niżej notatki
+  inwestora bez zmian.
+- `zadania`: zadania z pracy idą do bazy 🔨 TASKS na WORK (Project, Ticket), nie do TASKS z Obszar = Praca; „zrobiłem X”
+  szuka też tam. Obszary „Zadanie”, „Status zadania” i „Praca – produktywność” w Notion zaktualizowane.
+- Plan dnia (`uklad-wpisu.md`, D): wpisy o pracy z widoku „📓 Ostatnie dni” (wcześniej „🤖 Ostatni tydzień” – bez opisu
+  pracy i bez wierszy bez godzin); mapa `ja` z nowymi widokami i układem WORK.
+
 ## ja [1.17.2] – 2026-11-15 (POM-22)
 
 - `budzet`: import liczy korekty salda konta z Allegro (Allegro Pay do spłaty, zwroty z `oczekujace.json` z kwotą,

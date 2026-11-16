@@ -191,10 +191,10 @@ Wczoraj
 - **Kod i PR-y** – plik `.dom/praca/dzien.json` (skrypt `AI/automaty/praca.py` przed przebiegiem): `commity` od początku
   ostatniego dnia roboczego (`od`), `pr_moje`, `pr_do_recenzji` (z `moj_glos`), `pr_zamkniete`, `bledy`.
 - **Lista WORK** – widok bazy 🔨 TASKS „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (ID w `ja/references/notion-mapa.md`;
-  **treści samej strony WORK nie czytaj**) i TASKS z Obszar = Praca (krok B.6).
+  **treści samej strony WORK nie czytaj**).
 
-- **Twoje wpisy o pracy** – Dziennik produktywności (widok „🤖 Ostatni tydzień”, ID w mapie `ja`): wiersze od `od` do dnia
-  przeglądu – „Opis pracy” (jak poszło, co zrobione) i „Przerwy i przeszkadzajki” (to, co blokuje). Treść streść, numery
+- **Twoje wpisy o pracy** – Dziennik produktywności na stronie WORK (widok „📓 Ostatnie dni”, pierwsze 10 wierszy, ID w mapie `ja`):
+  wiersze od `od` do dnia przeglądu – „Opis pracy” (jak poszło, co zrobione) i „Przerwy i przeszkadzajki” (to, co blokuje). Treść streść, numery
   zgłoszeń zachowaj.
 
 Łączenie: jedna sprawa = jedno zgłoszenie (numer `ABC-123` z Jiry, commita, gałęzi, PR-a i pola Ticket w WORK); pokazuj
