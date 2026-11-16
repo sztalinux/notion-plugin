@@ -5,6 +5,17 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## dom-budowa [3.16.0] – 2026-11-16
+
+Nowa procedura `model-3d` (prośba inwestora 16.11) – model 3D domu i ogrodu w Blenderze, po którym można chodzić.
+- `model-3d`: zmiany wyłącznie przez pliki danych i przebudowę skryptem (kontrola danych → przebudowa → zrzut przed/po),
+  decyzje inwestora nadrzędne wobec rysunków, każde założenie do listy „do weryfikacji”, sprawy konstrukcyjne
+  „do potwierdzenia z konstruktorem”. Dane, skrypty i zapisany model są w prywatnym folderze modelu (własne repo) –
+  w harnessie tylko procedura.
+- Droga zapasowa bez konektora Blendera: Blender bez okna (ten sam model – suma kontrolna w raporcie przebudowy),
+  podgląd jako rendery; wiersz w tabeli „Konektory i drogi zapasowe” w README.
+- Wiersze w tabeli procedur (`AGENTS.md`, README) i w mapie procedur `budowa`.
+
 ## ja [1.18.0] – 2026-11-16 (POM-27)
 
 Strona 💼 WORK jako bazowy widok pracy (prośba inwestora 16.11).
