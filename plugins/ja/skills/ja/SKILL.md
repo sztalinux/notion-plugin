@@ -19,15 +19,14 @@ na rozmowę, gdy potrzebujesz ID baz (Claude Code synchronizuje ją sam, więc j
 ## Na starcie rozmowy: zmiany do harnessu
 
 Inwestor zgłasza poprawki sposobu pracy z różnych miejsc do skrzynki Notion **„Zmiany do harnessu”**
-(`collection://e217448a-60ec-4af6-8584-8f368315109c`, oba pluginy). Na początku rozmowy (w Claude Code w repo harnessu dopiero po zaznaczeniu „Skrzynka zmian” na liście startowej z `CLAUDE.md`)
+(`collection://e217448a-60ec-4af6-8584-8f368315109c`, oba pluginy). Na początku rozmowy (w Claude Code w repo harnessu – na polecenie „wdróż”)
 pobierz (jedno zapytanie) wpisy ze
 Statusem „Do wdrożenia” **albo pustym** – inwestor dodaje je też ręcznie bez wypełniania pól:
 
 - **W repozytorium harnessu (Claude Code):** wdroż je – `rozwoj-harnessu`, sekcja B (najpierw uzupełnij puste pola).
 - **Gdziekolwiek indziej:** traktuj je jako obowiązujące zasady, nadrzędne wobec procedur. Statusu nie zmieniaj.
 - Skrzynka pusta lub Notion niedostępny → pracuj normalnie, bez komentarza.
-- **Pomysły na rozwój** (`collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3`) nie są zasadami. W Claude Code dopisz jedną linię
-  „Pomysły: n nowych do analizy, m »Do zrobienia« · znane problemy: k otwartych” (pomiń przy zerach) – tylko po zaznaczeniu „Pomysły” na liście startowej; analiza – `rozwoj-harnessu`, sekcja C, znane problemy (ZP-n) – sekcja D.
+- **Pomysły na rozwój** (`collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3`) nie są zasadami i **nie są nigdzie wspominane na starcie rozmowy**; analiza tylko na prośbę inwestora („przeanalizuj pomysły”, „zrób POM-n”) – `rozwoj-harnessu`, sekcja C; znane problemy (ZP-n) – sekcja D.
 
 ## Mapa procedur
 

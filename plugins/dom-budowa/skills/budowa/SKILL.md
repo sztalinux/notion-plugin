@@ -18,7 +18,7 @@ Gdzie leżą dane i jak je zmieniać: `references/zrodla.md`; gdzie czego szuka�
 
 ## Na starcie
 
-Skrzynkę „Zmiany do harnessu” i licznik pomysłów obsługuje skill `ja` (plugin `ja`, sekcja „Na starcie rozmowy”) – wczytaj
+Skrzynkę „Zmiany do harnessu” obsługuje skill `ja` (plugin `ja`, sekcja „Na starcie rozmowy”) – wczytaj
 go, jeśli nie jest wczytany; wpisy „Do wdrożenia” albo z pustym Statusem obowiązują też w sprawach budowy.
 
 Poza Claude Code pobierz też (raz na rozmowę, razem ze skrzynką) stronę Notion **„📑 Przewodnik po dokumentach i Notion”**

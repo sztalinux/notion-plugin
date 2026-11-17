@@ -40,7 +40,7 @@ Pobierz w jak najmniejszej liczbie zapytań:
 5b. **🧱 Zakupy budowy**: „Zamówić do” w 14 dni lub po terminie, Status przed zamówieniem (nie Zamówione / Potwierdzone / Dostarczone / Nieaktualne); dostawy w 7 dni.
 5c. **Umowy i gwarancje**: Gwarancja do / Rękojmia do w ciągu 60 dni (przegląd przed upływem, zgłoszenie usterek).
 6. **Informacje**: „Wrażliwe na czas” z Datą informacji starszą niż 12 miesięcy, jeśli dotyczą bieżącego etapu.
-7. **Harness i pomysły** – nie tutaj: skrzynkę zmian i „Pomysły na rozwój” raportuje przegląd osobisty
+7. **Harness** – nie tutaj: skrzynkę zmian raportuje przegląd osobisty
    (`przeglad-tygodnia-osobisty`, plugin `ja`).
 8. **Dziennik budowy** (ID: `dziennik/references/notion-dziennik.md`): wpisy z 7 dni – dni pracy ekipy
    i własne, problemy z pola „Problemy / usterki”, kroki zakryte bez zdjęć („Przed zakryciem OK” odznaczone). Otwarte

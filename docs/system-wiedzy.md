@@ -34,7 +34,7 @@ Czat na telefonie (claude.ai, pluginy ja + dom-budowa): karty → odpowiedź z n
 | Kopia dla czatu | Indeks, `wiedza.py` i migawka publikowane do prywatnego repo; czat pobiera je tokenem tylko do odczytu | `references/indeks.md`, `indeks-awarie.md` |
 | Praca bez Notion (`budowa`, zasada 13) | Gdy w rozmowie nie ma narzędzi Notion: wiedza z indeksu, Notatnik i zadania z migawki, a każdy zapis do dokumentu Claude „📥 Skrzynka” słowami, bez pól Notion; przebieg godzinowy na Macu przenosi wpisy do Notion | `plugins/ja/skills/wpisy/references/skrzynka.md` |
 | Tryb głęboki | Pytanie złożone, którego nie pokrywa żadna karta: czat zostawia je w prywatnym repo, workflow GitHub Actions (leży w prywatnym repo kopii, nie w tym; model przez token OAuth Claude Code) czyta całą bazę, pisze odpowiedź i odkłada ją do repo; 3–6 minut, ok. 1–2 USD. Lokalny skrypt Maca (`pytania.py`) jest wersją zapasową | `references/tryb-gleboki.md` |
-| Automaty na Macu (launchd, poza repo) | Przeglądy Dziennika (szybki, wieczorny, tygodniowy) przez `claude -p` z lokalnym serwerem MCP Notion; przed każdym przebiegiem `sync --publikuj`, `migawka.py` i `wiedza_karty.py aktualizuj`. To one utrzymują kopię dla telefonu świeżą | `docs/wiedza-runbook.md`, sekcje 2 i 5.1 |
+| Automaty na Macu (launchd, poza repo) | Przeglądy Dziennika (szybki, nocny, tygodniowy) przez `claude -p` z lokalnym serwerem MCP Notion; przed każdym przebiegiem `sync --publikuj`, `migawka.py` i `wiedza_karty.py aktualizuj`. To one utrzymują kopię dla telefonu świeżą | `docs/wiedza-runbook.md`, sekcje 2 i 5.1 |
 | Obserwator (`tools/wiedza_jakosc.py`) | Stałe zbiory pytań i znanych wierszy; alarm, gdy szukanie po zmianach zaczyna gubić to, co znajdowało | `references/indeks-jakosc.md` |
 | Sędzia LLM (`wiedza_jakosc.py sedzia`) | Model bez narzędzi ocenia sens wyników dla pytań testowych (0/1/2); bez filtra danych osobowych – do modeli Claude wolno, do repo nie | `references/indeks-sedzia.md` |
 | Ocena ręczna (`wiedza_jakosc.py reczna`) | Inwestor ocenia wyniki w terminalu; punkt odniesienia dla sędziego | `references/indeks-jakosc.md` |
@@ -47,7 +47,7 @@ Czat na telefonie (claude.ai, pluginy ja + dom-budowa): karty → odpowiedź z n
 2. **Automaty launchd (samo)** – szybki przebieg co godzinę w ciągu dnia (8:05–22:05 i 22:30), przegląd dnia o 2:00 w nocy, tygodniowy w niedzielę
    wieczorem. Każdy zaczyna od `sync --publikuj`, `migawka.py` i `wiedza_karty.py aktualizuj --publikuj` (nowe tezy → tagi
    czynności, wybór do kart pytań, ocena ścisła, zapis, publikacja); plik indeksu, który nie mieści się w limicie czasu `sync --cicho`,
-   wysyła `publikuj` po wieczornym przebiegu. Mac uśpiony = przebieg przesunięty do wybudzenia, wyłączony = przepada
+   wysyła `publikuj` po nocnym przebiegu. Mac uśpiony = przebieg przesunięty do wybudzenia, wyłączony = przepada
    (wpisy poczekają).
 3. **Noc (inwestor uruchamia z strony kolejki)** – po każdej pozycji odświeżenie indeksu, co N-te pytanie o wiedzę kontrola obu
    silników, na końcu publikacja kopii, obserwator i sędzia (gdy minął ustawiony odstęp). Nowe tezy z nocy trafiają do kart przy

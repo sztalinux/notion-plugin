@@ -82,7 +82,7 @@ dane indeksu, definicje kart, zbiory oceny, prywatne repo kopii, automaty launch
 `wiedza.py sync --publikuj --cicho` (indeks z Notion i kopia dla telefonu), `migawka.py --cicho` (Notatnik i zadania), `wiedza_karty.py aktualizuj --cicho --publikuj`
 (nowe tezy → karty). Przegląd dnia o 2:00 w nocy, tygodniowy w niedzielę wieczorem. Gdy nic nowego – przebieg kończy się bez zapisów.
 Plik indeksu (ponad ok. 13 MB) nie mieści się w limicie 110 s `sync --cicho` – ten wysyła tylko kod, gdy się zmienił, a indeks jedzie z `wiedza.py publikuj --cicho`
-po wieczornym przebiegu (bez limitu 110 s; proces do 360 s) i z `aktualizuj --publikuj`, gdy dopisze nowe tezy do kart.
+po nocnym przebiegu (bez limitu 110 s; proces do 360 s) i z `aktualizuj --publikuj`, gdy dopisze nowe tezy do kart.
 
 **Sesja Claude Code w repo:** lista wyboru na starcie, domyślnie nic (`CLAUDE.md`). „Indeks wiedzy” = `sync --publikuj --cicho` + `wiedza_jakosc.py przypomnij --cicho`.
 Po zapisie wiedzy do Notion w sesji interaktywnej: `python3 tools/wiedza.py sync --publikuj`.
@@ -138,14 +138,14 @@ Objaw: brak nowych linii „🤖” w Dzienniku, puste albo stare logi, „kopia
 2. **Co mówi log:** w `<folder budowy>/.dom/automaty/` – `<tryb>-RRRR-MM-DD.log` (przygotowanie, kod wyjścia, czas, koszt), `stan.json` (ostatni start, koniec, kod, koszt na tryb),
    `launchd-<tryb>.log` (surowe wyjście launchd). Kod wyjścia: **0** ok; **1** błąd przebiegu; **2** brak logowania MCP notion (linia „NOTION: brak logowania” → 5.2);
    **3** przekroczony limit czasu; **4** brak sieci (przed startem sprawdzane: hosty Notion, API modelu i stan `claude mcp get notion`; szybki kończy od razu i ponawia za godzinę,
-   wieczorny i tygodniowy ponawiają co 5 min do 45 min).
+   nocny i tygodniowy ponawiają co 5 min do 45 min).
 3. **„Operation not permitted” w `launchd-<tryb>.log`:** macOS (TCC) odmawia stubowi `/usr/bin/python3` dostępu do plików w Dokumentach. W plistach `ProgramArguments` musi
    zaczynać się od pełnej ścieżki Pythona z frameworka Command Line Tools:
    `/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3`, a `Python.app` z tego frameworka musi mieć „Pełny dostęp do dysku”
    (Ustawienia systemowe → Prywatność i ochrona). Po nadaniu dostępu albo zmianie plistu: `bootout` i `bootstrap` danego automatu. Po aktualizacji Command Line Tools sprawdź, czy ścieżka i wersja (3.x) wciąż istnieją i czy dostęp nadal jest nadany.
    Test: tymczasowy plist, który wykonuje `-c "open('<ścieżka skryptu>')"`.
 4. **Czy Mac spał:** launchd z `StartCalendarInterval` nie uruchamia zadań w uśpieniu; pominięte uruchomienia scala w jedno po wybudzeniu. Mac wyłączony w porze zadania –
-   przebieg przepada (wpisy poczekają na następny). Wieczorny po przegapionej porze uruchom ręcznie: `python3 <katalog automatów>/przeglad.py wieczorny`.
+   przebieg przepada (wpisy poczekają na następny). Nocny (tryb `wieczorny`) po przegapionej porze uruchom ręcznie: `python3 <katalog automatów>/przeglad.py wieczorny`.
 5. **Próba ręczna:** `python3 <katalog automatów>/przeglad.py --sprawdz` (przebieg bez Notion: ma wypisać „notion MCP: zalogowany” i odpowiedź `OK`).
 6. **Kopia dla telefonu mimo to świeża?** `python3 tools/wiedza.py sync --publikuj` i `python3 tools/migawka.py` ręcznie; `wiedza_karty.py aktualizuj --publikuj`. Zaplanowanych zadań
    na claude.ai nie używamy – przeglądy uruchamia wyłącznie launchd.

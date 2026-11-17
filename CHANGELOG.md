@@ -5,6 +5,21 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## dom-budowa [3.18.1] – 2026-11-17
+
+- `budowa`, `przeglad-tygodnia`: bez wzmianek o licznikach pomysłów (decyzja D7); `indeks-jakosc.md`: `przypomnij` w przeglądzie tygodniowym, nie na starcie sesji.
+
+## ja [1.21.0] – 2026-11-17
+
+Uproszczenie przepływu, 3.2 i 3.3 oraz P13 (bez zmiany opisu startu sesji – ta decyzja czeka na inwestora).
+- 3.3 (D7): `przeglad-dnia` B.2 bez automatycznej analizy pomysłów (zostaje kontrola spójności grupy P); `rozwoj-harnessu` C: analiza tylko na
+  prośbę; linia „🤖” i ☀️ Dziś bez „pomysły – n”; `ja` „Na starcie rozmowy” bez linii o Pomysłach; `przeglad-tygodnia-osobisty` bez POM.
+- 3.2: ☀️ Dziś – liczba nowych i zmienionych dokumentów budowy z `dokumenty.py --dry-run` (tylko odczyt, tylko nocny; `ZAKAZANE` bez zmian);
+  przegląd tygodniowy: stan zdjęć (`zdjecia.py stan`), kopii dokumentów (`kopia.py stan`) i przypomnienie jakości wiedzy (`wiedza_jakosc.py przypomnij`),
+  problem → 🔔 `zdjecia-i-kopie`.
+- P13: „wieczorny” → „nocny” w README, docs, `AGENTS.md` (tabela) i opisie pluginu; w `przeglad-dnia` adnotacja o kluczu technicznym `wieczorny`
+  (klucze, etykiety, logi i `stan.json` bez zmian).
+
 ## dom-budowa [3.18.0] – 2026-11-17
 
 Uproszczenie przepływu, faza 2 – jeden przepływ wydatków (kosztorys + budżet domowy).

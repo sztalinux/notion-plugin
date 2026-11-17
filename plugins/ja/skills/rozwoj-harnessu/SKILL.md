@@ -14,7 +14,7 @@ Konfiguracja projektu „Dom” na claude.ai (instrukcje, wiedza): `references/c
 | Gdzie jesteś | Co robisz |
 |---|---|
 | Czat, telefon, Cowork, inne AI (bez repo) | **Zgłoszenie** do skrzynki w Notion – sekcja A |
-| Claude Code w folderze repo | **Wdrożenie** skrzynki do plików + push – sekcja B (na starcie sesji tylko po zaznaczeniu „Skrzynka zmian” na liście startowej, `CLAUDE.md`) |
+| Claude Code w folderze repo | **Wdrożenie** skrzynki do plików + push – sekcja B (na polecenie „wdróż”) |
 | Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, arkusz kosztorysu) | **Pomysł** do bazy „Pomysły na rozwój” → analiza → wdrożenie na polecenie – sekcja C |
 | Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Znany problem** w bazie „🧯 Znane problemy” → naprawa w Claude Code – sekcja D |
 
@@ -105,12 +105,12 @@ Treść strony: pomysł inwestora (nie zmieniaj), pod nim sekcja „Analiza” p
 sprawdź, czy podobny już jest (uzupełnij zamiast dublować); nowy wiersz – tytuł, Obszar, w treści „## Pomysł (kto, data)”
 i słowa inwestora. Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to nie pomysł – sekcja A.
 
-**Analiza** (wpisy Nowy lub pusty; w przeglądzie dnia `przeglad-dnia` automatycznie, inaczej na prośbę):
+**Analiza** – tylko na prośbę inwestora („przeanalizuj pomysły”, „przeanalizuj POM-n”); przegląd dnia ich nie analizuje (wpisy Nowy lub pusty):
 1. Przeczytaj pomysł i przejrzyj, co już jest: procedury (mapy w `ja` i `budowa`, odpowiednie `SKILL.md`), mapy Notion
    (`ja/references/notion-mapa.md`, `budowa/references/notion-mapa.md`), inne pomysły (zależności, duplikaty). Wiersz dodany
    ręcznie z pustymi polami → uzupełnij je przy analizie (Obszar, Status, Nakład, Wymaga ode mnie).
 2. Niejasne, co inwestor chce → dopisz „### ❓ Pytania (data)” z 1–3 pytaniami i propozycją interpretacji, Status
-   „Pytania do mnie”. Odpowiedź inwestora pod pytaniami → przy następnym przebiegu analizuj dalej.
+   „Pytania do mnie”. Odpowiedź inwestora pod pytaniami → analizuj dalej przy kolejnej prośbie inwestora.
 3. Jasne → dopisz pod pomysłem sekcję (nie nadpisuj wcześniejszych):
    ```
    ## Analiza (asystent, data)
@@ -145,7 +145,7 @@ Treść strony: objaśnienie, wystąpienia z datą, ustalenia z odpowiedzi inwes
   C.5); Claude Code, gdy w pracy trafi na powtarzalną usterkę spoza bieżącego zadania; inwestor ręcznie (pusty Status =
   Nowy). Przed dodaniem szukaj tego samego problemu (Skąd, 2–3 słowa) – jest → zaktualizuj Ostatnio i treść.
 - **Problem a pomysł:** coś, co miało działać, a nie działa → tu; nowa funkcja albo zmiana sposobu pracy → sekcja C lub A.
-- **Naprawa** – w Claude Code na „zrób ZP-n” (albo po zaznaczeniu „Pomysły” na liście startowej, gdy inwestor wskaże ZP):
+- **Naprawa** – w Claude Code na „zrób ZP-n” (albo gdy inwestor wskaże ZP):
   przeczytaj stronę, ustal przyczynę (log, `stan.json`, skrypt), napraw; zmiana harnessu → kroki B.2–B.8. Na końcu Status
   „Rozwiązany”, Rozwiązano w wersji (albo „skrypt poza repo, data”), w treści linia „Naprawione (data): przyczyna, co
   zmieniono”. Wybór wariantu technicznego rozstrzygnij sam (domyślny z „Co zrobić”) – nie pytaj. Naprawa naprawdę wymaga

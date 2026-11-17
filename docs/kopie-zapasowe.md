@@ -36,7 +36,7 @@ sekcja 7.
 3. **Eksport usług, które mają jedną kopię.**
    - Notion: raz w miesiącu ręczny eksport całego obszaru (Ustawienia → Eksport, Markdown i CSV, z podstronami). Asystent
      tego nie uruchomi, może tylko przypomnieć.
-   - Arkusz kosztorysu: automat wieczorny co dzień zapisuje kopię wartości (`Koszty/Kosztorys_google.json`). Raz w
+   - Arkusz kosztorysu: automat nocny co dzień zapisuje kopię wartości (`Koszty/Kosztorys_google.json`). Raz w
      miesiącu pobierz też plik xlsx z formułami.
    - Artefakty claude.ai: kod pulpitu jest w repozytorium, a dane pulpitu w `.dom` (warstwa 1).
 

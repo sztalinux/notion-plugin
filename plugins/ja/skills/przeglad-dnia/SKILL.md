@@ -19,6 +19,8 @@ krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
 
 ## Zasady trybu bez inwestora (oba tryby)
 
+Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inwestora **nocny** przegląd dnia (2:00) – w tekstach dla niego pisz „nocny”; klucze techniczne zostają.
+
 - Nie ma kogo zapytać: niejasne → pytanie w Notion (okienko pod wpisem w „📝 Wpisy”; sprawy z tła – blok 🔔 w tym samym miejscu, `wpisy/references/pytania.md`, C.7),
   nie tylko w odpowiedzi. Jedno polecenie na wywołanie narzędzia: ścieżka względna od repo, bez `cd`, potoków i `;`.
 - **Nie zostawiaj sprawy z adnotacją „wymaga sesji Claude Code”** – wybierz (a) część + ❓/🔔 z propozycją, (b) ❓/🔔 z dokładną
@@ -82,8 +84,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    Komunikaty 🔔 z linią `→ ZP-n`: sprawdź Status tych wierszy „🧯 Znane problemy” (wyszukiwarka z parametrem bazy) –
    „Rozwiązany” albo „Zostaje” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze ZP „Czeka na mnie”
    (widok „🧯 Otwarte”) bez bloku 🔔 → dodaj blok (tamże, C.5).
-2. **Pomysły na rozwój** – `rozwoj-harnessu`, sekcja C: Status Nowy lub pusty → analiza (max 3, najstarsze pierwsze);
-   „Pytania do mnie” z odpowiedzią → analizuj dalej. Niczego nie wdrażaj.
+2. **Pomysły na rozwój** – bez automatycznej analizy (analiza tylko na prośbę inwestora, `rozwoj-harnessu`, sekcja C).
    **Kontrola spójności pomysłów (grupa P)** – z jednego odczytu całej tablicy pomysłów (wszystkie statusy, nie tylko „Nowy”): „Zrobione” bez „Zrobiono
    w wersji”, „Do zrobienia” / „Przeanalizowany” przy wdrożeniu zapisanym w polu albo w nagłówku `CHANGELOG.md`, „gałąź …”
    już scalona. Pole wersji uzupełniasz tylko z nagłówka CHANGELOG z numerem POM; **Status zmienia dopiero ☑ inwestora**
@@ -178,7 +179,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    edycję (`wpisy`, krok 7) zrób na końcu przebiegu, po kroku 8, gdy znasz już wszystkie liczby (kroki 3–5 doliczają
    ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma; krok 3 dostaje listę wpisów budowy z kroku 1). Bloki 🔔 z kroków 2, 5, 5a–5c, 6, 7 (nowe i zmieniane) zapisz **jedną punktową edycją „Wpisów”** pod nagłówkiem 🔔 w tym samym momencie:
    ```
-   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga, pomysły: 1 wersja uzupełniona · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · pomysły – 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
+   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga, pomysły: 1 wersja uzupełniona · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy
    ```
 10. **Odpowiedź** (log zadania): linia „🤖” + lista zapisów (gdzie, link) i błędów.

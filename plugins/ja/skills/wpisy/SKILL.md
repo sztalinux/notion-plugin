@@ -111,7 +111,7 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    całej sekcji. Po edycji odczyt kontrolny: trzy nagłówki z treścią sprzed edycji (punkty „❓”) i pięć podstron są na
    miejscu; brak czegoś → przywróć z odczytu sprzed edycji i odnotuj w linii „🤖”. Linia „🤖” idzie na górę bloku dnia:
    ```
-   🤖 15.10 wieczór: dziennik – przetworzono 5 (budowa 2, emocje 1, zadania 2), czeka na Ciebie 1 · pomysły – 1 · jutro: 3
+   🤖 15.10 wieczór: dziennik – przetworzono 5 (budowa 2, emocje 1, zadania 2), czeka na Ciebie 1 · jutro: 3
    ```
    Kolejny przebieg tego dnia (np. ręczny) – druga linia „🤖 … (ręczne)” w tym samym bloku. W rozmowie z inwestorem
    przy > 3 wpisach pokaż plan (tabela: wpis | obszar | gdzie trafi | pytanie?) i poproś o „ok”, chyba że powiedział

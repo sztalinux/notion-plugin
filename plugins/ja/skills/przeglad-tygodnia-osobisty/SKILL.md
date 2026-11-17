@@ -46,11 +46,16 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    - Zakupy: 🛒 Zakupy „Do kupienia” (licznik, najstarsze) i z Terminem w 7 dni (wymień).
 3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i bloki 🔔 starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
    tylko licznikiem, są w przeglądzie budowy); skrzynka „Zmiany do harnessu” – wpisy do wdrożenia starsze niż 7 dni
-   (przypomnienie: uruchom Claude Code); „Pomysły na rozwój” – nowe bez analizy i „Pytania do mnie”. Pierwszy przegląd
+   (przypomnienie: napisz „wdróż” w Claude Code). Pierwszy przegląd
    w miesiącu (dzień ≤ 7): strona „📘 Instrukcja obsługi” (ID w `ja/references/notion-mapa.md`) – sekcje z linią „Stan:”
    starszą niż 60 dni wymień w „Czeka na Ciebie” („Instrukcja: n sekcji do sprawdzenia – …”); tokeny z datą ważności
    w sekcji „Utrzymanie” wygasające w 30 dni – też tam. W tym samym przebiegu nadpisz kopię offline `AI/Instrukcja obsługi.md`
    w folderze budowy treścią pobranej strony (jedyne odświeżenie kopii; bez dostępu do plików → „kopia instrukcji: do odświeżenia”).
+   **Zdjęcia, kopie i jakość wiedzy (tylko odczyt):** `python3 tools/zdjecia.py stan` (liczba plików w `Zdjęcia/_nowe` czekających na rozłożenie, ostatni
+   przebieg, blokada), `python3 tools/kopia.py stan --cicho` (kopia dokumentów) i `python3 tools/wiedza_jakosc.py przypomnij --cicho` (jedna linia, gdy
+   raport jakości czeka); polecenie niedostępne → „niesprawdzone”. Coś do zrobienia (pliki w `_nowe`, kopia po terminie, alarm jakości) → jeden
+   komunikat 🔔 z kluczem `zdjecia-i-kopie` (`wpisy/references/pytania.md`, C; „Co możesz zrobić”: np. „napisz w Claude Code »rozłóż zdjęcia«”); w tygodniowym
+   wpisie tylko liczby.
    **Kopie zapasowe:** `python3 tools/kopie.py stan --cicho` (tylko odczyt; brak wyjścia = wszystko aktualne; polecenie
    niedostępne → „niesprawdzone”). Pozycje ⚠/✗ → jeden komunikat 🔔 z kluczem `kopie-zapasowe` we „Wpisach”
    (`wpisy/references/pytania.md`, C; kolejny tydzień – aktualizacja bloku, wszystko ✓ → „ustąpiło”), w okienku
@@ -61,7 +66,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    z punktami; najpierw zaległe i czekające; nieudane odczyty jedną linią na końcu):
    ```
    **Zaległe i po terminie:** zadanie – od kiedy → zamknąć, przesunąć czy odpuścić?
-   **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia, POM-x z pytaniami
+   **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia
    **Zrobione:** 3–6 punktów (prywatne / dziecko / praca)
    **Najbliższy tydzień:** zadania z terminem wg dni, wesele (30 dni), „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Emocje i praca (liczby):** n wpisów emocji, najczęściej: …, śr. intensywność x; praca: n dni, śr. ocena y; wzorzec: …
