@@ -77,7 +77,7 @@ z ⚠ i inwestor o tym wie.
 
 | Konektor | Do czego | Gdy go zabraknie |
 |---|---|---|
-| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają w Dzienniku i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json`; po zalogowaniu pierwszy udany przebieg zostawia tylko ślad „ustąpiło” w „Przetworzone” Dziennika, bez bloku 🔔 – w trakcie widać go wyłącznie w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
+| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają we „Wpisach” i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json`; po zalogowaniu pierwszy udany przebieg zostawia tylko ślad „ustąpiło” w „Przetworzone” Dziennika, bez bloku 🔔 – w trakcie widać go wyłącznie w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
 | Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
 | Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
 | Google Sheets / Drive + strona decyzji (artefakt, procedura `budzet`) | budżet domowy: odczyt Transakcji, zapis wierszy, decyzje inwestora | wynik `przenies.py` (`miesiace/RRRR-MM-zapis.json`) wkleja się ręcznie; decyzje można podać w czacie zamiast na stronie |

@@ -46,7 +46,7 @@ wszystkich otwartych zadań.
 2. **Znajdź nowe rozjazdy** wg tabeli. Klucz flagi: `KS-<grupa>-<ostatnie 6 znaków ID zadania>` (np. `KS-H2-a1b2c3`).
    Pomiń parę, której klucz jest już w 🔔 (czeka) albo w „Przetworzone” (rozpatrzona – wyciszenie trwa, dopóki wpis tam jest;
    przegląd tygodnia archiwizuje po 14 dniach). Max 5 nowych flag na przebieg łącznie dla wszystkich grup (H, Z, R, S1, P), reszta „+k” w linii „🤖” – bez zalewu pytań.
-3. **Dopisz flagi** jako blok 🔔 pod „🔔 Komunikaty asystenta” we „📝 Wpisach” (format `wpisy/references/pytania.md`, C.7 – checkbox + klucz w kodzie; to jedna edycja
+3. **Dopisz flagi** jako blok 🔔 pod „🔔 Komunikaty asystenta” we „📝 Wpisach” (format `wpisy/references/pytania.md`, C.7 – checkbox + klucz w kodzie + dopisek „zastosuję w nocnym przeglądzie”; to jedna edycja
    „Wpisów” razem z resztą zapisów przeglądu – `SKILL.md`, krok 9). Jedno pytanie = jeden to-do, do ok. 12 słów, z kluczem na końcu:
    `- [ ] Krok „<krok>” → Zrobione? (zadanie „<nazwa>” zamknięte) KS-H1-a1b2c3`. H2 = dwa to-do pod jednym punktem, „zaznacz
    jedno”: `- [ ] Zadanie „<nazwa>” → DONE` i `- [ ] Zadanie „<nazwa>” → ARCHIVED (nieaktualne)` + klucz (krok zrobiony nie

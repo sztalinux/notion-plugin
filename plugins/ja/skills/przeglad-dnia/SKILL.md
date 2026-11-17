@@ -1,6 +1,6 @@
 ---
 name: przeglad-dnia
-description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę w ciągu dnia) rozkłada nowe wpisy z „📓 Dziennika” (i strony z widgetu na najwyższym poziomie Private) na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), budowa dodatkowo w „📆 Przeglądy dzienne – budowa” na DOM – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów i rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
+description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę w ciągu dnia) rozkłada nowe wpisy ze „📝 Wpisów” i Skrzynki na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY (dla inwestora – nocny) robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), budowa dodatkowo w „📆 Przeglądy dzienne – budowa” na DOM – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów i rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
 ---
 
 # Przegląd dnia – tryb szybki i wieczorny
@@ -45,11 +45,10 @@ krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
    „🔔 Komunikaty asystenta” we „Wpisach”. Lista „Komunikaty z automatów Maca” w poleceniu przebiegu (dokleja ją
    `przeglad.py`, gdy coś się zepsuło albo ustąpiło) to szóste źródło – bez odczytu.
    Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Strony Dziennika (bloki 1. poziomu) i stron z widgetu **nie czytasz** –
-   nie są źródłem wpisów (`wpisy`, „Źródła wpisów”; wyjątek: jednorazowe przejście po wdrożeniu 1.19.0).
+   nie są źródłem wpisów (`wpisy`, „Źródła wpisów”); przejścia 1.1 i 1.2 robi tylko nocny przebieg (`references/przejscia.md`).
 2. **Nic nowego → koniec.** Brak bloków w treści „Wpisów” (wpis z okienkiem ❓ bez
    odpowiedzi się nie liczy) i podstron w „Wpisach”, brak pozycji w „Nowe”
-   Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; odpowiedzi w blokach 🔔 z kluczami
-   `KS-…`, `RES-n` i luki w zadaniach obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
+   Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; szybki obsługuje tylko ❓ pod wpisami oraz 🔔 z automatów, kolejki 💸 i `SP-n`; **wszystkie inne bloki 🔔** (`KS-…`, `RES-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…`, `ZP-n`) obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
    „Błąd”, brak listy od automatu w poleceniu i brak odpowiedzi pod blokami 🔔 (blok 🔔 bez odpowiedzi się nie liczy – inaczej
    każdy przebieg przestałby być tani) → odpowiedz jedną linią „Wpisy: nic nowego (<godzina>;
    Skrzynka: 0)”
@@ -66,7 +65,7 @@ krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
    (`wpisy` krok 7); tytuł bloku pokazuje sumę dnia. W odpowiedzi
    podaj nowe wpisy per źródło – „Wpisy n · Skrzynka n” – żeby było
    widać, że przebieg sprawdził oba.
-5. Bez analizy pomysłów, bez „jutra”, bez wpisów w przeglądach – to robi wieczór. Przejście 1.1 (stare źródła → Wpisy): `references/przejscia.md`.
+5. Bez analizy pomysłów, bez „jutra”, bez wpisów w przeglądach – to robi wieczór.
 
 ## B. Tryb wieczorny – podsumowanie i plan
 
@@ -95,7 +94,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    („rozkminki czekają: n” w „⚠ Na teraz”). Procedura tematu **tylko odczytem**: budowa – spotkanie, decyzja → `przygotowanie`
    („Bez inwestora”), technika → `analiza-techniczna`, oferta → `oferta`, terminy → `harmonogram`; osobiste – skill `ja` obszaru.
    Wynik = sekcja „🧠 Rozkminka: <temat>”: budowa → krok 3, reszta → krok 8. Bez zapisów do baz – nowe pytania, zadania
-   i decyzje → jeden blok 🔔 we „Wpisach” (`wpisy/references/pytania.md`, C.7). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
+   i decyzje → jeden blok 🔔 we „Wpisach” (klucz `rozkminka-<dd.mm>`; `wpisy/references/pytania.md`, C.7). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
 3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i najbliższe 7 dni budowy (zwraca punkty do zakładki 🏗) i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze); najpierw domyka sprzeczności z Decyzją wpisaną
    przez inwestora; ostrzeżenie pogodowe dopisuje tylko przy przekroczonym progu w dniu roboty wrażliwej wpisanej w Uwagach
@@ -121,7 +120,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **Uzupełnij luki** w tych wierszach według `zadania`, sekcja D (tylko wskazane pola; Status i When nie zmieniaj; wątpliwości
    → jeden zbiorczy blok 🔔 (`wpisy/references/pytania.md`, C.7)). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie
    (krok 8) i do linii „🤖” weź liczby per kategoria, nazwy zamkniętych i zmienionych (max 5 na obszar, reszta „+k”) i listę
-   uzupełnionych pól.
+   uzupełnionych pól. **Odpowiedzi na dawne bloki `luki-zadan-<dd.mm>`:** to-do = uzupełnij pole wg propozycji (dopisek ma pierwszeństwo), blok → „Przetworzone”; nowy blok ma ten klucz.
 
    **5a. Kontrola spójności** – `references/kontrola-spojnosci.md`: zastosuj odpowiedzi inwestora na dawne flagi `KS-…`, potem
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.
@@ -142,8 +141,8 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    sprawdź ID, jeśli któryś odczyt się nie powiedzie.
 
    **Suplementy wstrzymane (kontrola spójności, grupa S1):** suplement z Buy = tak i Statusem BREAK albo SUSPENDED nie jest
-   „do kupienia” – nie wliczaj go do licznika ani do zadania „Zamówić suple”, pokaż osobno jako „do sprawdzenia” i zadaj jedno
-   zbiorcze pytanie „❓ Odznaczyć Buy?” (klucz `KS-S1-…`, propozycja: tak); pola Buy nie zmieniaj bez ☑ inwestora.
+   „do kupienia” – nie wliczaj go do licznika ani do zadania „Zamówić suple”, pokaż osobno jako „do sprawdzenia” i zadaj jeden
+   zbiorczy blok 🔔 „Odznaczyć Buy?” (klucz `KS-S1-…`, propozycja: tak); pola Buy nie zmieniaj bez ☑ inwestora.
    Reguły, klucze i obsługa odpowiedzi: `references/kontrola-spojnosci-suple.md`.
 
    **Suplementy po zamkniętym zadaniu** (przed licznikiem): zadanie „Zamówić suple” DONE od poprzedniego wieczornego przeglądu
@@ -177,7 +176,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    górze z odesłaniem.
 9. **Linia „🤖”** – na górze dzisiejszego bloku w „Przetworzone”, w tej samej edycji Dziennika co zapisy kroku 1 – tę jedną
    edycję (`wpisy`, krok 7) zrób na końcu przebiegu, po kroku 8, gdy znasz już wszystkie liczby (kroki 3–5 doliczają
-   ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma; krok 3 dostaje listę wpisów budowy z kroku 1):
+   ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma; krok 3 dostaje listę wpisów budowy z kroku 1). Bloki 🔔 z kroków 2, 5, 5a–5c, 6, 7 (nowe i zmieniane) zapisz **jedną punktową edycją „Wpisów”** pod nagłówkiem 🔔 w tym samym momencie:
    ```
    🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga, pomysły: 1 wersja uzupełniona · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · pomysły – 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy

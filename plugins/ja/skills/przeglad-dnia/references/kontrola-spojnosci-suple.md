@@ -9,7 +9,7 @@ Tylko odczyt i pytanie w 🔔 – **asystent sam nie zmienia pola Buy ani Status
 
 | Grupa | Rozjazd | Skutek |
 |---|---|---|
-| **S1** | suplement z Buy = tak i Status BREAK albo SUSPENDED | **nie wliczaj** do licznika „kupić” ani do zadania „Zamówić suple”; pokaż osobno jako „do sprawdzenia”; jedno zbiorcze pytanie „❓”; po ☑ Buy = nie |
+| **S1** | suplement z Buy = tak i Status BREAK albo SUSPENDED | **nie wliczaj** do licznika „kupić” ani do zadania „Zamówić suple”; pokaż osobno jako „do sprawdzenia”; jedno zbiorcze pytanie 🔔; po ☑ Buy = nie |
 
 Status TAKING i TO START z Buy = tak to zwykły zakup (bez zmian). Suplement po „wracam do X” ma Status TAKING – wtedy Buy
 znów się liczy.
@@ -24,7 +24,7 @@ znów się liczy.
    suplementów (jedna edycja na wiersz; Status, When, Last break, dawki i ceny bez zmian); dopisek inwestora zamiast ☑ („zostaw”,
    „kupuję mimo przerwy”) → nic nie zmieniaj, a suplement od tej pory wlicz do zakupów (wyciszenie: wpis w „Przetworzone”
    z kluczem, jak niżej). Rozpatrzony punkt idzie do „Przetworzone” z dopiskiem „→ KS: <Buy odznaczone | zostaje>”.
-3. **Pytanie 🔔** (blok we „Wpisach”, `wpisy/references/pytania.md`, C.7; jedna edycja „Wpisów” z resztą zapisów przeglądu – krok 9):
+3. **Pytanie 🔔** (blok we „Wpisach”, `wpisy/references/pytania.md`, C.7, z dopiskiem „zastosuję w nocnym przeglądzie”; jedna edycja „Wpisów” z resztą zapisów przeglądu – krok 9):
    **jedno zbiorcze pytanie na przebieg**, nawet gdy „do sprawdzenia” jest kilka suplementów; to-do w jednym punkcie:
    `- [ ] Odznaczyć Buy? <nazwa 1>, <nazwa 2> (Status BREAK/SUSPENDED) KS-S1-<klucz>` – zaznaczenie = tak, odznacz Buy wszystkim
    wymienionym; wybór pojedynczych → dopisek pod punktem. Propozycja domyślna: tak.

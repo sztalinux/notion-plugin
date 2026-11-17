@@ -97,11 +97,11 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    otwarte = to-do z dopiskiem `→ wpisz pod spodem`; max 3 to-do na blok. Kontekst i to, co asystent zrobi po odpowiedzi –
    w zwiniętym toggle „Szczegóły” pod pytaniem. **Odczyt:** zaznaczony to-do = zgoda; tekst dopisany pod to-do ma pierwszeństwo;
    niezaznaczony i bez dopisku = brak odpowiedzi; częściowa odpowiedź – przetwórz odpowiedziane, reszta zostaje.
-   Klucze `KS-…`, `RES-n`, `SP-n`, `ZP-n` stoją w bloku jak klucze komunikatów (kod w tekście), żeby parser znalazł pytanie po
-   kluczu; ten sam klucz = aktualizacja istniejącego bloku (pkt 2). **Limit:** najwyżej 5 nowych bloków 🔔 z kontroli spójności
-   (`KS-…`) na przebieg. **Kto obsługuje odpowiedzi:** na bloki `KS-…`, `KS-Z…`, `KS-R…`, `KS-S1-…`, `KS-P…`, `RES-n` i na luki w zadaniach –
+   Blok z kluczem obsługiwanym przez nocny kończy się dopiskiem „zastosuję w nocnym przeglądzie”. Klucze `KS-…`, `RES-n`, `SP-n`, `ZP-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…` stoją w bloku jak klucze komunikatów (kod w tekście), żeby parser znalazł pytanie po
+   kluczu; ten sam klucz = aktualizacja istniejącego bloku (pkt 2). **Limit:** jeden blok = jedna flaga; najwyżej 5 nowych bloków 🔔 z kontroli spójności
+   (`KS-…`, wszystkie grupy razem) na przebieg; RES-n (max 2), rozkminki (max 2), luki w zadaniach (jeden zbiorczy blok), porządki tygodnia i przejście 1.2 są poza tym limitem. **Kto obsługuje odpowiedzi:** na bloki `KS-…`, `KS-Z…`, `KS-R…`, `KS-S1-…`, `KS-P…`, `RES-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…` i `ZP-n` –
    **tylko nocny przebieg** (szybki ma zostać tani i **nie liczy ich** w warunku „nic nowego”, `przeglad-dnia`, A.2); szybki obsługuje
-   odpowiedzi w okienkach ❓ pod wpisami i pod 🔔 z automatów i kolejki 💸 (pkt 4). Obsłużony blok idzie do „Przetworzone”.
+   odpowiedzi w okienkach ❓ pod wpisami oraz pod 🔔 z automatów, kolejki 💸 i `SP-n` (pkt 4); każdy inny klucz zostaje nocnemu. Obsłużony blok idzie do „Przetworzone”.
 8. **Zakaz „czeka na sesję Claude Code”.** Nie zostawiaj sprawy z adnotacją „wymaga sesji Claude Code”. Dla każdej rzeczy, której
    przebieg nie zrobi, wybierz jedno: (a) zrób część, którą możesz, i zadaj ❓ albo 🔔 z propozycją, na którą wystarczy krótka
    odpowiedź; (b) podaj w ❓ albo 🔔 dokładną czynność dla inwestora (gdzie kliknąć, co wpisać), a po jego „zrobione” dokończ;

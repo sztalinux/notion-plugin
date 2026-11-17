@@ -28,7 +28,7 @@ Nie otwieraj wpisu dla różnic w szczegółach bez znaczenia praktycznego (np. 
 
 ## Rozstrzygnięcie – po odpowiedzi inwestora
 
-Odpowiedź inwestora przychodzi trzema drogami: w rozmowie, wpisem „SP-n: …” w Dzienniku (procedura `wpisy`) albo wpisaną
+Odpowiedź inwestora przychodzi trzema drogami: w rozmowie, wpisem „SP-n: …” we „Wpisach” (procedura `wpisy`) albo wpisaną
 przez niego treścią pola **Decyzja** w Rejestrze (widok „🤖 Decyzja wpisana – do domknięcia”: Decyzja niepusta, Status
 „Czeka na decyzję” lub „Do sprawdzenia u projektanta”). Wszystkie trzy domykasz tymi samymi krokami – także w przeglądzie
 dnia bez inwestora (szczegóły niżej, „Bez inwestora”).

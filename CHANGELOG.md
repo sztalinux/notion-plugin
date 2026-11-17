@@ -17,6 +17,7 @@ Uproszczenie przepływu, faza 1 (jedno wejście, dwa miejsca pytań, zakaz „cz
   luki w zadaniach, przegląd tygodnia (blok tylko pod nagłówkiem 🔔, jedna punktowa edycja).
 - ☀️ Dziś: linia z liczbą otwartych ❓ i 🔔.
 - `budzet` A.2: składnia `wpis.py` bez `--help`, jedno polecenie na wywołanie. `przeglad.py` (poza repo): zezwolenie `wpis.py --help`, prompty bez Dziennika/widgetu.
+- Po recenzji: odpowiedzi na bloki `KS-…`, `RES-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…`, `ZP-n` tylko w nocnym (szybki: ❓, automaty, 💸, `SP-n`); przejścia 1.1/1.2 tylko nocne; parser luk w zadaniach; producenci budowy (`przeglad-tygodnia`, `przygotowanie`) na 🔔.
 - Poza zakresem tej wersji (decyzje inwestora): faza 4 i 5 wg sekcji 0a specyfikacji.
 
 ## dom-budowa [3.17.1] – 2026-11-17

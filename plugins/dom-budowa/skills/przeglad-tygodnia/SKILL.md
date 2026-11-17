@@ -56,7 +56,7 @@ Pobierz w jak najmniejszej liczbie zapytań:
       nie widać ich w „🔴 Do zamknięcia” na DOM;
     - Dziennik: problemy bez wpisu w Notatniku/TASKS; TASKS „DONE”, a powiązany wpis Notatnika otwarty;
     - zadania budowy ↔ kroki Harmonogramu (grupy H1–H4): pełny przebieg wg `ja/skills/przeglad-dnia/references/kontrola-spojnosci.md`
-      (bez warunku „zmienione dziś” z przeglądu dnia); flagi tylko jako pytania „❓” z kluczem `KS-…`, bez zmian bez ☑ inwestora;
+      (bez warunku „zmienione dziś” z przeglądu dnia); flagi tylko jako bloki 🔔 z kluczem `KS-…` (`wpisy/references/pytania.md`, C.7; liczą się do limitu 5), bez zmian bez ☑ inwestora;
       zadanie lub krok w koszu Notion (strona oznaczona jako usunięta) – pomiń bez flagi; H2 z wyborem DONE albo ARCHIVED;
     - indeks wiedzy (`wiedza/references/indeks.md`): `python3 tools/wiedza.py stan --json` i `python3 tools/wiedza.py duplikaty --od <data sprzed 7 dni> --json`
       → lista kandydatów na duplikaty do DECYZJI inwestora (nie scalaj bez zgody); `zbudowano` starsze niż 7 dni albo `ostatni_pelny`

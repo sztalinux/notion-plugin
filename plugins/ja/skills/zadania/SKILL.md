@@ -55,7 +55,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
    Pozycji X nie ma w 🛒 (szukanie jak w pkt 1) → nie zakładaj jej; w śladzie „→ zakup bez pozycji na liście” – lista zakupów
    to plan, nie historia wydatków.
    „Odpuszczam X” → Odpuszczone (powiązane zadanie ARCHIVED). Ręczne zmiany inwestora w Notion (status zakupu, zamknięcie zadania)
-   wyrównuje wieczorem `przeglad-dnia`, krok 5b – pytaniem „❓”, nie samowolnie.
+   wyrównuje wieczorem `przeglad-dnia`, krok 5b – blokiem 🔔 (`KS-Z…`), nie samowolnie.
 5. Odczyt „co kupić”: widok „🛒 Do kupienia” (grupy wg Gdzie), „📦 Zamówione – czekam”, „✅ Kupione” (ID w `ja/references/notion-mapa.md`);
    „co kupić w markecie” – dołóż widok „🧱 Do kupienia na budowę” (podzakładka 🧱 Budowa w zakładce 🛒 Zakupy, ID w mapie).
    Zakup z Termin lub pilny wymień osobno na górze.
@@ -106,13 +106,13 @@ Puste Obszar znaczy w starych wierszach Dom, więc zadanie prywatne z pustym Obs
 | Pole (puste) | Uzupełnij |
 |---|---|
 | Obszar | **Dom** – gdy Kategoria jest budowlana (Media, Kredyt, Czyszczenie działki, Stan zero, SSO, Ogrodzenie, Teren, Przygotowanie do budowy, Wiata kontener, Projektowanie, Zakup działki, Ogród). **Prywatne** – Kategoria Zdrowie lub Nauka. Inaczej z nazwy i opisu, tylko gdy jednoznaczne (dziecko, praca, zwykła sprawa prywatna); wątpliwość → „❓” |
-| Kto | Ja – chyba że Status WAITING albo nazwa lub opis wskazuje kogoś innego (wtedy „❓”) |
+| Kto | Ja – chyba że Status WAITING albo nazwa lub opis wskazuje kogoś innego (wtedy 🔔 `luki-zadan-<dd.mm>`) |
 | Priority | Medium |
 | Kategoria | Obszar inny niż Dom: z nazwy (Zakup, Zdrowie, Nauka), niejasne → Inne. Obszar Dom zostaw (kategorię nadają `notatka` i `harmonogram`) |
 | Desc | jedno zdanie z treści strony, gdy ją ma; pusta strona → zostaw puste |
 
 Status, When i Name zostają – to decyzje inwestora. Termin wynikający z nazwy
-lub opisu („do piątku”, data) → „❓” z proponowaną datą. Wpisanych wartości nie nadpisuj.
+lub opisu („do piątku”, data) → 🔔 `luki-zadan-<dd.mm>` z proponowaną datą. Wpisanych wartości nie nadpisuj.
 
 ## Zasady
 

@@ -56,8 +56,8 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
    - brak pasującej pozycji albo niepewność → nie zgaduj: pytanie z propozycją (okienko ❓ pod wpisem we „📝 Wpisach” – `wpisy/references/pytania.md`, A;
      w rozmowie – wprost); nowa pozycja to zmiana arkusza (sekcja C).
      **Wydatek bez pozycji nie czeka bez ruchu inwestora:** ❓ z instrukcją 3–4 kroków w arkuszu (Kosztorys → dodaj wiersz pozycji w etapie,
-     skopiuj formuły z sąsiedniego wiersza, nazwa jak w ❓) i prośbą „odpisz »dodane«”; po odpowiedzi `python3 tools/wydatki.py pozycje`
-     odświeża listę pozycji w Notion, a przebieg zapisuje wydatek (nigdy samą adnotacją „wymaga sesji Claude Code”).
+     skopiuj formuły z sąsiedniego wiersza, nazwa jak w ❓) i prośbą „odpisz »dodane«”; po odpowiedzi lista pozycji w Notion odświeża się po nocnym przebiegu (automat; w Claude Code od razu `python3 tools/wydatki.py pozycje`),
+     a przebieg zapisuje wydatek dopiero na odświeżonej liście – do tego czasu ❓ zostaje z dopiskiem „czeka na odświeżenie listy” (nigdy samą adnotacją „wymaga sesji Claude Code”).
 3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą **z tego samego źródła** (ten sam wpis, wiadomość albo nr FV) →
    zaktualizuj go zamiast dodawać drugi. Ta sama data i kwota z innego źródła albo dwie płatności nazwane wprost (np. przelew
    w dwóch częściach) → osobne wiersze, w Notatkach „druga płatność tego dnia – nie duplikat”; niepewne → pytanie. W Claude Code sprawdź też
@@ -121,7 +121,7 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 
 1. Opisz zmianę i jej wpływ (które arkusze i formuły) – przy większych poczekaj na „ok”.
 2. Nigdy nie proś o ponowny import pliku – arkusz żyje w Google. Prosta zmiana danych (nowa pozycja) →
-   instrukcja krok po kroku dla inwestora (kwota planu – kolejka, sekcja B3); nowa pozycja trafi na listę w Notion przy wieczornym `wydatki.py pozycje`.
+   instrukcja krok po kroku dla inwestora (kwota planu – kolejka, sekcja B3); nowa pozycja trafi na listę w Notion przy nocnym `wydatki.py pozycje` (automat).
 3. Zmiana układu lub wyglądu (kolumny, formuły, kolory, listy) – w Claude Code, na żywym arkuszu, według
    `docs/wydatki-arkusz.md`, sekcja 8:
    - **konektor Google Sheets** (szybciej): migawka zakresu przed zmianą (z formułami), zapis, odczyt kontrolny; formuły ze

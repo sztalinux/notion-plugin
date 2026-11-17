@@ -100,7 +100,7 @@ niosą główną myśl materiału. Mniej niż 3 informacje – pomiń blok (wszy
 
 ## C. Rozstrzygnięcie sprzeczności (po odpowiedzi inwestora)
 
-Tylko po odpowiedzi inwestora; niejasna → dopytaj, nie zgaduj. Odpowiedzią jest też „SP-n: …” w Dzienniku i treść, którą
+Tylko po odpowiedzi inwestora; niejasna → dopytaj, nie zgaduj. Odpowiedzią jest też „SP-n: …” we „Wpisach” i treść, którą
 inwestor sam wpisał w pole Decyzja – domyka je także przegląd dnia bez inwestora. Własny wariant, połączenie opcji albo
 rozstrzygnięcie części dylematu to odpowiedź, nie niejasność. Kroki i granica „niejasnej”: `references/sprzecznosci.md`.
 

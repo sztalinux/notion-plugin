@@ -59,8 +59,8 @@ Krótko, do przeczytania na telefonie przed wejściem na spotkanie:
 Gdy wywołuje cię wieczorny przegląd dnia (`przeglad-dnia`, B.2a – inwestor poprosił we wpisie np. „przygotuj mi pytania
 na spotkanie z …”): w kroku 1 zamiast pytania przyjmij założenie i napisz je w pierwszym punkcie karty; kartę skróć do
 punktów (pytania obowiązkowe, czerwone flagi, co zabrać) – trafia do sekcji „🧠 Rozkminka” przeglądu dnia budowy, nie do
-rozmowy. Krok 6 bez zapisów: nowe pytania do Notatnika i termin do TASKS wymień w jednym zbiorczym „❓” w Dzienniku
-(`wpisy/references/pytania.md`, B, plugin `ja`) i zapisz dopiero po „tak”.
+rozmowy. Krok 6 bez zapisów: nowe pytania do Notatnika i termin do TASKS wymień w jednym zbiorczym bloku 🔔 we „Wpisach”
+(`wpisy/references/pytania.md`, C.7, plugin `ja`) i zapisz dopiero po „tak”.
 
 ## Zasady
 

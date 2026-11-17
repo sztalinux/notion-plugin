@@ -51,7 +51,7 @@ sekcja 🗄 Archiwum nie przyjmuje nowych wpisów, a „💞 Relacja” jej nie 
 
 - Klucz: `KS-R-<ostatnie 6 znaków ID zadania>`; pomiń parę, której klucz jest w 🔔 albo w „Przetworzone”. Limit 5 flag na
   przebieg razem z innymi grupami serii (reszta „+k”).
-- Pytanie jako blok 🔔 we „Wpisach” (`wpisy/references/pytania.md`, C.7), jeden to-do do ok. 12 słów, bez treści tematu:
+- Pytanie jako blok 🔔 we „Wpisach” (`wpisy/references/pytania.md`, C.7; dopisek „zastosuję w nocnym przeglądzie”), jeden to-do do ok. 12 słów, bez treści tematu:
   `- [ ] „<początek nazwy zadania>” zamknięte – oznaczyć temat jako przegadany? (<wzmianka strony osoby>) KS-R-a1b2c3`.
   W „Szczegóły”: data zadania i że po ☑ dopiszesz zagnieżdżony punkt „✅ przegadane”. **Treść tematu to dane prywatne** –
   w pytaniu i w logu tylko link do strony osoby i liczby, bez cytowania tematu.

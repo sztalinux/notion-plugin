@@ -53,7 +53,7 @@ pilny / z zadaniem zwykle zamyka się szybciej). Zadanie i zakup bez relacji nie
 3. **Nowe rozjazdy (Z1, Z2, Z3)** wg tabeli. Klucz: `KS-<grupa>-<ostatnie 6 znaków ID zakupu>` (np. `KS-Z1-a1b2c3`). Pomiń parę, której
    klucz jest już w 🔔 (czeka) albo w „Przetworzone” (rozpatrzona; wyciszenie trwa, dopóki wpis tam jest). **Max 5 nowych
    flag na przebieg łącznie ze wszystkimi grupami KS**, reszta „+k” w linii „🤖”.
-4. **Dopisz flagi** jako blok 🔔 pod „🔔 Komunikaty asystenta” we „📝 Wpisach” (format `wpisy/references/pytania.md`, C.7 – checkbox + klucz w kodzie; jedna edycja
+4. **Dopisz flagi** jako blok 🔔 pod „🔔 Komunikaty asystenta” we „📝 Wpisach” (format `wpisy/references/pytania.md`, C.7 – checkbox + klucz w kodzie + dopisek „zastosuję w nocnym przeglądzie”; jedna edycja
    z resztą zapisów przeglądu – `SKILL.md`, krok 9). Jedno pytanie = jeden to-do, do ok. 12 słów, klucz na końcu:
    `- [ ] Zadanie „<nazwa>” → DONE? (zakup Kupione) KS-Z1-a1b2c3`. Z2 z DONE = dwa to-do pod jednym punktem, „zaznacz jedno”:
    `- [ ] Zakup „<rzecz>” → Kupione` i `- [ ] Zakup „<rzecz>” → Odpuszczone` + klucz; przy ARCHIVED jeden to-do (Odpuszczone).

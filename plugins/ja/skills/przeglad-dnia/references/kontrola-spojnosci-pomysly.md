@@ -39,7 +39,7 @@ Kilka nagłówków jednego POM (kolejne etapy) → wpisz wszystkie wersje po prz
    bo wartość pochodzi z nagłówka CHANGELOG; są idempotentne (po zapisie wiersz nie jest już kandydatem), więc bez klucza.
    W linii „🤖” i w „Czeka na Ciebie” – licznik „uzupełniono wersje: n”.
 4. **Pytania P1/P2/P3** – jedno pytanie = jeden to-do z kluczem `KS-P<n>-<ostatnie 6 znaków ID strony pomysłu>` jako blok 🔔
-   we „Wpisach” (`wpisy/references/pytania.md`, C.7), np. `- [ ] POM-8: Status → Zrobione? (pole „Zrobiono w wersji” wypełnione) KS-P2-d1e2f3`;
+   we „Wpisach” (`wpisy/references/pytania.md`, C.7; dopisek „zastosuję w nocnym przeglądzie”), np. `- [ ] POM-8: Status → Zrobione? (pole „Zrobiono w wersji” wypełnione) KS-P2-d1e2f3`;
    ID pomysłu (POM-n) podaj jako wzmiankę strony. Pomiń parę, której klucz jest już w 🔔 (czeka) albo w „Przetworzone”
    (rozpatrzona – wyciszenie trwa, dopóki wpis tam jest). Liczy się do wspólnego limitu 5 nowych flag `KS-…` na przebieg.
 5. **Licznik** do kroku 8 i linii „🤖”: `rozjazdy: n nowych, m wykonanych` (wspólny dla serii) + „uzupełniono wersje: k” (P1, P4).

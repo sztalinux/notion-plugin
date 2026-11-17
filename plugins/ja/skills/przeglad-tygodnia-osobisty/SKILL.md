@@ -96,5 +96,5 @@ Do zatwierdzenia (propozycja w przeglądzie):
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
 - TASKS prywatne po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze);
-Odpowiedź (☑ albo dopisek pod to-do) czyta najbliższy przebieg dnia (`przeglad-dnia` A.2) – wykonaj wtedy
+Odpowiedź (☑ albo dopisek pod to-do) czyta nocny przebieg (`przeglad-dnia`, B; klucz `porzadki-…`) – wykonaj wtedy
 zatwierdzone porządki wsadowo (`ja`, zasada 2), punkt do „Przetworzone”. Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.

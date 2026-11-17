@@ -95,6 +95,6 @@ zamówienia z „Zamówić do” (bez Dostarczone i Nieaktualne – jak przeglą
 - Kwoty nigdy w Harmonogramie ani Zakupach budowy – arkusz kosztorysu (`koszty`).
 - Zadanie z relacją do kroku i sam krok rozjeżdżają się przy ręcznych zmianach (zadanie DONE, krok nie; krok „Zrobione”, zadanie
   otwarte; zadanie po końcu kroku; „czekam na” ze starym terminem po przesunięciu). Rozjazdy wychwytuje kontrola spójności
-  (`ja/skills/przeglad-dnia/references/kontrola-spojnosci.md`) – pytaniem w „❓”; relację do kroku ustawiaj więc zawsze, gdy zadanie z niego wynika.
+  (`ja/skills/przeglad-dnia/references/kontrola-spojnosci.md`) – blokiem 🔔 (`KS-…`); relację do kroku ustawiaj więc zawsze, gdy zadanie z niego wynika.
 - Termin w Notatniku (pole Kiedy) i zadanie w TASKS dla tej samej sprawy → zadanie w TASKS, w Notatniku link; nie dubluj dat.
   Otwarte wpisy Notatnika z Kiedy (w oknie albo po terminie) wchodzą do „co mnie czeka” (E), jak w przeglądzie tygodnia (pkt 4).

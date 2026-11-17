@@ -38,8 +38,7 @@ inwestora w okienkach ❓ i pod blokami 🔔. Wyjątki (nie wpisy): „Jak używ
 z blokami pod nim (komunikat staje się pracą dopiero po odpowiedzi – `references/pytania.md`, C) i stałe podstrony „📆 Przeglądy dzienne”,
 „📅 Przeglądy tygodniowe”, „🗃 Przetworzone podstrony”, „🗃 Przetworzone – archiwum”.
 **Nie są już źródłem** (od ja 1.19.0): bloki 1. poziomu strony „📓 Dziennik” i strony na najwyższym poziomie Private spoza listy
-stałych stron (widget „nowa strona”). Nie przetwarzaj ich; wyjątek – **jednorazowe przejście** (pierwszy przebieg po wdrożeniu
-1.19.0): przenieś jeszcze te stare źródła do „📝 Wpisów” jako zwykłe wpisy (blok → na koniec treści Wpisów; strona z widgetu
+stałych stron (widget „nowa strona”). Nie przetwarzaj ich; wyjątek – **przejście 1.1** (tylko nocny przebieg, dopóki w „Jak używać” Dziennika brak zdania „Piszesz we 📝 Wpisach”; `przeglad-dnia/references/przejscia.md`): przenieś jeszcze te stare źródła do „📝 Wpisów” jako zwykłe wpisy (blok → na koniec treści Wpisów; strona z widgetu
 → jej treść jako blok we Wpisach, strona pod „🗃 Przetworzone podstrony”), od następnego przebiegu ich nie czytaj.
 Porównuj po ID, nie po tytule. 🔒 Prywatne – nigdy jej nie otwieraj (`ja`, zasada 5). Ogólny zakaz: nie przetwarzaj stron spoza Wpisów.
 **Podstron „Wpisów” nie usuwaj i nie wycinaj znacznikiem strony z treści** (to by ją skasowało)
@@ -50,10 +49,10 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
 ## Procedura
 
 1. **Pobierz** stronę „📝 Wpisy” (bloki w treści i podstrony) i sekcję „Nowe” Skrzynki (`references/skrzynka.md`). Stronę Dziennik
-   pobierz tylko do zapisu „Przetworzone” (krok 6–7). Przy jednorazowym przejściu (patrz „Źródła wpisów”) pobierz też bloki 1. poziomu
+   pobierz tylko do zapisu „Przetworzone” (krok 6–7). Przy przejściu 1.1 (patrz „Źródła wpisów”) pobierz też bloki 1. poziomu
    Dziennika i listę stron najwyższego poziomu Private.
    Nowe wpisy oraz wpisy z okienkiem ❓ we „Wpisach”, w którym inwestor coś dopisał – te oceń ponownie; odczyt odpowiedzi:
-   `references/pytania.md`, A. Komunikaty 🔔 z odpowiedzią albo zmianą stanu – obsłuż wg `references/pytania.md`, C. Wpis z okienkiem bez odpowiedzi nie jest nowy – pomiń go. Brak obu → „Dziennik pusty”
+   `references/pytania.md`, A. Komunikaty 🔔 z odpowiedzią albo zmianą stanu – obsłuż wg `references/pytania.md`, C. Wpis z okienkiem bez odpowiedzi nie jest nowy – pomiń go. Brak obu → „Wpisy puste”
    (+ liczba czekających we „Wpisach”).
 2. **Pobierz Obszary** – zapisany widok „🤖 Aktywne (dla asystenta)” (`view://3faf5982-09e7-817b-a060-000c05f26c6a`, tryb view:
    Aktywny = tak, sort Kolejność; baza `collection://253b7564-00ac-45b2-a3f4-956275e3a7e0`).
@@ -105,7 +104,7 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    Dziennik (przeniesienia do „Przetworzone”, linia „🤖”) – podstrony „Wpisów” przenosisz jednym osobnym wywołaniem przed nią.
    Bloki z treści „📝 Wpisy” idą w tej edycji Dziennika do „Przetworzone”; **jedna** edycja
    „Wpisów” (punktowa, podstron nie ruszaj) zdejmuje przetworzone bloki z ich okienkami, dodaje okienka pod niejasnymi
-   (przy jednorazowym przejściu także dopisuje tu stare wpisy z Dziennika i widgetu) – po niej treść „Wpisów” to tylko nagłówek 🔔 z komunikatami, wpisy z okienkami ❓, podstrony i 1 pusta linia
+   (przy przejściu 1.1 także dopisuje tu stare wpisy z Dziennika i widgetu) – po niej treść „Wpisów” to tylko nagłówek 🔔 z komunikatami, wpisy z okienkami ❓, podstrony i 1 pusta linia
    (zmiany w 🔔 idą w tej samej edycji).
    Po edycji Dziennika (po przejściu) na 1. poziomie zostaje tylko to, co stałe – „Jak używać” (ze zdaniem „Piszesz we 📝 Wpisach”), trzema nagłówkami, pięcioma stałymi podstronami (lista wyżej) i 1–2 pustymi
    liniami do pisania. Każda zamiana (`old_str`) obejmuje tylko blok, który przenosisz, albo jedną linię-kotwicę – nigdy
