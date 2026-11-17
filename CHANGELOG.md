@@ -5,6 +5,15 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## dom-budowa [3.17.0] – 2026-11-17
+
+Prośba inwestora 17.11: lista poprawek do modelu 3D w Notion.
+- `model-3d`: nowa sekcja „Lista poprawek inwestora” – baza „🏠 Poprawki modelu 3D” na stronie DOM jako skrzynka poprawek;
+  na polecenie „wprowadź poprawki modelu” / „zrób M3D-n” asystent pobiera wiersze „Nowa” albo puste, wprowadza je w danych
+  modelu i oznacza jako „Zrobiona” albo „Pytanie”. Droga zapasowa bez Notion: plik `POPRAWKI.md` w folderze modelu.
+- `model-3d`: szczegółów wystroju wnętrz nie zmienia się bez prośby; zasoby z internetu dopiero po zgodzie na listę.
+- Mapa Notion budowy, tabele procedur (`AGENTS.md`, README, `budowa`) – nowy wiersz / dopisek.
+
 ## ja [1.18.1] – 2026-11-17
 
 - HZ-15 (`budzet`, sekcja A): wydatek wpisany zwykłym zdaniem, bez skrótu, konta i osoby, jest rozpoznawany jako wydatek –

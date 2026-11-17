@@ -86,6 +86,7 @@ z ⚠ i inwestor o tym wie.
 | Notion – „📘 Książka domu” (procedura `ksiazka-domu`) | rozdziały etapów, „gdzie co biegnie” | szkic rozdziału jako Markdown w folderze budowy (`Książka domu/`), punkty z telefonu przez Skrzynkę; ostatni eksport PDF i zdjęcia na Dysku działają bez Notion i bez asystenta |
 | Atlassian MCP (Jira, przebiegi na Macu – zakładka 💼 planu dnia) | zgłoszenia przypisane do inwestora, zmiany od wczoraj | commity i PR-y ze skryptu lokalnego (`.dom/praca/dzien.json`) i lista WORK – plan pracy bez statusów Jiry, w 📊 linia „Jira – brak odczytu” |
 | Blender MCP (model 3D, procedura `model-3d`) | przebudowa modelu w otwartym Blenderze, zrzuty widoku na żywo | Blender bez okna: `Blender -b -P narzedzia/buduj.py -- --zapisz` i `narzedzia/rendery.py` w folderze modelu – ten sam model (suma kontrolna w `model/raport.json`), podgląd jako obrazy w `podglad/`; bez Blendera w ogóle zostaje kontrola danych `narzedzia/sprawdz.py` i zapisany plik sceny |
+| Notion – „🏠 Poprawki modelu 3D” (procedura `model-3d`) | lista poprawek do modelu wpisywana przez inwestora | plik `POPRAWKI.md` w folderze modelu albo poprawki podyktowane w rozmowie |
 | Artifact / ArtifactData (pulpit budowy, Claude Code) | publikacja pulpitu, odczyt zaznaczeń inwestora (procedura `pulpit`) | ⚠ brak zapasu dla samej strony pulpitu: nie odświeża się, a nowych zaznaczeń nie da się odczytać; nic nie ginie – źródłem prawdy jest Notion (Notatnik, Harmonogram, Checklista), decyzje wpisuje się tam wprost |
 
 ## Procedury
@@ -120,7 +121,7 @@ z ⚠ i inwestor o tym wie.
 | `dziennik` | „dziś na budowie…”, zdjęcia, godziny własne, roboty dodatkowe | Dziennik budowy w Notion, przekazanie kosztów/zadań |
 | `harmonogram` | „ekipa wchodzi…”, „przesuwamy…”, „czekam na…”, „co mnie czeka” | harmonogram w Notion (oś czasu), terminy pochodne (zamówienia, bramki, ludzie), przesunięcia |
 | `pulpit` | „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło” (tylko Claude Code) | obieg pulpitu budowy: zaznaczenia ze strony → Notion (statusy, decyzje), świeże dane z Notion, testy, publikacja pod stałym adresem |
-| `model-3d` | „przebuduj model 3D”, „zmień podłogę w salonie”, „dodaj okno dachowe”, „pokaż widok z…”, „zrób rendery elewacji” | model 3D domu i ogrodu w Blenderze: zmiana w plikach danych → kontrola → przebudowa → zrzut przed/po; dane i skrypty w prywatnym folderze modelu, tu tylko procedura; bez konektora Blender działa bez okna |
+| `model-3d` | „przebuduj model 3D”, „zmień podłogę w salonie”, „dodaj okno dachowe”, „pokaż widok z…”, „zrób rendery elewacji”, „wprowadź poprawki modelu” | model 3D domu i ogrodu w Blenderze: zmiana w plikach danych → kontrola → przebudowa → zrzut przed/po; dane i skrypty w prywatnym folderze modelu, tu tylko procedura; bez konektora Blender działa bez okna |
 | `zakupy` | „kupić X na budowę”, „co kupić na…”, „kiedy zamawiać”, oferta hurtowni, dostawa | wszystko na działkę i do budynku w 🧱 Zakupy budowy, lista z kosztorysu, wyprzedzenia, porównanie dostawców |
 | `przygotowanie` | „jutro spotkanie z…”, „o co zapytać”, „kogo wybrać z kilku” | karta przygotowania: pytania, czerwone flagi, macierz decyzji, zapis po spotkaniu |
 | `przeglad-tygodnia` | niedziela wieczorem – automat na Macu, z przeglądem osobistym / „co nowego” | decyzje, nowa wiedza, terminy, budowa, zamówienia, porządki |

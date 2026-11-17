@@ -1,6 +1,6 @@
 ---
 name: model-3d
-description: Model 3D domu i ogrodu w Blenderze, po którym można chodzić – zmiany w modelu przez pliki danych (JSON) i przebudowę skryptem, podgląd przed/po, rendery kontrolne, praca przez konektor Blendera albo bez okna. Używaj, gdy użytkownik mówi „przebuduj model 3D”, „zmień podłogę w salonie”, „dodaj okno dachowe”, „podnieś taras”, „przesuń ścianę w modelu”, „pokaż widok z kuchni na ogród”, „dodaj drzewo / rabatę w modelu”, „zapisz model”, „zrób rendery elewacji”, „dostałem DWG rzutów od architekta”, „co w modelu jest przybliżone”, albo pyta, jak chodzić po modelu.
+description: Model 3D domu i ogrodu w Blenderze, po którym można chodzić – zmiany w modelu przez pliki danych (JSON) i przebudowę skryptem, podgląd przed/po, rendery kontrolne, praca przez konektor Blendera albo bez okna. Używaj, gdy użytkownik mówi „przebuduj model 3D”, „zmień podłogę w salonie”, „dodaj okno dachowe”, „podnieś taras”, „przesuń ścianę w modelu”, „pokaż widok z kuchni na ogród”, „dodaj drzewo / rabatę w modelu”, „zapisz model”, „zrób rendery elewacji”, „dostałem DWG rzutów od architekta”, „co w modelu jest przybliżone”, albo pyta, jak chodzić po modelu, „wprowadź poprawki modelu”, „zrób M3D-n” (lista poprawek w Notion).
 ---
 
 # Model 3D domu i ogrodu
@@ -69,6 +69,24 @@ procedur, commitów harnessu ani do Notion bez prośby.
   i zrób zrzut ponownie; gdy nadal się nie zgadza, zrób render z kamery skryptem `rendery.py`.
 - Porównanie z projektem: rendery ortogonalne czterech elewacji zestaw z arkuszami elewacji, ujęcia „jak wizualizacja”
   z wizualizacjami architekta.
+
+## Lista poprawek inwestora („wprowadź poprawki modelu”, „zrób M3D-n”)
+
+Inwestor wpisuje poprawki do modelu w Notion – baza „🏠 Poprawki modelu 3D” na stronie DOM
+(`collection://41bf5982-09e7-81e0-8e87-000b02dc8a70`; pola: Poprawka, Status, Gdzie, Szczegóły, Zdjęcie, Odpowiedź asystenta,
+Zrobiono, ID „M3D-n”). Baza jest tylko skrzynką – niczego z niej nie wprowadzaj bez polecenia.
+
+1. Pobierz wiersze ze Statusem „Nowa” albo pustym (najstarsze pierwsze); obejrzyj załączone zdjęcia i zrzuty.
+2. Każdą poprawkę wprowadź jak typową zmianę (kroki niżej). Życzenie inwestora co do wyglądu domu to jego decyzja – dopisz
+   ją do decyzji inwestora w danych domu; gdy jest sprzeczna z rysunkami albo dotyczy konstrukcji, wprowadź ją i dopisz
+   pytanie do architekta / konstruktora w pliku stanu modelu.
+3. Oznacz wiersze jednym zapisem: „Zrobiona” + Zrobiono + jedno zdanie w „Odpowiedź asystenta”; poprawkę niejasną albo
+   niewykonalną – „Pytanie” z pytaniem zwrotnym (nie zgaduj).
+4. Bez konektora Notion: ta sama lista jako plik `POPRAWKI.md` w folderze modelu (linia = poprawka; zrobione pod nagłówkiem
+   „Zrobione” z datą) – inwestor może ją też podyktować w rozmowie.
+
+Szczegółów wystroju wnętrz (dobór mebli i dodatków) nie zmieniaj bez prośby – inwestor zajmuje się nimi przy projektowaniu
+wnętrz; zasoby z internetu pobieraj dopiero po jego zgodzie na listę (źródło, licencja, rozmiar).
 
 ## Nowe źródła
 
