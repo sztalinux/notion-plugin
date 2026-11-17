@@ -38,7 +38,8 @@ której nie da się dobrać.
 2. Na Macu (przebieg albo Claude Code): `python3 tools/budzet/wpis.py dodaj "<treść wpisu>" --data <dzień wydatku albo wpisu>
    --id <id bloku / strony wpisu>`. Ten sam `--id` nadpisuje zapis – ponowny przebieg nie dubluje. Skrypt nic nie pisze do
    arkusza: wiersz powstaje przy zamknięciu miesiąca.
-   Składnia jest tu – nie sprawdzaj `--help`; jedno polecenie na wywołanie, ścieżka względna od repo, bez `cd`, potoków i `;`.
+   Wydatek budowy: dodatkowo `--budowa <id strony 💸>` i `--gotowka` (Sposób = Gotówka); konto budowy: `wpis.py ustaw-konto-budowy <skrót>`
+   (`dom-budowa/skills/koszty/references/wydatek-przeplyw.md`). Składnia jest tu – nie sprawdzaj `--help`; jedno polecenie na wywołanie, ścieżka względna od repo, bez `cd`, potoków i `;`.
 3. „✗ pierwsze pole to nie kwota” → wpis nie jest wydatkiem w skrócie; obsłuż go inną procedurą albo pytaniem ❓.
    „nieznany skrót kategorii” → zapis zostaje; pytanie pojawi się na stronie decyzji, a odpowiedź doda skrót.
 4. Bez Maca (claude.ai, telefon): wydatek do Skrzynki z polem „Zrobić: wydatek …” (`wpisy/references/skrzynka.md`); Mac zapisze go krokiem 2.

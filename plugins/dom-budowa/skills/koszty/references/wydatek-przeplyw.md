@@ -13,6 +13,7 @@ chyba że inwestor powie inaczej.
 | Na budowę + „tylko kosztorys” / „nie do budżetu” | tak | nie; w Notatkach strony 💸 „bez budżetu (prośba inwestora)” |
 | Na budowę + inna kategoria budżetu („to z wesela”) | tak | tak, wskazany skrót kategorii zamiast `dom` |
 | Zwrot otrzymany (Rodzaj = Zwrot, `koszty` B.7a) | tak | tak: `"+<kwota>[, konto], dom, zwrot <opis>" --budowa <id> --id <id>` – „+” = wpływ; zamknięcie miesiąca odejmuje go od wydatku na dom („zwrot pomniejsza zakup”) |
+| Zwrot obiecany (Rodzaj = Zwrot, Płatność „Do zapłaty”) | tak | nie teraz – jak „Do zapłaty” (pkt 3) |
 | Wycena (`koszty` B2), Plan (B3) | tak | nigdy |
 | Prywatny (nie budowa) | nie | tak, kategoria wg skrótów (`budzet` A) |
 
@@ -21,7 +22,7 @@ prywatne? (propozycja: …)”.
 
 ## 2. Konto (unikanie dubla przy zamknięciu miesiąca)
 
-- Strona 💸 ma Sposób = Gotówka → dopisz `--gotowka` (gotówka, osobny wiersz przy zamknięciu – jak dotąd).
+- Strona 💸 ma Sposób = Gotówka → dopisz `--gotowka` (gotówka, osobny wiersz przy zamknięciu – jak dotąd; nadpisuje też konto z treści).
 - Sposób = Przelew / Karta / BLIK albo pusty, a we wpisie nie ma konta → **nie podawaj konta**: `wpis.py` z `--budowa` sam weźmie
   `konto_budowy` z `ustawienia.json` (w folderze danych budżetu, poza repo). Konto z wyciągiem = przy zamknięciu tylko
   podpowiedź dla transakcji z wyciągu (dopasowanie: kwota do złotówki, ±4 dni), bez drugiego wiersza.
@@ -29,10 +30,10 @@ prywatne? (propozycja: …)”.
 - **Brak klucza `konto_budowy`** → `wpis.py` zapisze gotówkę (jak dotąd) i wypisze uwagę. Wtedy jeden blok 🔔 we „Wpisach”
   (`wpisy/references/pytania.md`, C; klucz `konto-budowy` – aktualizuj, nie dubluj; odpowiedź obsługuje nocny przebieg): „Wskaż konto, z którego płacisz za
   budowę (wpiszę je do ustawień budżetu)”. Jednorazowo w tym samym bloku lista wpisów z `budowa` zapisanych na gotówce
-  w bieżącym miesiącu (`python3 tools/budzet/wpis.py lista RRRR-MM`, tylko daty, kwoty i ID – bez opisów) z pytaniem, czy je
+  w bieżącym miesiącu (`python3 tools/budzet/wpis.py lista RRRR-MM` – wiersze ze znacznikiem `[budowa]` na gotówce; do bloku przepisz tylko datę, kwotę i ID, bez opisów) z pytaniem, czy je
   przepisać na to konto. **Danych nie zmieniaj bez odpowiedzi.** Po odpowiedzi (przebieg albo Claude Code):
-  `python3 tools/budzet/wpis.py ustaw-konto-budowy <skrót konta>`, a przepisanie zatwierdzonych = `wpis.py dodaj` z tym samym `--id`
-  i skrótem konta w treści; blok → „Przetworzone”.
+  `python3 tools/budzet/wpis.py ustaw-konto-budowy <skrót konta>`, a przepisanie zatwierdzonych = `wpis.py dodaj` z tymi samymi `--id` (bez prefiksu `w`), `--data`
+  i `--budowa` oraz skrótem konta w treści; blok → „Przetworzone”.
 - Wydatek prywatny bez szczegółów – bez zmian (gotówka drugiej osoby, `budzet` A).
 
 ## 3. Kanały
@@ -41,6 +42,6 @@ prywatne? (propozycja: …)”.
 - **Telefon (claude.ai bez Notion):** każdy wydatek – budowa i prywatny – do Skrzynki słowami inwestora z polem
   „Zrobić: wydatek …” (`wpisy/references/skrzynka.md`); Mac stosuje pkt 1–2 przy przeniesieniu.
 - **„Do zapłaty” → „Zrealizowane”:** nocny przebieg (`przeglad-dnia`, B) przegląda strony 💸 zmienione od wczoraj z Płatność =
-  Zrealizowane, Rodzaj wydatek lub zwrot, bez „bez budżetu” w Notatkach; brak wpisu o ich ID w `wpis.py lista RRRR-MM` (miesiąc
+  Zrealizowane, Rodzaj wydatek lub zwrot, bez „bez budżetu” w Notatkach; brak wpisu o ich ID w `wpis.py lista RRRR-MM` (lista pokazuje ID z prefiksem `w`) (miesiąc
   daty zapłaty) → zapis wg pkt 1–2. Ten sam `--id` nie dubluje, więc powtórka jest bezpieczna. (Decyzja: logika po stronie
   przebiegu, nie w `wydatki.py sync` – sync to narzędzie arkusza kosztorysu i nie zna wyjątków z pkt 1, np. innej kategorii.)

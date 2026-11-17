@@ -387,8 +387,10 @@ def pozycja(b, kod, budowa=''):
     else:
         ark_k = kwota_pozycji(b['kwota'], prop['typ'])
         skl = b.get('skladniki')
-        if skl and ark_k < 0:  # zwrot rozpisany działaniem: składniki ze znakiem arkusza
+        if skl and abs(round(sum(skl), 2) - ark_k) >= 0.005:  # zwrot rozpisany działaniem: składniki ze znakiem arkusza
             skl = [-x for x in skl]
+            if abs(round(sum(skl), 2) - ark_k) >= 0.005:
+                skl = None
         auto.append(dict(b, typ=prop['typ'], kat=prop['kat'], pod=prop['pod'], regula=kod, kwota_ark=ark_k, skladniki=skl, **bud))
 
 

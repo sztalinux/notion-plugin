@@ -18,7 +18,7 @@ Uproszczenie przepływu, faza 2 – jeden przepływ wydatków (kosztorys + budż
 ## ja [1.20.0] – 2026-11-17
 
 - `tools/budzet/wpis.py`: `--budowa` bez konta w treści → konto `konto_budowy` z `ustawienia.json` (brak klucza – gotówka jak dotąd,
-  z uwagą); nowy `--gotowka` wymusza gotówkę; nowe `ustaw-konto-budowy <skrót>` zapisuje klucz (przebieg wykonuje je po odpowiedzi w 🔔).
+  z uwagą); nowy `--gotowka` wymusza gotówkę; nowe `ustaw-konto-budowy <skrót>` zapisuje klucz (przebieg wykonuje je po odpowiedzi w 🔔); `lista` oznacza wpisy budowy `[budowa]`.
 - `tools/budzet/importuj.py`: zwrot („+”) z gotówki i kont bez wyciągu pomniejsza wydatek (wcześniej `abs()` go powiększał);
   także w działaniu („+30-5”) i przy szukaniu wiersza wpisanego ręcznie. Przychód i przelew z list – bez zmian.
 - `tools/test_budzet.py`: testy przepływu jako procesy na zmyślonych danych w katalogu tymczasowym (`BUDZET_DANE`): przelew budowy

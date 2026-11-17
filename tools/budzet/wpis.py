@@ -78,7 +78,8 @@ def zapisz_wszystkie(mies, wpisy):
 
 def opis_wpisu(w):
     kat = f"{w['kat']} › {w['pod']}" if w['pod'] else (w['kat'] or f"nieznany skrót „{w['kod']}”")
-    return f"{w['data']} {w['kwota']:+.2f} {w['konto']} {w['osoba']} {kat}" + (f" – {w['opis']}" if w['opis'] else '')
+    return (f"{w['data']} {w['kwota']:+.2f} {w['konto']} {w['osoba']} {kat}" + (' [budowa]' if w.get('budowa') else '')
+            + (f" – {w['opis']}" if w['opis'] else ''))
 
 
 def main():

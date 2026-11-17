@@ -97,7 +97,8 @@ class Przeplyw(unittest.TestCase):
         self.dane = Path(tempfile.mkdtemp())
         self.ustaw(konto_budowy='K-bank')
         (self.dane / 'kategorie.json').write_text(json.dumps({'Inwestycja': {'Dom': []}, 'Wydatek': {'Inne wydatki': []}}))
-        (self.dane / 'reguly.json').write_text(json.dumps({'reguly': [], 'skroty': {'dom': ['Inwestycja', 'Dom', '']}}))
+        (self.dane / 'reguly.json').write_text(json.dumps({'reguly': [], 'skroty': {'dom': ['Inwestycja', 'Dom', ''],
+                                                                                    'pen': ['Przychód', 'Inne przychody', '']}}))
         (self.dane / 'ark.json').write_text(json.dumps({'values': [['Data']]}))
 
     def ustaw(self, **dod):
@@ -153,6 +154,25 @@ class Przeplyw(unittest.TestCase):
         r = subprocess.run([sys.executable, str(NARZ / 'wpis.py'), 'ustaw-konto-budowy', 'xyz'],
                            env=dict(os.environ, BUDZET_DANE=str(self.dane)), capture_output=True, text=True)
         self.assertEqual(r.returncode, 1)
+
+    def gotowka(self, tekst, ark=None):
+        (self.dane / 'got.txt').write_text(tekst, encoding='utf-8')
+        if ark:
+            (self.dane / 'ark.json').write_text(json.dumps({'values': [['Data']] + ark}))
+        return self.importuj('--gotowka', 'got.txt')
+
+    def test_lista_gotowki_zwrot_i_przychod(self):
+        m = self.gotowka('+50 dom\n100 pen\n')
+        self.assertEqual(sorted((w['kat'], w['kwota']) for w in m['wiersze']), [('Dom', -50.0), ('Inne przychody', 100.0)])
+
+    def test_lista_zwrot_juz_w_arkuszu(self):
+        wiersz = ['05-Oct-2026', '', 'Inwestycja', '-50', 'Dom', '', 'Gotówka', '', 'zwrot', '', '', '', '2026-10', '', '']
+        m = self.gotowka('+50 dom\n', ark=[wiersz])
+        self.assertEqual((m['wiersze'], len(m['juz'])), ([], 1))
+
+    def test_lista_oznacza_budowe(self):
+        self.uruchom('wpis.py', 'dodaj', '60, dom', '--data', '2026-10-12', '--id', 'p9', '--budowa', 'p9')
+        self.assertIn('[budowa]', self.uruchom('wpis.py', 'lista', '2026-10'))
 
     def test_zwrot_pomniejsza_wydatek(self):
         self.uruchom('wpis.py', 'dodaj', '300, dom', '--data', '2026-10-09', '--id', 'p5', '--gotowka')
