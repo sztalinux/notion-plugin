@@ -5,6 +5,12 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## ja [1.18.1] – 2026-11-17
+
+- HZ-15 (`budzet`, sekcja A): wydatek wpisany zwykłym zdaniem, bez skrótu, konta i osoby, jest rozpoznawany jako wydatek –
+  asystent sam przepisuje go na skrót i nie pyta o konto ani osobę (brak szczegółów = gotówka drugiej osoby); kilka
+  wydatków w jednym wpisie dostaje osobne ID. Pytanie tylko o brakującą kwotę albo kategorię nie do dobrania.
+
 ## dom-budowa [3.16.0] – 2026-11-16
 
 Nowa procedura `model-3d` (prośba inwestora 16.11) – model 3D domu i ogrodu w Blenderze, po którym można chodzić.

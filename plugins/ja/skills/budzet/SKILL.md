@@ -1,6 +1,6 @@
 ---
 name: budzet
-description: Budżet domowy w arkuszu Google „Budżet domowy” – wydatki zapisywane na bieżąco z wpisów („200, pra, o, zam”, gotówka, wydatek na budowę także do budżetu) i miesięczne zamknięcie – wyciągi (mBank, ZEN), lista zakupów Allegro, listy wydatków drugiej osoby i gotówki, strona decyzji (artefakt), zapis do Transakcji, kontrola arkusza, przychód drugiej osoby z sald i podsumowanie miesiąca. Wpis wydatku działa też w przebiegu na Macu; zamknięcie tylko w Claude Code na Macu (skrypty tools/budzet). Używaj, gdy użytkownik mówi „zamknijmy miesiąc”, „budżet za październik”, „wrzuciłem wyciągi”, „przenieś decyzje budżetu RRRR-MM”, „podsumuj miesiąc w budżecie”, „czy przychody są dobrze policzone”, wkleja listę Allegro albo listę wydatków ze skrótami, albo wpisuje wydatek w skrócie „kwota, konto, osoba, kategoria, opis”.
+description: Budżet domowy w arkuszu Google „Budżet domowy” – wydatki zapisywane na bieżąco z wpisów („200, pra, o, zam”, gotówka, wydatek na budowę także do budżetu) i miesięczne zamknięcie – wyciągi (mBank, ZEN), lista zakupów Allegro, listy wydatków drugiej osoby i gotówki, strona decyzji (artefakt), zapis do Transakcji, kontrola arkusza, przychód drugiej osoby z sald i podsumowanie miesiąca. Wpis wydatku działa też w przebiegu na Macu; zamknięcie tylko w Claude Code na Macu (skrypty tools/budzet). Używaj, gdy użytkownik mówi „zamknijmy miesiąc”, „budżet za październik”, „wrzuciłem wyciągi”, „przenieś decyzje budżetu RRRR-MM”, „podsumuj miesiąc w budżecie”, „czy przychody są dobrze policzone”, wkleja listę Allegro albo listę wydatków ze skrótami, wpisuje wydatek w skrócie „kwota, konto, osoba, kategoria, opis” albo zwykłym zdaniem („wydałem N zł na regularne i M na jedzenie na mieście”).
 ---
 
 # Budżet domowy – wydatki na bieżąco i zamknięcie miesiąca
@@ -27,6 +27,12 @@ Wpis w Dzienniku albo wiadomość w skrócie `kwota, konto, osoba, kategoria, op
 „150, z, a, dom, geolog”, „45, zak reg, bułki”). Konto i osoba są opcjonalne: bez konta = gotówka; gotówka i konta drugiej
 osoby zawsze na drugą osobę. Skróty kont i osób – `ustawienia.json` (`skroty_kont`, `skroty_osob`); kategorii – `reguly.json`
 (`skroty`, te same co w listach). Kwota z „+” = wpływ.
+
+**Wydatek zwykłym zdaniem** („wydałem N zł na regularne i M na jedzenie na mieście” – bez skrótu, konta i osoby) to też
+wydatek: sam przepisz go na skrót (kategorię dobierz ze skrótów w `reguly.json`, np. „N, zak reg” i „M, jedz, na mieście”)
+i zapisz krokiem 2. Nie pytaj o konto ani osobę – brak szczegółów = gotówka drugiej osoby. Kilka wydatków w jednym wpisie =
+osobne wywołania z `--id <id>-1`, `<id>-2` (ten sam ID nadpisałby poprzedni). Pytaj tylko o brakującą kwotę albo kategorię,
+której nie da się dobrać.
 
 1. Wydatek na budowę (kategoria „dom”, ekipa, materiał) → najpierw `koszty` B (kolejka 💸), potem krok 2 z `--budowa <id strony 💸>`.
 2. Na Macu (przebieg albo Claude Code): `python3 tools/budzet/wpis.py dodaj "<treść wpisu>" --data <dzień wydatku albo wpisu>
