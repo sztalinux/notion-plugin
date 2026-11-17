@@ -5,6 +5,25 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## ja [1.19.0] – 2026-11-17
+
+Uproszczenie przepływu, faza 1 (jedno wejście, dwa miejsca pytań, zakaz „czeka na sesję”).
+- `wpisy`, `przeglad-dnia`: jedyne źródła wpisów to treść i podstrony „📝 Wpisy”, pozycje „Nowe” Skrzynki i odpowiedzi w ❓/🔔; bloki
+  1. poziomu Dziennika i strony z widgetu przestają być czytane. Odpowiedź szybkiego: `Wpisy n · Skrzynka n`.
+- Przejścia idempotentne (nowy `przeglad-dnia/references/przejscia.md`): 1.1 – stare źródła → Wpisy, znacznik: zdanie „Piszesz we 📝 Wpisach”
+  w „Jak używać”; 1.2 – sekcja „❓ Czeka na Twoją odpowiedź” → bloki 🔔 (tylko nocny), znacznik: zdanie „Pytania są teraz we 📝 Wpisach (🔔)”.
+- `pytania.md`: format B zastąpiony checkboxami w 🔔 (C.7: klucze `KS-…`/`RES-n`, limit 5 bloków z kontroli spójności na przebieg, odpowiedzi
+  tylko w nocnym) i zakaz „czeka na sesję Claude Code” (C.8). Producenci: kontrole spójności (zadania, zakupy, rozmowy, suple, pomysły), research RES-n,
+  luki w zadaniach, przegląd tygodnia (blok tylko pod nagłówkiem 🔔, jedna punktowa edycja).
+- ☀️ Dziś: linia z liczbą otwartych ❓ i 🔔.
+- `budzet` A.2: składnia `wpis.py` bez `--help`, jedno polecenie na wywołanie. `przeglad.py` (poza repo): zezwolenie `wpis.py --help`, prompty bez Dziennika/widgetu.
+- Poza zakresem tej wersji (decyzje inwestora): faza 4 i 5 wg sekcji 0a specyfikacji.
+
+## dom-budowa [3.17.1] – 2026-11-17
+
+- `koszty` B.2: wydatek bez pasującej pozycji kosztorysu → ❓ z instrukcją 3–4 kroków w arkuszu i „odpisz »dodane«”, potem `wydatki.py pozycje`
+  i zapis wydatku (zamiast adnotacji „wymaga sesji Claude Code”). Mapa Notion budowy: źródła wpisów i 🔔.
+
 ## dom-budowa [3.17.0] – 2026-11-17
 
 Prośba inwestora 17.11: lista poprawek do modelu 3D w Notion.

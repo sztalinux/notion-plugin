@@ -19,15 +19,18 @@ krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
 
 ## Zasady trybu bez inwestora (oba tryby)
 
-- Nie ma kogo zapytać: niejasne → pytanie w Notion (okienko pod wpisem w „📝 Wpisy”; sprawy spoza wpisów – Dziennik „❓”,
-  strona pomysłu), nie tylko w odpowiedzi.
+- Nie ma kogo zapytać: niejasne → pytanie w Notion (okienko pod wpisem w „📝 Wpisy”; sprawy z tła – blok 🔔 w tym samym miejscu, `wpisy/references/pytania.md`, C.7),
+  nie tylko w odpowiedzi. Jedno polecenie na wywołanie narzędzia: ścieżka względna od repo, bez `cd`, potoków i `;`.
+- **Nie zostawiaj sprawy z adnotacją „wymaga sesji Claude Code”** – wybierz (a) część + ❓/🔔 z propozycją, (b) ❓/🔔 z dokładną
+  czynnością dla inwestora, (c) tylko praca techniczna: wiersz ZP + 🔔 „naprawię w najbliższej sesji Claude Code; nic nie musisz robić”
+  (`wpisy/references/pytania.md`, C.8).
 - Nie wybieraj ani nie zgaduj decyzji za inwestora; nie zmieniaj układu ani kwot planu w arkuszu kosztów ani terminów kroków
   Harmonogramu budowy (wyjątki: termin kroku podany przez inwestora we wpisie i przesunięcie z relacji o tempie prac – `harmonogram` C, wstęp i C.4) (wydatki, wyceny i plan kwoty, który inwestor sam podał we wpisie, zapisuj w kolejce „💸 Wydatki → arkusz” wg `koszty`
   B/B2/B3 – to nie decyzja; własnych szacunków planu nie zapisuj) – zostaw wpis z pytaniem i propozycją (`wpisy`, krok 4). Nowy obszar Dziennika tylko proponuj, nie dodawaj sam.
 - Decyzję, którą inwestor **sam napisał** – wpis „SP-n: …” albo „decyzja: …”, pole Decyzja w Rejestrze sprzeczności –
   domknij ze wszystkimi skutkami (Status, data, Notatnik, wiedza, temat) wg `wiedza/references/sprzecznosci.md` (plugin
   dom-budowa), „Bez inwestora”. Tekst w polu Decyzja jest odpowiedzią – własny wariant, połączenie opcji albo rozstrzygnięcie
-  części dylematu też domykasz (z dopiskiem asystenta); pytanie tylko przy „?”, „nie wiem”, otwartym „A albo B” lub sprzeczności – blok pod 🔔 w „📝 Wpisy”, nie Dziennik „❓”.
+  części dylematu też domykasz (z dopiskiem asystenta); pytanie tylko przy „?”, „nie wiem”, otwartym „A albo B” lub sprzeczności – blok pod 🔔 w „📝 Wpisy”.
   Pole Decyzja sprawdza wieczór (krok 3) – każdy przebieg od nowa, także wiersze z czekającym pytaniem.
 - Bez planu do akceptacji; zapisy wsadowo (`ja`, zasada 2); odczyt baz przez zapisane widoki i wyszukiwarkę (`ja`, zasada 3), nie SQL.
 - Błąd zapisu (brak uprawnień, limit) → nie ponawiaj w kółko; odnotuj „nie zapisano: …” i zakończ.
@@ -35,41 +38,39 @@ krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
 
 ## A. Tryb szybki – ma być tani
 
-1. **Pięć odczytów – zawsze wszystkie, także gdy pierwszy coś dał:** Skrzynka – dokumenty Claude o tytule „📥 Skrzynka”,
-   sekcja „Nowe” (`wpisy/references/skrzynka.md`; brak narzędzia Claude Docs → pomiń i napisz „Skrzynka – brak odczytu”), strona Dziennik
-   (`3f8f5982-09e7-80c8-a154-c59aeb844e8f`), strona „📝 Wpisy” (`3faf5982-09e7-80b2-9b33-c48745d67a4f` – bloki w jej treści
-   i lista podstron) i lista stron najwyższego poziomu Private (narzędzie listy stron prywatnych; porównaj ID z listą
-   stałych stron w `ja/references/notion-mapa.md`; 🔒 Prywatne nie otwieraj). Otwórz tylko strony spoza listy. Piąty: widok
+1. **Trzy odczyty – zawsze wszystkie, także gdy pierwszy coś dał:** Skrzynka – dokumenty Claude o tytule „📥 Skrzynka”,
+   sekcja „Nowe” (`wpisy/references/skrzynka.md`; brak narzędzia Claude Docs → pomiń i napisz „Skrzynka – brak odczytu”), strona „📝 Wpisy” (`3faf5982-09e7-80b2-9b33-c48745d67a4f` – bloki w jej treści
+   i lista podstron). Trzeci: widok
    „⚠ Błędy do zgłoszenia” w „💸 Wydatki → arkusz” (tryb view, `koszty`, sekcja E) oraz stan stron z komunikatów 💸 pod
    „🔔 Komunikaty asystenta” we „Wpisach”. Lista „Komunikaty z automatów Maca” w poleceniu przebiegu (dokleja ją
    `przeglad.py`, gdy coś się zepsuło albo ustąpiło) to szóste źródło – bez odczytu.
-   Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Brak narzędzia do listy stron prywatnych → to źródło pomiń
-   i napisz „widget – brak odczytu” w odpowiedzi i w linii „🤖” (`wpisy`, krok 1).
-2. **Nic nowego → koniec.** Brak bloków na pierwszym poziomie Dziennika i w treści „Wpisów” (wpis z okienkiem ❓ bez
-   odpowiedzi się nie liczy), podstron w „Wpisach” i nowych stron w Private (definicja w `wpisy`), brak pozycji w „Nowe”
-   Skrzynki i brak odpowiedzi inwestora (tekst w okienku ❓ we „Wpisach”; w Dzienniku „❓” – dopisek albo zaznaczony
-   checkbox; `wpisy/references/pytania.md`), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
+   Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Strony Dziennika (bloki 1. poziomu) i stron z widgetu **nie czytasz** –
+   nie są źródłem wpisów (`wpisy`, „Źródła wpisów”; wyjątek: jednorazowe przejście po wdrożeniu 1.19.0).
+2. **Nic nowego → koniec.** Brak bloków w treści „Wpisów” (wpis z okienkiem ❓ bez
+   odpowiedzi się nie liczy) i podstron w „Wpisach”, brak pozycji w „Nowe”
+   Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; odpowiedzi w blokach 🔔 z kluczami
+   `KS-…`, `RES-n` i luki w zadaniach obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
    „Błąd”, brak listy od automatu w poleceniu i brak odpowiedzi pod blokami 🔔 (blok 🔔 bez odpowiedzi się nie liczy – inaczej
-   każdy przebieg przestałby być tani) → odpowiedz jedną linią „Dziennik: nic nowego (<godzina>;
-   widget: 0, Skrzynka: 0)”
+   każdy przebieg przestałby być tani) → odpowiedz jedną linią „Wpisy: nic nowego (<godzina>;
+   Skrzynka: 0)”
    i zakończ. **Zero zapisów** – nie dopisuj linii „🤖”, nie zmieniaj strony.
-3. **Inwestor może jeszcze pisać – oceniaj każde źródło osobno** (treść Dziennika, treść „Wpisów”, każda podstrona,
-   każda strona z widgetu). Źródło edytowane mniej niż 15 minut temu (czas ostatniej edycji strony), którego najnowszy wpis
+3. **Inwestor może jeszcze pisać – oceniaj każde źródło osobno** (treść „Wpisów”, każda podstrona, Skrzynka). Źródło edytowane mniej niż 15 minut temu (czas ostatniej edycji strony), którego najnowszy wpis
    jest pusty albo urwany w pół zdania, pomiń w tym przebiegu – następny je weźmie; **pozostałe źródła przetwórz**. Sam
    brak kropki to nie urwanie (z telefonu inwestor pisze bez kropek). Tylko gdy pominąłeś wszystko, co nowe →
-   „Dziennik: pomijam, świeże wpisy (<godzina>)” i zakończ. Pusta strona z widgetu starsza niż 15 minut → pominięta
-   (`wpisy`, krok 6).
+   „Wpisy: pomijam, świeże wpisy (<godzina>)” i zakończ.
 4. **Są wpisy:** procedura `wpisy`, kroki 2–7, bez pytań w rozmowie (wyjątki z zasad wyżej). Komunikaty (lista od automatu,
    błędy kolejki 💸 – `koszty`, E, odpowiedzi pod 🔔) – `wpisy/references/pytania.md`, C, w tej samej edycji „Wpisów”. Linia „🤖” w bloku dnia –
    krótka, z godziną, bez wyliczania zapisów (te są w podpunktach wpisów, `wpisy` krok 6): `🤖 11:00: przetworzono 2
    (zadania 1, emocje 1), czeka na Ciebie 1, świeże pominięte 1`; liczby per źródło – tylko w odpowiedzi (log). Kolejne
    przebiegi tego dnia dopisują swoje linie (każdą z jej śladem) na górze tego samego bloku, nad wcześniejszymi
    (`wpisy` krok 7); tytuł bloku pokazuje sumę dnia. W odpowiedzi
-   podaj nowe wpisy per źródło – „Dziennik n · Wpisy n · widget n · Skrzynka n” (albo „widget – brak odczytu”) – żeby było
-   widać, że przebieg sprawdził wszystkie cztery.
-5. Bez analizy pomysłów, bez „jutra”, bez wpisów w przeglądach – to robi wieczór.
+   podaj nowe wpisy per źródło – „Wpisy n · Skrzynka n” – żeby było
+   widać, że przebieg sprawdził oba.
+5. Bez analizy pomysłów, bez „jutra”, bez wpisów w przeglądach – to robi wieczór. Przejście 1.1 (stare źródła → Wpisy): `references/przejscia.md`.
 
 ## B. Tryb wieczorny – podsumowanie i plan
+
+Na początku nocnego przebiegu sprawdź przejścia 1.1 i 1.2 (`references/przejscia.md`) i wykonaj je, gdy warunek nie jest spełniony.
 
 Budowa i sprawy osobiste mają **osobne przeglądy**, żeby intensywny dzień na budowie nie zasłaniał reszty:
 budowa → „📆 Przeglądy dzienne – budowa” na stronie DOM (pisze skill `budowa`, sekcja „Wieczorem”); reszta → „📆 Przeglądy
@@ -87,14 +88,14 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **Kontrola spójności pomysłów (grupa P)** – z jednego odczytu całej tablicy pomysłów (wszystkie statusy, nie tylko „Nowy”): „Zrobione” bez „Zrobiono
    w wersji”, „Do zrobienia” / „Przeanalizowany” przy wdrożeniu zapisanym w polu albo w nagłówku `CHANGELOG.md`, „gałąź …”
    już scalona. Pole wersji uzupełniasz tylko z nagłówka CHANGELOG z numerem POM; **Status zmienia dopiero ☑ inwestora**
-   (pytanie w „❓”, klucz `KS-P…`). Reguły i obsługa odpowiedzi: `references/kontrola-spojnosci-pomysly.md`.
+   (blok 🔔, klucz `KS-P…`). Reguły i obsługa odpowiedzi: `references/kontrola-spojnosci-pomysly.md`.
 2a. **Rozkminki – tylko na prośbę z wpisu** (ślad `→ 🧠 rozkminka wieczorem` w dzisiejszym lub wczorajszym bloku
    „Przetworzone”, `wpisy` krok 5, **także ślady z kroku 1 tego przebiegu** – na stronie ich jeszcze nie ma, zapisz je od razu
    jako `→ 🧠 rozkminka: <wzmianka>`; z własnej inicjatywy nie rób – to koszt). Max 2, najstarsze pierwsze; reszta jutro
    („rozkminki czekają: n” w „⚠ Na teraz”). Procedura tematu **tylko odczytem**: budowa – spotkanie, decyzja → `przygotowanie`
    („Bez inwestora”), technika → `analiza-techniczna`, oferta → `oferta`, terminy → `harmonogram`; osobiste – skill `ja` obszaru.
    Wynik = sekcja „🧠 Rozkminka: <temat>”: budowa → krok 3, reszta → krok 8. Bez zapisów do baz – nowe pytania, zadania
-   i decyzje → jedno „❓” w Dzienniku (`wpisy/references/pytania.md`, B). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
+   i decyzje → jeden blok 🔔 we „Wpisach” (`wpisy/references/pytania.md`, C.7). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
 3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i najbliższe 7 dni budowy (zwraca punkty do zakładki 🏗) i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze); najpierw domyka sprzeczności z Decyzją wpisaną
    przez inwestora; ostrzeżenie pogodowe dopisuje tylko przy przekroczonym progu w dniu roboty wrażliwej wpisanej w Uwagach
@@ -103,7 +104,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    i punkty do zakładki 🏗 planu (`budowa/references/wieczorem.md`, krok 4).
 4. **Dziś – sprawy osobiste** (tylko odczyt): blok dzisiejszego dnia w „Przetworzone” (wpisy obszarów innych niż Budowa,
    liczby per obszar), dzień pracy z Dziennika produktywności, liczba wpisów emocji z dziś (bez treści), nowe punkty na stronie
-   dziecka, wpisy z okienkiem ❓ we „Wpisach”, bloki pod „🔔 Komunikaty asystenta” (liczba) i pozycje „❓” Dziennika. Zadania zmienione dziś – krok 5.
+   dziecka, wpisy z okienkiem ❓ we „Wpisach”, bloki pod „🔔 Komunikaty asystenta” (liczba) i pozycje starej sekcji „❓” Dziennika (do przejścia 1.2). Zadania zmienione dziś – krok 5.
 5. **Zadania – zmiany dnia i luki w kolumnach** (wszystkie obszary; inwestor zmienia statusy i kończy zadania sam w Notion,
    więc nie ma ich we wpisach). Odczyt: widok TASKS „🤖 Zmiany – od wczoraj (przegląd dnia)” (tryb view, ID w
    `ja/references/notion-mapa.md`; `has_more` → następna strona). Widok daje dwa dni, bo „dziś” w filtrze Notion zależy od
@@ -118,20 +119,20 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
      z automatycznymi.
 
    **Uzupełnij luki** w tych wierszach według `zadania`, sekcja D (tylko wskazane pola; Status i When nie zmieniaj; wątpliwości
-   → jedno zbiorcze „❓” w formacie `wpisy/references/pytania.md`). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie
+   → jeden zbiorczy blok 🔔 (`wpisy/references/pytania.md`, C.7)). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie
    (krok 8) i do linii „🤖” weź liczby per kategoria, nazwy zamkniętych i zmienionych (max 5 na obszar, reszta „+k”) i listę
    uzupełnionych pól.
 
    **5a. Kontrola spójności** – `references/kontrola-spojnosci.md`: zastosuj odpowiedzi inwestora na dawne flagi `KS-…`, potem
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.
-   Tylko pytania w „❓” (max 5), żadnych zmian bez ☑ inwestora; licznik „rozjazdy” idzie do kroku 8 i linii „🤖”.
+   Tylko pytania w 🔔 (max 5), żadnych zmian bez ☑ inwestora; licznik „rozjazdy” idzie do kroku 8 i linii „🤖”.
    **5b. Kontrola spójności zakupów** – `references/kontrola-spojnosci-zakupy.md`: zakup Kupione / Odpuszczone ↔ zadanie „Kupić X”
-   (flagi „❓” z kluczem `KS-Z…`, wspólny limit 5 z 5a, zmiana statusu dopiero po ☑ inwestora) oraz pytanie o „Kupione dnia”
+   (flagi 🔔 z kluczem `KS-Z…`, wspólny limit 5 z 5a, zmiana statusu dopiero po ☑ inwestora) oraz pytanie o „Kupione dnia”
    z proponowaną datą (tylko zakupy zmienione od wczoraj) i bezpieczne uzupełnienie researchu Zamknięty. Liczniki „rozjazdy”
    i „zakupy” idą do kroku 8 i linii „🤖”.
    **5c. Kontrola spójności: rozmowy** – `references/kontrola-spojnosci-rozmowy.md`: zadanie rozmowy („Porozmawiać / Pogadać /
    Rozmowa” w nazwie, Obszar Dziecko lub Prywatne) DONE (wiersze kroku 5)
-   ↔ temat w „💬 Do przegadania” na stronie osoby. Tylko pytanie „❓” z kluczem `KS-R…` (wspólny limit 5 z 5a); po ☑ dopisek
+   ↔ temat w „💬 Do przegadania” na stronie osoby. Tylko pytanie 🔔 z kluczem `KS-R…` (wspólny limit 5 z 5a); po ☑ dopisek
    „✅ przegadane” pod tematem, nic się nie przenosi. Treści tematów nie wypisuj; licznik „rozjazdy” jak w 5a.
 6. **Plan – najbliższe 7 dni** (odczyt; jedyne zapisy – suplementy, niżej): TASKS „🗓 Tydzień (7 dni)” (wszystkie obszary,
    z zaległymi; zastępuje „📅 Jutro – wszystko” i „📅 Dziś”) – zakres i „po terminie” licz od **dnia planu** (`references/uklad-wpisu.md`, D);
@@ -162,9 +163,9 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    plusy, minusy, link), Na co uważać, Źródła. Pole Rekomendacja = jedno zdanie, Status „Gotowy”, Zrobiono = data; w Uwagach
    zakupu albo Desc zadania dopisz „Research RES-n gotowy”. Brak kluczowej informacji (budżet, wymiar, zastosowanie) → zrób,
    co się da, dopisz „### ❓ Pytania (data)” z 1–3 pytaniami (format: `wpisy/references/pytania.md`) i propozycją domyślną,
-   Status „Pytania do mnie”, a w Dzienniku „❓” linię „RES-n: <pytanie> (wzmianka)”. Research nie podejmuje decyzji i nie
-   zmienia statusów zakupów ani zadań. **Zabezpieczenie** (tylko wieczorem – szybki ma być tani): każda linia RES-n w „❓”,
-   której research nie ma już Statusu „Pytania do mnie”, idzie do „Przetworzone” z dopiskiem „→ rozwiązane poza Dziennikiem”.
+   Status „Pytania do mnie”, a we „Wpisach” pod 🔔 blok z kluczem `RES-n`, checkboxami i pytaniem (wzmianka strony; „zastosuję w nocnym przeglądzie”). Research nie podejmuje decyzji i nie
+   zmienia statusów zakupów ani zadań. **Zabezpieczenie** (tylko wieczorem – szybki ma być tani): każdy blok 🔔 `RES-n`,
+   którego research nie ma już Statusu „Pytania do mnie”, idzie do „Przetworzone” z dopiskiem „→ rozwiązane poza 🔔”.
 8. **Plan dnia na stronie ☀️ Dziś + historia** – **codziennie**, także w spokojny dzień; układ, zasady i szablon:
    `references/uklad-wpisu.md`, D. Najpierw nadpisz treść strony ☀️ Dziś (`416f5982-09e7-81b3-b96d-ddd19086bc5b`) planem na dzień
    planu – ramka „najważniejsze” i zakładki 🧭 Przegląd · 🏗 Budowa (z kroku 3) · 🏠 Prywatne (kroki 6–7, 2a) · 💼 Praca · 📊 Wczoraj

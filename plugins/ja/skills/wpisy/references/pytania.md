@@ -1,13 +1,12 @@
 # Format pytań do inwestora w Notion
 
 Inwestor odpowiada z telefonu i zagląda głównie do „📝 Wpisy”. Tabel nie używaj (na telefonie przewijanie w bok i niewygodna
-edycja komórek). Trzy formaty:
+edycja komórek). Dwa miejsca na stronie „📝 Wpisy” (od ja 1.19.0 – sekcja „❓ Czeka na Twoją odpowiedź” w Dzienniku przestaje istnieć):
 
 | Pytanie dotyczy | Gdzie | Format |
 |---|---|---|
-| konkretnego wpisu (Dziennik, „Wpisy”, podstrona, widget, Skrzynka) | okienko pod wpisem w „📝 Wpisy” (`wpisy`, krok 4) | A |
-| czegoś spoza wpisów: RES-n, luki w zadaniach z przeglądu dnia | Dziennik „❓ Czeka na Twoją odpowiedź”, strona RES-n („### ❓ Pytania”), strona pomysłu | B |
-| problemu, którego nie wywołał żaden wpis (automat Maca, skrypt, błąd kolejki 💸), niejasnej decyzji SP-n wpisanej w pole Decyzja Rejestru | zwijany nagłówek „🔔 Komunikaty asystenta” w „📝 Wpisy” | C |
+| konkretnego wpisu („Wpisy”, podstrona, Skrzynka) | okienko ❓ pod wpisem w „📝 Wpisy” (`wpisy`, krok 4) | A |
+| czegokolwiek, co powstało w tle: RES-n, luki w zadaniach, kontrole spójności `KS-…`, suplementy, pomysły, automat Maca, skrypt, błąd kolejki 💸, decyzja SP-n, ZP-n | zwijany nagłówek „🔔 Komunikaty asystenta” w „📝 Wpisy” | C (z checkboxami – C.7) |
 
 **Co w ogóle pytać.** Sprawy techniczne (harness, skrypty, automaty, scalanie, struktura Notion, warianty naprawy ZP)
 rozstrzyga asystent sam i tylko odnotowuje wynik – inwestor ufa mu w tym i nie ma czasu na takie pytania. Pytaj o budowę
@@ -59,34 +58,6 @@ jest dzieckiem wpisu.
 - Częściowa odpowiedź (dwa pytania, jedna odpowiedź): przetwórz, co się da; w okienku zostaw tylko brakujące pytanie
   i nową linię `✍️`. Odpowiedź wciąż nie wystarcza → dopisz w tym samym okienku nowe pytanie pod odpowiedzią, z linią `✍️`.
 
-## B. Pytania spoza wpisów (checkboxy)
-
-Inwestor ma móc zaznaczyć jedno pole, zamiast pisać.
-
-1. **Nagłówek** jedną linią: `❓ asystent (data) · <temat> – ☑ = tak, inaczej dopisz pod punktem`.
-2. **Każde pytanie to osobny to-do** (checkbox), do ok. 12 słów, z propozycją w treści, sformułowany tak, żeby zaznaczenie
-   znaczyło „tak, zgadzam się” (np. `- [ ] Wariant B zamiast A`).
-   - Wybór z kilku opcji = kilka to-do pod jednym punktem („zaznacz jedno”).
-   - Pytanie otwarte (kwota, wymiar, data) = to-do z dopiskiem `→ wpisz pod spodem`.
-3. **Max 3 pytania na punkt**; więcej → osobne punkty.
-4. **Kontekst, uzasadnienie, opinie, linki i to, co asystent zrobi po odpowiedzi** – w zwiniętym toggle „Szczegóły” pod danym
-   pytaniem, nigdy w linii pytania.
-
-```
-❓ asystent (12.10) · wybór wariantu – ☑ = tak, inaczej dopisz pod punktem
-	- [ ] Wariant B zamiast A
-		<toggle>
-		Szczegóły
-
-		dlaczego B, co zmieni, co zrobię po odpowiedzi
-		</toggle>
-	- [ ] Termin do piątku → wpisz pod spodem
-```
-
-Odczyt: zaznaczony to-do = zgoda na propozycję; tekst dopisany pod to-do = odpowiedź i **ma pierwszeństwo** przed
-zaznaczeniem; niezaznaczony i bez dopisku = brak odpowiedzi; częściowa odpowiedź – przetwórz odpowiedziane punkty (ślad
-w „Przetworzone”), reszta zostaje. Zaznaczony checkbox liczy się jako odpowiedź inwestora (`przeglad-dnia`, A.2).
-
 ## C. Komunikaty asystenta (🔔 we „📝 Wpisach”)
 
 Problemy asynchroniczne – nikt o nie nie pytał we wpisie, a inwestor powinien o nich wiedzieć: przebieg na Macu się nie udał
@@ -110,7 +81,7 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    zgłosić – np. brak logowania MCP) → sam ślad w bloku dnia „Przetworzone” w tym formacie, bez bloku 🔔.
 4. **Odpowiedź inwestora** (odczyt jak w A) = praca dla najbliższego przebiegu (szybkiego albo wieczornego): wykonaj, co się
    da w przebiegu, i przenieś blok do „Przetworzone” (`~~🔔 <skrót>~~ (❓ … → ✍️ …) → <co zrobiono>`).
-5. **Za duże na przebieg** (wymaga Claude Code, zmiany skryptu, decyzji technicznej) → wiersz w bazie „🧯 Znane problemy”
+5. **Za duże na przebieg** (zmiana skryptu – patrz zakaz w C.8; decyzja techniczna – podejmij sam) → wiersz w bazie „🧯 Znane problemy”
    (`rozwoj-harnessu`, D; ten sam problem już jest → zaktualizuj Ostatnio i treść), w okienku zamiast `✍️` linia
    `→ ZP-n (<status>)`. Blok zostaje, dopóki wiersz nie ma Statusu „Rozwiązany” albo „Zostaje” – wtedy do „Przetworzone”
    (`→ ZP-n rozwiązany` / `zostaje`); statusy ZP sprawdza tylko przebieg wieczorny.
@@ -119,6 +90,23 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    odpowiedź przepisz do treści strony ZP („ustalenia z odpowiedzi inwestora”) i ustaw Status „Nowy” – naprawi Claude Code.
 6. **Blok bez odpowiedzi nie jest nowym wpisem** – tryb szybki go pomija (`przeglad-dnia`, A.2); zmienia go tylko nowa lista
    od automatu, odpowiedź albo zmiana stanu (pkt 2–5).
+
+7. **Checkboxy w 🔔 (dawny format B).** Gdy pytanie to „tak / nie” albo wybór z listy, blok 🔔 zawiera to-do zamiast (albo obok)
+   okienka: każde pytanie to osobny to-do do ok. 12 słów z propozycją w treści, sformułowany tak, żeby zaznaczenie znaczyło
+   „tak” (np. `- [ ] Wariant B zamiast A`); wybór z kilku opcji = kilka to-do pod jednym punktem („zaznacz jedno”); pytanie
+   otwarte = to-do z dopiskiem `→ wpisz pod spodem`; max 3 to-do na blok. Kontekst i to, co asystent zrobi po odpowiedzi –
+   w zwiniętym toggle „Szczegóły” pod pytaniem. **Odczyt:** zaznaczony to-do = zgoda; tekst dopisany pod to-do ma pierwszeństwo;
+   niezaznaczony i bez dopisku = brak odpowiedzi; częściowa odpowiedź – przetwórz odpowiedziane, reszta zostaje.
+   Klucze `KS-…`, `RES-n`, `SP-n`, `ZP-n` stoją w bloku jak klucze komunikatów (kod w tekście), żeby parser znalazł pytanie po
+   kluczu; ten sam klucz = aktualizacja istniejącego bloku (pkt 2). **Limit:** najwyżej 5 nowych bloków 🔔 z kontroli spójności
+   (`KS-…`) na przebieg. **Kto obsługuje odpowiedzi:** na bloki `KS-…`, `KS-Z…`, `KS-R…`, `KS-S1-…`, `KS-P…`, `RES-n` i na luki w zadaniach –
+   **tylko nocny przebieg** (szybki ma zostać tani i **nie liczy ich** w warunku „nic nowego”, `przeglad-dnia`, A.2); szybki obsługuje
+   odpowiedzi w okienkach ❓ pod wpisami i pod 🔔 z automatów i kolejki 💸 (pkt 4). Obsłużony blok idzie do „Przetworzone”.
+8. **Zakaz „czeka na sesję Claude Code”.** Nie zostawiaj sprawy z adnotacją „wymaga sesji Claude Code”. Dla każdej rzeczy, której
+   przebieg nie zrobi, wybierz jedno: (a) zrób część, którą możesz, i zadaj ❓ albo 🔔 z propozycją, na którą wystarczy krótka
+   odpowiedź; (b) podaj w ❓ albo 🔔 dokładną czynność dla inwestora (gdzie kliknąć, co wpisać), a po jego „zrobione” dokończ;
+   (c) tylko praca techniczna (skrypt, struktura arkusza): wiersz ZP + blok 🔔 „naprawię w najbliższej sesji Claude Code;
+   nic nie musisz robić”. Wzorzec – wydatek budowy bez pasującej pozycji w kosztorysie: `koszty`, B.2.
 
 Zapis w Notion (przykład zmyślony; nagłówek to zwijany nagłówek h3, komunikat jego dzieckiem):
 

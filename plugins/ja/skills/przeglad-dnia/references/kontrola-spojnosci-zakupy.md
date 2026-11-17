@@ -2,7 +2,7 @@
 
 Inwestor zmienia statusy zakupów i zamyka zadania ręcznie w Notion; wpisy „kupiłem X” z Dziennika synchronizują obie bazy
 (`zadania`, sekcja „Zakupy” pkt 4 i B.2), ręczne zmiany – nie. Ten krok wychwytuje rozjazdy. **Bezpieczne uzupełnienie (Z4) robi sam,
-decyzje i daty zostawia inwestorowi** w pytaniach „❓” (`SKILL.md`, zasady trybu bez inwestora). Zakres: baza 🛒 Zakupy (prywatne).
+decyzje i daty zostawia inwestorowi** w pytaniach 🔔 (`SKILL.md`, zasady trybu bez inwestora). Zakres: baza 🛒 Zakupy (prywatne).
 🧱 Zakupy budowy nie mają relacji Zadanie ani „Kupione dnia” – poza zakresem.
 
 Format flag i klucze `KS-…` są wspólne z serią „Kontrola spójności” (kolejne grupy = własna litera): ta grupa to **Z**.
@@ -31,7 +31,7 @@ Nigdy nie zmieniaj Status zakupu ani zadania bez ☑ inwestora; nie zakładaj za
 2. „🛒 Do kupienia” (wynik z kroku 6 użyj ponownie) i „📦 Zamówione – czekam” – tylko wiersze z niepustą relacją Zadanie (Z2).
 3. Stan powiązanych zadań i researchów: strony z relacji, pojedynczo, **razem max 12 stron na przebieg** (zaczynaj od
    wierszy z relacją Zadanie, potem Research; reszta następnego dnia). Status zadania i jego edycja to właściwości strony.
-4. Odpowiedzi na wcześniejsze flagi: ☑ i dopiski pod punktami `KS-Z…` w Dzienniku „❓”.
+4. Odpowiedzi na wcześniejsze flagi: ☑ i dopiski pod punktami `KS-Z…` w blokach 🔔 (nocny przebieg).
 
 Brak wierszy z relacją, brak świeżego Z3 i brak Z4 do uzupełnienia → pomiń resztę i napisz „zakupy: bez zmian”.
 **Zasięg:** zakupy dodane dawniej niż miesiąc temu kontrola pomija (świadomie – okno miesiąca trzyma koszt odczytu stałym; zakup
@@ -49,11 +49,11 @@ pilny / z zadaniem zwykle zamyka się szybciej). Zadanie i zakup bez relacji nie
 2. **Uzupełnienie (Z4)** – od razu, jedna edycja wiersza: research Status „Zamknięty” + w treści strony RES-n „<data>:
    zamknięty – zakup <Kupione|Odpuszczone> (kontrola spójności)”. Gdy Uwagi zakupu zawierają „przeniesione do 🧱” (rzecz
    przeszła do 🧱 Zakupów budowy), dopisek brzmi „zamknięty – zakup przeniesiony (kontrola spójności)”, nie „Odpuszczone”.
-   Linia RES-n w „❓” Dziennika zniknie przy zabezpieczeniu kroku 7 przeglądu.
+   Blok RES-n w 🔔 zniknie przy zabezpieczeniu kroku 7 przeglądu.
 3. **Nowe rozjazdy (Z1, Z2, Z3)** wg tabeli. Klucz: `KS-<grupa>-<ostatnie 6 znaków ID zakupu>` (np. `KS-Z1-a1b2c3`). Pomiń parę, której
-   klucz jest już w „❓” (czeka) albo w „Przetworzone” (rozpatrzona; wyciszenie trwa, dopóki wpis tam jest). **Max 5 nowych
+   klucz jest już w 🔔 (czeka) albo w „Przetworzone” (rozpatrzona; wyciszenie trwa, dopóki wpis tam jest). **Max 5 nowych
    flag na przebieg łącznie ze wszystkimi grupami KS**, reszta „+k” w linii „🤖”.
-4. **Dopisz flagi** do Dziennika „❓ Czeka na Twoją odpowiedź” (format B, `wpisy/references/pytania.md`; jedna edycja
+4. **Dopisz flagi** jako blok 🔔 pod „🔔 Komunikaty asystenta” we „📝 Wpisach” (format `wpisy/references/pytania.md`, C.7 – checkbox + klucz w kodzie; jedna edycja
    z resztą zapisów przeglądu – `SKILL.md`, krok 9). Jedno pytanie = jeden to-do, do ok. 12 słów, klucz na końcu:
    `- [ ] Zadanie „<nazwa>” → DONE? (zakup Kupione) KS-Z1-a1b2c3`. Z2 z DONE = dwa to-do pod jednym punktem, „zaznacz jedno”:
    `- [ ] Zakup „<rzecz>” → Kupione` i `- [ ] Zakup „<rzecz>” → Odpuszczone` + klucz; przy ARCHIVED jeden to-do (Odpuszczone).

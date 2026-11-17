@@ -210,9 +210,9 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
 - Nowy plik od projektanta/wykonawcy → wrzuć do `Dom/_Przychodzące/` i uruchom `claude` w `Dom/AI/dom`.
   Asystent go posortuje, opisze w przewodniku i sam zaktualizuje stronę przewodnika w Notion – nic nie wgrywasz.
   Gdy na telefonie asystent poprosi o dokument – załącz wskazany plik.
-- Wszystko, co przyjdzie Ci do głowy (emocja, zadanie, dziecko, suplement, budowa), wpisuj na stronę „📓 Dziennik” w Notion –
-  punkt pod punktem albo jako podstronę (telefon wystarczy; widget „nowa strona” w telefonie zakłada stronę na najwyższym
-  poziomie Private – też trafi do Dziennika). Szybki przebieg co godzinę (8–22) i wieczorny przegląd dnia rozłożą to według bazy „🧭 Obszary
+- Wszystko, co przyjdzie Ci do głowy (emocja, zadanie, dziecko, suplement, budowa), wpisuj na stronę „📝 Wpisy” (pod „📓 Dziennik”) w Notion –
+  punkt pod punktem albo jako podstronę (telefon wystarczy albo Claude na telefonie → „📥 Skrzynka”; bloki 1. poziomu Dziennika i strony z widgetu
+  nie są już czytane – przejście robi jednorazowo przegląd, `przeglad-dnia/references/przejscia.md`). Szybki przebieg co godzinę (8–22) i wieczorny przegląd dnia rozłożą to według bazy „🧭 Obszary
   Dziennika”, a pod niejasnymi wpisami w „📝 Wpisy” doda krótkie okienko z pytaniem – odpowiedź wpisujesz w nim, przerobi ją następny przebieg. Gdy coś zepsuje się „w tle” (automat na Macu, skrypt, wydatek, który nie wszedł do arkusza), na górze „Wpisów” pojawi się blok pod „🔔 Komunikaty asystenta” – odpisz pod nim albo zostaw, jeśli ustąpi samo; sprawy za duże na przebieg trafiają do bazy „🧯 Znane problemy” na stronie 🤖 Asystent AI. Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
   Ręcznie: „przerób dziennik”. Chcesz, żeby asystent coś przemyślał („przygotuj mi pytania na jutrzejsze spotkanie”, „porównaj…”)
   – napisz to we wpisie; wynik będzie rano w przeglądzie dnia, w sekcji „🧠 Rozkminka” (bez prośby asystent rozkminek nie robi).

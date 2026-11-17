@@ -29,7 +29,7 @@ pomysłu ↔ wdrożenie (P, `kontrola-spojnosci-pomysly.md`, krok 2). Klucze `KS
    jako usuniętą) pomiń bez flagi i bez pytania; relacje do usuniętych stron Notion zostawia, więc to nie rozjazd.
 2. **Kroki:** widok Harmonogramu „📅 Oś czasu” (`view://3f7f5982-09e7-814f-bb28-000c12b8d4f1`, jeden odczyt; to duży
    wynik, więc czytaj go tylko w kroku 1 niepustym). Dopasuj kroki po adresie; potrzebne: Krok, Status, Termin (od–do).
-3. **Odpowiedzi na wcześniejsze flagi:** zaznaczone ☑ i dopiski pod punktami `KS-` w Dzienniku „❓” (krok 3 poniżej).
+3. **Odpowiedzi na wcześniejsze flagi:** zaznaczone ☑ i dopiski pod punktami `KS-` w blokach 🔔 we „Wpisach” (krok 3 poniżej).
 
 **Zasięg wieczoru:** H1 i H3 widać tylko, gdy zadanie zmieniono od wczoraj (krok 5); H4 – dla każdego „czekam na” z relacją;
 H2 zaczyna się od zmiany po stronie kroku (krok „Zrobione”), której widok zadań nie widzi – wieczorem trafia tylko na zadania
@@ -44,10 +44,10 @@ wszystkich otwartych zadań.
    zamiast ☑ → wykonaj dopisek, jeśli jednoznaczny (inaczej zostaw i dopytaj tym samym punktem); dopisek „zostaje” / „zgodne”
    → nic nie zmieniaj. Każdy rozpatrzony punkt idzie do „Przetworzone” z dopiskiem „→ KS: <wykonano | zostaje>” i kluczem.
 2. **Znajdź nowe rozjazdy** wg tabeli. Klucz flagi: `KS-<grupa>-<ostatnie 6 znaków ID zadania>` (np. `KS-H2-a1b2c3`).
-   Pomiń parę, której klucz jest już w „❓” (czeka) albo w „Przetworzone” (rozpatrzona – wyciszenie trwa, dopóki wpis tam jest;
+   Pomiń parę, której klucz jest już w 🔔 (czeka) albo w „Przetworzone” (rozpatrzona – wyciszenie trwa, dopóki wpis tam jest;
    przegląd tygodnia archiwizuje po 14 dniach). Max 5 nowych flag na przebieg łącznie dla wszystkich grup (H, Z, R, S1, P), reszta „+k” w linii „🤖” – bez zalewu pytań.
-3. **Dopisz flagi** do Dziennika „❓ Czeka na Twoją odpowiedź” (format B, `wpisy/references/pytania.md`; to jedna edycja
-   razem z resztą zapisów przeglądu – `SKILL.md`, krok 9). Jedno pytanie = jeden to-do, do ok. 12 słów, z kluczem na końcu:
+3. **Dopisz flagi** jako blok 🔔 pod „🔔 Komunikaty asystenta” we „📝 Wpisach” (format `wpisy/references/pytania.md`, C.7 – checkbox + klucz w kodzie; to jedna edycja
+   „Wpisów” razem z resztą zapisów przeglądu – `SKILL.md`, krok 9). Jedno pytanie = jeden to-do, do ok. 12 słów, z kluczem na końcu:
    `- [ ] Krok „<krok>” → Zrobione? (zadanie „<nazwa>” zamknięte) KS-H1-a1b2c3`. H2 = dwa to-do pod jednym punktem, „zaznacz
    jedno”: `- [ ] Zadanie „<nazwa>” → DONE` i `- [ ] Zadanie „<nazwa>” → ARCHIVED (nieaktualne)` + klucz (krok zrobiony nie
    znaczy, że zadanie wykonano – mogło się zdezaktualizować). Powód i skutek ☑ – w „Szczegóły”

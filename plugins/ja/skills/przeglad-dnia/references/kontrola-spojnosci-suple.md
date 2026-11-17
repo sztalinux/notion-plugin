@@ -3,7 +3,7 @@
 Inwestor przełącza Status suplementu w Notion ręcznie (`suple` zmienia go tylko na wpis „przerwa od X” / „odstawiam X”),
 a pole **Buy** zostaje zaznaczone. Bez tej kontroli licznik „kupić: n suplementów” i zadanie „Zamówić suple” zawyżają zakupy
 o suplementy, których inwestor w tej chwili nie bierze. Ta grupa serii „Kontrola spójności” (klucze `KS-…`) to **S**.
-Tylko odczyt i pytanie w „❓” – **asystent sam nie zmienia pola Buy ani Statusu**.
+Tylko odczyt i pytanie w 🔔 – **asystent sam nie zmienia pola Buy ani Statusu**.
 
 ## Reguła
 
@@ -24,12 +24,12 @@ znów się liczy.
    suplementów (jedna edycja na wiersz; Status, When, Last break, dawki i ceny bez zmian); dopisek inwestora zamiast ☑ („zostaw”,
    „kupuję mimo przerwy”) → nic nie zmieniaj, a suplement od tej pory wlicz do zakupów (wyciszenie: wpis w „Przetworzone”
    z kluczem, jak niżej). Rozpatrzony punkt idzie do „Przetworzone” z dopiskiem „→ KS: <Buy odznaczone | zostaje>”.
-3. **Pytanie „❓”** (format B, `wpisy/references/pytania.md`; jedna edycja Dziennika z resztą zapisów przeglądu – krok 9):
+3. **Pytanie 🔔** (blok we „Wpisach”, `wpisy/references/pytania.md`, C.7; jedna edycja „Wpisów” z resztą zapisów przeglądu – krok 9):
    **jedno zbiorcze pytanie na przebieg**, nawet gdy „do sprawdzenia” jest kilka suplementów; to-do w jednym punkcie:
    `- [ ] Odznaczyć Buy? <nazwa 1>, <nazwa 2> (Status BREAK/SUSPENDED) KS-S1-<klucz>` – zaznaczenie = tak, odznacz Buy wszystkim
    wymienionym; wybór pojedynczych → dopisek pod punktem. Propozycja domyślna: tak.
    Klucz: `KS-S1-` + ostatnie 6 znaków ID pierwszego (alfabetycznie) suplementu na liście; lista zmienia się → nowy klucz.
-   Pomiń pytanie, gdy ten sam zestaw ma klucz już w „❓” (czeka) albo w „Przetworzone” (rozpatrzony – dopóki wpis tam jest,
+   Pomiń pytanie, gdy ten sam zestaw ma klucz już w 🔔 (czeka) albo w „Przetworzone” (rozpatrzony – dopóki wpis tam jest,
    pozycje nadal pokazuj w zakładce 🏠 planu („Kupić”) jako „do sprawdzenia”, ale nie pytaj ponownie). Liczy się do wspólnego limitu
    5 nowych flag na przebieg (`KS-…`).
 4. **Wynik w przeglądzie** (krok 8–9): w zakładce 🏠 planu („Kupić”) `kupić: n suplementów (+ k do sprawdzenia)`; do licznika „spójność /

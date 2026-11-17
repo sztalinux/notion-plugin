@@ -39,12 +39,12 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    - Dziennik produktywności widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81af-9ea1-000cbe3dd643`): dni zapisane,
      średnia ocena, najczęstsze przeszkadzajki;
    - strona dziecka: nowe punkty w „💬 Do przegadania” i „🎁 Prezenty” z tygodnia (licznik + tytuły tematów);
-   - zadania rozmowy („Porozmawiać / Pogadać / Rozmowa” w nazwie, Obszar Dziecko lub Prywatne) zamknięte w tygodniu a temat nadal na liście „💬 Do przegadania” – pytania „❓” z kluczem `KS-R…`
+   - zadania rozmowy („Porozmawiać / Pogadać / Rozmowa” w nazwie, Obszar Dziecko lub Prywatne) zamknięte w tygodniu a temat nadal na liście „💬 Do przegadania” – pytania 🔔 z kluczem `KS-R…`
      (`przeglad-dnia/references/kontrola-spojnosci-rozmowy.md`; tylko licznik, bez treści tematów);
    - strona „💍 Wesele”: nowe punkty i zadania „Wesele:” z terminem w 30 dni;
    - Suple: Buy = tak (licznik, nazwy);
    - Zakupy: 🛒 Zakupy „Do kupienia” (licznik, najstarsze) i z Terminem w 7 dni (wymień).
-3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i pozycje „❓” Dziennika starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
+3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i bloki 🔔 starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
    tylko licznikiem, są w przeglądzie budowy); skrzynka „Zmiany do harnessu” – wpisy do wdrożenia starsze niż 7 dni
    (przypomnienie: uruchom Claude Code); „Pomysły na rozwój” – nowe bez analizy i „Pytania do mnie”. Pierwszy przegląd
    w miesiącu (dzień ≤ 7): strona „📘 Instrukcja obsługi” (ID w `ja/references/notion-mapa.md`) – sekcje z linią „Stan:”
@@ -68,16 +68,17 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    **Dziecko:** n nowych tematów do przegadania, n pomysłów na prezent
    **Kopie:** aktualne / ⚠ n (…) · ✗ n (…) / niesprawdzone
    **🏗 Budowa:** <linia skrótu> → <wzmianka przeglądu budowy z tego tygodnia>
-   **Porządki (n):** n propozycji z sekcji D – pytania w „❓” Dziennika · archiwum: przeniesiono n dni (dd.mm–dd.mm) ·
+   **Porządki (n):** n propozycji z sekcji D – pytania w 🔔 we „Wpisach” · archiwum: przeniesiono n dni (dd.mm–dd.mm) ·
    naprawione nagłówki: n
    ```
    Pusty tydzień → krótki wpis „spokojny tydzień” z linią budowy. Ręczny przebieg – osobny wpis z dopiskiem „(ręczne)”.
 5. **Porządki bez pytania** (sekcja D, pierwsza lista) – **zawsze, także w zaplanowanym przebiegu**: bloki dni i wpisy
    przeglądów dziennych starsze niż 14 dni do archiwum – zrób to **przed zapisem wpisu z kroku 4**, żeby wpis od razu miał liczbę i zakres dni w linii
    „Porządki” (jedna edycja strony – `ja`, zasada 2; brak takich dni → „archiwum: nic”, także w pustym tygodniu).
-   Pozostałe porządki tylko proponujesz: jeden punkt w „❓” Dziennika w formacie B (`wpisy/references/pytania.md`;
-   `❓ asystent (data) · porządki tygodnia <RRRR-Www> – ☑ = tak`, jedno to-do na porządek), w tej samej edycji Dziennika
-   co archiwum; we wpisie tylko liczba (linia „Porządki”). Ta sama propozycja już czeka w „❓” → nie dubluj.
+   Pozostałe porządki tylko proponujesz: jeden blok 🔔 pod „🔔 Komunikaty asystenta” we „Wpisach” (`wpisy/references/pytania.md`, C.7; klucz `porzadki-<RRRR-Www>`, jedno to-do
+   na porządek, „zastosuję w nocnym przeglądzie”). Tygodniowy dodaje i aktualizuje bloki **tylko pod nagłówkiem 🔔**, jedną
+   punktową edycją „Wpisów” (szybki nie startuje, gdy trwa tygodniowy); listy „Komunikaty z automatów” nie dostaje. Wpis tygodniowy: tylko liczba
+   (linia „Porządki”). Ta sama propozycja już czeka w 🔔 → nie dubluj.
 6. **Odpowiedź** (log): link do wpisu + liczby, w tym „archiwum: n dni”; bez treści emocji.
 
 ## D. Porządki w Dzienniku
@@ -91,7 +92,7 @@ Bez pytania (także w zaplanowanym przebiegu – to tylko ślad, linki są w doc
   (najpierw wklej na górę archiwum, sprawdź, potem zdejmij; podstronę archiwum na dole strony zostaw – przy zamianie treści
   przepisz jej znacznik `<page>` bez zmian). Stronę budowy archiwizuje tak samo `przeglad-tygodnia` (porządki).
 Do zatwierdzenia (propozycja w przeglądzie):
-- wpisy z okienkiem ❓ i pozycje „❓” bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
+- wpisy z okienkiem ❓ i bloki 🔔 bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
 - TASKS prywatne po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze);

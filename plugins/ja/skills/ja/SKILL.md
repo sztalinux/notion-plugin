@@ -65,10 +65,10 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
    w rozmowie wprost). Słowa względne („wczoraj”, „w piątek”) licz od daty we wpisie; wpis bez daty – od daty przetwarzania, bez pytania
    (`wpisy`, krok 3 – „Data zdarzenia”, z wyjątkiem pierwszego przebiegu dnia). Każde pytanie
    do inwestora zapisane w Notion ma format z `wpisy/references/pytania.md`: o wpis – krótkie okienko ❓ z linią `✍️` pod
-   wpisem (A); poza wpisami (Dziennik „❓”, strony RES-n, pomysłów) – checkbox na pytanie, kontekst w „Szczegółach” (B).
+   wpisem (A); z tła (RES-n, kontrole spójności, luki w zadaniach, automaty) – blok 🔔 we „Wpisach”, w nim checkbox na pytanie i kontekst w „Szczegółach” (C.7).
 5. **Prywatność:** strona **„🔒 Prywatne”** (`3faf5982-09e7-816b-92ab-d8b79c61ad92`) i wszystko pod nią jest poza zasięgiem
    asystenta – nie czytaj, nie przeszukuj (wyniki wyszukiwania z niej pomijaj), nie cytuj, nie przenoś tam i stamtąd niczego
-   bez wyraźnego polecenia. Lista stron najwyższego poziomu Private (odczyt wpisów z widgetu) pokazuje też tę stronę –
+   bez wyraźnego polecenia. Lista stron najwyższego poziomu Private (używana tylko przy jednorazowym przejściu 1.1 z widgetu) pokazuje też tę stronę –
    pomiń ją, nie otwieraj. Wpis intymny lub bardzo osobisty z Dziennika nie trafia nigdzie – zostaje we „Wpisach” z pytaniem, czy
    inwestor przeniesie go sam do „🔒 Prywatne”. Haseł nie przepisuj nigdy (przechodziłyby przez rozmowę z AI) – całe strony
    wolno przenosić. Treść emocji, notatki o dziecku i zdrowiu zostają w Notion; w odpowiedziach nie cytuj ich ponad potrzebę.
@@ -114,7 +114,7 @@ zapisuj wprost według pól „Gdzie” i „Jak zapisać” w bazie Obszary.
 ## Domknięcie rozmowy
 
 Na koniec pracy, która coś zmieniła, trzy bloki w tej kolejności: **🛑 Potrzebuję Twojej odpowiedzi** (na samej górze, tylko
-gdy coś stoi: czego dotyczy + jedno pytanie z propozycją domyślną; pytania zapisane w Notion – pod wpisami, w „❓” – wymień jedną linią) ·
+gdy coś stoi: czego dotyczy + jedno pytanie z propozycją domyślną; pytania zapisane w Notion – pod wpisami (❓) i w 🔔 – wymień jedną linią) ·
 **✅ Zrobione** (co i gdzie, link) · **⏳ Niezrobione** (co pominięto lub odłożono i dlaczego). Brak 🛑 oznacza, że nic nie
 wisi na inwestorze – nie dopisuj ostrzeżeń „na wszelki wypadek”. Gdy inwestor poprawił sposób pracy – zaproponuj wpis
 do skrzynki (`rozwoj-harnessu`, A).

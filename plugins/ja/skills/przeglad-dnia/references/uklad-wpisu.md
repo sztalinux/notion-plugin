@@ -69,6 +69,8 @@ przeglądu z linii „Teraz” / „dzień przeglądu” w poleceniu, nie z zega
 w ciągu dnia (prośba „plan dnia”) = plan na dziś, z dopiskiem „(ręczne)” w podpisie ramki.
 
 **Zasady:**
+- Na górze strony jedna linia: liczba otwartych ❓ pod wpisami i bloków 🔔 we „Wpisach” z wzmianką strony „📝 Wpisy”
+  (np. „Czeka na Ciebie: ❓ 2 · 🔔 3 – <wzmianka Wpisów>”); zero = pomiń linię.
 - Dzień planu i 6 kolejnych = „najbliższe 7 dni”; „po terminie” = When / Termin przed dniem planu i niezakończone. Widoki
   Notion liczą „dziś” po swojemu – zakres utnij sam.
 - Każda sprawa to wzmianka (link) – klikalna; obok tylko to, czego nie widać w nazwie (godzina, „od 8.11”, kto). Jedna sprawa

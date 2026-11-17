@@ -1,6 +1,6 @@
 ---
 name: wpisy
-description: Przetwarzanie luźnych wpisów inwestora ze strony „📓 Dziennik” w Notion i ze stron zakładanych widgetem w telefonie na najwyższym poziomie Private (myśli, emocje, zadania, sprawy budowy, dziecko, suplementy, książki – wpisane w biegu, z telefonu) – rozpoznanie obszaru według bazy „🧭 Obszary Dziennika”, wyjaśnienie niejasnych, przekazanie do właściwej procedury, ślad w „Przetworzone”. Używaj, gdy użytkownik mówi „przerób dziennik”, „ogarnij dziennik”, „co mam w dzienniku”, „odpowiedziałem w dzienniku”, „przerób inbox”, gdy przegląd dnia lub tygodnia pokazuje wpisy do przetworzenia, albo gdy wkleja kilka luźnych notatek naraz i prosi „wrzuć gdzie trzeba”.
+description: Przetwarzanie luźnych wpisów inwestora ze strony „📝 Wpisy” (podstrona „📓 Dziennik”) w Notion i z pozycji „📥 Skrzynka” (myśli, emocje, zadania, sprawy budowy, dziecko, suplementy, książki – wpisane w biegu, z telefonu) – rozpoznanie obszaru według bazy „🧭 Obszary Dziennika”, wyjaśnienie niejasnych, przekazanie do właściwej procedury, ślad w „Przetworzone”. Używaj, gdy użytkownik mówi „przerób dziennik”, „ogarnij dziennik”, „co mam w dzienniku”, „odpowiedziałem w dzienniku”, „przerób inbox”, gdy przegląd dnia lub tygodnia pokazuje wpisy do przetworzenia, albo gdy wkleja kilka luźnych notatek naraz i prosi „wrzuć gdzie trzeba”.
 ---
 
 # Dziennik → właściwe miejsca
@@ -15,8 +15,8 @@ jeszcze nie widział):
 ```
 📓 Dziennik
 	<toggle> Jak używać </toggle>
-	- nowy wpis inwestora (albo podstrona)              ← NOWE: pierwszy poziom; po przebiegu pusto
-	▸ ### ❓ Czeka na Twoją odpowiedź (zwijany nagłówek)  ← tylko pytania spoza wpisów (RES-n, luki w zadaniach); wpisów tu nie trzymaj
+	Piszesz we 📝 Wpisach (nie tu) – bloki 1. poziomu Dziennika nie są już źródłem wpisów (od ja 1.19.0)
+	▸ ### ❓ Czeka na Twoją odpowiedź (zwijany nagłówek)  ← przejściowo; pytania są teraz we 📝 Wpisach (🔔), sekcję usuwa faza 6
 	▸ ### Przetworzone (zwijany nagłówek)
 		▸ 📅 13.10 wt · 🤖 przetworzono 3 · czeka na Ciebie 1 · jutro 2   ← zwijany blok dnia, najnowszy na górze
 			🤖 13.10 wieczór: dziennik – przetworzono 3 (emocje 1, zadania 2), … (pełna linia)
@@ -29,31 +29,29 @@ jeszcze nie widział):
 				✍️ odpowiedź inwestora
 	🗃 Przetworzone podstrony, 🗃 Przetworzone – archiwum, 📆 Przeglądy dzienne / 📅 tygodniowe (podstrony) ← nie są wpisami
 Private (najwyższy poziom)
-	📌 DASHBOARD, 🛖 DOM, 📓 Dziennik, … 🔒 Prywatne   ← stałe strony (lista w ja/references/notion-mapa.md)
-	nowa strona z widgetu w telefonie                 ← NOWY wpis; po przetworzeniu przeniesiona pod 🗃
+	📌 DASHBOARD, 🛖 DOM, 📓 Dziennik, … 🔒 Prywatne   ← stałe strony (lista w ja/references/notion-mapa.md; chroni 🔒 Prywatne)
 ```
 
-**Nowy wpis** = każdy blok pierwszego poziomu (akapit, punkt), **każdy blok w treści strony „📝 Wpisy”**
-(`3faf5982-09e7-80b2-9b33-c48745d67a4f`; inwestor często pisze tam wprost, bez zakładania podstrony), **każda jej
-podstrona** (tytuł + treść = wpis), podstrona Dziennika założona poza „Wpisami”, z wyjątkiem
-„Jak używać”, pustych linii, trzech zwijanych nagłówków Dziennika, nagłówka „🔔 Komunikaty asystenta” we „Wpisach” z blokami pod nim
-(komunikat staje się pracą dopiero po odpowiedzi – `references/pytania.md`, C) i stałych podstron „📝 Wpisy”, „📆 Przeglądy dzienne”,
-„📅 Przeglądy tygodniowe”, „🗃 Przetworzone podstrony” i „🗃 Przetworzone – archiwum”, **oraz każda strona na najwyższym poziomie Private spoza listy stałych stron**
-(lista z ID: `ja/references/notion-mapa.md`, „Struktura najwyższego poziomu”) – tam widget „nowa strona” w telefonie
-zakłada strony. Porównuj po ID, nie po tytule. 🔒 Prywatne jest na liście – nigdy jej nie otwieraj (`ja`, zasada 5).
-Nieznana strona na najwyższym poziomie, która ma podstrony lub bazę albo wygląda na nowy obszar (tytuł jak nazwa działu,
-bez treści wpisu), **nie jest wpisem**: nie przetwarzaj jej i nie przenoś – we „Wpisach” akapit z jej wzmianką i okienkiem
-„Wpis czy nowa stała strona? (jeśli stała, dopiszę ją do listy)” (krok 4).
-**Podstrony (także strony z widgetu w Private) nie usuwaj i nie wycinaj znacznikiem strony z treści** (to by ją skasowało)
+**Źródła wpisów (jedyne):** (1) każdy blok w treści strony „📝 Wpisy” (`3faf5982-09e7-80b2-9b33-c48745d67a4f`) i **każda jej
+podstrona** (tytuł + treść = wpis), (2) pozycje sekcji „Nowe” dokumentu „📥 Skrzynka” (`references/skrzynka.md`), (3) odpowiedzi
+inwestora w okienkach ❓ i pod blokami 🔔. Wyjątki (nie wpisy): „Jak używać”, puste linie, nagłówek „🔔 Komunikaty asystenta”
+z blokami pod nim (komunikat staje się pracą dopiero po odpowiedzi – `references/pytania.md`, C) i stałe podstrony „📆 Przeglądy dzienne”,
+„📅 Przeglądy tygodniowe”, „🗃 Przetworzone podstrony”, „🗃 Przetworzone – archiwum”.
+**Nie są już źródłem** (od ja 1.19.0): bloki 1. poziomu strony „📓 Dziennik” i strony na najwyższym poziomie Private spoza listy
+stałych stron (widget „nowa strona”). Nie przetwarzaj ich; wyjątek – **jednorazowe przejście** (pierwszy przebieg po wdrożeniu
+1.19.0): przenieś jeszcze te stare źródła do „📝 Wpisów” jako zwykłe wpisy (blok → na koniec treści Wpisów; strona z widgetu
+→ jej treść jako blok we Wpisach, strona pod „🗃 Przetworzone podstrony”), od następnego przebiegu ich nie czytaj.
+Porównuj po ID, nie po tytule. 🔒 Prywatne – nigdy jej nie otwieraj (`ja`, zasada 5). Ogólny zakaz: nie przetwarzaj stron spoza Wpisów.
+**Podstron „Wpisów” nie usuwaj i nie wycinaj znacznikiem strony z treści** (to by ją skasowało)
 – po przetworzeniu przenieś ją narzędziem przenoszenia stron pod „🗃 Przetworzone podstrony” (`3faf5982-09e7-8115-908f-f764d3133d6f`), a w śladzie dnia
 daj do niej wzmiankę. Jeden blok może zawierać kilka spraw – rozłóż je osobno. Nie zmieniaj treści
 wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
 
 ## Procedura
 
-1. **Pobierz** stronę Dziennik, stronę „📝 Wpisy” (bloki w treści i podstrony) i listę stron najwyższego poziomu Private (odczyt
-   listy stron prywatnych; strony spoza listy stałych otwórz, żeby mieć treść i czas ostatniej edycji – tylko je). Brak
-   narzędzia do listy stron prywatnych → pomiń to źródło i dopisz w linii „🤖”: „strony z widgetu – brak odczytu”.
+1. **Pobierz** stronę „📝 Wpisy” (bloki w treści i podstrony) i sekcję „Nowe” Skrzynki (`references/skrzynka.md`). Stronę Dziennik
+   pobierz tylko do zapisu „Przetworzone” (krok 6–7). Przy jednorazowym przejściu (patrz „Źródła wpisów”) pobierz też bloki 1. poziomu
+   Dziennika i listę stron najwyższego poziomu Private.
    Nowe wpisy oraz wpisy z okienkiem ❓ we „Wpisach”, w którym inwestor coś dopisał – te oceń ponownie; odczyt odpowiedzi:
    `references/pytania.md`, A. Komunikaty 🔔 z odpowiedzią albo zmianą stanu – obsłuż wg `references/pytania.md`, C. Wpis z okienkiem bez odpowiedzi nie jest nowy – pomiń go. Brak obu → „Dziennik pusty”
    (+ liczba czekających we „Wpisach”).
@@ -69,16 +67,14 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
      jest z tego samego dnia; **nie pytaj** o to i nie odkładaj wpisu z pytaniem z tego powodu. Zapisz termin, a w śladzie dopisz
      „(termin od daty przetworzenia)”. Wyjątek: pierwszy przebieg dnia (do 9:00) po wpisach, które mogły powstać poprzedniego
      wieczoru – gdy blok dnia w Dzienniku albo data ostatniej edycji strony wskazuje wczoraj, licz od wczoraj i dopisz to w śladzie.
-     Podstrona lub strona z widgetu bez daty w treści → data jej ostatniej edycji (z odczytu strony), z dopiskiem w śladzie.
+     Podstrona bez daty w treści → data jej ostatniej edycji (z odczytu strony), z dopiskiem w śladzie.
      Przy emocji bez daty – data przetwarzania z dopiskiem „(data przetworzenia)”.
 4. **Niejednoznaczny albo bez obszaru → nie przetwarzaj, zapytaj pod wpisem w „📝 Wpisy”** – okienko ❓ w formacie
    `references/pytania.md`, A (jedno krótkie pytanie z propozycją i linia `✍️` na odpowiedź). Gdzie trafia okienko:
    - blok z treści „Wpisów” – zostaje na miejscu, okienko zagnieżdżone pod nim;
-   - blok z pierwszego poziomu Dziennika – przenieś go na koniec treści „Wpisów” (przed pustą linią), z okienkiem pod nim;
    - podstrona „Wpisów” – okienko jako blok tuż pod nią;
-   - strona z widgetu, pozycja Skrzynki – we „Wpisach” akapit ze wzmianką strony (Skrzynka: treść dosłownie) i okienkiem
-     pod nim; strona zostaje na miejscu i nie jest nowym wpisem, dopóki inwestor nie odpowie w okienku albo nie zmieni
-     strony po dacie pytania.
+   - pozycja Skrzynki – we „Wpisach” akapit ze wzmianką (Skrzynka: treść dosłownie) i okienkiem pod nim; pozycja zostaje
+     w „Nowe” i nie jest nowym wpisem, dopóki inwestor nie odpowie w okienku.
    Wpis z odpowiedzią – połącz z nią i oceń ponownie. **Wpis jasny tylko w części** (np. zadanie zapisane, kwota albo
    miejsce niejasne) → zapisz jasną część, jej ślad daj do „Przetworzone” z dopiskiem „(reszta – pytanie we Wpisach)”,
    a wpis zostaw we „Wpisach” z okienkiem o brakującą część; zamknij go (krok 6) dopiero po odpowiedzi.
@@ -102,17 +98,16 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    jednym podpunkcie na miejsce, z ikoną i liczbą: `📓 Dziennik budowy: <link>` · `💸 Wydatki (3): <link>, …` ·
    `✅ TASKS (2): <link>, …` · `🧱 Zakupy: ZAM-6, ZAM-8 – …` · `📅 Harmonogram: HR-1 Zrobione, …` (bez jednej długiej linii)
    (blok z treści „Wpisów”: `~~wpis~~ (Wpisy) → <gdzie>: <link>`;
-   podstrona: `~~tytuł~~ (podstrona → <wzmianka>) → <gdzie>: <link>`, strona z widgetu: `(widget → <wzmianka>)`, po
-   przeniesieniu jej pod „🗃 Przetworzone podstrony”). Zdublowane / nieprzydatne / testowe / pusta strona z widgetu (bez
+   podstrona: `~~tytuł~~ (podstrona → <wzmianka>) → <gdzie>: <link>`, po
+   przeniesieniu jej pod „🗃 Przetworzone podstrony”). Zdublowane / nieprzydatne / testowe / pusta podstrona (bez
    tytułu i treści) → `~~wpis~~ → pominięte: <jedno zdanie>`. Nie usuwaj.
 7. **Zapisy wsadowo** (`ja`, zasada 2): odczyty, potem jedno wywołanie na bazę docelową, na końcu **jedna** edycja strony
-   Dziennik (przeniesienia do „Przetworzone”, zdjęcie bloków przeniesionych do „Wpisów”, linia „🤖”) – podstrony i strony
-   z widgetu przenosisz jednym osobnym wywołaniem przed nią; po nim na najwyższym poziomie Private zostają tylko stałe strony
-   (i te z okienkiem we „Wpisach”). Bloki z treści „📝 Wpisy” idą w tej edycji Dziennika do „Przetworzone”; **jedna** edycja
+   Dziennik (przeniesienia do „Przetworzone”, linia „🤖”) – podstrony „Wpisów” przenosisz jednym osobnym wywołaniem przed nią.
+   Bloki z treści „📝 Wpisy” idą w tej edycji Dziennika do „Przetworzone”; **jedna** edycja
    „Wpisów” (punktowa, podstron nie ruszaj) zdejmuje przetworzone bloki z ich okienkami, dodaje okienka pod niejasnymi
-   i przenosi tu niejasne z Dziennika – po niej treść „Wpisów” to tylko nagłówek 🔔 z komunikatami, wpisy z okienkami ❓, podstrony i 1 pusta linia
+   (przy jednorazowym przejściu także dopisuje tu stare wpisy z Dziennika i widgetu) – po niej treść „Wpisów” to tylko nagłówek 🔔 z komunikatami, wpisy z okienkami ❓, podstrony i 1 pusta linia
    (zmiany w 🔔 idą w tej samej edycji).
-   Po edycji Dziennika **pierwszy poziom jest pusty** – poza „Jak używać”, trzema nagłówkami, pięcioma stałymi podstronami (lista wyżej) i 1–2 pustymi
+   Po edycji Dziennika (po przejściu) na 1. poziomie zostaje tylko to, co stałe – „Jak używać” (ze zdaniem „Piszesz we 📝 Wpisach”), trzema nagłówkami, pięcioma stałymi podstronami (lista wyżej) i 1–2 pustymi
    liniami do pisania. Każda zamiana (`old_str`) obejmuje tylko blok, który przenosisz, albo jedną linię-kotwicę – nigdy
    całej sekcji. Po edycji odczyt kontrolny: trzy nagłówki z treścią sprzed edycji (punkty „❓”) i pięć podstron są na
    miejscu; brak czegoś → przywróć z odczytu sprzed edycji i odnotuj w linii „🤖”. Linia „🤖” idzie na górę bloku dnia:
@@ -138,20 +133,21 @@ z czatu bez Notion (`references/skrzynka.md`): te same kroki 3–7, ślad w Skrz
 - Nigdy nie zgaduj znaczenia skrótowego wpisu i nie zapisuj go „na wszelki wypadek” – lepiej jedno pytanie niż zagadka
   w bazie. Wyjątek: w docelowej bazie jest już wpis, który go wyjaśnia – wtedy dopisz uzupełnienie tam.
 - Źródło (kto powiedział, skąd) przepisuj dosłownie, gdy procedura docelowa ma na nie pole.
-- **Research (RES-n):** odpowiedź „RES-n: …” (w Dzienniku albo pod pytaniami na stronie researchu) → dopisz ją pod pytaniami
+- **Research (RES-n):** odpowiedź „RES-n: …” (w bloku 🔔 z kluczem `RES-n` we „Wpisach” albo pod pytaniami na stronie researchu; w bloku obsługuje je nocny przebieg) → dopisz ją pod pytaniami
   na stronie RES-n z datą i ustaw Status „Do zrobienia” (wieczór dokończy); „RES-n niepotrzebny” albo zakup już Kupione →
   Status „Zamknięty”.
-- **Sprzeczności (SP-n):** odpowiedź „SP-n: …” (w Dzienniku, we „Wpisach” albo w okienku ❓) → `wiedza`, sekcja C (plugin
+- **Sprzeczności (SP-n):** odpowiedź „SP-n: …” (we „Wpisach”, w bloku 🔔 albo w okienku ❓) → `wiedza`, sekcja C (plugin
   dom-budowa) – także w przeglądzie dnia bez inwestora; jasna (także własny wariant albo część dylematu) = domknięcie ze
   skutkami, niejasna („?”, „nie wiem”, otwarte „A albo B”) = okienko ❓ pod wpisem (granica: `wiedza/references/sprzecznosci.md`).
-- **Sprzątanie pytań:** pytanie (okienko pod wpisem, RES-n, SP-n, zadanie w „❓”), które inwestor rozstrzygnął w rozmowie,
+- **Sprzątanie pytań:** pytanie (okienko pod wpisem, RES-n, SP-n, blok 🔔), które inwestor rozstrzygnął w rozmowie,
   zamknij w tej samej pracy: dopisz wynik tam, gdzie żyje sprawa (strona RES-n z nowym Statusem itd.), a wpis z okienkiem
-  albo linię „❓” przenieś do bloku dnia w „Przetworzone” jako `~~…~~ → rozwiązane w rozmowie (data): <wzmianka>`. Nie usuwaj.
-- **Wpis w „❓” Dziennika** (stary format albo pomyłka) → przy najbliższej edycji przenieś go do „Wpisów” z jednym okienkiem
-  (scal pytania, dopisane odpowiedzi uwzględnij) – pytania o wpisy mają być tam, gdzie inwestor pisze.
+  albo blok 🔔 przenieś do bloku dnia w „Przetworzone” jako `~~…~~ → rozwiązane w rozmowie (data): <wzmianka>`. Nie usuwaj.
+- **Pozycja w starej sekcji „❓ Czeka na Twoją odpowiedź” w Dzienniku** (jednorazowe przejście, tylko nocny przebieg) → przenieś
+  do „🔔 Komunikaty asystenta” jako blok 🔔 (checkboxy i dopiski zachowaj, klucz `KS-…`/`RES-n` w kodzie); sekcję zostaw z jednym
+  zdaniem „Pytania są teraz we 📝 Wpisach (🔔)”.
 - **Pytanie czy komunikat:** pytanie o to, co inwestor sam wpisał → okienko pod wpisem (A); problem, którego nie wywołał
-  żaden wpis (automat, skrypt, błąd kolejki) → blok pod „🔔 Komunikaty asystenta” (C). Pytania spoza wpisów (RES-n, luki
-  w zadaniach) zostają w „❓” Dziennika (B).
+  żaden wpis (automat, skrypt, błąd kolejki) → blok pod „🔔 Komunikaty asystenta” (C). Pytania z tła, także RES-n i luki w zadaniach, to też 🔔
+  (C.7, z checkboxami).
 - **Komunikat 💸** (błąd kolejki wydatków, zakłada go przebieg pod 🔔): odpowiedź i zamknięcie – `koszty`, sekcja E (plugin
   dom-budowa); bez odpowiedzi sprawdź stan strony – nie jest już „Błąd” → zamknij jako naprawione.
 - Zdjęcia we wpisie: budowa → `dziennik` (plugin dom-budowa); inne – zostaw w treści docelowej strony.

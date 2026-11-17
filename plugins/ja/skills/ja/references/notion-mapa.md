@@ -9,13 +9,12 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 ```
 📓 Dziennik
 ├─ Jak używać (toggle)
-├─ nowe wpisy inwestora – bloki 1. poziomu (po przebiegu pusto)
+├─ (bloki 1. poziomu Dziennika nie są już źródłem wpisów – piszesz we 📝 Wpisach; `wpisy`, „Źródła wpisów”)
 ├─ 📝 Wpisy (podstrona) – wpisy pisane wprost w treści albo jako osobne strony (bloki i podstrony; po przetworzeniu zostają
 │   tylko niejasne – z okienkiem ❓ pytania asystenta i linią ✍️ na odpowiedź); na górze zwijany nagłówek
 │   „🔔 Komunikaty asystenta” – problemy bez wpisu (automaty Maca, skrypty, błędy kolejki 💸), nie są wpisami
-│   (`wpisy/references/pytania.md`, C)
-│   (drugie wejście: strony na najwyższym poziomie Private, np. z widgetu „nowa strona” w telefonie – lista stałych stron niżej)
-├─ ### ❓ Czeka na Twoją odpowiedź (toggle) – pytania asystenta spoza wpisów (RES-n, luki w zadaniach), odpowiedź pod pytaniem
+│   (`wpisy/references/pytania.md`, C); tu też wszystkie pytania z tła (RES-n, KS-…) jako 🔔 z checkboxami (C.7)
+├─ ### ❓ Czeka na Twoją odpowiedź (toggle) – przejściowo; pytania są teraz we 📝 Wpisach (🔔), sekcję usuwa faza 6
 ├─ ### Przetworzone (toggle) – zwijany blok na każdy dzień: linia „🤖” + ślad „~~wpis~~ → gdzie”
 ├─ ### 🧭 Dla asystenta (toggle) – baza 🧭 Obszary Dziennika, wzmianka przewodnika
 ├─ 📆 Przeglądy dzienne (podstrona – przeglądy osobiste; budowa ma własne na DOM)
@@ -26,10 +25,9 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 
 | Czego szukasz | Gdzie | ID | Najważniejsze pola |
 |---|---|---|---|
-| Nowe wpisy, pytania asystenta spoza wpisów | 📓 Dziennik (schemat wyżej) | `3f8f5982-09e7-80c8-a154-c59aeb844e8f` | – (wolny tekst) |
+| Kontener wpisów: Wpisy, „Przetworzone”, archiwa, przeglądy | 📓 Dziennik (schemat wyżej) | `3f8f5982-09e7-80c8-a154-c59aeb844e8f` | – (wolny tekst) |
 | Podział wpisów na obszary (dokąd co idzie) | 🧭 Obszary Dziennika → widok „🤖 Aktywne (dla asystenta)” (tryb view – bez limitu) | `collection://253b7564-00ac-45b2-a3f4-956275e3a7e0`, `view://3faf5982-09e7-817b-a060-000c05f26c6a` | Obszar, Rozpoznawanie, Gdzie, Jak zapisać, Procedura, Aktywny, Kolejność, Przykład |
 | Wpisy pisane w treści „Wpisów” albo jako osobne strony | 📝 Wpisy (pod Dziennikiem) – bloki w treści i podstrony = nowe wpisy; niejasne czekają tu z okienkiem ❓; nagłówek „🔔 Komunikaty asystenta” z blokami pod nim – nie wpisy | `3faf5982-09e7-80b2-9b33-c48745d67a4f` | – |
-| Wpisy z widgetu „nowa strona” (telefon) | najwyższy poziom Private – każda strona spoza listy stałych stron niżej (lista stron prywatnych) | – | – |
 | Przegląd dnia – sprawy osobiste (dziś / jutro; ręczne „(ręczne)”) | 📆 Przeglądy dzienne (pod Dziennikiem) | `3faf5982-09e7-81df-a361-cc65fddb81f4` | – |
 | Plan dnia (strona do czytania rano; nadpisywana co wieczór) | ☀️ Dziś (najwyższy poziom Private, w Ulubionych) | `416f5982-09e7-81b3-b96d-ddd19086bc5b` | zakładki: 🧭 Przegląd · 🏗 Budowa · 🏠 Prywatne · 💼 Praca · 📊 Wczoraj (`przeglad-dnia/references/uklad-wpisu.md`, D) |
 | Zadania z pracy – zapis nowych i zmiana statusu (`zadania`), odczyt do planu dnia | 💼 WORK → sekcja „🎯 Zadania” → baza 🔨 TASKS; widoki „🎯 Na dziś”, „📋 Tablica”, „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (tryb view; **treści strony WORK poza bazami nie czytaj** – w notatkach są dane dostępowe) | `collection://330e462e-ae97-42f4-92e4-12b1d6ea1c89`, `view://41af5982-09e7-8162-9242-000cad5449d4`, `view://41af5982-09e7-8106-b6e9-000cd6f2d81e`, `view://416f5982-09e7-81aa-a76d-000c4a563877` | Name, Status (TO DO / IN PROGRESS / WAITING / ON HOLD / SOMEDAY / DONE / ARCHIVED), When, Priority (Highest / High / Medium / Low), Project (opcje bazy), Ticket (link zgłoszenia), Desc |
@@ -66,7 +64,7 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 
 **Struktura najwyższego poziomu (POM-9, 15.10.2026)** – strona startowa 📌 DASHBOARD w zakładkach, opis całości dla inwestora: „🗺 Mapa Notion”
 (`3faf5982-09e7-8186-b1f1-f2b4ed2a9448`, pod DASHBOARD). **Lista stałych stron najwyższego poziomu Private (komplet –
-każda inna strona na tym poziomie to nowy wpis z widgetu, `wpisy`):**
+lista chroni 🔒 Prywatne; strony spoza listy nie są już wpisami – `wpisy`, „Źródła wpisów”):**
 - 📌 DASHBOARD `8ef0a264-9b9e-4463-8e2e-2c64887f110d` – strona startowa w zakładkach, 🗺 Mapa Notion, 📘 Instrukcja obsługi;
 - 🛖 DOM `24af5982-09e7-806b-821a-e157ff33be42` – budowa (plugin dom-budowa);
 - ☀️ Dziś `416f5982-09e7-81b3-b96d-ddd19086bc5b` – plan dnia w zakładkach (Przegląd, Budowa, Prywatne, Praca, Wczoraj),
