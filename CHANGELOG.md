@@ -19,6 +19,7 @@ Uproszczenie przepływu, 3.2 i 3.3 oraz P13 (bez zmiany opisu startu sesji – t
   problem → 🔔 `zdjecia-i-kopie`.
 - P13: „wieczorny” → „nocny” w README, docs, `AGENTS.md` (tabela) i opisie pluginu; w `przeglad-dnia` adnotacja o kluczu technicznym `wieczorny`
   (klucze, etykiety, logi i `stan.json` bez zmian).
+- P13: nowa podstrona „🧭 Jak to działa” pod „📘 Instrukcją obsługi” w Notion (ściąga z zasadami po fazach 1–3, przepływ wydatków, dostęp, rytm automatów); ID w mapie Notion.
 
 ## dom-budowa [3.18.0] – 2026-11-17
 
