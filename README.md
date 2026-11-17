@@ -63,7 +63,7 @@ claude.ai (telefon, czat, Cowork) ◄── pluginy ja + dom-budowa ─┘   (ka
    ├─ projekt „Dom” – tylko kontener dokumentów budowy (wgrywasz paczkę ręcznie, opcjonalnie)
    └─ bez Notion (blokada organizacji) → zapisy do „📥 Skrzynki” (Claude Docs)
 
-Mac (launchd, `AI/automaty/przeglad.py`, poza repo) ── co godzinę 8–22, wieczorem, w niedzielę:
+Mac (launchd, `AI/automaty/przeglad.py`, poza repo) ── co godzinę 8–22, w nocy (2:00), w niedzielę:
    ├─ `claude -p` + MCP Notion: Skrzynka i 📓 Dziennik → Notion (przegląd dnia, tygodnia)
    ├─ po przebiegu `tools/wydatki.py`: kolejka „💸 Wydatki → arkusz” → arkusz Google „Kosztorys budowy”
    └─ problem, który trwa (przebieg nieudany lub nieuruchomiony, logowanie MCP, błąd skryptu) → `stan.json` →
@@ -101,7 +101,7 @@ z ⚠ i inwestor o tym wie.
 | `zadania` | „muszę…”, „zrobiłem X”, „co mam jutro” | wspólna TASKS z polem Obszar; zmiana statusu z Dziennika |
 | `dziecko` | obserwacja, „porozmawiać z nią o…”, prezent, zalecenie | strona dziecka w sekcjach |
 | `suple` | „kończy się…”, „kupiłem…”, przerwa | baza Suple: Buy, Status, Last break |
-| `przeglad-dnia` | co godzinę (tryb szybki) i w nocy (2:00) – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; nocny (klucz techniczny `wieczorny`): podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), przegląd dnia budowy osobno na DOM, analiza pomysłów, kontrola spójności (zadanie budowy ↔ krok Harmonogramu, zakup ↔ zadanie „Kupić X”, zadanie rozmowy („Porozmawiać / Pogadać / Rozmowa” w nazwie) ↔ temat do przegadania, suplement wstrzymany z Buy, status pomysłu ↔ wdrożenie – tylko pytania ❓, zmiana dopiero po Twoim ☑); rozkminka („przygotuj mi…”, „jakie pytania…”) tylko na prośbę we wpisie |
+| `przeglad-dnia` | co godzinę (tryb szybki) i w nocy (2:00) – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; nocny (klucz techniczny `wieczorny`): podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), przegląd dnia budowy osobno na DOM, kontrola spójności (zadanie budowy ↔ krok Harmonogramu, zakup ↔ zadanie „Kupić X”, zadanie rozmowy („Porozmawiać / Pogadać / Rozmowa” w nazwie) ↔ temat do przegadania, suplement wstrzymany z Buy, status pomysłu ↔ wdrożenie – tylko pytania ❓, zmiana dopiero po Twoim ☑); rozkminka („przygotuj mi…”, „jakie pytania…”) tylko na prośbę we wpisie |
 | `przeglad-tygodnia-osobisty` | raz w tygodniu – automat na Macu / „przegląd tygodnia” | sprawy osobiste w liczbach, zaległe, najbliższy tydzień, porządki w Dzienniku; uruchamia przegląd budowy i linkuje do niego |
 | `rozwoj-harnessu` | „zapamiętaj na przyszłość”, nowa procedura, „mam pomysł…”, „zrób POM-n”, „zrób ZP-n” | skrzynka w Notion → wdrożenie do repo; pomysły → analiza → wdrożenie na polecenie; „🧯 Znane problemy” – sprawy, których przebieg nie załatwi |
 

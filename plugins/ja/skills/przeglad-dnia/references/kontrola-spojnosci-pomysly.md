@@ -25,7 +25,7 @@ Zasada pomysłu: „Zrobione” bez wersji uzupełniasz tylko, gdy wersja jest *
 starsze wpisy sprzed 11.11 nie mają numerów w nagłówkach) – wtedy P1 daje pytanie, a P3 nie flaguje wcale.
 Kilka nagłówków jednego POM (kolejne etapy) → wpisz wszystkie wersje po przecinku („ja 1.4.0, ja 1.5.0”).
 
-## Przebieg (w kroku 2; jeden odczyt bazy pomysłów – cała tablica, wszystkie statusy, nie tylko „Nowy”; ten sam wynik służy analizie)
+## Przebieg (w kroku 2; jeden odczyt bazy pomysłów – cała tablica, wszystkie statusy, nie tylko „Nowy”)
 
 1. **Zastosuj odpowiedzi** na wcześniejsze punkty `KS-P…` (zanim dopiszesz nowe): ☑ przy P2 → Status „Zrobione”; ☑ przy P3 →
    Status „Zrobione” i pole „Zrobiono w wersji” z nagłówka CHANGELOG; dopisek „zostaje” / „częściowo” → nic nie zmieniaj;
@@ -49,4 +49,4 @@ Kilka nagłówków jednego POM (kolejne etapy) → wpisz wszystkie wersje po prz
 - Nie zmieniaj Statusu pomysłu bez ☑ inwestora i nie ruszaj treści strony pomysłu ani „Wymaga ode mnie”.
 - Nie zgaduj wersji z treści wpisu CHANGELOG ani z `git log` – tylko nagłówek z numerem POM.
 - Nie flaguj pomysłów „Nowy”, „Pytania do mnie”, „Odłożone”, „Odrzucone”; nie flaguj wdrożeń oznaczonych „częściowo”.
-- Nie wdrażaj pomysłów i nie analizuj ich w tym kroku – to osobne zadanie kroku 2 (`rozwoj-harnessu`, C).
+- Nie wdrażaj pomysłów i nie analizuj ich – analiza tylko na prośbę inwestora (`rozwoj-harnessu`, C).

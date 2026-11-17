@@ -1,6 +1,6 @@
 ---
 name: przeglad-dnia
-description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę w ciągu dnia) rozkłada nowe wpisy ze „📝 Wpisów” i Skrzynki na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY (dla inwestora – nocny) robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), budowa dodatkowo w „📆 Przeglądy dzienne – budowa” na DOM – i linię „🤖” w Dzienniku, plus analizę nowych pomysłów i rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
+description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę w ciągu dnia) rozkłada nowe wpisy ze „📝 Wpisów” i Skrzynki na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY (dla inwestora – nocny) robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), budowa dodatkowo w „📆 Przeglądy dzienne – budowa” na DOM – i linię „🤖” w Dzienniku, plus rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
 ---
 
 # Przegląd dnia – tryb szybki i wieczorny
@@ -12,7 +12,7 @@ w rozmowie, te same zasady:
 | Zadanie | Kiedy | Polecenie | Co robi |
 |---|---|---|---|
 | Dziennik – szybki przebieg | co godzinę 8:05–22:05 i 22:30 | „Dziennik – szybki przebieg (skill przeglad-dnia z pluginu ja, tryb szybki)” | rozkłada nowe wpisy; pusto → koniec bez zapisów |
-| Przegląd dnia | raz w nocy, 2:00 (przegląd poprzedniego dnia) | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + zmiany w zadaniach + pomysły + plan dnia na stronie ☀️ Dziś |
+| Przegląd dnia | raz w nocy, 2:00 (przegląd poprzedniego dnia) | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + zmiany w zadaniach + kontrola spójności + plan dnia na stronie ☀️ Dziś |
 
 Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia” / „podsumuj dzień” = tryb wieczorny, „plan dnia” = tylko
 krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
@@ -67,7 +67,7 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
    (`wpisy` krok 7); tytuł bloku pokazuje sumę dnia. W odpowiedzi
    podaj nowe wpisy per źródło – „Wpisy n · Skrzynka n” – żeby było
    widać, że przebieg sprawdził oba.
-5. Bez analizy pomysłów, bez „jutra”, bez wpisów w przeglądach – to robi wieczór.
+5. Bez „jutra”, bez wpisów w przeglądach – to robi wieczór.
 
 ## B. Tryb wieczorny – podsumowanie i plan
 

@@ -62,7 +62,7 @@ jest dzieckiem wpisu.
 
 Problemy asynchroniczne – nikt o nie nie pytał we wpisie, a inwestor powinien o nich wiedzieć: przebieg na Macu się nie udał
 albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błąd, kopie zapasowe po terminie
-(`przeglad-tygodnia-osobisty`, klucz `kopie-zapasowe`), wpis kolejki 💸 nie trafił do arkusza
+(`przeglad-tygodnia-osobisty`, klucze `kopie-zapasowe` i `zdjecia-i-kopie`), wpis kolejki 💸 nie trafił do arkusza
 (`koszty`, E), decyzja wpisana w pole Decyzja Rejestru sprzeczności jest niejasna (`wiedza/references/sprzecznosci.md`,
 „Bez inwestora”; plugin dom-budowa). Wszystkie w jednym miejscu: zwijany nagłówek „🔔 Komunikaty asystenta” na górze treści „📝 Wpisy”
 (nad wpisami). Nagłówek zostaje także pusty – nie usuwaj go; brak → utwórz przy pierwszym komunikacie.
@@ -99,7 +99,7 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    niezaznaczony i bez dopisku = brak odpowiedzi; częściowa odpowiedź – przetwórz odpowiedziane, reszta zostaje.
    Blok z kluczem obsługiwanym przez nocny kończy się dopiskiem „zastosuję w nocnym przeglądzie”. Klucze `KS-…`, `RES-n`, `SP-n`, `ZP-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…` stoją w bloku jak klucze komunikatów (kod w tekście), żeby parser znalazł pytanie po
    kluczu; ten sam klucz = aktualizacja istniejącego bloku (pkt 2). **Limit:** jeden blok = jedna flaga; najwyżej 5 nowych bloków 🔔 z kontroli spójności
-   (`KS-…`, wszystkie grupy razem) na przebieg; RES-n (max 2), rozkminki (max 2), luki w zadaniach (jeden zbiorczy blok), porządki tygodnia i przejście 1.2 są poza tym limitem. **Kto obsługuje odpowiedzi:** na bloki `KS-…`, `KS-Z…`, `KS-R…`, `KS-S1-…`, `KS-P…`, `RES-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…`, `konto-budowy` i `ZP-n` –
+   (`KS-…`, wszystkie grupy razem) na przebieg; RES-n (max 2), rozkminki (max 2), luki w zadaniach (jeden zbiorczy blok), porządki tygodnia i przejście 1.2 są poza tym limitem. **Kto obsługuje odpowiedzi:** na bloki `KS-…`, `KS-Z…`, `KS-R…`, `KS-S1-…`, `KS-P…`, `RES-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…`, `konto-budowy`, `zdjecia-i-kopie` i `ZP-n` –
    **tylko nocny przebieg** (szybki ma zostać tani i **nie liczy ich** w warunku „nic nowego”, `przeglad-dnia`, A.2); szybki obsługuje
    odpowiedzi w okienkach ❓ pod wpisami oraz pod 🔔 z automatów, kolejki 💸 i `SP-n` (pkt 4); każdy inny klucz zostaje nocnemu. Obsłużony blok idzie do „Przetworzone”.
 8. **Zakaz „czeka na sesję Claude Code”.** Nie zostawiaj sprawy z adnotacją „wymaga sesji Claude Code”. Dla każdej rzeczy, której

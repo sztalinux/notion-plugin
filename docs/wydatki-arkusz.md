@@ -115,7 +115,7 @@ Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
 | `sync` | kolejka „Do arkusza” (i puste Arkusz) → arkusz; strona już w arkuszu = korekta jej wiersza; Plan → „Plan ręczny” w Kosztorysie (kolumna i wiersz po nagłówkach); czyści Zgłoszono | automat po przebiegu; agent w Claude Code po zapisie |
 | `sync --proba` | pokazuje, co by poszło; nic nie zapisuje. Sprawdza tylko pola strony (data, kwota, pozycja z listy, ilość, wycena) – pozycję wobec Kosztorysu, konflikt planu i wersję kodu Apps Script sprawdza dopiero `sync` | ręcznie |
 | `pozycje` | pozycje Kosztorysu → opcje pola Pozycja w Notion | przebieg nocny; po dodaniu pozycji w arkuszu |
-| `pobierz [--gdy-starsza H]` | wartości wszystkich zakładek → `<hub>/Koszty/Kosztorys_google.json` (limit odczytu 300 s); z `--gdy-starsza` tylko, gdy kopia jest starsza niż H godzin | przebieg wieczorny, szybki (ponowienie); przed analizą liczb |
+| `pobierz [--gdy-starsza H]` | wartości wszystkich zakładek → `<hub>/Koszty/Kosztorys_google.json` (limit odczytu 300 s); z `--gdy-starsza` tylko, gdy kopia jest starsza niż H godzin | przebieg nocny, szybki (ponowienie); przed analizą liczb |
 | `wycofaj <id>…` | czyści wiersz w Wydatkach / Cenniku albo „Plan ręczny” (gdy stoi tam kwota z tej strony), w Notion „Nie wysyłać” | agent na prośbę |
 | `sprawdz` | sekrety, dostęp do bazy i arkusza, wersja kodu | ręcznie, przy problemach |
 | `kod` | kod Apps Script z sekcji 9 (z `\| LANG=en_US.UTF-8 pbcopy` – do schowka; bez LANG polskie znaki się psują) | przy aktualizacji kodu |
