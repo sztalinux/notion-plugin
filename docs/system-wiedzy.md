@@ -42,7 +42,7 @@ Czat na telefonie (claude.ai, pluginy ja + dom-budowa): karty → odpowiedź z n
 
 ## Kto co uruchamia
 
-1. **Start sesji Claude Code w repo** – lista wyboru (`CLAUDE.md`), domyślnie nic. Pozycja „Indeks wiedzy” = `sync --publikuj --cicho`
+1. **Start sesji Claude Code w repo** – linia stanu (`CLAUDE.md`), bez pytań. Polecenie „odśwież indeks” = `sync --publikuj --cicho`
    i przypomnienie obserwatora.
 2. **Automaty launchd (samo)** – szybki przebieg co godzinę w ciągu dnia (8:05–22:05 i 22:30), przegląd dnia o 2:00 w nocy, tygodniowy w niedzielę
    wieczorem. Każdy zaczyna od `sync --publikuj`, `migawka.py` i `wiedza_karty.py aktualizuj --publikuj` (nowe tezy → tagi

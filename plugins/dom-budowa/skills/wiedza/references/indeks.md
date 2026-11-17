@@ -8,7 +8,7 @@ Notatnik, forma odpowiedzi) – `pytanie-do-bazy.md`; czym są karty i jak Mac j
 
 ## Claude Code – sesja interaktywna w repo
 
-Indeks odświeża się na żądanie – pozycją „Indeks wiedzy” z listy startowej Claude Code albo poleceniem `sync` poniżej; bez tego bywa
+Indeks odświeża się na żądanie – poleceniem „odśwież indeks” w Claude Code albo poleceniem `sync` poniżej; bez tego bywa
 nieaktualny. Polecenia uruchamiaj z katalogu repo:
 - `python3 tools/wiedza.py szukaj "przerwa robocza płyta" [--etap "Stan zero"] [--limit 12]` – wpisz 2–4 słowa
   treściowe, bez zdania i spójników („czy”, „jak”, „na” program i tak odrzuci). Końcówki fleksyjne program przycina sam,

@@ -11,7 +11,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 2. Dobierz procedurę do zadania (tabela niżej) i wczytaj jej `SKILL.md`.
 3. Pliki z `references/` czytaj dopiero wtedy, gdy procedura każe.
 4. Skrzynka „Zmiany do harnessu” w Notion (opis: procedura `ja`, sekcja „Na starcie rozmowy”): poza Claude Code w repo sprawdź ją
-   na starcie rozmowy; w Claude Code w repo – tylko po zaznaczeniu „Skrzynka zmian” na liście startowej (`CLAUDE.md`).
+   na starcie rozmowy; w Claude Code w repo – na polecenie „wdróż” (`CLAUDE.md`).
 
 | Zadanie | Procedura |
 |---|---|

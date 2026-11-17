@@ -5,6 +5,17 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## dom-budowa [3.18.2] – 2026-11-17
+
+- `dokumenty`, `indeks.md`, `indeks-sedzia.md`, `indeks-jakosc.md`: bez odwołań do listy startowej (polecenia „posortuj dokumenty”, „odśwież indeks”).
+
+## ja [1.22.0] – 2026-11-17
+
+Uproszczenie przepływu, 3.1 (wersja P11) – decyzja inwestora 17.11.
+- `CLAUDE.md`: lista wyboru na starcie sesji zastąpiona jedną linią stanu z `<folder budowy>/.dom/automaty/stan-sesji.txt` (pisze ją `przeglad.py`);
+  bez pytań i bez POM/ZP; polecenia w trakcie sesji: „wdróż”, „zrób POM-n”, „przeanalizuj pomysły”, „zrób ZP-n”, „odśwież indeks”, „posortuj dokumenty”, „stan kopii”, „rozłóż zdjęcia”.
+- `AGENTS.md` pkt 4, README, `docs/system-wiedzy.md`, `docs/wiedza-runbook.md`: opis startu zgodny z nowym (zasada 8).
+
 ## dom-budowa [3.18.1] – 2026-11-17
 
 - `budowa`, `przeglad-tygodnia`: bez wzmianek o licznikach pomysłów (decyzja D7); `indeks-jakosc.md`: `przypomnij` w przeglądzie tygodniowym, nie na starcie sesji.

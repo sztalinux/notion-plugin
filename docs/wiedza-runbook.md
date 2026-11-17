@@ -84,7 +84,7 @@ dane indeksu, definicje kart, zbiory oceny, prywatne repo kopii, automaty launch
 Plik indeksu (ponad ok. 13 MB) nie mieści się w limicie 110 s `sync --cicho` – ten wysyła tylko kod, gdy się zmienił, a indeks jedzie z `wiedza.py publikuj --cicho`
 po nocnym przebiegu (bez limitu 110 s; proces do 360 s) i z `aktualizuj --publikuj`, gdy dopisze nowe tezy do kart.
 
-**Sesja Claude Code w repo:** lista wyboru na starcie, domyślnie nic (`CLAUDE.md`). „Indeks wiedzy” = `sync --publikuj --cicho` + `wiedza_jakosc.py przypomnij --cicho`.
+**Sesja Claude Code w repo:** linia stanu na starcie, bez pytań (`CLAUDE.md`). „Odśwież indeks” = `sync --publikuj --cicho` + `wiedza_jakosc.py przypomnij --cicho`.
 Po zapisie wiedzy do Notion w sesji interaktywnej: `python3 tools/wiedza.py sync --publikuj`.
 
 **Noc (inwestor uruchamia):** strona kolejki (start – `README-lokalne.md`) → zaznaczenie filmów i artykułów → polecenie do terminala. Kolejka przerabia pozycje

@@ -73,4 +73,4 @@ Wynik („trafne %”) widać w `raport`, zgodność z sędzią (y ↔ ocena 2) 
 
 `sedzia` – model ocenia 0/1/2 pierwsze 12 wyników pytań wymyślonych (bez filtra danych osobowych – decyzja inwestora
 z 26.10.2026). Domyślnie na sucho; wysyłka tylko `--wyslij` po zgodzie inwestora. Co idzie do modelu, jak czytać
-wynik: `references/indeks-sedzia.md`. Lista startowa (`przypomnij`) nigdy go nie woła.
+wynik: `references/indeks-sedzia.md`. Przypomnienie (`przypomnij`) nigdy go nie woła.

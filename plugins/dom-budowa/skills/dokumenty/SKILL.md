@@ -1,13 +1,13 @@
 ---
 name: dokumenty
-description: "Porządek w dokumentach budowy (folder budowy na komputerze inwestora), przewodnik po nich na stronie Notion (czyta go claude.ai) i paczka dla claude.ai (kopia awaryjna). Używaj, gdy raport „[dokumenty]” (z listy startowej) pokazuje nowe lub zmienione pliki, gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co mam wgrać do claude.ai”, „wgrałem” (paczka), albo pyta, gdzie jest dany dokument lub która wersja jest aktualna. Także dokumenty z telefonu i kopia na Dysk Google: „wgrałem fakturę / WZ / wpis kierownika”, „zrób kopię dokumentów”, „wgrałem kopię”, „aplikacja Dysku nie działa”."
+description: "Porządek w dokumentach budowy (folder budowy na komputerze inwestora), przewodnik po nich na stronie Notion (czyta go claude.ai) i paczka dla claude.ai (kopia awaryjna). Używaj, gdy raport „[dokumenty]” (liczba w ☀️ Dziś albo „posortuj dokumenty”) pokazuje nowe lub zmienione pliki, gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co mam wgrać do claude.ai”, „wgrałem” (paczka), albo pyta, gdzie jest dany dokument lub która wersja jest aktualna. Także dokumenty z telefonu i kopia na Dysk Google: „wgrałem fakturę / WZ / wpis kierownika”, „zrób kopię dokumentów”, „wgrałem kopię”, „aplikacja Dysku nie działa”."
 ---
 
 # Dokumenty budowy
 
 Wszystkie pliki od projektantów, wykonawców i urzędów leżą w **folderze budowy** na komputerze inwestora
 (katalog dwa poziomy nad repo harnessu; inny – zmienna `DOM_HUB`). Inwestor wrzuca je tam, najlepiej do `_Przychodzące/`.
-Skrypt `tools/dokumenty.py` (uruchamiany z listy startowej Claude Code – pozycja „Dokumenty budowy” – albo na polecenie) prowadzi indeks plików
+Skrypt `tools/dokumenty.py` (uruchamiany na polecenie „posortuj dokumenty”; liczbę nowych plików pokazuje ☀️ Dziś) prowadzi indeks plików
 i buduje folder `_Do claude.ai/` – paczkę do wgrania w wiedzy projektu „Dom” na claude.ai.
 
 **Przewodnik po dokumentach** (każdy aktualny dokument: co to jest, na jakie pytania odpowiada, gdzie leży, plus mapa

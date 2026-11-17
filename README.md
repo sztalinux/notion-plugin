@@ -33,7 +33,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     plugins/ja/skills/                ← procedury osobiste (Dziennik, zadania, emocje, dziecko, suple, przegląd dnia, harness)
     plugins/dom-budowa/skills/        ← procedury budowy
     .claude/skills/, .agents/skills/  ← dowiązania na każdy skill obu pluginów (odtwarza tools/build.py)
-    .claude/settings.json             ← zezwolenia (hooków startowych nie ma – lista wyboru na starcie sesji: CLAUDE.md)
+    .claude/settings.json             ← zezwolenia (hooków startowych nie ma – na starcie sesji jedna linia stanu: CLAUDE.md)
     .githooks/                        ← pre-commit (pliki, autor), commit-msg (wiadomość), pre-push (każdy wysyłany commit)
     tools/build.py                    ← walidacja (w tym dane osobowe) + dowiązania skilli + paczki dist/ (po jednej na plugin)
     tools/dokumenty.py                ← indeks folderu budowy i paczka dla claude.ai
@@ -52,7 +52,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
 ```
 Telefon / czat ── poprawka sposobu pracy ──► Notion „Zmiany do harnessu” (obowiązuje od razu)
                                                    │
-Claude Code (komputer; na starcie lista wyboru, domyślnie nic) ◄──┘
+Claude Code (komputer; na starcie linia stanu, bez pytań) ◄──┘
    ├─ „Dokumenty budowy” (tools/dokumenty.py): skan folderu budowy → przewodnik na stronie Notion (+ kopia awaryjna `_Do claude.ai/`)
    ├─ „Indeks wiedzy” (tools/wiedza.py sync --publikuj --cicho): odświeża indeks Bazy wiedzy z Notion i publikuje kopię dla czatu
    │    (plik indeksu ponad ok. 13 MB nie mieści się w limicie 110 s – od razu: tools/wiedza.py publikuj --teraz)

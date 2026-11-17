@@ -6,36 +6,17 @@ To repozytorium jest źródłem harnessu – dwóch pluginów: `ja` (`plugins/ja
 (`plugins/dom-budowa/skills/`). Procedury czytasz z dysku (`.claude/skills/` – dowiązanie na każdy skill obu pluginów,
 odtwarza je `python3 tools/build.py`), a nie z pluginów zainstalowanych na koncie (te są tu wyłączone w `.claude/settings.json`).
 
-### Start sesji: lista wyboru, domyślnie nic
+### Start sesji: jedna linia stanu, bez pytań
 
-Na starcie nic nie uruchamia się samo (hooków startowych nie ma w `.claude/settings.json`) – inwestor nie zawsze chce, żeby
-sesja coś robiła. Pierwszą czynnością sesji, przed czymkolwiek innym i także gdy pierwsza wiadomość jest zadaniem, jest jedno
-pytanie z listą wielokrotnego wyboru (narzędzie AskUserQuestion, `multiSelect`), **bez żadnej zaznaczonej pozycji**:
+Na starcie sesji przeczytaj `<folder budowy>/.dom/automaty/stan-sesji.txt` i pokaż jego jedyną linię bez komentarza, potem od razu zadanie
+z pierwszej wiadomości. Nie czytaj Notion i nie uruchamiaj skryptów na starcie; nie zadawaj pytania z listą opcji. Brak pliku albo plik starszy
+niż 36 h → linia „Stan: brak świeżych danych z nocnego przebiegu”. Linię składa `przeglad.py` po każdym przebiegu (wersje harnessu w repo i na koncie,
+stan ostatnich przebiegów) – bez POM i ZP. Gdy konto ma starsze pluginy niż repo, powiedz to jednym zdaniem.
 
-- Pytanie „Harness i repo”:
-  - **Skrzynka zmian** – `git pull`; wpisy „Zmiany do harnessu” (`collection://e217448a-60ec-4af6-8584-8f368315109c`) ze Statusem
-    „Do wdrożenia” **albo pustym** (inwestor dodaje je ręcznie bez pól – uzupełnij je, HZ-3) wdroż wg
-    `plugins/ja/skills/rozwoj-harnessu/SKILL.md`, sekcja „Wdrożenie” (zmiana plików → wersja → CHANGELOG →
-    `python3 tools/build.py` → commit → push → oznaczenie wpisów jako „Wdrożone”). Wpis niejasny albo sprzeczny z inną
-    procedurą – zapytaj inwestora przed wdrożeniem. Skrzynka pusta – jedna linia „Harness aktualny (dom-budowa X.Y.Z, ja X.Y.Z)”.
-  - **Pomysły** – jedna linia „Pomysły: n nowych do analizy, m »Do zrobienia« · znane problemy: k otwartych” z bazy „Pomysły
-    na rozwój” (`collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3`) i widoku „🧯 Otwarte” bazy „🧯 Znane problemy”
-    (`view://414f5982-09e7-8172-abde-000c5e85c87a`; pomiń przy zerach). Niczego z nich nie analizuj, nie wdrażaj ani nie naprawiaj bez
-    polecenia „zrób POM-n” / „zrób ZP-n” (`rozwoj-harnessu`, sekcje C i D).
-  - **git pull** – zaktualizuj repo.
-- Pytanie „Dane i dokumenty”:
-  - **Dokumenty budowy** – `python3 tools/dokumenty.py`; „Przewodnik zmieniony” → od razu przepisz stronę przewodnika w Notion
-    (`dokumenty`, sekcja C), bez pytania. Nowe pliki do sklasyfikowania – zaproponuj ich obsługę wg
-    `plugins/dom-budowa/skills/dokumenty/SKILL.md` (jedna linia); listy „Kopia awaryjna” nie przypominaj.
-  - **Indeks wiedzy** – `python3 tools/wiedza.py sync --publikuj --cicho`, potem `python3 tools/wiedza_jakosc.py przypomnij --cicho`;
-    wynik w jednej linii.
-  - **Zdjęcia i kopia** – `python3 tools/zdjecia.py stan`, `python3 tools/kopia.py stan` i `python3 tools/kopie.py stan --cicho` (kopie zapasowe, `docs/kopie-zapasowe.md`); z konektorem Dysku policz pliki
-    w `Zdjęcia/_nowe` i – gdy coś jest – zaproponuj „rozłóż zdjęcia” (`plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`, 8); wynik w jednej linii.
-
-Wykonaj tylko to, co inwestor zaznaczył. Brak zaznaczenia, odrzucenie pytania albo „nic” = nic z listy, od razu zadanie
-z pierwszej wiadomości. Przed wyborem nie czytaj Notion i nie uruchamiaj skryptów (opisy opcji bez liczb). Gdy pytanie jest
-niemożliwe (tryb nieinteraktywny) – pomiń listę i nic nie uruchamiaj. Prośba w trakcie sesji („wdróż skrzynkę”, „odśwież
-indeks”) działa tak samo jak zaznaczenie.
+Polecenia w trakcie sesji (działają tak samo jak dawne pozycje listy): „wdróż” (skrzynka zmian: `git pull`, wpisy „Zmiany do harnessu” ze Statusem
+„Do wdrożenia” albo pustym – `rozwoj-harnessu`, sekcja „Wdrożenie”), „zrób POM-n” i „przeanalizuj pomysły” (tylko na prośbę), „zrób ZP-n”, „odśwież indeks”
+(`python3 tools/wiedza.py sync --publikuj --cicho`), „posortuj dokumenty” (`python3 tools/dokumenty.py`, procedura `dokumenty`), „stan kopii”
+(`tools/zdjecia.py stan`, `tools/kopia.py stan`, `tools/kopie.py stan`) i „rozłóż zdjęcia” (`dziennik`, `references/zdjecia-i-kopia.md`).
 
 ### Zasady pracy w repo
 
