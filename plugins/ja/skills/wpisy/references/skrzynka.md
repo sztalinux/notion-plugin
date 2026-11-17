@@ -19,6 +19,7 @@ może się zmienić, a bez Notion nie da się jej sprawdzić; telefon pisze, co 
 - [ ] 2026-10-28 14:12 · <treść> · Zrobić: <…>
 ```
 
+- **Wydatek** (budowa i prywatny) – też tutaj, z „Zrobić: wydatek …”; Mac stosuje regułę `dom-budowa/skills/koszty/references/wydatek-przeplyw.md`.
 - **Treść** dosłownie, jak w Dzienniku – nie streszczaj. **Zrobić** = intencja słowami, z tym, co inwestor powiedział albo co
   wynika z rozmowy (termin jako data, kogo dotyczy, którego etapu). Nie wpisuj nazw pól, statusów ani ID baz.
 - Brak danych (data, czego dotyczy, kto) → nie zgaduj: dopisz w tej samej linii `❓ <pytanie z propozycją>`; Mac przeniesie je

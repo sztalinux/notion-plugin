@@ -5,6 +5,27 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## dom-budowa [3.18.0] – 2026-11-17
+
+Uproszczenie przepływu, faza 2 – jeden przepływ wydatków (kosztorys + budżet domowy).
+- Nowy `koszty/references/wydatek-przeplyw.md` – jedyne źródło reguły: wydatek na budowę do kolejki 💸 **i** do budżetu jako
+  `Inwestycja › Dom`; „Do zapłaty” do budżetu dopiero po Zrealizowane (nocny przebieg, ten sam `--id`); „tylko kosztorys” → bez
+  budżetu z notatką; zwrot jako wpływ „+”, który pomniejsza wydatek na dom. `koszty` B.5a tylko odsyła.
+- Konto: Sposób = Gotówka → `--gotowka`; inaczej `konto_budowy` z ustawień budżetu. Brak klucza → jak dotąd (gotówka) + jeden
+  blok 🔔 `konto-budowy` z prośbą o konto i jednorazową listą wpisów budowy na gotówce (dane bez zmian do odpowiedzi).
+- Decyzja: przejście „Do zapłaty” → „Zrealizowane” robi nocny przebieg, nie `wydatki.py sync` (sync nie zna wyjątków reguły).
+
+## ja [1.20.0] – 2026-11-17
+
+- `tools/budzet/wpis.py`: `--budowa` bez konta w treści → konto `konto_budowy` z `ustawienia.json` (brak klucza – gotówka jak dotąd,
+  z uwagą); nowy `--gotowka` wymusza gotówkę; nowe `ustaw-konto-budowy <skrót>` zapisuje klucz (przebieg wykonuje je po odpowiedzi w 🔔).
+- `tools/budzet/importuj.py`: zwrot („+”) z gotówki i kont bez wyciągu pomniejsza wydatek (wcześniej `abs()` go powiększał);
+  także w działaniu („+30-5”) i przy szukaniu wiersza wpisanego ręcznie. Przychód i przelew z list – bez zmian.
+- `tools/test_budzet.py`: testy przepływu jako procesy na zmyślonych danych w katalogu tymczasowym (`BUDZET_DANE`): przelew budowy
+  + wyciąg = jeden wiersz, gotówka = jeden wiersz, ten sam `--id` = jeden wpis, brak `konto_budowy`, zwrot pomniejsza wydatek.
+- `budzet` A.1/A.4, `wpisy/references/skrzynka.md`, mapa procedur `ja`: odesłanie do reguły; telefon zapisuje wydatek do Skrzynki
+  (zamiast „nic nie zapisuj”).
+
 ## ja [1.19.0] – 2026-11-17
 
 Uproszczenie przepływu, faza 1 (jedno wejście, dwa miejsca pytań, zakaz „czeka na sesję”).

@@ -1,5 +1,5 @@
 """Testy parserów budżetu na danych zmyślonych (python3 tools/test_budzet.py)."""
-import os, sys, tempfile, unittest
+import json, os, subprocess, sys, tempfile, unittest
 from pathlib import Path
 
 os.environ['BUDZET_DANE'] = tempfile.mkdtemp()
@@ -85,6 +85,85 @@ class Testy(unittest.TestCase):
         self.assertEqual((w['kwota'], w['skladniki']), (-25.0, [30.0, -5.0]))
         with self.assertRaises(ValueError):
             wpis.parsuj('abc, zam', sk)
+
+
+NARZ = Path(__file__).resolve().parent / 'budzet'
+
+
+class Przeplyw(unittest.TestCase):
+    """wpis.py + importuj.py jako procesy na zmyślonych danych w katalogu tymczasowym (BUDZET_DANE; danych produkcyjnych nie dotyka)."""
+
+    def setUp(self):
+        self.dane = Path(tempfile.mkdtemp())
+        self.ustaw(konto_budowy='K-bank')
+        (self.dane / 'kategorie.json').write_text(json.dumps({'Inwestycja': {'Dom': []}, 'Wydatek': {'Inne wydatki': []}}))
+        (self.dane / 'reguly.json').write_text(json.dumps({'reguly': [], 'skroty': {'dom': ['Inwestycja', 'Dom', '']}}))
+        (self.dane / 'ark.json').write_text(json.dumps({'values': [['Data']]}))
+
+    def ustaw(self, **dod):
+        u = dict(konto_zen='K-bank', konto_mbank='K-mb', gotowka_konto='Gotówka', osoba_listy='Osoba B',
+                 osoba_wyciagi='Osoba A', skroty_kont={'z': 'K-bank'})
+        u.update(dod)
+        (self.dane / 'ustawienia.json').write_text(json.dumps(u))
+
+    def uruchom(self, skrypt, *arg):
+        env = dict(os.environ, BUDZET_DANE=str(self.dane))
+        r = subprocess.run([sys.executable, str(NARZ / skrypt), *arg], env=env, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        return r.stdout
+
+    def importuj(self, *dod):
+        self.uruchom('importuj.py', '--miesiac', '2026-10', '--arkusz', 'ark.json', *dod)
+        return json.loads((self.dane / 'miesiace' / '2026-10.json').read_text(encoding='utf-8'))
+
+    def zen(self, kwota):
+        (self.dane / 'zen.csv').write_text('Naglowek\nTransactions:\n"Date,Transaction type,Description,Settlement amount"\n'
+                                           f'"6 Oct 2026,Transfer,""HURTOWNIA TESTOWA"",{kwota},PLN,{kwota},PLN,1,,,,900.00"\n')
+
+    def test_budowa_przelew_i_wyciag_jeden_wiersz(self):
+        out = self.uruchom('wpis.py', 'dodaj', '300, dom, stal', '--data', '2026-10-05', '--id', 'p1', '--budowa', 'p1')
+        self.assertIn('K-bank', out)
+        self.zen('-300.00')
+        m = self.importuj('--zen', 'zen.csv')
+        self.assertEqual([(w['konto'], w['kat'], w['kwota']) for w in m['wiersze']], [('K-bank', 'Dom', 300.0)])
+        self.assertEqual(m['decyzje'], [])
+
+    def test_budowa_gotowka_jeden_wiersz(self):
+        self.uruchom('wpis.py', 'dodaj', '120, dom, piasek', '--data', '2026-10-05', '--id', 'p2', '--budowa', 'p2', '--gotowka')
+        m = self.importuj()
+        self.assertEqual([(w['konto'], w['kat'], w['kwota']) for w in m['wiersze']], [('Gotówka', 'Dom', 120.0)])
+
+    def test_ten_sam_id_jeden_wpis(self):
+        for _ in range(2):
+            self.uruchom('wpis.py', 'dodaj', '80, dom', '--data', '2026-10-07', '--id', 'p3', '--budowa', 'p3')
+        self.assertIn('2026-10: 1 wpisów', self.uruchom('wpis.py', 'lista', '2026-10'))
+
+    def test_brak_konta_budowy_gotowka_z_uwaga(self):
+        self.ustaw()
+        out = self.uruchom('wpis.py', 'dodaj', '50, dom', '--data', '2026-10-08', '--id', 'p4', '--budowa', 'p4')
+        self.assertIn('Gotówka', out)
+        self.assertIn('konto_budowy', out)
+
+    def test_ustaw_konto_budowy(self):
+        self.ustaw()
+        self.assertIn('konto_budowy = K-bank', self.uruchom('wpis.py', 'ustaw-konto-budowy', 'z'))
+        u = json.loads((self.dane / 'ustawienia.json').read_text(encoding='utf-8'))
+        self.assertEqual((u['konto_budowy'], u['osoba_listy']), ('K-bank', 'Osoba B'))  # reszta ustawień zostaje
+        self.assertIn('K-bank', self.uruchom('wpis.py', 'dodaj', '70, dom', '--data', '2026-10-11', '--id', 'p8', '--budowa', 'p8'))
+        r = subprocess.run([sys.executable, str(NARZ / 'wpis.py'), 'ustaw-konto-budowy', 'xyz'],
+                           env=dict(os.environ, BUDZET_DANE=str(self.dane)), capture_output=True, text=True)
+        self.assertEqual(r.returncode, 1)
+
+    def test_zwrot_pomniejsza_wydatek(self):
+        self.uruchom('wpis.py', 'dodaj', '300, dom', '--data', '2026-10-09', '--id', 'p5', '--gotowka')
+        self.uruchom('wpis.py', 'dodaj', '+50, dom, zwrot', '--data', '2026-10-09', '--id', 'p6', '--gotowka')
+        m = self.importuj()
+        self.assertEqual([(w['konto'], w['kwota']) for w in m['wiersze']], [('Gotówka', 250.0)])
+
+    def test_sam_zwrot_ujemny(self):
+        self.uruchom('wpis.py', 'dodaj', '+40, dom, zwrot', '--data', '2026-10-10', '--id', 'p7', '--gotowka')
+        m = self.importuj()
+        self.assertEqual([w['kwota'] for w in m['wiersze']], [-40.0])
 
 
 if __name__ == '__main__':

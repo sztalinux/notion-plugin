@@ -69,7 +69,7 @@ krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
 
 ## B. Tryb wieczorny – podsumowanie i plan
 
-Na początku nocnego przebiegu sprawdź przejścia 1.1 i 1.2 (`references/przejscia.md`) i wykonaj je, gdy warunek nie jest spełniony.
+Na początku nocnego przebiegu sprawdź przejścia 1.1 i 1.2 (`references/przejscia.md`) i wykonaj je, gdy warunek nie jest spełniony. Wydatki 💸 „Do zapłaty” → „Zrealizowane” do budżetu: `dom-budowa/skills/koszty/references/wydatek-przeplyw.md`, pkt 3.
 
 Budowa i sprawy osobiste mają **osobne przeglądy**, żeby intensywny dzień na budowie nie zasłaniał reszty:
 budowa → „📆 Przeglądy dzienne – budowa” na stronie DOM (pisze skill `budowa`, sekcja „Wieczorem”); reszta → „📆 Przeglądy

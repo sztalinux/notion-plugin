@@ -30,18 +30,18 @@ osoby zawsze na drugą osobę. Skróty kont i osób – `ustawienia.json` (`skro
 
 **Wydatek zwykłym zdaniem** („wydałem N zł na regularne i M na jedzenie na mieście” – bez skrótu, konta i osoby) to też
 wydatek: sam przepisz go na skrót (kategorię dobierz ze skrótów w `reguly.json`, np. „N, zak reg” i „M, jedz, na mieście”)
-i zapisz krokiem 2. Nie pytaj o konto ani osobę – brak szczegółów = gotówka drugiej osoby. Kilka wydatków w jednym wpisie =
+i zapisz krokiem 2. Nie pytaj o konto ani osobę – brak szczegółów = gotówka drugiej osoby (wydatek na budowę – konto wg pkt 1). Kilka wydatków w jednym wpisie =
 osobne wywołania z `--id <id>-1`, `<id>-2` (ten sam ID nadpisałby poprzedni). Pytaj tylko o brakującą kwotę albo kategorię,
 której nie da się dobrać.
 
-1. Wydatek na budowę (kategoria „dom”, ekipa, materiał) → najpierw `koszty` B (kolejka 💸), potem krok 2 z `--budowa <id strony 💸>`.
+1. Wydatek na budowę (ekipa, materiał, usługa) → reguła `dom-budowa/skills/koszty/references/wydatek-przeplyw.md` (kosztorys i budżet, konto, zwroty).
 2. Na Macu (przebieg albo Claude Code): `python3 tools/budzet/wpis.py dodaj "<treść wpisu>" --data <dzień wydatku albo wpisu>
    --id <id bloku / strony wpisu>`. Ten sam `--id` nadpisuje zapis – ponowny przebieg nie dubluje. Skrypt nic nie pisze do
    arkusza: wiersz powstaje przy zamknięciu miesiąca.
    Składnia jest tu – nie sprawdzaj `--help`; jedno polecenie na wywołanie, ścieżka względna od repo, bez `cd`, potoków i `;`.
 3. „✗ pierwsze pole to nie kwota” → wpis nie jest wydatkiem w skrócie; obsłuż go inną procedurą albo pytaniem ❓.
    „nieznany skrót kategorii” → zapis zostaje; pytanie pojawi się na stronie decyzji, a odpowiedź doda skrót.
-4. Bez Maca (claude.ai, telefon): nic nie zapisuj – zamknięcie miesiąca złapie wydatek z wyciągu albo listy.
+4. Bez Maca (claude.ai, telefon): wydatek do Skrzynki z polem „Zrobić: wydatek …” (`wpisy/references/skrzynka.md`); Mac zapisze go krokiem 2.
 
 Przy zamknięciu: gotówka i konta drugiej osoby z wpisów = wiersze z datą i opisem (ta sama kwota na liście drugiej osoby
 jest pomijana jako „już z wpisu”); konto z wyciągiem = podpowiedź kategorii i opisu dla płatności z wyciągu (kwota do

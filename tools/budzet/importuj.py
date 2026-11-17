@@ -346,12 +346,19 @@ nasze_l = [r for r in ark if r['konto'] not in KONTA_A and r['mies'] == MIES and
            and r['typ'] != 'Przelew' and r['kat'] != PS_KAT]
 
 
+def kwota_pozycji(kwota, typ):
+    """Kwota w arkuszu dla pozycji listy / wpisu: wydatek dodatni, zwrot („+”) ujemny – zwrot pomniejsza zakup.
+    Przychód i przelew – wartość bezwzględna (listy zapisują je bez „+”)."""
+    return abs(kwota) if typ in ('Przychód', 'Przelew') else round(-kwota, 2)
+
+
 def juz_w_arkuszu(b, kod):
     if b['id'] in po_id:
         return po_id[b['id']], 'zaimportowane wcześniej'
     kat = SKROTY.get(kod)
+    oczek = kwota_pozycji(b['kwota'], kat[0]) if kat else abs(b['kwota'])
     for r in nasze_l:
-        if not r.get('uzyty') and r['konto'] == b['konto'] and abs(r['kwota'] - abs(b['kwota'])) < 0.005 \
+        if not r.get('uzyty') and r['konto'] == b['konto'] and abs(r['kwota'] - oczek) < 0.005 \
                 and (not kat or nazwa(kat[1]) == r['kat']):
             r['uzyty'] = True
             return r, 'wpisane wcześniej ręcznie'
@@ -378,7 +385,11 @@ def pozycja(b, kod, budowa=''):
                 uwaga=f'nietypowo duża kwota (zwykle ok. {statistics.median(h):.0f} zł)')
         decyzje[-1].update(bud)
     else:
-        auto.append(dict(b, typ=prop['typ'], kat=prop['kat'], pod=prop['pod'], regula=kod, kwota_ark=suma, **bud))
+        ark_k = kwota_pozycji(b['kwota'], prop['typ'])
+        skl = b.get('skladniki')
+        if skl and ark_k < 0:  # zwrot rozpisany działaniem: składniki ze znakiem arkusza
+            skl = [-x for x in skl]
+        auto.append(dict(b, typ=prop['typ'], kat=prop['kat'], pod=prop['pod'], regula=kod, kwota_ark=ark_k, skladniki=skl, **bud))
 
 
 WPISY_L = [w for w in WPISY if w['konto'] not in KONTA_A]
