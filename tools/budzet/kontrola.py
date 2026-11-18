@@ -49,7 +49,7 @@ for i, r in enumerate(wiersze, start=2):
         problemy['pusta kwota'].append(f'{i}: {data} {typ} {kat}')
     elif 'zł' not in kwota:
         problemy['kwota jako tekst (nie wchodzi do sum) – wpisz liczbę'].append(f'{i}: „{kwota}” {kat}')
-    klucze[(data, typ, kwota, kat, pod, konto, osoba, r[8])] += 1
+    klucze[(data, typ, kwota, kat, pod, konto, osoba, r[8], r[14])] += 1  # O: dwa wpisy o tej samej treści to nie duplikat
     if typ in ('Wydatek', 'Koszt', 'Inwestycja'):
         if konto in KONTA_DRUGIEJ and osoba != DRUGA:
             problemy['wydatek z konta drugiej osoby bez jej Osoby (zaniża jej przychód)'].append(f'{i}: {data} {konto} {kat} Osoba „{osoba}”')

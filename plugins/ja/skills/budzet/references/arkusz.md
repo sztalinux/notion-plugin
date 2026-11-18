@@ -6,9 +6,12 @@ pierwszej = `osoba_wyciagi`, kategoria przychodu z sald = `przychod_z_sald.kateg
 
 ## Transakcje (kolumny A–O)
 
-A data · B status · C Typ (Przychód / Wydatek / Koszt / Inwestycja / Przelew) · D kwota (liczba albo formuła sumy) ·
-E Kategoria · F Podkategoria · G Konto · H Osoba · I Opis · J Projekt · K Tag (`import RRRR-MM`) · L Notatki ·
-M miesiąc (formuła z A) · N rok (formuła z A) · O ID importu (ukryta; ID z wyciągów, Allegro, list, wpisów – po przecinku).
+A data (format `d"-"mmm"-"yyyy`) · B status · C Typ (Przychód / Wydatek / Koszt / Inwestycja / Przelew) · D kwota (liczba
+albo formuła sumy, format `#,##0.00" zł"`) · E Kategoria · F Podkategoria · G Konto · H Osoba · I Opis · J Projekt ·
+K Tag (`import RRRR-MM`) · L Notatki (`z wpisu` przy wierszach z wpisów) · M miesiąc `=IF($A2="","",DATE(YEAR($A2),MONTH($A2),1))`
+(format `yyyy-mm`) · N rok `=IF($A2="","",YEAR($A2))` · O ID importu (ukryta; ID z wyciągów `b…`, Allegro `a…`, list `l…`,
+wpisów `w…` – po przecinku; wiersz z wpisu po przypięciu płatności ma też ID wyciągu). Nagłówki w wierszu 1 (C1:O1 sprawdza
+skrypt arkusza – `docs/budzet-arkusz.md`), dane od wiersza 2. Daty skrypt zapisuje w strefie arkusza (Plik → Ustawienia).
 Pary kategoria–podkategoria i typy: zakładka Kategorie (kopia w `kategorie.json`); zła para podświetla się na pomarańczowo.
 
 ## Zakładka roku (np. „2026”)

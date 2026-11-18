@@ -4,6 +4,31 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.25.0] – 2026-11-19 (POM-29)
+
+Budżet domowy: każdy wydatek z wpisu od razu w arkuszu „Budżet domowy”, zamknięcie miesiąca bez dubli.
+- Nowy `tools/budzet/arkusz_budzetu.py` (`sync`, `sync --proba`, `kontrola`, `ponow`, `przypnij`, `sprawdz`, `kod`) i
+  `docs/budzet-arkusz.md` z kodem osobnego, małego skryptu Apps Script arkusza budżetu (ping z wersją, odczyt kolumny O,
+  dopisz / popraw / usuń po ID, przypięcie ID wyciągu do grupy wierszy z korektą kwoty – od razu pod paragony z POM-30).
+  Zapisy z datą od 1.12.2026 idą do Transakcji w ciągu godziny (ID wpisu w O, Notatki „z wpisu”); listopad – przy zamknięciu.
+- Znacznik wysyłki w `RRRR-MM-wpisy.jsonl` (wiersz, skrót treści, czas): wysyłane tylko zapisy nowe i zmienione, ręczna
+  poprawka wiersza zostaje; `wpis.py dodaj` przenosi znacznik (także przy zmianie miesiąca), `wpis.py usun` zostawia znak
+  usunięcia – `sync` kasuje wiersz w arkuszu. Pliki wpisów pod blokadą.
+- `importuj.py`: płatność z wyciągu (do złotówki różnicy, ±4 dni, także przez przełom miesiąca) przypina się do wiersza z wpisu – kwota
+  z wyciągu do D, ID wyciągu do O, bez nowego wiersza (`przypiecia`); wpis z karty z ID w O nie tworzy wiersza; wpis
+  z ostatnich dni miesiąca bez pary czeka na import kolejnego; wiersze z wpisów poza regułą „wpisane ręcznie do dnia X”
+  i bez scalania (jeden ID = jeden wiersz, także w `przenies.py`, który wpisuje też Notatki); bez listy gotówki
+  (`--gotowka` i brak „lista wydatków gotówkowych” usunięte – gotówka tylko z wpisów); pole `grupa` łączy części płatności.
+- `kontrola.py`: duplikat liczony z kolumną O (dwa wpisy o tej samej treści to nie duplikat).
+- Procedura `budzet` (A.2, A.5, B.5, C.3, zasady), `references/arkusz.md` (formaty, formuły M:N, ID w O), README.
+- Zapas bez skryptu: wpisy czekają w pliku, `sync` i `kontrola` kończą się kodem 0 jedną linią; zamknięcie dopisuje brakujące
+  wiersze po ID, przypięcia konektorem.
+- `AI/automaty/przeglad.py` (poza repo, osobna łatka): `arkusz_budzetu.py sync` po każdym przebiegu, w nocy `kontrola`
+  (wpis bez wiersza → 🔔 od razu), pierwsza linia „✗” w opisie komunikatu, pozwolenia `ponow`, `kontrola`, `wpis.py usun`.
+- **Czynność inwestora (raz):** wkleić kod z `docs/budzet-arkusz.md` (sekcja 8) do Apps Script arkusza „Budżet domowy”,
+  wdrożyć jako aplikację internetową (Ja, Każdy), dopisać `BUDZET_ARKUSZ_URL` i `BUDZET_ARKUSZ_SEKRET` do `.dom/sekrety.env`,
+  sprawdzić `arkusz_budzetu.py sprawdz` i `sync --proba` (sekcja 6). 19.11: gotówkę z 1–17.11 dopisać jako wpisy.
+
 
 ## dom-budowa [3.18.4] – 2026-11-18
 

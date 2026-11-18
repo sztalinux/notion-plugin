@@ -1,27 +1,34 @@
 #!/usr/bin/env python3
-"""Import miesiąca do budżetu domowego: wyciągi (mBank, ZEN), zamówienia Allegro, listy wydatków (druga osoba, gotówka)
--> propozycja wierszy i decyzje dla strony. Nic nie zapisuje do arkusza. Procedura: plugins/ja/skills/budzet.
+"""Import miesiąca do budżetu domowego: wyciągi (mBank, ZEN), zamówienia Allegro, lista wydatków drugiej osoby, wydatki
+z wpisów (gotówka tylko z wpisów) -> propozycja wierszy i decyzje dla strony. Nic nie zapisuje do arkusza.
+Procedura: plugins/ja/skills/budzet.
 
     python3 tools/budzet/importuj.py --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>.json \
         [--zen wyciagi/zen.csv] [--mbank wyciagi/mbank.csv] [--allegro listy/allegro-<data>.json] \
-        [--lista listy/RRRR-MM-lista.txt] [--gotowka listy/RRRR-MM-gotowka.txt] [--wpisy listy/RRRR-MM-wpisy.jsonl] \
-        [--salda-wpisane]
+        [--lista listy/RRRR-MM-lista.txt] [--wpisy listy/RRRR-MM-wpisy.jsonl] [--salda-wpisane]
 
-Ścieżki względne liczą się od folderu danych (wspolne.DANE). Wpisy (wpis.py) czyta też bez --wpisy, jeśli plik miesiąca istnieje. Wynik: miesiace/RRRR-MM.json – wiersze (pewne, po scaleniu),
-auto, decyzje (strona), pominiete, juz (z numerem wiersza), braki, salda.
+Ścieżki względne liczą się od folderu danych (wspolne.DANE). Wpisy (wpis.py) czyta też bez --wpisy, jeśli plik miesiąca istnieje.
+Wpis z karty (konto z wyciągiem) paruje się z płatnością do złotówki różnicy, ±4 dni, także przez przełom miesiąca (końcówka poprzedniego
+i początek następnego pliku wpisów). Wpis już w arkuszu (ID w kolumnie O) nie daje nowego wiersza: płatność przypina się do
+jego wiersza (`przypiecia` – ID wyciągu do kolumny O, kwota z wyciągu do D). Wpis bez pary z ostatnich dni miesiąca, gdy
+wyciąg jeszcze ich nie obejmuje, czeka (pominiete) – rozstrzygnie import kolejnego miesiąca. Wiersze z wpisów (ID z prefiksem
+w) nie liczą się do „wpisane ręcznie do dnia X” i nie są scalane. Pole `grupa` zapisu łączy części jednej płatności.
+Wynik: miesiace/RRRR-MM.json – wiersze (pewne, po scaleniu), auto, decyzje (strona), pominiete, juz (z numerem wiersza),
+przypiecia, braki, salda.
 """
 import argparse, hashlib, json, re, statistics, sys
 from calendar import monthrange
 from collections import Counter, defaultdict
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from itertools import combinations
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import DANE, DRZEWO, U, arkusz, kw, nazwa, norm, opcja, rozbij, wczytaj, wyciagi, zapisz  # noqa: E402
+from wspolne import (DANE, DRZEWO, U, arkusz, czytaj_wpisy, kw, kwota_pozycji, nazwa, norm, notatka_wpisu,  # noqa: E402
+                     opcja, rozbij, skladniki_arkusza, wczytaj, wyciagi, z_wpisu, zapisz)
 
 ap = argparse.ArgumentParser()
-for a in ('miesiac', 'arkusz', 'zen', 'mbank', 'allegro', 'lista', 'gotowka', 'wpisy'):
+for a in ('miesiac', 'arkusz', 'zen', 'mbank', 'allegro', 'lista', 'wpisy'):
     ap.add_argument('--' + a)
 ap.add_argument('--salda-wpisane', action='store_true', help='salda drugiej osoby są już w zakładce Konta')
 A = ap.parse_args()
@@ -56,10 +63,47 @@ for t in bank:
     if t['id'] in po_id:
         para[t['id']] = (po_id[t['id']], 'zaimportowane wcześniej')
         po_id[t['id']]['uzyty'] = True
-nasze = [r for r in ark if r['konto'] in KONTA_A and r['kwota'] is not None and not r.get('uzyty')]
+
+# ---------- wpisy (wpis.py); karty: para z płatnością do złotówki różnicy, ±4 dni, także przez przełom miesiąca – przed parowaniem wierszy
+# ręcznych, bo wiersz z wpisu (ID w w kolumnie O) ma pierwszeństwo, a do „wpisane ręcznie do dnia X” się nie liczy
+PRZELOM = 4
+POCZ = date(R, M, 1)
+POPRZ = f'{R - (M == 1)}-{(M - 2) % 12 + 1:02d}'
+NAST = f'{R + (M == 12)}-{M % 12 + 1:02d}'
+if A.wpisy:
+    pw = Path(sciezka(A.wpisy))
+    WPISY = [w for w in (json.loads(l) for l in pw.read_text(encoding='utf-8').splitlines() if l.strip())
+             if not w.get('usuniety')] if pw.exists() else []
+else:
+    WPISY = czytaj_wpisy(MIES)
+dzien_wpisu = lambda w: date.fromisoformat(w['data'])
+SASIEDNIE = ([w for w in czytaj_wpisy(POPRZ) if dzien_wpisu(w) >= POCZ - timedelta(days=PRZELOM)]
+             + [w for w in czytaj_wpisy(NAST) if dzien_wpisu(w) <= KONIEC + timedelta(days=PRZELOM)])
+czesci = defaultdict(list)
+for w in WPISY + SASIEDNIE:
+    if w['konto'] in KONTA_A:
+        czesci[(w['konto'], w.get('grupa') or w['id'])].append(w)
+jednostki = []
+for (konto, _), cz in czesci.items():
+    wr = [po_id.get(w['id']) for w in cz]
+    if all(r and any(not i.startswith('w') for i in r['ids']) for r in wr):
+        continue  # wszystkie części już przypięte do płatności przy wcześniejszym zamknięciu
+    jednostki.append(dict(konto=konto, czesci=cz, wiersze=wr, kwota=round(sum(w['kwota'] for w in cz), 2),
+                          data=min(dzien_wpisu(w) for w in cz)))
+for u in sorted(jednostki, key=lambda u: u['data']):
+    k = [t for t in bank if t['id'] not in para and not t.get('jednostka') and t['konto'] == u['konto']
+         and (t['kwota'] > 0) == (u['kwota'] > 0) and abs(abs(t['kwota']) - abs(u['kwota'])) <= 1.0
+         and abs((t['data'] - u['data']).days) <= PRZELOM]
+    if k:
+        t = min(k, key=lambda t: (abs(abs(t['kwota']) - abs(u['kwota'])), abs((t['data'] - u['data']).days)))
+        t['jednostka'], u['t'] = u, t
+        if t['mies'] == MIES and any(u['wiersze']):
+            para[t['id']] = (next(r for r in u['wiersze'] if r), 'z wpisu – przypięte do wiersza')
+
+nasze = [r for r in ark if r['konto'] in KONTA_A and r['kwota'] is not None and not r.get('uzyty') and not z_wpisu(r)]
 pozbank = defaultdict(list)
 for t in bank:
-    if t['id'] not in para:
+    if t['id'] not in para and not t.get('jednostka'):
         pozbank[(t['konto'], t['mies'])].append(t)
 for r in nasze:
     k = [t for t in pozbank[(r['konto'], r['mies'])] if t['id'] not in para and abs(t['kwota']) == r['kwota'] and pasuje(r, t)]
@@ -167,18 +211,74 @@ def decyzja(b, **kw_):
     decyzje.append(d)
 
 
-# --- wydatki z wpisów (wpis.py): konto z wyciągiem -> podpowiedź kategorii dla transakcji; reszta -> jak lista (niżej)
-pw = Path(sciezka(A.wpisy) if A.wpisy else DANE / 'listy' / f'{MIES}-wpisy.jsonl')
-WPISY = [json.loads(l) for l in pw.read_text(encoding='utf-8').splitlines() if l.strip()] if pw.exists() else []
-for w in WPISY:
-    if w['konto'] not in KONTA_A:
+def baza_wpisu(w):
+    return dict(id=w['id'], data=w['data'], konto=w['konto'], osoba=w['osoba'], kwota=w['kwota'], opis=w['tekst'],
+                skladniki=w.get('skladniki'), wpis=True, opis_w=w['opis'] or w['kod'], notatki=notatka_wpisu(w))
+
+
+def wiersz_z_wpisu(w, kwota_ark=None, b=None):
+    """Nowy wiersz z wpisu (zapas, gdy wpisu nie ma w arkuszu) albo decyzja, gdy skrót kategorii jest nieznany."""
+    b = b or baza_wpisu(w)
+    if not w['kat']:
+        decyzja(b, zrodlo='lista', regula=w['kod'], uwaga='z wpisu – nieznany skrót kategorii')
+        return
+    ark = kwota_pozycji(w['kwota'], w['typ']) if kwota_ark is None else kwota_ark
+    auto.append(dict(b, typ=w['typ'], kat=w['kat'], pod=w['pod'], regula=w['kod'], opis_w=w['opis'] or w['kod'],
+                     kwota_ark=ark, skladniki=skladniki_arkusza(ark, w.get('skladniki')), ids_w=[w['id']],
+                     notatki=notatka_wpisu(w), **({'budowa': 'z wpisu – w kosztorysie budowy (💸)'} if w.get('budowa') else {})))
+
+
+# --- wpisy z kart: przypięcie płatności do wierszy z wpisów, wiersz z wpisu bez arkusza (zapas), czekające, decyzje
+ZASIEG = {}
+for t in bank:
+    ZASIEG[t['konto']] = max(ZASIEG.get(t['konto'], t['data']), t['data'])
+przypiecia, obsluzone, czeka = [], set(), 0
+for u in sorted(jednostki, key=lambda u: u['data']):
+    t, pary = u.get('t'), list(zip(u['czesci'], u['wiersze']))
+    if t is not None and t['mies'] == MIES:
+        if not any(u['wiersze']) and len(pary) == 1:
+            t['wpis'] = u['czesci'][0]  # wpisu nie ma w arkuszu: wiersz z płatności z kategorią wpisu (pętla wyciągu)
+            continue
+        kw_cz = {w['id']: (r['kwota'] if r else kwota_pozycji(w['kwota'], w['typ'])) for w, r in pary}
+        najw = max(u['czesci'], key=lambda w: abs(kw_cz[w['id']]))
+        roznica = round(kwota_pozycji(t['kwota'], najw['typ']) - sum(kw_cz.values()), 2)
+        if abs(roznica) >= 0.005:  # kwota z wyciągu wygrywa; różnicę grupy bierze największa część
+            kw_cz[najw['id']] = round(kw_cz[najw['id']] + roznica, 2)
+        w_ark = [(w, r) for w, r in pary if r]
+        if w_ark:
+            przypiecia.append(dict(id_wyciagu=t['id'], data=t['data'].isoformat(), konto=t['konto'], kwota_wyciagu=t['kwota'],
+                                   opis=t['opis'], wiersze=[dict(id=w['id'], wiersz=r['wiersz'],
+                                                                 kwota=kw_cz[w['id']] if abs(kw_cz[w['id']] - r['kwota']) >= 0.005 else None)
+                                                            for w, r in w_ark]))
+        else:
+            obsluzone.add(t['id'])
+        for w, r in pary:
+            if not r:
+                wiersz_z_wpisu(w, kw_cz[w['id']], dict(baza(t), id=t['id'], wpis=True, opis_w=w['opis'] or w['kod'],
+                                                       notatki=notatka_wpisu(w)))
         continue
-    wd = date.fromisoformat(w['data'])
-    k = [t for t in teraz if t['konto'] == w['konto'] and not t.get('wpis') and (t['kwota'] > 0) == (w['kwota'] > 0)
-         and abs(abs(t['kwota']) - abs(w['kwota'])) <= 1.0 and abs((t['data'] - wd).days) <= 4]
-    if k:
-        t = min(k, key=lambda t: (abs(abs(t['kwota']) - abs(w['kwota'])), abs((t['data'] - wd).days)))
-        t['wpis'], w['para'] = w, t['id']
+    if t is not None:  # płatność w wyciągu innego miesiąca – do wiersza przypnie ją zamknięcie tamtego miesiąca
+        for w, r in pary:
+            if not r and w['data'][:7] == MIES:
+                wiersz_z_wpisu(w)
+        continue
+    if u['data'] > KONIEC:
+        continue  # początek następnego miesiąca bez pary w tym – rozstrzygnie import następnego
+    if u['konto'] not in ZASIEG or ZASIEG[u['konto']] < u['data'] + timedelta(days=PRZELOM):
+        for w, r in pary:
+            czeka += 1
+            pominiete.append(dict(baza_wpisu(w), powod='z wpisu – wyciąg nie obejmuje jeszcze 4 dni po wpisie; czeka na import '
+                                                         'kolejnego miesiąca' + (f" (wiersz {r['wiersz']})" if r else '')))
+        continue
+    for w, r in pary:
+        if r:
+            decyzja(baza_wpisu(w), zrodlo='lista', regula=w['kod'], kandydaci=[wiersz_info(r)], w_arkuszu=r['wiersz'],
+                    uwaga=f"wiersz {r['wiersz']} z wpisu – w wyciągu nie ma takiej płatności (do złotówki różnicy, ±4 dni); „Już w arkuszu” "
+                          'zostawia wiersz; usunięcie albo inne konto opisz w polu opisu')
+        else:
+            prop = opcja(w['typ'], w['kat'], w['pod']) if w['kat'] else None
+            decyzja(baza_wpisu(w), zrodlo='lista', regula=w['kod'], opcje=[prop] if prop else [],
+                    uwaga='z wpisu – w wyciągu nie ma takiej płatności (±4 dni); inne konto albo inny miesiąc? Pomiń, jeśli to duplikat')
 
 # --- pary pomijane razem (np. wydatek oddany tego samego dnia), przelewy partnera, pensja, zapowiedziane zwroty
 for p in U.get('pary_pomijane', []):
@@ -233,6 +333,8 @@ if A.allegro:
 
 for t in sorted(teraz, key=lambda t: (t['data'], t['konto'])):
     b = baza(t)
+    if t['id'] in obsluzone:
+        continue
     if t['id'] in para:
         r, sp = para[t['id']]
         juz.append(dict(b, sposob=sp, w=wiersz_info(r)))
@@ -243,7 +345,7 @@ for t in sorted(teraz, key=lambda t: (t['data'], t['konto'])):
     w = t.get('wpis')
     if w and w['kat']:
         auto.append(dict(b, typ=w['typ'], kat=w['kat'], pod=w['pod'], regula=w['kod'], opis_w=w['opis'] or w['kod'],
-                         kwota_ark=kwota_w_arkuszu(t['kwota'], w['typ']), ids_w=[w['id']],
+                         kwota_ark=kwota_w_arkuszu(t['kwota'], w['typ']), ids_w=[w['id']], notatki=notatka_wpisu(w),
                          **({'budowa': 'z wpisu – w kosztorysie budowy (💸)'} if w.get('budowa') else {})))
         continue
     g = regula(t)
@@ -330,7 +432,7 @@ for z in zam:
             opcje=([prop] if prop else []) + [rozbij(o) for o in z.get('opcje', [])],
             uwaga='Allegro Pay – spłata w kolejnym miesiącu zostanie pominięta' if z['pay'] else '')
 
-# ---------- listy skrótów (druga osoba, gotówka)
+# ---------- lista skrótów drugiej osoby (gotówka tylko z wpisów)
 KONTA = U.get('konta_list', {})
 KONTA_ID = U.get('konta_list_id', {})
 NIEZNANE = U.get('nieznane_skroty', {})
@@ -344,12 +446,6 @@ PS_KAT = U.get('przychod_z_sald', {}).get('kategoria')
 # ręcznie wpisane wiersze tego miesiąca (gotówka, konta drugiej osoby) – lista i wpisy nie mogą ich zdublować
 nasze_l = [r for r in ark if r['konto'] not in KONTA_A and r['mies'] == MIES and r['kwota'] is not None and not r['ids']
            and r['typ'] != 'Przelew' and r['kat'] != PS_KAT]
-
-
-def kwota_pozycji(kwota, typ):
-    """Kwota w arkuszu dla pozycji listy / wpisu: wydatek dodatni, zwrot („+”) ujemny – zwrot pomniejsza zakup.
-    Przychód i przelew – wartość bezwzględna (listy zapisują je bez „+”)."""
-    return abs(kwota) if typ in ('Przychód', 'Przelew') else round(-kwota, 2)
 
 
 def juz_w_arkuszu(b, kod):
@@ -386,11 +482,7 @@ def pozycja(b, kod, budowa=''):
         decyzje[-1].update(bud)
     else:
         ark_k = kwota_pozycji(b['kwota'], prop['typ'])
-        skl = b.get('skladniki')
-        if skl and abs(round(sum(skl), 2) - ark_k) >= 0.005:  # zwrot rozpisany działaniem: składniki ze znakiem arkusza
-            skl = [-x for x in skl]
-            if abs(round(sum(skl), 2) - ark_k) >= 0.005:
-                skl = None
+        skl = skladniki_arkusza(ark_k, b.get('skladniki'))  # zwrot rozpisany działaniem: składniki ze znakiem arkusza
         auto.append(dict(b, typ=prop['typ'], kat=prop['kat'], pod=prop['pod'], regula=kod, kwota_ark=ark_k, skladniki=skl, **bud))
 
 
@@ -427,27 +519,18 @@ if A.lista:
     czytaj_liste(sciezka(A.lista), U.get('lista_domyslne_konto'))
 else:
     braki.append(f"{U.get('etykieta_listy', 'lista wydatków drugiej osoby').lower()}")
-if A.gotowka:
-    czytaj_liste(sciezka(A.gotowka), U.get('gotowka_konto', 'Gotówka'))
-else:
-    braki.append(f"lista wydatków gotówkowych (Osoba = {U.get('osoba_listy')})")
 
-for w in WPISY:
-    b = dict(id=w['id'], data=w['data'], konto=w['konto'], osoba=w['osoba'], kwota=w['kwota'], opis=w['tekst'],
-             skladniki=w.get('skladniki'), wpis=True, opis_w=w['opis'] or w['kod'])
-    if w['konto'] not in KONTA_A:
-        pozycja(b, w['kod'], 'z wpisu – w kosztorysie budowy (💸)' if w.get('budowa') else '')
-    elif not w.get('para') and not any(t.get('wpis') is w for t in teraz):
-        prop = opcja(w['typ'], w['kat'], w['pod']) if w['kat'] else None
-        decyzja(b, zrodlo='lista', regula=w['kod'], opcje=[prop] if prop else [],
-                uwaga='z wpisu – w wyciągu nie ma takiej płatności (±4 dni); inne konto albo inny miesiąc? Pomiń, jeśli to duplikat')
+for w in WPISY_L:  # gotówka i konta drugiej osoby: ID w kolumnie O -> już w arkuszu, inaczej wiersz (zapas) albo decyzja
+    pozycja(baza_wpisu(w), w['kod'], 'z wpisu – w kosztorysie budowy (💸)' if w.get('budowa') else '')
 
 # ---------- scalanie pewnych: ten sam dzień, konto i kategoria -> formuła; cashback – jeden wiersz na miesiąc
+# wiersze z wpisów (ID w) nie są scalane – jeden ID = jeden wiersz
 grupy = defaultdict(list)
 for a in auto:
-    grupy[('miesiąc' if a['regula'] == 'CASHBACK' else a['data'], a['konto'], a['typ'], a['kat'], a['pod'])].append(a)
+    sam = ','.join(a.get('ids_w') or [a['id']]) if (a.get('ids_w') or a['id'].startswith('w')) else ''
+    grupy[('miesiąc' if a['regula'] == 'CASHBACK' else a['data'], a['konto'], a['typ'], a['kat'], a['pod'], sam)].append(a)
 wiersze = []
-for (dzien, konto, typ, kat, pod), g in sorted(grupy.items(), key=lambda x: (max(a['data'] for a in x[1]), x[0][1] or '')):
+for (dzien, konto, typ, kat, pod, _), g in sorted(grupy.items(), key=lambda x: (max(a['data'] for a in x[1]), x[0][1] or '')):
     skl = [x for a in g for x in (a['skladniki'] if a.get('skladniki') else [a['kwota_ark']])]
     wiersze.append(dict(data=max(a['data'] for a in g), konto=konto, osoba='' if typ == 'Przelew' else g[0]['osoba'], typ=typ, kat=kat, pod=pod,
                         kwota=round(sum(skl), 2), formula=('=' + '+'.join(f'{x:.2f}' for x in skl)).replace('+-', '-') if len(skl) > 1 else None,
@@ -483,7 +566,6 @@ kor = []
 pay_dlug = round(sum(z['suma'] for z in zam if z['pay'] and not z.get('zwrocony')), 2)
 if pay_dlug:
     kor.append(dict(kwota=-pay_dlug, opis='zakupy Allegro Pay z tego miesiąca – spłata w kolejnym'))
-NAST = f'{R + (M == 12)}-{M % 12 + 1:02d}'
 for o in oczek:
     if o['miesiac'] == NAST and o.get('kwota') and o.get('kierunek', 'wpływ') == 'wpływ':
         kor.append(dict(kwota=o['kwota'], opis='należność: ' + o['powod'][:80]))
@@ -495,10 +577,11 @@ if kor:
 
 drzewo = [dict(typ=t, kat=k, pod=p) for t, ks in DRZEWO.items() for k, p in ks.items()]
 zapisz(f'miesiace/{MIES}.json', dict(miesiac=MIES, wygenerowano=datetime.now().strftime('%Y-%m-%d %H:%M'), wiersze=wiersze,
-                                     auto=auto, decyzje=decyzje, pominiete=pominiete, juz=juz, braki=braki, salda=salda,
+                                     auto=auto, decyzje=decyzje, pominiete=pominiete, juz=juz, przypiecia=przypiecia,
+                                     braki=braki, salda=salda,
                                      kategorie=drzewo, etykieta_listy=U.get('etykieta_listy', 'Lista wydatków'),
                                      ostatni_wiersz=max((r['wiersz'] for r in ark), default=1),
                                      ostatnia={k: v.isoformat() for k, v in ostatnia.items()}))
 print(f"{MIES}: wyciąg {len(teraz)} (już w arkuszu {len(juz)}, pominięte {len(pominiete)}), Allegro {len(zam)} zamówień, "
       f"pewne {len(auto)} -> {len(wiersze)} wierszy, decyzje {len(decyzje)} {dict(Counter(d['zrodlo'] for d in decyzje))}; "
-      f"braki: {len(braki)}")
+      f"przypięte do wierszy z wpisów {len(przypiecia)}, wpisy czekające {czeka}; braki: {len(braki)}")

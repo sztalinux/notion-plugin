@@ -102,6 +102,94 @@ def wyciagi(zen=None, mbank=None):
     return bank
 
 
+# ---------- wpisy (wpis.py) – pliki listy/RRRR-MM-wpisy.jsonl i ich wiersze w arkuszu (POM-29)
+# Wpisy z datą od tego dnia idą do arkusza od razu (arkusz_budzetu.py sync); starsze – przy zamknięciu miesiąca.
+ARKUSZ_OD = U.get('arkusz_od', '2026-12-01')
+POMIJANE_W_SKROCIE = ('dodano', 'arkusz', 'usuniety')
+
+
+def plik_wpisow(mies):
+    return DANE / 'listy' / f'{mies}-wpisy.jsonl'
+
+
+def czytaj_wpisy(mies, z_usunietymi=False):
+    """Zapisy z pliku miesiąca; usunięte (czekają na wyczyszczenie wiersza w arkuszu) tylko z z_usunietymi."""
+    p = plik_wpisow(mies)
+    ws = [json.loads(l) for l in p.read_text(encoding='utf-8').splitlines() if l.strip()] if p.exists() else []
+    return ws if z_usunietymi else [w for w in ws if not w.get('usuniety')]
+
+
+def zapisz_wpisy(mies, wpisy):
+    p = plik_wpisow(mies)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    tmp = p.with_suffix('.tmp')
+    tmp.write_text(''.join(json.dumps(w, ensure_ascii=False) + '\n' for w in wpisy), encoding='utf-8')
+    tmp.replace(p)
+
+
+def miesiace_wpisow():
+    return sorted(p.name[:7] for p in (DANE / 'listy').glob('????-??-wpisy.jsonl'))
+
+
+class blokada_wpisow:
+    """Wyłączny dostęp do plików wpisów (wpis.py i synchronizacja z arkuszem nie nadpiszą sobie zmian)."""
+
+    def __enter__(self):
+        import fcntl
+        (DANE / 'listy').mkdir(parents=True, exist_ok=True)
+        self.f = open(DANE / 'listy' / '.wpisy.lock', 'w')
+        fcntl.flock(self.f, fcntl.LOCK_EX)
+        return self
+
+    def __exit__(self, *a):
+        self.f.close()
+
+
+def skrot(w):
+    """Skrót treści zapisu – zmienia się tylko, gdy zmieni się wpis (nie przy ponownym przebiegu ani wysyłce)."""
+    tresc = {k: v for k, v in w.items() if k not in POMIJANE_W_SKROCIE}
+    return hashlib.sha1(json.dumps(tresc, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
+
+
+def kwota_pozycji(kwota, typ):
+    """Kwota w arkuszu dla pozycji listy / wpisu: wydatek dodatni, zwrot („+”) ujemny – zwrot pomniejsza zakup.
+    Przychód i przelew – wartość bezwzględna (listy zapisują je bez „+”)."""
+    return abs(kwota) if typ in ('Przychód', 'Przelew') else round(-kwota, 2)
+
+
+def skladniki_arkusza(kwota_ark, skladniki):
+    """Składniki działania („30-5”) ze znakiem arkusza albo None, gdy nie sumują się do kwoty."""
+    if not skladniki:
+        return None
+    if abs(round(sum(skladniki), 2) - kwota_ark) < 0.005:
+        return skladniki
+    skl = [-x for x in skladniki]
+    return skl if abs(round(sum(skl), 2) - kwota_ark) < 0.005 else None
+
+
+def formula_sumy(skl):
+    return ('=' + '+'.join(f'{x:.2f}' for x in skl)).replace('+-', '-')
+
+
+def notatka_wpisu(w):
+    return 'z wpisu – w kosztorysie budowy (💸)' if w.get('budowa') else 'z wpisu'
+
+
+def wiersz_wpisu(w):
+    """Zapis z pliku -> wiersz zakładki Transakcje (A:L i O) – ten sam dla synchronizacji i zamknięcia miesiąca."""
+    ark = kwota_pozycji(w['kwota'], w['typ'])
+    skl = skladniki_arkusza(ark, w.get('skladniki'))
+    return dict(id=w['id'], data=w['data'], status='Zrealizowane', typ=w['typ'],
+                kwota=formula_sumy(skl) if skl and len(skl) > 1 else ark, kat=w['kat'], pod=w['pod'], konto=w['konto'],
+                osoba='' if w['typ'] == 'Przelew' else w['osoba'], opis=w['opis'] or w['kod'], tag=f"import {w['data'][:7]}",
+                notatki=notatka_wpisu(w))
+
+
+def z_wpisu(r):
+    """Wiersz arkusza z wpisu (ID z prefiksem w w kolumnie O)."""
+    return any(i.startswith('w') for i in r['ids'])
+
+
 def arkusz(sciezka):
     """Transakcje!A1:O z get_values ({"values": [...]}) -> lista wierszy z numerem wiersza arkusza."""
     out = []
@@ -114,5 +202,5 @@ def arkusz(sciezka):
         except ValueError:
             d = None
         out.append(dict(wiersz=i, data=d, typ=r[2], kwota=kw(r[3]), kat=r[4], pod=r[5], konto=r[6], opis=r[8], tag=r[10],
-                        mies=r[12], ids=[x for x in r[14].split(',') if x]))
+                        mies=r[12], ids=[x.strip() for x in r[14].split(',') if x.strip()]))
     return out
