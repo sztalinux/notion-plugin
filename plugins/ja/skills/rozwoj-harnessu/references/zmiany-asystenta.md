@@ -42,7 +42,7 @@ prefiksu w bazie (jedno zapytanie przed zapisem). Ten sam ID nigdy nie jest uży
 | Odłożone | – | Odłożone | – |
 | Odrzucone | Odrzucone | Odrzucone | Zostaje |
 
-Zasada z pustym Statusem albo „Do zrobienia” = do wdrożenia (obowiązuje w rozmowach od razu). Usterka „Odrzucone” = dawne
+Zasada nie używa Statusu „Nowy”: pusty albo „Do zrobienia” = do wdrożenia (obowiązuje w rozmowach od razu). Usterka „Odrzucone” = dawne
 „Zostaje” (nie warto naprawiać).
 
 ## Widoki

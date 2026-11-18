@@ -8,6 +8,7 @@ nadrzędna) – zmienia tylko pole „Zrobiono w wersji”, i to wyłącznie z n
 
 ## Reguły
 
+Czytaj wyłącznie Rodzaj = Pomysł (widok „💡 Tablica pomysłów”, `view://41cf5982-09e7-81c2-8022-000c1ff69c98`); Zasady i Usterki pomiń.
 Brane pod uwagę wiersze ze Statusem „Zrobione”, „Do zrobienia” albo „Przeanalizowany” (Nowy, Czeka na mnie, Odłożone,
 Odrzucone – pomiń). Wartość pola „Zrobiono w wersji” ze słowem „częściowo” oznacza wdrożenie w częściach – status
 „Przeanalizowany” albo „Do zrobienia” jest wtedy celowy (P2 jej nie flaguje); wartość „gałąź … (czeka na scalenie)”

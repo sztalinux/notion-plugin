@@ -9,7 +9,7 @@ Zasada podziału: **harness = JAK pracujemy** (procedury, formaty, zasady) – t
 | Co | Gdzie | Kto edytuje |
 |---|---|---|
 | Procedury, zasady, szablony | publiczne repo GitHub `sztalinux/notion-plugin` → pluginy `dom-budowa` i `ja` na koncie Claude (aktualizacja: ręczne odświeżenie lub synchronizacja – plugin `ja`, `rozwoj-harnessu/references/claude-ai-projekt.md`) | Claude Code (`rozwoj-harnessu`, sekcja B) |
-| Zgłoszone zmiany harnessu (obowiązują od razu) | Notion → 🤖 Asystent AI (najwyższy poziom) → Zmiany do harnessu | dowolny asystent (`rozwoj-harnessu`, sekcja A) |
+| Zgłoszone zmiany harnessu (obowiązują od razu) | Notion → 🤖 Asystent AI (najwyższy poziom) → 🤖 Zmiany asystenta (Rodzaj Zasada) | dowolny asystent (`rozwoj-harnessu`, sekcja A) |
 | Pomysły (do analizy; wdrożenie tylko na polecenie) | Notion → 🤖 Asystent AI → 🤖 Zmiany asystenta (Rodzaj Pomysł) | inwestor wpisuje, asystent analizuje (`rozwoj-harnessu`, sekcja C) |
 | Terminy: harmonogram, zadania, czekam na, zamówienia | Notion → Harmonogram, TASKS, 🧱 Zakupy budowy (daty); kwoty i płatności – arkusz Google „Kosztorys budowy” (Etapy, Wydatki) | agent (`harmonogram`, `zakupy`), inwestor |
 | Umowy, odbiory, gwarancje | Notion → Umowy i gwarancje; skany – folder budowy | agent (`oferta`, `etap`), inwestor |

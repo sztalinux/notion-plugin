@@ -1,6 +1,6 @@
 ---
 name: rozwoj-harnessu
-description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez bazę „🤖 Zmiany asystenta” w Notion (zasady, pomysły, usterki) oraz analiza pomysłów na rozwój setupu (baza „Pomysły na rozwój”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/arkusza, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, „zrób ZP-2”, „znane problemy”, albo pyta o przeniesienie harnessu do innego AI.
+description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez bazę „🤖 Zmiany asystenta” w Notion (zasady, pomysły, usterki) oraz analiza pomysłów na rozwój setupu (Rodzaj Pomysł w bazie „🤖 Zmiany asystenta”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/arkusza, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, „zrób ZP-2”, „znane problemy”, albo pyta o przeniesienie harnessu do innego AI.
 ---
 
 # Rozwój harnessu
@@ -39,7 +39,7 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
 
 1. Sformułuj zmianę tak, żeby dało się ją wdrożyć bez tej rozmowy:
    - **Zmiana:** krótki tytuł („Oferta: zawsze pytaj o fasety”),
-   - **Plugin**, **Procedura** i **Rodzaj**,
+   - **Plugin**, **Procedura** i **Typ zmiany** (Rodzaj = Zasada),
    - **Treść do wdrożenia:** gotowy tekst reguły w trybie rozkazującym, tak jak ma trafić do procedury,
    - **Dlaczego:** 1–2 zdania kontekstu z rozmowy (data).
 2. Sprawdź w skrzynce, czy podobny wpis już nie czeka – jeśli tak, uzupełnij go zamiast dublować.
@@ -101,7 +101,7 @@ Treść strony: pomysł inwestora (nie zmieniaj), pod nim sekcja „Analiza” p
 
 **Zapis pomysłu** („mam pomysł…”, wpis w Dzienniku „pomysł: …” o asystencie, Notion, arkuszu kosztorysu, plikach, automatyzacji):
 sprawdź, czy podobny już jest (uzupełnij zamiast dublować); nowy wiersz – tytuł, Obszar, w treści „## Pomysł (kto, data)”
-i słowa inwestora. Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to nie pomysł – sekcja A.
+i słowa inwestora. Rodzaj Pomysł, ID tekst wg `references/zmiany-asystenta.md` („ID nowego wiersza”), Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to nie pomysł – sekcja A.
 
 **Analiza** – tylko na prośbę inwestora („przeanalizuj pomysły”, „przeanalizuj POM-n”); przegląd dnia ich nie analizuje (wpisy Nowy lub pusty):
 1. Przeczytaj pomysł i przejrzyj, co już jest: procedury (mapy w `ja` i `budowa`, odpowiednie `SKILL.md`), mapy Notion
@@ -140,7 +140,7 @@ Treść strony: objaśnienie, wystąpienia z datą, ustalenia z odpowiedzi inwes
 
 - **Kto wpisuje:** przebieg, gdy odpowiedź pod komunikatem 🔔 wymaga pracy poza przebiegiem (`wpisy/references/pytania.md`,
   C.5); Claude Code, gdy w pracy trafi na powtarzalną usterkę spoza bieżącego zadania; inwestor ręcznie (pusty Status =
-  Nowy). Przed dodaniem szukaj tego samego problemu (Skąd, 2–3 słowa) – jest → zaktualizuj Ostatnio i treść.
+  Nowy). Przed dodaniem szukaj tego samego problemu (Skąd, 2–3 słowa) – jest → zaktualizuj Ostatnio i treść; nowy wiersz – Rodzaj Usterka, ID tekst wg `references/zmiany-asystenta.md` („ID nowego wiersza”).
 - **Problem a pomysł:** coś, co miało działać, a nie działa → tu; nowa funkcja albo zmiana sposobu pracy → sekcja C lub A.
 - **Naprawa** – w Claude Code na „zrób ZP-n” (albo gdy inwestor wskaże ZP):
   przeczytaj stronę, ustal przyczynę (log, `stan.json`, skrypt), napraw; zmiana harnessu → kroki B.2–B.8. Na końcu Status

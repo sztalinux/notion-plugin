@@ -58,7 +58,7 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 | Filmy i seriale do obejrzenia | 🎬 Films (w 🗂️ Collections) | `collection://bea14b52-2a7f-45a2-b5a7-cbd1c255fa8b` | Name, Status (To watch / Watched), Tags, URL |
 | Zasady, pomysły i usterki asystenta (HZ-n, POM-n, ZP-n) | 🤖 Zmiany asystenta (na stronie 🤖 Asystent AI; `rozwoj-harnessu/references/zmiany-asystenta.md`) – widoki „📥 Zasady do wdrożenia”, „💡 Tablica pomysłów”, „🧯 Otwarte usterki” | `collection://41cf5982-09e7-812c-a004-000b7cb2af9f` | Zmiana, Rodzaj, ID (tekst), Status, Plugin, Procedura, Obszar |
 | Dawne bazy HZ / POM / ZP (tylko do wglądu) | 🗄 Archiwum | `collection://e217448a-60ec-4af6-8584-8f368315109c`, `collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3`, `collection://f387bb3c-796f-435a-a684-819196fd6aa4` | – |
-| Wersja harnessu, skrzynka, pomysły i znane problemy | 🤖 Asystent AI | `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` | – |
+| Wersja harnessu i baza 🤖 Zmiany asystenta | 🤖 Asystent AI | `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` | – |
 | Dostęp do indeksu wiedzy z czatu (kopia, token odczytu, polecenia) | 🔑 Asystent – dostęp (podstrona 🤖 Asystent AI; tylko dla asystenta) | `3fcf5982-09e7-810e-aaca-f2b582438924` | – |
 
 **Struktura najwyższego poziomu (POM-9, 15.10.2026)** – strona startowa 📌 DASHBOARD w zakładkach, opis całości dla inwestora: „🗺 Mapa Notion”
