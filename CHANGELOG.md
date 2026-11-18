@@ -29,6 +29,8 @@ Paragony ze zdjęcia: rozpisanie na kategorie, metoda płatności i podział pł
 - `koszty/references/wydatek-przeplyw.md`: paragon mieszany (część na budowę → strona 💸 i `paragon.py rozpisz --budowa`),
   stan po POM-29 – gotówka i wydatki z wpisów w arkuszu budżetu od 1.12.2026 w ciągu godziny, starsze przy zamknięciu;
   płatność z wyciągu przypina się do wiersza z wpisu; zwrot z wpisu to własny wiersz z kwotą ujemną.
+- `koszty` (B) i router `budowa`: zdjęcie paragonu z „kto i czym”, także mieszanego, prowadzi procedura `budzet`
+  (`references/paragony.md`); tu wraca tylko strona 💸 dla części budowlanej.
 
 ## ja [1.25.0] – 2026-11-19 (POM-29)
 

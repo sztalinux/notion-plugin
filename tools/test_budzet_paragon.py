@@ -223,6 +223,15 @@ class Przeplyw30(unittest.TestCase):
         self.assertTrue(all(x.startswith('b') and x.count(',') == 1 for x in o), o)
         self.assertEqual(sorted(x.split(',')[1] for x in o), ['wp1-1', 'wp1-2'])
 
+    def test_karta_grupa_i_reczny_wiersz_bez_dubla(self):
+        """Recenzja POM-29, 1 – dla grup: ręczny wiersz = suma paragonu zajmuje płatność 1:1, części bez wierszy są „już w arkuszu”."""
+        self.paragon(*self.POZ, data='2026-11-18')
+        self.zen(('19 Nov 2026', 'SKLEP A', '-33.50'))
+        (self.dane / 'ark.json').write_text(json.dumps({'values': [['Data'], wiersz_ark('2026-11-19', 33.5, 'K-bank', '')]}))
+        m = self.importuj('--zen', 'zen.csv', mies='2026-11')
+        self.assertEqual((m['wiersze'], m['decyzje'], [j['sposob'] for j in m['juz']]), ([], [], ['1:1']))
+        self.assertEqual(sorted(p['id'] for p in m['pominiete'] if 'już w arkuszu' in p['powod']), ['wp1-1', 'wp1-2'])
+
     def test_karta_grupa_przelom_miesiaca_przypiecie(self):
         self.paragon(*self.POZ, data='2026-12-30')
         self.zen(('2 Jan 2027', 'SKLEP A', '-33.49'))

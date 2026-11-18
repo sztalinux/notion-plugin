@@ -41,6 +41,8 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
 
 Źródło bywa różne – wpis w 📓 Dzienniku (przebieg bez inwestora, `wpisy` → `budowa`), wiadomość do asystenta („dopisz
 wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to samo; kilka płatności w jednej wiadomości = kilka wierszy.
+Zdjęcie paragonu z dopiskiem „kto i czym”, także mieszanego (budowa + prywatne), prowadzi `ja/skills/budzet/references/paragony.md`
+– stamtąd wraca tu tylko po stronę 💸 dla części budowlanej (paragon w całości na budowę – zwykły wydatek z tej sekcji).
 
 1. Wyciągnij: datę, kwotę **brutto** (tyle, ile zapłacono), na co, przy materiale ilość i jednostkę, typ (Materiał /
    Robocizna / Sprzęt / Usługa / Formalności – zawsze, także poza stanem zero), sposób (Przelew / Gotówka / Karta / BLIK), płatność (Zrealizowane =
