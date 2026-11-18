@@ -12,9 +12,10 @@ Na starcie sesji przeczytaj `<folder budowy>/.dom/automaty/stan-sesji.txt` i pok
 z pierwszej wiadomości. Nie czytaj Notion i nie uruchamiaj skryptów na starcie; nie zadawaj pytania z listą opcji. Brak pliku albo plik starszy
 niż 36 h → linia „Stan: brak świeżych danych z nocnego przebiegu”. Linię składa `przeglad.py` po każdym przebiegu (wersje harnessu w repo i na koncie,
 stan ostatnich przebiegów) – bez POM i ZP. Gdy konto ma starsze pluginy niż repo, powiedz to jednym zdaniem.
-**Jedyny wyjątek od „nie uruchamiaj skryptów na starcie”:** linia zawiera „nowy etap kosztorysu” → zaraz po niej, przed zadaniem
-z pierwszej wiadomości, dodaj ten etap bez pytania wg `koszty`, sekcja C.7 (`references/nowa-pozycja.md`, C – zaczyna się od
-`python3 tools/wydatki.py etapy --zablokuj`, które wyklucza drugą sesję) i zamelduj to jedną linią.
+**Jedyny wyjątek od „nie uruchamiaj skryptów na starcie”:** linia zawiera „nowy etap kosztorysu” albo „nowa pozycja kosztorysu:
+pierwsze sprawdzenie” → zaraz po niej, przed zadaniem z pierwszej wiadomości, zrób to bez pytania wg `koszty`, sekcje C.7 i C.8
+(`references/nowa-pozycja.md`, C i D – zaczyna się od `python3 tools/wydatki.py sesja --zablokuj`, które wyklucza drugą
+sesję), i zamelduj wynik jedną linią.
 
 Polecenia w trakcie sesji (działają tak samo jak dawne pozycje listy): „wdróż” (skrzynka zmian: `git pull`, widok „📥 Zasady do wdrożenia” w „🤖 Zmiany asystenta” – Rodzaj = Zasada i Status
 „Do zrobienia” albo pustym – `rozwoj-harnessu`, sekcja „Wdrożenie”), „zrób POM-n” i „przeanalizuj pomysły” (tylko na prośbę), „zrób ZP-n”, „odśwież indeks”

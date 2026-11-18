@@ -108,6 +108,10 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    (c) tylko praca techniczna (skrypt, struktura arkusza): wiersz ZP + blok 🔔 „naprawię w najbliższej sesji Claude Code;
    nic nie musisz robić”. Wzorzec (a) – wydatek budowy bez pasującej pozycji w kosztorysie: ❓ z gotową propozycją nowej
    pozycji, „tak” wystarcza, resztę robi automat albo pierwsza sesja Claude Code (`koszty`, B.2; plugin dom-budowa).
+   **Wyjątek:** nowy etap kosztorysu i pierwsze sprawdzenie nowej pozycji (`koszty` C.7–C.8) czekają na sesję Claude Code
+   z dopiskiem w polu Błąd strony 💸 – to nie adnotacja do pilnowania przez inwestora: sprawa jest w linii stanu sesji
+   i pierwsza sesja robi ją sama (po 3 dniach czekania – 🔔 z `sync`). Ślad we „Wpisach”: „etap doda najbliższa sesja
+   Claude Code – nic nie musisz robić”.
 
 Zapis w Notion (przykład zmyślony; nagłówek to zwijany nagłówek h3, komunikat jego dzieckiem):
 

@@ -9,31 +9,47 @@ PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury 
 
 Nowa pozycja kosztorysu na jedno „tak” – automat dodaje ją sam, wydatek idzie w tym samym przebiegu.
 - `koszty` B.2: wydatek bez pasującej pozycji → ❓ z gotową propozycją („Nowa pozycja: 47 | Pozycja X | Materiał | kpl – tak?”)
-  zamiast instrukcji dodania wiersza i „odpisz »dodane«”; po „tak” albo własnej nazwie strona 💸 z polem **Nowa pozycja**.
-  Nowy `koszty/references/nowa-pozycja.md` (propozycja, format pola, zamknięcie ❓, nowy etap w sesji).
+  zamiast instrukcji dodania wiersza i „odpisz »dodane«”; po „tak” albo własnej nazwie strona 💸 z polem **Nowa pozycja**
+  (tylko Rodzaj Wydatek i Wycena; wybrana Pozycja wygrywa, pole czyści `sync`). Nowy `koszty/references/nowa-pozycja.md`
+  (propozycja, format pola, co robi automat, nowy etap w sesji – C, pierwsze sprawdzenie – D).
 - `koszty` C.2: zasada „automat nie zmienia układu arkusza” zawężona – automatowi wolno tylko dodać wiersz pozycji
-  w istniejącym etapie; niczego nie usuwa ani nie przenosi poza wycofaniem własnego, świeżo wstawionego wiersza.
-- Kod Apps Script **w wersji 5** (`docs/wydatki-arkusz.md`, sekcja 9): akcja `dodaj_pozycje` pod blokadą – wiersz wewnątrz
-  etapu (przed ostatnią pozycją, przy jednej pozycji za nią; nigdy za ostatnią pozycją arkusza, bo zakresy sum `$5:$<n>` by go
-  pominęły), formuły i formaty z sąsiedniej pozycji, sumy nagłówka etapu poprawione, kontrola przed i po („Kontrola
-  powiązań”, RAZEM KOSZTORYS, wiersz w sumach, T puste) – różnica = wstawiony wiersz usunięty i błąd; ta sama nazwa w etapie =
-  istniejący Lp; tryb `na_sucho`. Operacja `wstaw` w `zmien` (puste wiersze w Kosztorysie, tylko wewnątrz pozycji).
-- `tools/wydatki.py`: `sync` obsługuje pole „Nowa pozycja” (dodaje pozycję, opcję w Notion, ustawia Pozycję, czyści pole, wysyła
-  wydatek); przy kodzie < 5 strony czekają (jak zwroty przy < 4); etap spoza Kosztorysu → strona czeka „Do arkusza” z dopiskiem
-  w polu Błąd (bez 🔔), etap do `<hub>/.dom/wydatki/etapy-do-dodania.json`. Nowe polecenia `nowa-pozycja "<etap> | <nazwa> |
-  <typ> | <jedn.>" [--proba]` i `etapy [--zablokuj | --odblokuj]`. Testy: `tools/test_wydatki_pozycje.py`.
-- Nowy etap: pierwsza sesja Claude Code dodaje go sama (`koszty` C.7, konektor Arkuszy jak etap 47, bez konektora `migruj`
-  z `wstaw`) – wyjątek w zasadzie startu sesji (`CLAUDE.md`), blokada przeciw dwóm sesjom; linię stanu uzupełnia `przeglad.py`
-  (poza repo, „nowy etap kosztorysu: NN”).
-- `notatka/references/notion-schematy.md` (pole Nowa pozycja), `koszty/references/arkusze.md` (zakresy sum, gdzie wstawiać),
-  `docs/wydatki-arkusz.md` (sekcje 1, 2, 4, 5, 6, 8), `README.md` (konektory).
-- **Czynność inwestora: zaktualizuj kod arkusza do wersji 5** (`docs/wydatki-arkusz.md`, sekcja 7, „Aktualizacja kodu”);
-  do tego czasu `wydatki.py sync` odkłada strony z polem „Nowa pozycja”.
+  w istniejącym etapie; niczego nie usuwa ani nie przenosi poza wycofaniem własnego, świeżo wstawionego wiersza. C.5 i
+  `arkusze.md`: teksty nagłówków i etykiet czytane przez automat (⚙).
+- Kod Apps Script **w wersji 5** (`docs/wydatki-arkusz.md`, sekcja 9): akcja `dodaj_pozycje` pod blokadą.
+  - Wiersz wewnątrz etapu: przed ostatnią pozycją, przy jednej pozycji za nią; nigdy za ostatnią pozycją arkusza, bo zakresy
+    sum `$5:$<n>` by go pominęły.
+  - Formuły i formaty z pozycji z kompletem formuł; Lp i nazwa (jako tekst) od razu po wstawieniu; Lp = najwyższy numer etapu
+    w Kosztorysie i w Wydatkach + 1; sumy nagłówka etapu poprawione.
+  - Nagłówki i etykiety sprawdzane przed zmianą. Kontrola po zmianie: „Kontrola powiązań”, RAZEM KOSZTORYS, sumy nagłówka,
+    komplet formuł, klucz, pusta Kontrola. Różnica albo wyjątek = wstawiony wiersz usunięty i błąd strony.
+  - Wiersz etapu bez Lp = odmowa. Ta sama nazwa = istniejący Lp, o ile jego wiersz jest kompletny. Tryb `na_sucho`.
+  - Operacja `wstaw` w `zmien`: puste wiersze w Kosztorysie, tylko wewnątrz pozycji.
+- `tools/wydatki.py`:
+  - `sync` obsługuje pole „Nowa pozycja”: dodaje pozycję, opcję w Notion, ustawia Pozycję, czyści pole i wysyła wydatek.
+  - Kod < 5 → strony czekają (jak zwroty przy < 4).
+  - **Bezpiecznik pierwszego użycia:** bez znacznika `<hub>/.dom/wydatki/nowa-pozycja-sprawdzona` akcja idzie tylko na sucho –
+    istniejąca pozycja przechodzi, nowa czeka na pierwsze sprawdzenie w sesji.
+  - Etap spoza Kosztorysu albo nagłówek bez pozycji, a także świeża blokada sesji dla tego etapu → strona czeka „Do arkusza”
+    z dopiskiem w polu Błąd (bez 🔔). Sprawy dla sesji trafiają do `<hub>/.dom/wydatki/kosztorys-do-sesji.json`; czekanie ponad
+    3 dni → kod 1 (🔔 z przebiegu).
+  - Plany idą przed pingiem; własny plan rozpoznawany po Lp strony, nie po numerze wiersza.
+  - Nowe polecenia: `nowa-pozycja "<etap> | <nazwa> | <typ> | <jedn.>" [--proba]`, `nowa-pozycja --potwierdz`,
+    `sesja [--zablokuj | --odblokuj]`. Testy: `tools/test_wydatki_pozycje.py`.
+- Sesja Claude Code bez pytania robi nowy etap (`koszty` C.7: konektor Arkuszy jak etap 47, kolumna A na końcu; bez konektora
+  `migruj` z `wstaw`) i jednorazowe pierwsze sprawdzenie nowej pozycji (C.8). Wyjątek w zasadzie startu sesji (`CLAUDE.md`),
+  blokada przeciw dwóm sesjom. Linię stanu uzupełnia `przeglad.py` (poza repo): „nowy etap kosztorysu: NN” / „nowa pozycja
+  kosztorysu: pierwsze sprawdzenie”.
+- `notatka/references/notion-schematy.md` (pole Nowa pozycja), `koszty/references/arkusze.md` (zakresy sum, gdzie wstawiać,
+  ⚙ teksty), `docs/wydatki-arkusz.md` (sekcje 1, 2, 4, 5, 6, 8), `README.md` (konektory).
+- **Czynność inwestora: zaktualizuj kod arkusza do wersji 5** (`docs/wydatki-arkusz.md`, sekcja 7, „Aktualizacja kodu”).
+  Do tego czasu `wydatki.py sync` odkłada strony z polem „Nowa pozycja”. Pierwszą nową pozycję po wdrożeniu wstawi sesja
+  Claude Code sama (C.8).
 
 ## ja [1.24.1] – 2026-11-19 (POM-31)
 
 - `wpisy/references/pytania.md` C.8: wzorzec dla wydatku bez pozycji kosztorysu to teraz ❓ z gotową propozycją (wariant a),
-  nie instrukcja dla inwestora.
+  nie instrukcja dla inwestora. Jawny wyjątek od zakazu „czeka na sesję Claude Code”: nowy etap kosztorysu i pierwsze
+  sprawdzenie nowej pozycji – przekazuje je sesji linia stanu (to samo w `przeglad-dnia`).
 
 ## dom-budowa [3.18.4] – 2026-11-18
 

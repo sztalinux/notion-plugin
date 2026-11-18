@@ -9,7 +9,8 @@
     python3 tools/wydatki.py kod | LANG=en_US.UTF-8 pbcopy             # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
     python3 tools/wydatki.py migruj <zmiany.json>        # zmiana układu na arkuszu (cofanie: Plik → Historia wersji)
     python3 tools/wydatki.py nowa-pozycja "47 | Nazwa | Materiał | kpl" [--proba]   # pozycja w istniejącym etapie (kod ≥ 5)
-    python3 tools/wydatki.py etapy [--zablokuj | --odblokuj]  # nowe etapy czekające na sesję Claude Code (koszty C.7)
+    python3 tools/wydatki.py nowa-pozycja --potwierdz   # po pierwszym sprawdzeniu w sesji: `sync` może wstawiać pozycje
+    python3 tools/wydatki.py sesja [--zablokuj | --odblokuj]  # co czeka na sesję Claude Code (koszty C.7–C.8)
     python3 tools/wydatki.py gotowka [--harmonogram PLIK] # ile pieniędzy wyjdzie w którym miesiącu (tylko odczyt, kwoty
                                                           # na ekran – nie do logu; koszty, sekcja D)
 
@@ -27,10 +28,13 @@ brutto) nie idzie do Apps Script jako wiersz – `sync` wpisuje go w Kosztorys �
 inny plan nadpisuje tylko strona, która go ustawiła, albo z „Nadpisz plan”. Każde wysłanie czyści pole Zgłoszono (pytanie
 o błąd we Wpisach zakłada przebieg Claude, nie ten skrypt). Wyceny wymagają kodu Apps Script
 w wersji ≥ 2 i Cennika w nowym układzie (ping: cennik_ok) – inaczej czekają w kolejce.
-Pole „Nowa pozycja” strony („<etap> | <nazwa> | <typ> | <jedn.>”, POM-31): `sync` woła akcję Apps Script „dodaj_pozycje”
-(kod ≥ 5; starszy – strona czeka), ustawia Pozycję na nowy Lp i wysyła wydatek w tym samym przebiegu. Etapu, którego nie ma
-w Kosztorysie, skrypt nie dodaje: strona czeka („Do arkusza”, w polu Błąd dopisek), a etap trafia do
-<hub>/.dom/wydatki/etapy-do-dodania.json – stąd linia stanu sesji i polecenie `etapy` (dodaje go sesja Claude Code).
+Pole „Nowa pozycja” strony („<etap> | <nazwa> | <typ> | <jedn.>”, POM-31; tylko Wydatek i Wycena; prawidłowa Pozycja
+wygrywa, a pole jest czyszczone): `sync` woła akcję Apps Script „dodaj_pozycje” (kod ≥ 5; starszy – strona czeka), ustawia
+Pozycję na nowy Lp i wysyła wydatek w tym samym przebiegu. Bezpiecznik: dopóki nie ma znacznika
+<hub>/.dom/wydatki/nowa-pozycja-sprawdzona (`nowa-pozycja --potwierdz` po pierwszym sprawdzeniu w sesji), `sync` woła akcję
+tylko na sucho – istniejąca pozycja przechodzi, nowa czeka. Etapu, którego nie ma w Kosztorysie, skrypt nie dodaje. Strony
+czekające na sesję mają „Do arkusza” i dopisek w polu Błąd (bez 🔔), a sprawa trafia do <hub>/.dom/wydatki/kosztorys-do-sesji.json
+– stąd linia stanu sesji i polecenie `sesja`; czekanie dłużej niż 3 dni = kod 1 (🔔 z przebiegu).
 Zmiany układu arkusza (kolumny, formuły, kolory) idą bez ponownego importu: plik zmian JSON z operacjami
 (akcja „zmien” w Apps Script). Skrypt ma dostęp tylko do tego arkusza (@OnlyCurrentDoc) – bez kopii na Dysku; zmianę
 cofa się z historii wersji arkusza.
@@ -66,9 +70,12 @@ WERSJA_POZYCJI = 5          # minimalna wersja kodu Apps Script z akcją „doda
 TYPY = ("Materiał", "Robocizna", "Sprzęt", "Usługa", "Formalności")
 JEDNOSTKI = ("kpl", "m³", "m²", "mb", "kg", "t", "szt", "h", "dzień", "mies.", "l")   # lista Kosztorys kol. E
 STANY = ("Koszty ogólne", "Stan zero", "SSO", "Deweloperski", "Wykończenie", "Teren")
-PLIK_ETAPOW = "etapy-do-dodania.json"   # w <hub>/.dom/wydatki/ – czyta linia stanu sesji (przeglad.py) i `etapy`
-BLOKADA_ETAPU = "nowy-etap.lock"        # katalog-blokada: jedna sesja Claude Code dodaje etap
+PLIK_SESJI = "kosztorys-do-sesji.json"  # w <hub>/.dom/wydatki/: nowe etapy i pierwsze sprawdzenie – linia stanu sesji, `sesja`
+BLOKADA_SESJI = "kosztorys-sesja.lock"  # katalog-blokada: jedna sesja Claude Code naraz (nowy etap, pierwsze sprawdzenie)
 BLOKADA_WAZNA_S = 2 * 3600
+ZNACZNIK_SPRAWDZENIA = "nowa-pozycja-sprawdzona"   # bez niego `sync` nie wstawia wierszy (bezpiecznik pierwszego użycia)
+ALARM_PO_S = 3 * 86400      # strona czeka na sesję dłużej → `sync` kończy się kodem 1 (🔔 z przebiegu)
+RODZAJE_NOWEJ = ("Wydatek", "Wycena")
 ZWROT = "Zwrot"
 KOL_VAT = "P"               # Wydatki: VAT % (wpisuje sync z pola VAT %); Q – kwota netto (formuła)
 PLIK_KOPII = "Kosztorys_google.json"
@@ -231,10 +238,15 @@ def nowa_pozycja(tekst_: str, w: dict) -> tuple:
 
 def blad_lokalny(w: dict) -> str:
     if w.get("nowa"):
-        # nowa pozycja zastępuje wybór z listy – numer etapu wystarcza do kontroli materiału 02–08
-        w["poz"], b = nowa_pozycja(w["nowa"], w)
-        if b:
-            return b
+        if w["lp"] and w["lp"] != ZASTEPCZA:
+            w["czysc_nowa"] = True   # wybrana Pozycja wygrywa (świadomy wybór) – pole czyści najbliższy zapis strony
+        elif w["rodzaj"] not in RODZAJE_NOWEJ:
+            return f"Nowa pozycja tylko dla Rodzaju Wydatek albo Wycena – przy Rodzaju {w['rodzaj']} wybierz Pozycję z listy"
+        else:
+            # nowa pozycja zamiast wyboru z listy – numer etapu wystarcza do kontroli materiału 02–08
+            w["poz"], b = nowa_pozycja(w["nowa"], w)
+            if b:
+                return b
     if w["rodzaj"] == "Plan":
         if not isinstance(w["kwota"], (int, float)) or w["kwota"] < 0:
             return "plan bez kwoty (pole Kwota, zł brutto za całą pozycję)"
@@ -263,12 +275,14 @@ def blad_lokalny(w: dict) -> str:
     return ""
 
 
-def oznacz(k: dict, id_: str, stan: str, wiersz=None, blad: str = ""):
+def oznacz(k: dict, id_: str, stan: str, wiersz=None, blad: str = "", czysc_nowa: bool = False):
     wl = {"Arkusz": {"select": {"name": stan}},
           "Błąd": {"rich_text": [{"type": "text", "text": {"content": blad[:300]}}] if blad else []},
           "Zgłoszono": {"date": None}}   # nowy wynik = nowe zgłoszenie we Wpisach, jeśli znów błąd
     if wiersz:
         wl["Wiersz arkusza"] = {"number": wiersz}
+    if czysc_nowa:
+        wl["Nowa pozycja"] = {"rich_text": []}
     W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{id_}", naglowki(k), {"properties": wl})
 
 
@@ -289,15 +303,26 @@ def sync(k: dict, proba: bool) -> tuple:
             if proba:
                 print(f"  ✗ {w['id']} {w['lp'] or '–'}: {b}")   # pełne id – pierwsze znaki powtarzają się w całej przestrzeni Notion
             else:
-                oznacz(k, w["id"], BLAD, blad=b)
+                oznacz(k, w["id"], BLAD, blad=b, czysc_nowa=bool(w.get("czysc_nowa")))
         else:
             do_wyslania.append(w)
+    czysc = {w["id"] for w in wiersze if w.get("czysc_nowa")}
+
+    def ozn(id_, stan, **kw):
+        oznacz(k, id_, stan, czysc_nowa=id_ in czysc, **kw)
     if proba:
         for w in do_wyslania:
             nowa = f" + nowa pozycja w etapie {w['poz']['etap']}" if w.get("poz") else ""
             print(f"  → {w['id']} {w['rodzaj']} {w['data']} poz. {w['lp'] or '–'} {w['typ'] or w['status_wyceny'] or ''} – "
                   f"wysłałbym{nowa}")
         return licz, bledy
+    plany = [w for w in do_wyslania if w["rodzaj"] == "Plan"]
+    do_wyslania = [w for w in do_wyslania if w["rodzaj"] != "Plan"]   # Apps Script wziąłby je za wydatki
+    if plany:   # przed pingiem – jego timeout nie wstrzymuje planów (plan nie ma „Nowej pozycji”)
+        try:
+            wyslij_plany(k, plany, licz, czysc)
+        except BladArkusza as e:
+            bledy.append(f"plany: {e} – strony zostają w kolejce")
     potrzebna_wersja = any(w["rodzaj"] in ("Wycena", ZWROT) or w.get("poz") for w in do_wyslania)
     ping = arkusz(k, "ping") if potrzebna_wersja else {}
     wersja = ping.get("wersja") or 1
@@ -306,14 +331,7 @@ def sync(k: dict, proba: bool) -> tuple:
         wyjete = dodaj_nowe_pozycje(k, nowe, wersja, licz, bledy)
         do_wyslania = [w for w in do_wyslania if w["id"] not in wyjete]
     else:
-        zapisz_etapy({})   # żadna strona nie czeka na etap
-    plany = [w for w in do_wyslania if w["rodzaj"] == "Plan"]
-    do_wyslania = [w for w in do_wyslania if w["rodzaj"] != "Plan"]   # Apps Script wziąłby je za wydatki
-    if plany:
-        try:
-            wyslij_plany(k, plany, licz)
-        except BladArkusza as e:
-            bledy.append(f"plany: {e} – strony zostają w kolejce")
+        zapisz_sesje({}, None)   # nic nie czeka na sesję
     if any(w["rodzaj"] == ZWROT for w in do_wyslania) and wersja < WERSJA_ZWROTOW:
         # starszy kod odrzuciłby kwotę ujemną jako „brak kwoty” – zwroty czekają w kolejce na nowe wdrożenie
         czekaja = [w for w in do_wyslania if w["rodzaj"] == ZWROT]
@@ -354,7 +372,7 @@ def sync(k: dict, proba: bool) -> tuple:
                         continue
                     if blad:
                         licz["bledy"] += 1
-                        oznacz(k, r["id"], BLAD, wiersz=r.get("wiersz"), blad=blad)
+                        ozn(r["id"], BLAD, wiersz=r.get("wiersz"), blad=blad)
                         continue
                     licz["poprawione"] += 1
                 else:
@@ -362,10 +380,10 @@ def sync(k: dict, proba: bool) -> tuple:
                     if po_id[r["id"]]["vat"] is not None:
                         nowe_z_vat.append(r)
                         continue
-                oznacz(k, r["id"], W_ARKUSZU, wiersz=r.get("wiersz"))
+                ozn(r["id"], W_ARKUSZU, wiersz=r.get("wiersz"))
             else:
                 licz["bledy"] += 1
-                oznacz(k, r["id"], BLAD, blad=str(r.get("blad") or "odrzucone przez arkusz"))
+                ozn(r["id"], BLAD, blad=str(r.get("blad") or "odrzucone przez arkusz"))
         if nowe_z_vat:
             try:
                 arkusz(k, "zmien", operacje=[op_vat(po_id[r["id"]], r["wiersz"]) for r in nowe_z_vat])
@@ -374,52 +392,80 @@ def sync(k: dict, proba: bool) -> tuple:
                 bledy.append(f"VAT %: {e} – {len(nowe_z_vat)} stron zostaje w kolejce")
                 continue
             for r in nowe_z_vat:
-                oznacz(k, r["id"], W_ARKUSZU, wiersz=r.get("wiersz"))
+                ozn(r["id"], W_ARKUSZU, wiersz=r.get("wiersz"))
     return licz, bledy
 
 
 def dodaj_nowe_pozycje(k: dict, nowe: list, wersja: int, licz: dict, bledy: list) -> set:
     """Strony z polem „Nowa pozycja”: akcja „dodaj_pozycje” dodaje wiersz w etapie (albo zwraca istniejący Lp – ponowienie
     po timeoucie nie dubluje), `pozycje` dodaje opcję w Notion, strona dostaje Pozycję i pusty „Nowa pozycja”, a wydatek
-    idzie dalej w tym samym `sync`. → id stron wyjętych z tej wysyłki (czekają albo Błąd)."""
+    idzie dalej w tym samym `sync`. Bez znacznika pierwszego sprawdzenia akcja idzie na sucho: istniejąca pozycja
+    przechodzi, nowa czeka na sesję. → id stron wyjętych z tej wysyłki (czekają albo Błąd)."""
     if wersja < WERSJA_POZYCJI:
         # starszy kod nie zna akcji – strony czekają na nowe wdrożenie (jak zwroty przy kodzie < 4)
         licz["czekaja"] += len(nowe)
         bledy.append(f"{len(nowe)} stron z nową pozycją czeka: arkusz ma kod w wersji {wersja} – wklej nowy kod i zrób nową "
                      "wersję wdrożenia (docs/wydatki-arkusz.md, sekcja 7)")
         return {w["id"] for w in nowe}
-    wyjete, etapy_, dodane, wszystkie_odpowiedzi = set(), {}, [], True
+    stary = wczytaj_sesje()
+    sprawdzona = znacznik_sprawdzenia().exists()
+    zajete = {e.get("etap") for e in stary.get("etapy") or []} if blokada_swieza() else set()
+    wyjete, etapy_, pierwsze, dodane, wszystkie_odpowiedzi = set(), {}, None, [], True
+
+    def czeka(w, uwaga):
+        wyjete.add(w["id"])
+        if w["blad_tekst"] != uwaga:
+            W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{w['id']}", naglowki(k),
+                           {"properties": {"Błąd": {"rich_text": [{"type": "text", "text": {"content": uwaga}}]}}})
+
+    def na_etap(w, p):
+        # etapu nie dodaje automat – strona czeka „Do arkusza” (bez 🔔), etap trafia do linii stanu sesji
+        e = etapy_.setdefault(p["etap"], {"etap": p["etap"], "nazwa": "", "stan": "", "pozycje": [], "strony": []})
+        e["nazwa"], e["stan"] = e["nazwa"] or p["nazwa_etapu"], e["stan"] or p["stan"]
+        e["pozycje"].append({x: p[x] for x in ("nazwa", "typ", "jedn")})
+        e["strony"].append(w["id"])
+        licz["czekaja_na_etap"] += 1
+        czeka(w, f"czeka na etap {p['etap']} – doda go najbliższa sesja Claude Code (koszty C.7)")
+
     for w in nowe:
         p = w["poz"]
+        if p["etap"] in zajete:   # sesja właśnie dodaje ten etap – nie wchodź jej w drogę
+            na_etap(w, p)
+            continue
         try:
-            r = arkusz(k, "dodaj_pozycje", pozycja={x: p[x] for x in ("etap", "nazwa", "typ", "jedn")})["wynik"]
+            r = arkusz(k, "dodaj_pozycje", pozycja={x: p[x] for x in ("etap", "nazwa", "typ", "jedn")},
+                       na_sucho=not sprawdzona)["wynik"]
         except BladArkusza as e:
             bledy.append(f"nowa pozycja: {e} – strona zostaje w kolejce")
             wyjete.add(w["id"])
             wszystkie_odpowiedzi = False
             continue
-        if r.get("brak_etapu"):
-            # etapu nie dodaje automat – strona czeka „Do arkusza” (bez 🔔), etap trafia do linii stanu sesji
-            e = etapy_.setdefault(p["etap"], {"etap": p["etap"], "nazwa": "", "stan": "", "pozycje": [], "strony": []})
-            e["nazwa"], e["stan"] = e["nazwa"] or p["nazwa_etapu"], e["stan"] or p["stan"]
-            e["pozycje"].append({x: p[x] for x in ("nazwa", "typ", "jedn")})
-            e["strony"].append(w["id"])
-            licz["czekaja_na_etap"] += 1
-            wyjete.add(w["id"])
-            uwaga = f"czeka na etap {p['etap']} – doda go najbliższa sesja Claude Code (koszty C.7)"
-            if w["blad_tekst"] != uwaga:
-                W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{w['id']}", naglowki(k),
-                               {"properties": {"Błąd": {"rich_text": [{"type": "text", "text": {"content": uwaga}}]}}})
+        if r.get("brak_etapu"):   # także nagłówek etapu bez pozycji (sesja w trakcie albo przerwana)
+            na_etap(w, p)
             continue
         if not r.get("ok"):
             licz["bledy"] += 1
             oznacz(k, w["id"], BLAD, blad=str(r.get("blad") or "nowa pozycja odrzucona przez arkusz"))
             wyjete.add(w["id"])
             continue
+        if r.get("na_sucho"):
+            pierwsze = pierwsze or {"pozycje": [], "strony": []}
+            pierwsze["pozycje"].append(w["nowa"])
+            pierwsze["strony"].append(w["id"])
+            licz["czekaja_na_etap"] += 1
+            czeka(w, "czeka na pierwsze sprawdzenie w sesji Claude Code (koszty C.8) – potem pójdzie sama")
+            continue
+        if not r.get("lp"):
+            licz["bledy"] += 1
+            oznacz(k, w["id"], BLAD, blad="arkusz nie podał numeru nowej pozycji")
+            wyjete.add(w["id"])
+            continue
         dodane.append((w, r))
         licz["nowe_pozycje"] += 0 if r.get("juz") else 1
     if wszystkie_odpowiedzi:
-        zapisz_etapy(etapy_)
+        stare = zapisz_sesje(etapy_, pierwsze)
+        if stare:
+            bledy.append(f"czeka na sesję Claude Code ponad 3 dni: {', '.join(stare)} – otwórz sesję w repo (koszty C.7–C.8)")
     if dodane:
         try:
             nazwy = pozycje(k)["nazwy"]
@@ -427,63 +473,107 @@ def dodaj_nowe_pozycje(k: dict, nowe: list, wersja: int, licz: dict, bledy: list
             bledy.append(f"nowa pozycja: lista pozycji – {e}; {len(dodane)} stron zostaje w kolejce")
             return wyjete | {w["id"] for w, _ in dodane}
         for w, r in dodane:
-            nazwa = nazwy.get(r["lp"]) or nazwa_opcji(r)
+            nazwa = nazwy.get(r["lp"]) or nazwa_opcji({"klucz": r.get("klucz") or r["lp"]})
             W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{w['id']}", naglowki(k),
                            {"properties": {"Pozycja": {"select": {"name": nazwa}}, "Nowa pozycja": {"rich_text": []}}})
             w["lp"], w["nowa"] = r["lp"], ""
     return wyjete
 
 
-def plik_etapow() -> Path:
-    return W.CONF / "wydatki" / PLIK_ETAPOW
+def plik_sesji() -> Path:
+    return W.CONF / "wydatki" / PLIK_SESJI
 
 
-def zapisz_etapy(etapy_: dict):
-    """Etapy czekające na sesję Claude Code (dane prywatne – folder budowy, nie repo). Brak etapów = brak pliku."""
-    plik = plik_etapow()
-    if not etapy_:
+def znacznik_sprawdzenia() -> Path:
+    return W.CONF / "wydatki" / ZNACZNIK_SPRAWDZENIA
+
+
+def blokada_sesji() -> Path:
+    return W.CONF / "wydatki" / BLOKADA_SESJI
+
+
+def blokada_swieza() -> bool:
+    b = blokada_sesji()
+    return b.is_dir() and time.time() - b.stat().st_mtime < BLOKADA_WAZNA_S
+
+
+def wczytaj_sesje() -> dict:
+    try:
+        d = json.loads(plik_sesji().read_text(encoding="utf-8"))
+        return d if isinstance(d, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def zapisz_sesje(etapy_: dict, pierwsze) -> list:
+    """Sprawy dla sesji Claude Code (dane prywatne – folder budowy, nie repo): nowe etapy i pierwsze sprawdzenie nowej
+    pozycji. Nic nie czeka = brak pliku. „od” zostaje z poprzedniego zapisu. → sprawy czekające dłużej niż 3 dni."""
+    plik = plik_sesji()
+    if not etapy_ and not pierwsze:
         if plik.exists():
             plik.unlink()
-        return
+        return []
+    stary = wczytaj_sesje()
+    od_etapow = {e.get("etap"): e.get("od") for e in stary.get("etapy") or []}
+    teraz = time.strftime("%Y-%m-%d %H:%M")
+    for e in etapy_.values():
+        e["od"] = od_etapow.get(e["etap"]) or teraz
+    if pierwsze:
+        pierwsze["od"] = (stary.get("pierwsze_sprawdzenie") or {}).get("od") or teraz
     plik.parent.mkdir(parents=True, exist_ok=True)
     tymczasowy = plik.with_suffix(".tmp")
-    tymczasowy.write_text(json.dumps({"zapisano": time.strftime("%Y-%m-%d %H:%M"), "etapy": list(etapy_.values())},
+    tymczasowy.write_text(json.dumps({"zapisano": teraz, "etapy": list(etapy_.values()), "pierwsze_sprawdzenie": pierwsze},
                                      ensure_ascii=False, indent=1), encoding="utf-8")
     tymczasowy.replace(plik)
+    granica = time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time() - ALARM_PO_S))
+    stare = [f"nowy etap {e['etap']}" for e in etapy_.values() if e["od"] < granica]
+    if pierwsze and pierwsze["od"] < granica:
+        stare.append("pierwsze sprawdzenie nowej pozycji")
+    return stare
 
 
-def etapy(zablokuj: bool = False, odblokuj: bool = False) -> str:
-    """Nowe etapy czekające na sesję (koszty C.7). --zablokuj: blokada (katalog, ważna 2 h), żeby dwie sesje nie dodały
-    etapu dwa razy; zajęta – „zajęte”, nic nie rób. --odblokuj: po dodaniu etapu i `sync`."""
-    blokada = plik_etapow().parent / BLOKADA_ETAPU
+def sesja(zablokuj: bool = False, odblokuj: bool = False) -> str:
+    """Co czeka na sesję Claude Code (koszty C.7–C.8). --zablokuj: blokada (katalog, ważna 2 h), żeby dwie sesje nie
+    zrobiły tego samego; zajęta – „zajęte”, nic nie rób. --odblokuj: na końcu pracy sesji."""
+    blokada = blokada_sesji()
     if odblokuj:
         if blokada.is_dir():
             blokada.rmdir()
-        return "etapy: blokada zdjęta"
-    try:
-        lista = json.loads(plik_etapow().read_text(encoding="utf-8")).get("etapy") or []
-    except (OSError, ValueError):
-        lista = []
-    if not lista:
-        return "etapy: brak nowych etapów do dodania"
+        return "sesja: blokada zdjęta"
+    d = wczytaj_sesje()
+    lista, pierwsze = d.get("etapy") or [], d.get("pierwsze_sprawdzenie") or {}
+    if not lista and not pierwsze:
+        return "sesja: nic nie czeka"
     if zablokuj:
         blokada.parent.mkdir(parents=True, exist_ok=True)
         try:
             blokada.mkdir()
         except FileExistsError:
-            wiek = time.time() - blokada.stat().st_mtime
-            if wiek < BLOKADA_WAZNA_S:
-                return f"etapy: zajęte – inna sesja dodaje etap (od {time.strftime('%H:%M', time.localtime(blokada.stat().st_mtime))}); nic nie rób"
+            if blokada_swieza():
+                od = time.strftime("%H:%M", time.localtime(blokada.stat().st_mtime))
+                return f"sesja: zajęte – inna sesja już to robi (od {od}); nic nie rób"
             os.utime(blokada)   # porzucona blokada (sesja przerwana) – przejmij
     for e in lista:
         poz = "; ".join(f"{x['nazwa']} ({x['typ']}, {x['jedn']})" for x in e.get("pozycje") or [])
-        print(f"  etap {e['etap']} „{e.get('nazwa') or '?'}” · stan {e.get('stan') or '?'} · pozycje: {poz} · stron: "
-              f"{len(e.get('strony') or [])}")
-    return f"etapy: {len(lista)} do dodania" + (" – blokada założona" if zablokuj else "")
+        print(f"  nowy etap {e['etap']} „{e.get('nazwa') or '?'}” · stan {e.get('stan') or '?'} · pozycje: {poz} · stron: "
+              f"{len(e.get('strony') or [])} · od {e.get('od') or '?'}")
+    if pierwsze:
+        print(f"  pierwsze sprawdzenie nowej pozycji (od {pierwsze.get('od') or '?'}) – pozycje: "
+              + "; ".join(f"„{t}”" for t in pierwsze.get("pozycje") or []))
+    return (f"sesja: nowe etapy {len(lista)}, pierwsze sprawdzenie {'tak' if pierwsze else 'nie'}"
+            + (" – blokada założona" if zablokuj else ""))
 
 
-def nowa_pozycja_polecenie(k: dict, tekst_: str, proba: bool) -> str:
-    """Pozycja w istniejącym etapie z wiersza poleceń (sesja Claude Code; pierwsze sprawdzenie kodu v5: --proba)."""
+def nowa_pozycja_polecenie(k: dict, tekst_: str, proba: bool, potwierdz: bool = False) -> str:
+    """Pozycja w istniejącym etapie z wiersza poleceń (sesja Claude Code; działa bez znacznika – to narzędzie pierwszego
+    sprawdzenia). --potwierdz: znacznik, po którym `sync` z automatu sam wstawia pozycje (koszty C.8)."""
+    if potwierdz:
+        z = znacznik_sprawdzenia()
+        z.parent.mkdir(parents=True, exist_ok=True)
+        z.write_text(time.strftime("%Y-%m-%d %H:%M") + " – pierwsze sprawdzenie nowej pozycji zgodne\n", encoding="utf-8")
+        return "nowa-pozycja: znacznik zapisany – od teraz `sync` sam dodaje nowe pozycje"
+    if not tekst_.strip():
+        raise BladArkusza("podaj „etap | nazwa | typ | jedn.” albo --potwierdz")
     wymagaj(k, "url", "sekret") if proba else wymagaj(k, "token", "url", "sekret")
     p, b = nowa_pozycja(tekst_, {"typ": "", "jedn": ""})
     if b:
@@ -491,19 +581,25 @@ def nowa_pozycja_polecenie(k: dict, tekst_: str, proba: bool) -> str:
     wersja = arkusz(k, "ping").get("wersja") or 1
     if wersja < WERSJA_POZYCJI:
         raise BladArkusza(f"arkusz ma kod w wersji {wersja} – wklej nowy kod (docs/wydatki-arkusz.md, sekcja 7)")
-    r = arkusz(k, "dodaj_pozycje", pozycja={x: p[x] for x in ("etap", "nazwa", "typ", "jedn")}, na_sucho=proba)["wynik"]
+    r = arkusz(k, "dodaj_pozycje", pozycja={x: p[x] for x in ("etap", "nazwa", "typ", "jedn")}, na_sucho=proba).get("wynik")
+    if not isinstance(r, dict):
+        raise BladArkusza("odpowiedź arkusza bez wyniku akcji – sprawdź wersję kodu")
     if r.get("brak_etapu"):
-        raise BladArkusza(f"etap {p['etap']} nie istnieje w Kosztorysie – najpierw etap (koszty C.7)")
+        raise BladArkusza(f"etap {p['etap']} " + ("nie ma żadnej pozycji" if r.get("bez_pozycji") else "nie istnieje w Kosztorysie")
+                          + " – najpierw etap (koszty C.7)")
     if not r.get("ok"):
         raise BladArkusza(str(r.get("blad") or "odrzucone przez arkusz"))
+    if r.get("juz"):
+        return f"nowa-pozycja: pozycja już jest – Lp {r.get('lp') or '?'}, wiersz {r.get('wiersz') or '?'}; bez zmian"
     if proba:
         miejsce = "przed ostatnią pozycją etapu" if r.get("przed_ostatnia") else "za jedyną pozycją etapu"
-        return (f"nowa-pozycja (próba): Lp {r['lp']}, wiersz {r['wiersz']} ({miejsce}), suma etapu {r['suma_etapu']}, "
-                f"kontrola: {len(r.get('kontrola') or [])} wartości – nic nie zmieniono")
-    if not r.get("juz"):
-        pozycje(k)
-    return f"nowa-pozycja: Lp {r['lp']}, wiersz {r['wiersz']}" + (" (już była – bez zmian)" if r.get("juz") else
-                                                                    ", opcja w Notion dodana")
+        return (f"nowa-pozycja (próba): Lp {r.get('lp') or '?'}, wiersz {r.get('wiersz') or '?'} ({miejsce}), suma etapu "
+                f"{r.get('suma_etapu') or '?'}, wzór z wiersza {r.get('wzor') or '?'}, kontrola: {len(r.get('kontrola') or [])} "
+                "wartości – nic nie zmieniono")
+    if not r.get("lp"):
+        raise BladArkusza("arkusz nie podał numeru nowej pozycji")
+    pozycje(k)
+    return f"nowa-pozycja: Lp {r['lp']}, wiersz {r.get('wiersz') or '?'}, opcja w Notion dodana"
 
 
 def op_vat(w: dict, wiersz: int) -> dict:
@@ -561,7 +657,7 @@ def liczba(x):
     return x if isinstance(x, (int, float)) and not isinstance(x, bool) else None
 
 
-def wyslij_plany(k: dict, plany: list, licz: dict):
+def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset()):
     """Rodzaj „Plan” → komórka „Plan ręczny” pozycji w Kosztorysie. Pusta albo równa – zapis; inna wartość – tylko gdy ta
     strona już tę komórkę ustawiła (Wiersz arkusza) albo ma zaznaczone „Nadpisz plan”; inaczej Błąd z pytaniem."""
     m = mapa_planu(k)
@@ -569,13 +665,15 @@ def wyslij_plany(k: dict, plany: list, licz: dict):
         p = m["pozycje"].get(w["lp"])
         if not p:
             licz["bledy"] += 1
-            oznacz(k, w["id"], BLAD, blad=f"pozycja {w['lp']} nie istnieje w Kosztorysie")
+            oznacz(k, w["id"], BLAD, czysc_nowa=w["id"] in czysc, blad=f"pozycja {w['lp']} nie istnieje w Kosztorysie")
             continue
         obecny = liczba(p["plan"])
-        wlasny = w["wiersz_ark"] == p["wiersz"]
+        # własny plan = ta strona już raz wpisała plan swojej pozycji (Lp strony); numer wiersza się nie liczy, bo
+        # automatyczne wstawienia pozycji przesuwają wiersze
+        wlasny = w["wiersz_ark"] is not None
         if obecny not in (None, 0) and obecny != w["kwota"] and not (wlasny or w["nadpisz"]):
             licz["bledy"] += 1
-            oznacz(k, w["id"], BLAD, blad=f"pozycja {w['lp']} ma już inny plan ręczny – zaznacz „Nadpisz plan”, "
+            oznacz(k, w["id"], BLAD, czysc_nowa=w["id"] in czysc, blad=f"pozycja {w['lp']} ma już inny plan ręczny – zaznacz „Nadpisz plan”, "
                                           "jeśli ten ma go zastąpić")
             continue
         if obecny != w["kwota"]:
@@ -584,7 +682,7 @@ def wyslij_plany(k: dict, plany: list, licz: dict):
         uwaga = ("uwaga: pozycja ma wybraną ofertę – PLAN liczy się z oferty × ilość, plan ręczny jest zapasowy"
                  if (liczba(p["oferta"]) or 0) > 0 else "")
         licz["plany"] += 1
-        oznacz(k, w["id"], W_ARKUSZU, wiersz=p["wiersz"], blad=uwaga)
+        oznacz(k, w["id"], W_ARKUSZU, czysc_nowa=w["id"] in czysc, wiersz=p["wiersz"], blad=uwaga)
 
 
 def strona(k: dict, id_: str) -> dict:
@@ -907,13 +1005,15 @@ def sprawdz(k: dict) -> list:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("polecenie", choices=["sync", "pozycje", "pobierz", "wycofaj", "sprawdz", "kod", "migruj",
-                                                "gotowka", "nowa-pozycja", "etapy"])
+                                                "gotowka", "nowa-pozycja", "sesja"])
     ap.add_argument("ids", nargs="*", help="wycofaj: id stron Notion; migruj: plik zmian JSON; nowa-pozycja: "
                                            "„etap | nazwa | typ | jedn.”")
     ap.add_argument("--proba", action="store_true",
                     help="sync: tylko pokaż, co poszłoby do arkusza; nowa-pozycja: plan akcji na sucho (bez zapisu)")
-    ap.add_argument("--zablokuj", action="store_true", help="etapy: blokada – tę sprawę bierze ta sesja")
-    ap.add_argument("--odblokuj", action="store_true", help="etapy: zdejmij blokadę po dodaniu etapu")
+    ap.add_argument("--zablokuj", action="store_true", help="sesja: blokada – te sprawy bierze ta sesja")
+    ap.add_argument("--odblokuj", action="store_true", help="sesja: zdejmij blokadę na końcu")
+    ap.add_argument("--potwierdz", action="store_true",
+                    help="nowa-pozycja: pierwsze sprawdzenie zgodne – od teraz `sync` sam wstawia pozycje")
     ap.add_argument("--cicho", action="store_true", help="jedna linia wyniku (dla automatów)")
     ap.add_argument("--gdy-starsza", type=float, default=0, metavar="H",
                     help="pobierz: tylko gdy kopia jest starsza niż H godzin")
@@ -927,10 +1027,10 @@ def main(argv=None) -> int:
             return 1
         sys.stdout.write(m.group(1))
         return 0
-    if a.polecenie in ("wycofaj", "migruj", "nowa-pozycja") and not a.ids:
+    if a.polecenie in ("wycofaj", "migruj") and not a.ids or a.polecenie == "nowa-pozycja" and not (a.ids or a.potwierdz):
         ap.error(f"{a.polecenie}: brak argumentu (id stron / plik zmian / opis pozycji)")
-    if a.polecenie == "etapy":
-        print(etapy(a.zablokuj, a.odblokuj))
+    if a.polecenie == "sesja":
+        print(sesja(a.zablokuj, a.odblokuj))
         return 0
     k = konfiguracja()
     t0 = time.monotonic()
@@ -952,7 +1052,7 @@ def main(argv=None) -> int:
         elif a.polecenie == "gotowka":
             linia = gotowka(k, a.harmonogram, bledy)
         elif a.polecenie == "nowa-pozycja":
-            linia = nowa_pozycja_polecenie(k, " ".join(a.ids), a.proba)
+            linia = nowa_pozycja_polecenie(k, " ".join(a.ids), a.proba, a.potwierdz)
         elif a.polecenie == "pozycje":
             w = pozycje(k)
             linia = f"pozycje: {w['pozycje']} w arkuszu, nowe opcje w Notion {w['nowe_opcje']}"

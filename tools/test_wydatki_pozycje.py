@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Testy pola „Nowa pozycja” w `wydatki.py` (POM-31): parsowanie, walidacja, `sync` z akcją „dodaj_pozycje”, plik etapów
-i blokada sesji – na atrapach arkusza i Notion, bez sieci i bez prawdziwych danych.
+"""Testy pola „Nowa pozycja” w `wydatki.py` (POM-31): parsowanie, walidacja, `sync` z akcją „dodaj_pozycje”, bezpiecznik
+pierwszego użycia, plik spraw dla sesji i blokada – na atrapach arkusza i Notion, bez sieci i bez prawdziwych danych.
 
     python3 tools/test_wydatki_pozycje.py
 """
@@ -21,9 +21,9 @@ def tekst(t):
     return {"rich_text": [{"plain_text": t}]} if t else {"rich_text": []}
 
 
-def strona(id_, pozycja="", nowa="", typ="Materiał", jedn="szt", ilosc=2, blad=""):
+def strona(id_, pozycja="", nowa="", typ="Materiał", jedn="szt", ilosc=2, blad="", rodzaj="", kwota=100, wiersz=None):
     return {"id": id_, "properties": {
-        "Rodzaj": {"select": None}, "Data": {"date": {"start": "2026-11-18"}}, "Kwota": {"number": 100},
+        "Rodzaj": {"select": {"name": rodzaj} if rodzaj else None}, "Wiersz arkusza": {"number": wiersz}, "Data": {"date": {"start": "2026-11-18"}}, "Kwota": {"number": kwota},
         "Pozycja": {"select": {"name": pozycja} if pozycja else None}, "Typ": {"select": {"name": typ}},
         "Ilość": {"number": ilosc}, "Jedn.": {"select": {"name": jedn}}, "Wydatek": {"title": [{"plain_text": "Rzecz X"}]},
         "Nowa pozycja": tekst(nowa), "Błąd": tekst(blad)}}
@@ -32,19 +32,32 @@ def strona(id_, pozycja="", nowa="", typ="Materiał", jedn="szt", ilosc=2, blad=
 class Atrapy:
     """Arkusz (akcje Apps Script) i Notion (PATCH stron, schemat bazy) w pamięci."""
 
-    def __init__(self, wersja=5, odpowiedzi=None, timeout=False):
-        self.wersja, self.odpowiedzi, self.timeout = wersja, odpowiedzi or {}, timeout
+    def __init__(self, wersja=5, odpowiedzi=None, timeout=False, ping_timeout=False, plan=None):
+        self.wersja, self.odpowiedzi, self.timeout, self.ping_timeout = wersja, odpowiedzi or {}, timeout, ping_timeout
+        self.plan = plan   # Kosztorys „dane”: (lp, wiersz, plan ręczny)
         self.akcje, self.patche, self.dopisane = [], [], []
         self.opcje = [{"id": "o1", "name": "47.1 Pozycja A"}]
 
     def arkusz(self, k, akcja, limit=0, **dane):
         self.akcje.append((akcja, dane))
         if akcja == "ping":
+            if self.ping_timeout:
+                raise WY.BladArkusza("timeout")
             return {"ok": True, "wersja": self.wersja, "cennik_ok": True}
         if akcja == "dodaj_pozycje":
             if self.timeout:
                 raise WY.BladArkusza("timeout")
-            return {"ok": True, "wynik": self.odpowiedzi[dane["pozycja"]["etap"]]}
+            wynik = dict(self.odpowiedzi[dane["pozycja"]["etap"]])
+            if dane.get("na_sucho") and wynik.get("ok") and not wynik.get("juz") and not wynik.get("brak_etapu"):
+                wynik = {"ok": True, "na_sucho": True, "lp": wynik.get("lp"), "wiersz": 1, "suma_etapu": "1:2"}
+            return {"ok": True, "wynik": wynik}
+        if akcja == "dane":
+            lp, wiersz, plan = self.plan
+            nag = ["Etap", "Lp", "Pozycja", "PLAN", "Plan ręczny (zł)"]
+            wiersze = [[""]] * (wiersz - WY.PIERWSZY_WIERSZ)
+            return {"ok": True, "arkusze": {"Kosztorys": [[""], [""], [""], nag] + wiersze + [["E", lp, "X", 0, plan]]}}
+        if akcja == "zmien":
+            return {"ok": True, "wykonane": len(dane["operacje"])}
         if akcja == "pozycje":
             return {"ok": True, "pozycje": [{"lp": "47.1", "etap": "47 E", "klucz": "47.1 Pozycja A"},
                                             {"lp": "47.2", "etap": "47 E", "klucz": "47.2 Szafki, kuchnia"}]}
@@ -105,10 +118,14 @@ class SyncNowaPozycja(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self._conf, self._arkusz, self._http, self._kolejka = WY.W.CONF, WY.arkusz, WY.W.zadanie_http, WY.kolejka
         WY.W.CONF = Path(self.tmp.name)
+        self.potwierdz()
 
     def tearDown(self):
         WY.W.CONF, WY.arkusz, WY.W.zadanie_http, WY.kolejka = self._conf, self._arkusz, self._http, self._kolejka
         self.tmp.cleanup()
+
+    def potwierdz(self):
+        WY.nowa_pozycja_polecenie(K, "", proba=False, potwierdz=True)
 
     def uruchom(self, strony, atrapy):
         WY.arkusz, WY.W.zadanie_http, WY.kolejka = atrapy.arkusz, atrapy.http, (lambda k: strony)
@@ -124,7 +141,7 @@ class SyncNowaPozycja(unittest.TestCase):
         self.assertEqual(pozycja["Pozycja"]["select"]["name"], "47.2 Szafki; kuchnia")   # nazwa opcji bez przecinka
         self.assertEqual(pozycja["Nowa pozycja"], {"rich_text": []})
         self.assertIn("47.2 Szafki; kuchnia", [o["name"] for o in a.opcje])
-        self.assertFalse(WY.plik_etapow().exists())
+        self.assertFalse(WY.plik_sesji().exists())
 
     def test_istniejaca_pozycja_nie_liczy_sie_jako_nowa(self):
         a = Atrapy(odpowiedzi={"47": {"ok": True, "juz": True, "lp": "47.2", "klucz": "47.2 Szafki, kuchnia", "wiersz": 89}})
@@ -147,7 +164,7 @@ class SyncNowaPozycja(unittest.TestCase):
         self.assertEqual((licz["czekaja_na_etap"], licz["bledy"], licz["dopisane"]), (1, 0, 0))
         (id_, wl), = a.patche
         self.assertEqual(set(wl), {"Błąd"})                       # Arkusz zostaje „Do arkusza” – bez 🔔
-        dane = json.loads(WY.plik_etapow().read_text(encoding="utf-8"))
+        dane = json.loads(WY.plik_sesji().read_text(encoding="utf-8"))
         self.assertEqual(dane["etapy"][0]["etap"], "41")
         self.assertEqual(dane["etapy"][0]["stan"], "SSO")
         self.assertEqual(dane["etapy"][0]["strony"], ["a"])
@@ -156,7 +173,7 @@ class SyncNowaPozycja(unittest.TestCase):
         self.uruchom([strona("a", nowa="41 Etap nowy · SSO | Pozycja Z | Robocizna | m²", blad=wl["Błąd"]["rich_text"][0]["text"]["content"])], a2)
         self.assertEqual(a2.patche, [])
         self.uruchom([], Atrapy())
-        self.assertFalse(WY.plik_etapow().exists())
+        self.assertFalse(WY.plik_sesji().exists())
 
     def test_blad_akcji_to_blad_strony(self):
         a = Atrapy(odpowiedzi={"47": {"ok": False, "blad": "nowa pozycja 47.2: zmieniło się: RAZEM PLAN – wstawiony wiersz usunięty"}})
@@ -165,19 +182,114 @@ class SyncNowaPozycja(unittest.TestCase):
         self.assertEqual(a.patche[0][1]["Arkusz"]["select"]["name"], WY.BLAD)
 
     def test_timeout_zostawia_strone_i_plik(self):
-        WY.zapisz_etapy({"41": {"etap": "41", "nazwa": "", "stan": "", "pozycje": [], "strony": ["x"]}})
+        WY.zapisz_sesje({"41": {"etap": "41", "nazwa": "", "stan": "", "pozycje": [], "strony": ["x"]}}, None)
         a = Atrapy(timeout=True)
         licz, bledy = self.uruchom([strona("a", nowa="47 | Szafki | Materiał | kpl")], a)
         self.assertEqual((licz["dopisane"], licz["bledy"]), (0, 0))
         self.assertTrue(any("timeout" in b for b in bledy))
         self.assertEqual(a.patche, [])
-        self.assertTrue(WY.plik_etapow().exists())
+        self.assertTrue(WY.plik_sesji().exists())
+
+    def test_10_pozycja_wygrywa_a_pole_jest_czyszczone(self):
+        a = Atrapy()
+        licz, bledy = self.uruchom([strona("a", pozycja="47.1 Pozycja A", nowa="47 | Szafki | Materiał | kpl")], a)
+        self.assertEqual((bledy, licz["dopisane"], licz["nowe_pozycje"]), ([], 1, 0))
+        self.assertNotIn("dodaj_pozycje", [x for x, _ in a.akcje])
+        self.assertEqual(a.dopisane[0]["lp"], "47.1")
+        self.assertEqual(a.patche[-1][1]["Nowa pozycja"], {"rich_text": []})
+
+    def test_11_nowa_pozycja_przy_zwrocie_i_planie_to_blad(self):
+        for rodzaj in ("Zwrot", "Plan"):
+            a = Atrapy()
+            licz, _ = self.uruchom([strona("a", nowa="47 | Szafki | Materiał | kpl", rodzaj=rodzaj)], a)
+            self.assertEqual(licz["bledy"], 1, rodzaj)
+            self.assertIn("tylko dla Rodzaju Wydatek albo Wycena", a.patche[0][1]["Błąd"]["rich_text"][0]["text"]["content"])
+
+    def test_9_plan_wlasny_po_przesunieciu_wiersza(self):
+        # strona już raz wpisała plan (Wiersz arkusza = 40), wstawienie pozycji przesunęło wiersz na 41 – to nadal jej plan
+        a = Atrapy(plan=("47.1", 41, 500))
+        licz, bledy = self.uruchom([strona("a", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700, wiersz=40)], a)
+        self.assertEqual((bledy, licz["plany"], licz["bledy"]), ([], 1, 0))
+        a = Atrapy(plan=("47.1", 41, 500))
+        licz, _ = self.uruchom([strona("b", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700)], a)
+        self.assertEqual(licz["bledy"], 1)   # cudzy plan bez „Nadpisz plan” – jak dotąd
+
+    def test_12_timeout_pingu_nie_wstrzymuje_planow(self):
+        a = Atrapy(ping_timeout=True, plan=("47.1", 41, 0))
+        with self.assertRaises(WY.BladArkusza):
+            self.uruchom([strona("p", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700),
+                          strona("a", nowa="47 | Szafki | Materiał | kpl")], a)
+        self.assertEqual(a.patche[0][0], "p")
+        self.assertEqual(a.patche[0][1]["Arkusz"]["select"]["name"], WY.W_ARKUSZU)
+
+    def test_13_swieza_blokada_sesji_strony_etapu_czekaja(self):
+        WY.zapisz_sesje({"41": {"etap": "41", "nazwa": "", "stan": "", "pozycje": [], "strony": ["a"]}}, None)
+        WY.sesja(zablokuj=True)
+        a = Atrapy(odpowiedzi={"41": {"ok": True, "juz": True, "lp": "41.1", "klucz": "41.1 Pozycja Z", "wiersz": 9}})
+        licz, bledy = self.uruchom([strona("a", nowa="41 | Pozycja Z | Robocizna | m²")], a)
+        self.assertEqual((bledy, licz["czekaja_na_etap"], licz["bledy"]), ([], 1, 0))
+        self.assertNotIn("dodaj_pozycje", [x for x, _ in a.akcje])
+
+    def test_13_etap_bez_pozycji_czeka(self):
+        a = Atrapy(odpowiedzi={"41": {"ok": True, "brak_etapu": True, "bez_pozycji": True, "etap": "41"}})
+        licz, bledy = self.uruchom([strona("a", nowa="41 | Pozycja Z | Robocizna | m²")], a)
+        self.assertEqual((bledy, licz["czekaja_na_etap"], licz["bledy"]), ([], 1, 0))
+
+    def test_14_czekanie_ponad_3_dni_to_kod_1(self):
+        a = Atrapy(odpowiedzi={"41": {"ok": True, "brak_etapu": True, "etap": "41"}})
+        self.uruchom([strona("a", nowa="41 | Pozycja Z | Robocizna | m²")], a)
+        d = json.loads(WY.plik_sesji().read_text(encoding="utf-8"))
+        d["etapy"][0]["od"] = "2000-01-01 00:00"
+        WY.plik_sesji().write_text(json.dumps(d), encoding="utf-8")
+        _, bledy = self.uruchom([strona("a", nowa="41 | Pozycja Z | Robocizna | m²")], Atrapy(odpowiedzi=a.odpowiedzi))
+        self.assertTrue(any("ponad 3 dni" in b and "nowy etap 41" in b for b in bledy), bledy)
+        self.assertEqual(json.loads(WY.plik_sesji().read_text(encoding="utf-8"))["etapy"][0]["od"], "2000-01-01 00:00")
+
+    def test_15_bez_znacznika_nowa_czeka_istniejaca_przechodzi(self):
+        WY.znacznik_sprawdzenia().unlink()
+        a = Atrapy(odpowiedzi={"47": {"ok": True, "juz": False, "lp": "47.2", "klucz": "47.2 Szafki", "wiersz": 89},
+                               "03": {"ok": True, "juz": True, "lp": "03.5", "klucz": "03.5 Chudziak", "wiersz": 36}})
+        licz, bledy = self.uruchom([strona("a", nowa="47 | Szafki | Materiał | kpl"),
+                                    strona("b", nowa="03 | Chudziak | Materiał | m³")], a)
+        self.assertEqual(bledy, [])
+        self.assertTrue(all(d.get("na_sucho") for x, d in a.akcje if x == "dodaj_pozycje"))
+        self.assertEqual([w["id"] for w in a.dopisane], ["b"])
+        uwaga = [wl for i, wl in a.patche if i == "a"][0]["Błąd"]["rich_text"][0]["text"]["content"]
+        self.assertIn("pierwsze sprawdzenie", uwaga)
+        d = json.loads(WY.plik_sesji().read_text(encoding="utf-8"))
+        self.assertEqual(d["pierwsze_sprawdzenie"]["pozycje"], ["47 | Szafki | Materiał | kpl"])
+        self.assertIn("pierwsze sprawdzenie tak", WY.sesja())
+        # po potwierdzeniu wstawia naprawdę
+        self.potwierdz()
+        a2 = Atrapy(odpowiedzi=a.odpowiedzi)
+        licz, _ = self.uruchom([strona("a", nowa="47 | Szafki | Materiał | kpl")], a2)
+        self.assertEqual(licz["nowe_pozycje"], 1)
+        self.assertFalse(WY.plik_sesji().exists())
 
     def test_proba_nie_wola_arkusza(self):
         a = Atrapy()
         WY.arkusz, WY.W.zadanie_http, WY.kolejka = a.arkusz, a.http, (lambda k: [strona("a", nowa="47 | Szafki | Materiał | kpl")])
         licz, _ = WY.sync(K, proba=True)
         self.assertEqual((a.akcje, a.patche, licz["bledy"]), ([], [], 0))
+
+
+class PolecenieNowaPozycja(unittest.TestCase):
+    def setUp(self):
+        self._arkusz = WY.arkusz
+
+    def tearDown(self):
+        WY.arkusz = self._arkusz
+
+    def test_8_proba_przy_istniejacej_nazwie_i_niepelnej_odpowiedzi(self):
+        a = Atrapy(odpowiedzi={"03": {"ok": True, "juz": True, "lp": "03.17", "klucz": "03.17 Blacha", "wiersz": 44}})
+        WY.arkusz = a.arkusz
+        self.assertIn("już jest – Lp 03.17", WY.nowa_pozycja_polecenie(K, "03 | Blacha | Materiał | kpl", proba=True))
+        odp = {"wynik": {"ok": True, "na_sucho": True}}               # bez spodziewanych pól – bez tracebacku
+        WY.arkusz = lambda k, akcja, **d: {"ok": True, "wersja": 5} if akcja == "ping" else dict(odp, ok=True)
+        self.assertIn("Lp ?", WY.nowa_pozycja_polecenie(K, "03 | Inna | Materiał | kpl", proba=True))
+        odp = {}
+        with self.assertRaises(WY.BladArkusza):
+            WY.nowa_pozycja_polecenie(K, "03 | Inna | Materiał | kpl", proba=True)
 
 
 class BlokadaEtapu(unittest.TestCase):
@@ -190,21 +302,21 @@ class BlokadaEtapu(unittest.TestCase):
         WY.W.CONF = self._conf
         self.tmp.cleanup()
 
-    def test_brak_etapow(self):
-        self.assertIn("brak", WY.etapy(zablokuj=True))
-        self.assertFalse((WY.plik_etapow().parent / WY.BLOKADA_ETAPU).exists())
+    def test_nic_nie_czeka(self):
+        self.assertIn("nic nie czeka", WY.sesja(zablokuj=True))
+        self.assertFalse(WY.blokada_sesji().exists())
 
     def test_jedna_sesja_naraz_i_porzucona_blokada(self):
         import os
-        WY.zapisz_etapy({"41": {"etap": "41", "nazwa": "Etap nowy", "stan": "SSO",
-                                "pozycje": [{"nazwa": "Pozycja Z", "typ": "Robocizna", "jedn": "m²"}], "strony": ["a"]}})
-        self.assertIn("blokada założona", WY.etapy(zablokuj=True))
-        self.assertIn("zajęte", WY.etapy(zablokuj=True))
-        blokada = WY.plik_etapow().parent / WY.BLOKADA_ETAPU
+        WY.zapisz_sesje({"41": {"etap": "41", "nazwa": "Etap nowy", "stan": "SSO",
+                                "pozycje": [{"nazwa": "Pozycja Z", "typ": "Robocizna", "jedn": "m²"}], "strony": ["a"]}}, None)
+        self.assertIn("blokada założona", WY.sesja(zablokuj=True))
+        self.assertIn("zajęte", WY.sesja(zablokuj=True))
+        blokada = WY.blokada_sesji()
         stara = blokada.stat().st_mtime - WY.BLOKADA_WAZNA_S - 10
         os.utime(blokada, (stara, stara))
-        self.assertIn("blokada założona", WY.etapy(zablokuj=True))
-        WY.etapy(odblokuj=True)
+        self.assertIn("blokada założona", WY.sesja(zablokuj=True))
+        WY.sesja(odblokuj=True)
         self.assertFalse(blokada.exists())
 
 

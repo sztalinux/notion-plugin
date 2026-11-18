@@ -71,7 +71,7 @@ asystent albo inwestor z Arkusz = „Do arkusza”; resztę pól stanu ustawia `
 | Data | data | data płatności |
 | Kwota | liczba | Wydatek: zł brutto, tyle ile zapłacono; Wycena: cena za jednostkę; Plan: plan całej pozycji brutto |
 | Pozycja | select | pozycje arkusza Kosztorys „Lp Nazwa” (przecinki zamienione na „;”); listę odświeża `wydatki.py pozycje` |
-| Nowa pozycja | tekst | tylko gdy żadna Pozycja nie pasuje, po „tak” inwestora: `<etap> \| <nazwa> \| <typ> \| <jedn.>`, nowy etap `<nr> <nazwa etapu> · <stan> \| …` – `sync` dodaje pozycję, ustawia Pozycję i czyści to pole (`koszty/references/nowa-pozycja.md`) |
+| Nowa pozycja | tekst | tylko Rodzaj Wydatek i Wycena, przy pustej Pozycji (wybrana Pozycja wygrywa, pole czyści `sync`); gdy żadna Pozycja nie pasuje, po „tak” inwestora: `<etap> \| <nazwa> \| <typ> \| <jedn.>`, nowy etap `<nr> <nazwa etapu> · <stan> \| …` – `sync` dodaje pozycję, ustawia Pozycję i czyści to pole (`koszty/references/nowa-pozycja.md`) |
 | Typ | select | Materiał, Robocizna, Sprzęt, Usługa, Formalności |
 | Ilość, Jedn. | liczba, select | przy materiale w etapach 02–08 obowiązkowo; Jedn.: kpl, m³, m², mb, kg, t, szt, h, dzień, mies., l |
 | Płatność | select | Zrealizowane (zapłacone), Do zapłaty (faktura / transza czeka) |

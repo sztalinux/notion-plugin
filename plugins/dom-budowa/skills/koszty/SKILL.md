@@ -60,7 +60,8 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
      47 | Pozycja X | Materiał | kpl – tak?** (albo wpisz własną nazwę)” – etap, nazwa, typ, jednostka; nowy etap z numerem
      z zakładki szacunku AI, nazwą i stanem. „Tak” albo nazwa → strona wydatku (krok 4) z pustą Pozycją i polem
      **Nowa pozycja** = `<etap> | <nazwa> | <typ> | <jedn.>`: `sync` doda pozycję i wyśle wydatek w tym samym przebiegu;
-     nowy etap doda pierwsza sesja Claude Code (C.7). Format, propozycja, zamknięcie ❓: `references/nowa-pozycja.md`.
+     nowy etap doda pierwsza sesja Claude Code (C.7). Pole tylko przy Rodzaju Wydatek i Wycena; wybrana Pozycja wygrywa
+     z polem. Format, propozycja, zamknięcie ❓: `references/nowa-pozycja.md`.
 3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą **z tego samego źródła** (ten sam wpis, wiadomość albo nr FV) →
    zaktualizuj go zamiast dodawać drugi. Ta sama data i kwota z innego źródła albo dwie płatności nazwane wprost (np. przelew
    w dwóch częściach) → osobne wiersze, w Notatkach „druga płatność tego dnia – nie duplikat”; niepewne → pytanie. W Claude Code sprawdź też
@@ -73,7 +74,7 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
    zamiast zapisu (brak daty – krok 1: dzień wpisu albo wiadomości).
 5. Wysyłka zależy od kanału:
    - **Claude Code z inwestorem:** po zapisie `python3 tools/wydatki.py sync` – od razu w arkuszu; podaj wiersz
-     (`czekaja_na_etap` > 0 → od razu C.7).
+     (`czekaja_na_etap` > 0 → od razu C.7–C.8, lista: `wydatki.py sesja`).
    - **Przebieg bez inwestora (`claude -p`):** tylko kolejka – `sync` uruchamia automat po przebiegu.
    - **claude.ai / telefon bez Notion:** Skrzynka (`budowa`, zasada 13) ze wszystkimi danymi z kroku 1 – słowami, bez nazw pól (`wpisy/references/skrzynka.md`); Mac przeniesie.
    Potwierdź jedną linią: „N wydatków: wiersze … w arkuszu” albo „w kolejce – trafią przy najbliższym przebiegu”.
@@ -141,11 +142,16 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
    przypisz pasujące wiersze szacunku w kol. J (etap) i K (pozycja „Lp Nazwa”) – plik zmian z operacją `zakres` tylko na
    tych komórkach J:K; nie zmieniaj kwot szacunku. Wiersze niepasujące zostają bez przypisania (liczą się wg stanu).
 5. Kolumny A–P arkusza Wydatki (P – VAT %, wpisuje `sync`), kolumny A, B, M arkusza Kosztorys i nazwy tych arkuszy czyta automat – zmiana ich kolejności
-   albo nazw wymaga zmiany `tools/wydatki.py` i kodu Apps Script w tym samym kroku.
+   albo nazw wymaga zmiany `tools/wydatki.py` i kodu Apps Script w tym samym kroku. Akcja nowej pozycji szuka też po
+   tekście: nagłówków „PLAN…”, „Wydane…”, „Klucz…”, „Kontrola” w wierszu 4 Kosztorysu i „Pozycja” w wierszu 4 Wydatków,
+   „RAZEM KOSZTORYS” w kol. C Kosztorysu i „Kontrola powiązań” w Podsumowaniu – zmiana tych tekstów ją wyłącza (odmowa).
 6. Oddaj plik albo instrukcję + krótką listę zmian (arkusz, zakres, co).
 7. **Nowy etap z kolejki** (linia stanu sesji „nowy etap kosztorysu …” albo `sync` z `czekaja_na_etap` > 0): pierwsza sesja
    Claude Code dodaje go sama, bez pytania i bez przypominania inwestorowi – blokada przeciw drugiej sesji, kroki (konektor
-   jak etap 47, bez konektora `migruj`), kontrola i meldunek jedną linią: `references/nowa-pozycja.md`, sekcja C.
+   jak etap 47, bez konektora `migruj`; kolumna A na końcu), kontrola i meldunek jedną linią: `references/nowa-pozycja.md`, C.
+8. **Pierwsze sprawdzenie nowej pozycji** (linia stanu „nowa pozycja kosztorysu: pierwsze sprawdzenie”, jednorazowo po
+   wdrożeniu kodu 5): do tego czasu automat nie wstawia wierszy. Pierwsza sesja robi pierwsze wstawienie z kontrolą i dopiero
+   przy zgodności `nowa-pozycja --potwierdz` – tak samo bez pytania: `references/nowa-pozycja.md`, D.
 
 ## D. Płatności, transze, kredyt
 

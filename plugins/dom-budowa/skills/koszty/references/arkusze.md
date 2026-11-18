@@ -19,6 +19,9 @@ Nową pozycję w istniejącym etapie dodaje automat (pole „Nowa pozycja”, `r
 Claude Code (tamże, C). Zakresy sum (RAZEM KOSZTORYS, Etapy D–G, Podsumowanie „Kontrola powiązań”) kończą się na ostatniej
 pozycji arkusza (`$5:$<n>`), Etapy mają formuły w wierszach 5–40 – wiersz wstawiony za ostatnią pozycją arkusza wypada z sum,
 więc nowe wiersze idą zawsze wewnątrz bloków. Sumy w nagłówku etapu (`=SUM(G<od>:G<do>)`) poprawia ten, kto wstawia wiersz.
+⚙ Teksty, po których automat (akcja nowej pozycji) znajduje kolumny i wiersze: nagłówki „PLAN…”, „Wydane…”, „Klucz…”,
+„Kontrola” w wierszu 4 Kosztorysu, „Pozycja” w wierszu 4 Wydatków, „RAZEM KOSZTORYS” w kol. C Kosztorysu, „Kontrola
+powiązań” w Podsumowaniu (pod nią trzy wiersze kontroli). Zmiana tekstu = akcja odmawia, dopóki nie zmienisz kodu.
 
 ## Kolumny wejściowe (kremowe – wpisuje inwestor albo automat)
 - **Wydatki!A:Q** ⚙ – A Data · B Status (Zrealizowane / Do zapłaty) · C Kwota brutto (zwrot – z minusem) · D Etap (lista z Etapy!A) · E Pozycja

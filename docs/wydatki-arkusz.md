@@ -24,7 +24,7 @@ wpis w 📓 Dzienniku  ·  wiadomość do asystenta  ·  zdjęcie faktury  ·  w
    ▼
 Apps Script przypięty do arkusza (aplikacja internetowa + sekret, @OnlyCurrentDoc)
    │  Rodzaj Wydatek i Zwrot → zakładka Wydatki  ·  Wycena → Cennik  ·  Plan → Kosztorys, kolumna „Plan ręczny”
-   │  pole „Nowa pozycja” → najpierw nowy wiersz pozycji w etapie Kosztorysu (kod ≥ 5), potem jak wyżej
+   │  pole „Nowa pozycja” → najpierw nowy wiersz pozycji w etapie Kosztorysu (kod ≥ 5, po pierwszym sprawdzeniu w sesji), potem jak wyżej
    ▼
 Notion: Arkusz = „W arkuszu” + Wiersz arkusza   albo   „Błąd” + powód w polu Błąd
    │  przebieg szybki: widok „⚠ Błędy do zgłoszenia” → komunikat 🔔 z okienkiem ❓ we „📝 Wpisach”, Zgłoszono = dziś
@@ -59,7 +59,7 @@ wyłączony → strony czekają w Notion, nic nie ginie. GitHub Actions nie maj�
 | oferta / cena dostawcy („X ma beton po … zł/m³ brutto”) | Rodzaj Wycena, Kwota = cena za jednostkę, Jedn., Cena podana Netto/Brutto, VAT % | idzie do Cennika, nie do Wydatków; wybór = Status wyceny „Wybrana” i ponowne wysłanie |
 | „planuję wydać ok. N”, „szacowałem N, wyszło M” | Rodzaj Plan, Kwota = plan całej pozycji brutto (+ osobno wydatek M) | `sync` wpisuje „Plan ręczny” pozycji; inny plan już jest → Błąd i pytanie, „Nadpisz plan” zastępuje |
 | „kupić X na budowę” (jeszcze nie kupione) | nic – to zakup, procedura `zakupy` | koszt powstaje dopiero przy zapłacie |
-| wydatek bez pasującej pozycji | ❓ z propozycją „Nowa pozycja: 47 \| Pozycja X \| Materiał \| kpl – tak?”; po „tak” strona z pustą Pozycją i polem Nowa pozycja | `sync` dodaje pozycję (kod ≥ 5) i wysyła wydatek w tym samym przebiegu; nowy etap – pierwsza sesja Claude Code (`koszty/references/nowa-pozycja.md`) |
+| wydatek bez pasującej pozycji | ❓ z propozycją „Nowa pozycja: 47 \| Pozycja X \| Materiał \| kpl – tak?”; po „tak” strona z pustą Pozycją i polem Nowa pozycja | `sync` dodaje pozycję (kod ≥ 5, po pierwszym sprawdzeniu w sesji) i wysyła wydatek w tym samym przebiegu; nowy etap – pierwsza sesja Claude Code (`koszty/references/nowa-pozycja.md`); pole tylko przy Wydatku i Wycenie, wybrana Pozycja wygrywa |
 
 Pola obowiązkowe wydatku: Data, Kwota (to, co zapłacono – zwykle brutto), Pozycja z listy (= pozycja Kosztorysu, z niej
 arkusz bierze etap), Typ (Materiał / Robocizna / Sprzęt / Usługa / Formalności – zawsze). Materiał w etapach 02–08 – także
@@ -122,8 +122,9 @@ Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
 | `sprawdz` | sekrety, dostęp do bazy i arkusza, wersja kodu | ręcznie, przy problemach |
 | `kod` | kod Apps Script z sekcji 9 (z `\| LANG=en_US.UTF-8 pbcopy` – do schowka; bez LANG polskie znaki się psują) | przy aktualizacji kodu |
 | `migruj <zmiany.json>` | zmiana układu na żywym arkuszu (sekcja 8) | agent w Claude Code |
-| `nowa-pozycja "47 \| Nazwa \| Typ \| Jedn." [--proba]` | pozycja w istniejącym etapie (akcja „dodaj_pozycje”, kod ≥ 5) i opcja w Notion; z `--proba` – plan na sucho (wiersz, Lp, suma etapu), nic nie zmienia | agent w Claude Code; pierwsze sprawdzenie po wdrożeniu kodu 5 |
-| `etapy [--zablokuj \| --odblokuj]` | etapy czekające na sesję (`<hub>/.dom/wydatki/etapy-do-dodania.json`, pisze `sync`); blokada – jedna sesja naraz (2 h) | sesja Claude Code (`koszty` C.7) |
+| `nowa-pozycja "47 \| Nazwa \| Typ \| Jedn." [--proba]` | pozycja w istniejącym etapie (akcja „dodaj_pozycje”, kod ≥ 5) i opcja w Notion – działa bez znacznika; z `--proba` – plan na sucho (wiersz, Lp, suma etapu, wzór), nic nie zmienia | agent w Claude Code; pierwsze sprawdzenie (`koszty` C.8) |
+| `nowa-pozycja --potwierdz` | znacznik `<hub>/.dom/wydatki/nowa-pozycja-sprawdzona` – od niego `sync` sam wstawia pozycje (bez niego woła akcję na sucho: istniejąca pozycja przechodzi, nowa czeka) | sesja po zgodnym pierwszym sprawdzeniu |
+| `sesja [--zablokuj \| --odblokuj]` | co czeka na sesję: nowe etapy i pierwsze sprawdzenie (`<hub>/.dom/wydatki/kosztorys-do-sesji.json`, pisze `sync`; z niego linia stanu sesji); blokada – jedna sesja naraz (2 h), przy świeżej blokadzie `sync` nie rusza stron tego etapu | sesja Claude Code (`koszty` C.7–C.8) |
 | `gotowka [--harmonogram PLIK]` | tylko odczyt: ile pieniędzy wyjdzie w którym miesiącu – kopia arkusza + Harmonogram z Notion (`NOTION_TOKEN`); tabela z kwotami na ekran, nie do logu; reguły: `koszty/references/gotowka.md` | agent na „ile gotówki potrzebuję w …”, przegląd tygodnia |
 
 Kody wyjścia: 0 OK, 1 błąd polecenia (linie `✗` pod podsumowaniem, np. timeout arkusza, Notion), 2 brak konfiguracji.
@@ -154,7 +155,10 @@ blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 | „N wycen czeka: arkusz ma kod w wersji …” / „N wycen czeka: Cennik w starym układzie …” / „N zwrotów czeka: arkusz ma kod w wersji …” | starszy kod (sekcja 7, aktualizacja kodu; `sprawdz` pokaże wersję) albo brak zmiany układu (sekcja 8); strony czekają „Do arkusza”, `sync` kończy się kodem 1 |
 | „N stron z nową pozycją czeka: arkusz ma kod w wersji …” | kod < 5 – sekcja 7, aktualizacja kodu; strony czekają „Do arkusza” |
 | Błąd „nowa pozycja NN.n: … – wstawiony wiersz usunięty” | kontrola po wstawieniu się nie zgodziła (sumy, „Kontrola powiązań”); arkusz bez zmian. Sprawdź układ etapu (sumy w nagłówku, zakresy `$5:$<n>`) – `nowa-pozycja … --proba` pokaże plan |
-| Błąd pola „czeka na etap NN …” (Arkusz „Do arkusza”) | etapu nie ma w Kosztorysie – doda go najbliższa sesja Claude Code (`koszty` C.7); `etapy` pokazuje listę |
+| Błąd pola „czeka na etap NN …” (Arkusz „Do arkusza”) | etapu nie ma w Kosztorysie (albo nagłówek bez pozycji) – doda go najbliższa sesja Claude Code (`koszty` C.7); `sesja` pokazuje listę |
+| Błąd pola „czeka na pierwsze sprawdzenie …” | brak znacznika – pierwszą nową pozycję wstawia sesja z kontrolą (`koszty` C.8) |
+| „czeka na sesję Claude Code ponad 3 dni: …” (kod 1, 🔔 z przebiegu) | otwórz sesję Claude Code w repo – zrobi C.7–C.8 sama |
+| Błąd „wiersz N w etapie NN bez Lp” / „pozycja NN.n już jest, ale …” | w arkuszu wiersz bez Lp albo uszkodzona pozycja o tej nazwie – popraw w arkuszu, potem „Do arkusza” |
 | #ERROR! / dziwne liczby po zmianie układu | formuła z „,” zamiast „;” (arkusz ma polskie ustawienia) – sekcja 8, pułapki |
 
 ## 7. Konfiguracja od zera (już zrobiona – tylko przy odtwarzaniu)
@@ -212,9 +216,11 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
  * @OnlyCurrentDoc: skrypt ma dostęp wyłącznie do tego arkusza (bez Dysku, bez innych plików). Cofanie zmian – Plik →
  * Historia wersji.
  * dodaj_pozycje: jedyna zmiana układu, którą skrypt robi sam. Wstawia wiersz wewnątrz etapu (przed ostatnią pozycją etapu,
- * a przy etapie z jedną pozycją – za nią), kopiuje formuły i formaty z sąsiedniej pozycji, poprawia sumy w nagłówku etapu.
- * Kontrola przed i po: „Kontrola powiązań” i RAZEM KOSZTORYS bez zmian, nowy wiersz w sumach – inaczej usuwa wstawiony
- * wiersz i zwraca błąd. Ta sama nazwa w etapie = istniejący Lp (ponowienie nie dubluje). Etapu nie dodaje (brak_etapu).
+ * a przy etapie z jedną pozycją – za nią), kopiuje formuły i formaty z pozycji z kompletem formuł, od razu wpisuje Lp
+ * (najwyższy numer etapu w Kosztorysie i Wydatkach + 1) i nazwę, poprawia sumy w nagłówku etapu. Kontrola przed i po:
+ * „Kontrola powiązań”, RAZEM KOSZTORYS i sumy nagłówka etapu bez zmian, nowy wiersz w sumach i z kompletem formuł – inaczej
+ * (także po wyjątku) usuwa wstawiony wiersz i zwraca błąd. Nagłówki i etykiety sprawdza przed zmianą. Ta sama nazwa
+ * w etapie = istniejący Lp, jeśli jego wiersz jest kompletny. Wiersz etapu bez Lp = odmowa. Etapu nie dodaje (brak_etapu).
  * dopisz: rodzaj „Wycena” → arkusz Cennik (ponowne wysłanie aktualizuje ten sam wiersz), reszta → arkusz Wydatki
  * („Zwrot” z kwotą ujemną). Wydatki P (VAT %) wpisuje i czyści tools/wydatki.py akcją zmien, nie dopisz/usun.
  * Kolumn z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) dopisz/usun nigdy nie nadpisują.
@@ -560,11 +566,11 @@ function zwykla(t) {
   return String(t).replace(/\s+/g, ' ').trim().toLowerCase();
 }
 
-/** Numer kolumny (od 1) po początku nagłówka w wierszu 4; brak → wyjątek (nic jeszcze nie zmieniono). */
+/** Numer kolumny (od 1) po początku nagłówka w wierszu 4; brak → wyjątek (wołane przed jakąkolwiek zmianą). */
 function kolumnaNaglowka(arkusz, poczatek) {
   var nag = arkusz.getRange(PIERWSZY_WIERSZ - 1, 1, 1, arkusz.getLastColumn()).getValues()[0];
   for (var i = 0; i < nag.length; i++) if (String(nag[i]).indexOf(poczatek) === 0) return i + 1;
-  throw new Error(arkusz.getName() + ': brak kolumny „' + poczatek + '”');
+  throw new Error(arkusz.getName() + ': brak kolumny „' + poczatek + '” w wierszu ' + (PIERWSZY_WIERSZ - 1));
 }
 
 function ostatniaPozycja(k) {
@@ -573,27 +579,91 @@ function ostatniaPozycja(k) {
   return PIERWSZY_WIERSZ;
 }
 
-/** Kosztorys A:C od wiersza 5 → nagłówek etapu (A = etap, B puste), jego pozycje, ostatnia pozycja arkusza, wiersz RAZEM. */
+/** Kosztorys A:C od wiersza 5 → blok etapu. Nagłówek: pierwszy wiersz z A = etap i pustym B. Blok kończy się na wierszu
+ *  z innym niepustym A (inny etap) albo na RAZEM KOSZTORYS – nie na pustym B. Wiersz bloku z A = etap i pustym B to
+ *  sierota (ręcznie dodany wiersz bez Lp) – przy niej akcja odmawia, bo sumy etapu byłyby niepewne. */
 function blokEtapu(dane, etap) {
-  var b = {naglowek: 0, etap: '', pozycje: [], ostatnia: 0, razem: 0};
+  var b = {naglowek: 0, etap: '', pozycje: [], sieroty: [], ostatnia: 0, razem: 0};
   var koniec = false;
   dane.forEach(function (w, i) {
     var r = PIERWSZY_WIERSZ + i, a = String(w[0]).trim(), lp = String(w[1]).trim(), c = String(w[2]).trim();
+    if (c === RAZEM_KOSZTORYS) { b.razem = r; koniec = koniec || !!b.naglowek; return; }
     if (lp) b.ostatnia = r;
-    if (c === RAZEM_KOSZTORYS) b.razem = r;
-    if (a && !lp) {
-      if (b.naglowek) koniec = true;
-      else if (numerEtapu(a) === etap) { b.naglowek = r; b.etap = a; }
-    } else if (lp && b.naglowek && !koniec && a === b.etap) {
-      b.pozycje.push({wiersz: r, lp: lp, nazwa: c});
+    if (!b.naglowek) {
+      if (a && !lp && numerEtapu(a) === etap) { b.naglowek = r; b.etap = a; }
+      return;
     }
+    if (koniec) return;
+    if (a && a !== b.etap) { koniec = true; return; }
+    if (lp) b.pozycje.push({wiersz: r, lp: lp, nazwa: c});
+    else if (a) b.sieroty.push(r);
   });
   return b;
 }
 
-/** Liczby, które wstawienie pustej pozycji nie może zmienić: tabela „Kontrola powiązań” (Podsumowanie) i RAZEM
- *  KOSZTORYS (PLAN, Wydane). Szuka po etykietach, nie po adresach. */
-function kontrola(ss, k) {
+function kolumnyZFormula(f) {
+  var s = [];
+  f.forEach(function (x, i) { if (x) s.push(i); });
+  return s;
+}
+
+/** Komplet formuł pozycji = najczęstszy zestaw kolumn z formułą wśród pozycji arkusza (indeksy od 0); musi obejmować
+ *  kolumny PLAN, Wydane, Klucz i Kontrola. Pozycja z liczbą wpisaną ręcznie w kolumnę z formułą kompletu nie ma. */
+function kompletFormul(dane, formuly, wymagane) {
+  var licz = {}, naj = '', ile = 0;
+  dane.forEach(function (w, i) {
+    if (!String(w[1]).trim()) return;
+    var z = kolumnyZFormula(formuly[i]).join(',');
+    licz[z] = (licz[z] || 0) + 1;
+    if (licz[z] > ile) { ile = licz[z]; naj = z; }
+  });
+  var komplet = naj ? naj.split(',').map(Number) : [];
+  wymagane.forEach(function (k) {
+    if (komplet.indexOf(k) < 0) throw new Error('Kosztorys: pozycje bez formuły w kolumnie ' + (k + 1));
+  });
+  return komplet;
+}
+
+function maKomplet(f, komplet) {
+  return komplet.every(function (i) { return !!f[i]; });
+}
+
+/** Wzór nowego wiersza: pozycja etapu z kompletem formuł najbliżej ostatniej pozycji etapu, a gdy żadnej – najbliższa
+ *  taka pozycja arkusza. → numer wiersza (przed wstawieniem) albo 0. */
+function wybierzWzor(b, dane, formuly, komplet) {
+  var ostatnia = b.pozycje[b.pozycje.length - 1].wiersz;
+  for (var i = b.pozycje.length - 1; i >= 0; i--) {
+    if (maKomplet(formuly[b.pozycje[i].wiersz - PIERWSZY_WIERSZ], komplet)) return b.pozycje[i].wiersz;
+  }
+  var naj = 0;
+  dane.forEach(function (w, i) {
+    var r = PIERWSZY_WIERSZ + i;
+    if (String(w[1]).trim() && maKomplet(formuly[i], komplet) && (!naj || Math.abs(r - ostatnia) < Math.abs(naj - ostatnia))) naj = r;
+  });
+  return naj;
+}
+
+/** Najwyższy numer pozycji etapu – z Kosztorysu i z Wydatków (kol. „Pozycja”), żeby nie nadać ponownie numeru usuniętej
+ *  pozycji, do której odwołują się stare wydatki. */
+function maksNumer(ss, etap, lpEtapu) {
+  var maks = 0;
+  function dolicz(x) {
+    var t = String(x).trim().split(/\s+/)[0];
+    if (t.indexOf(etap + '.') !== 0) return;
+    var n = Number(t.slice(etap.length + 1));
+    if (n % 1 === 0 && n > maks) maks = n;
+  }
+  lpEtapu.forEach(dolicz);
+  var w = ss.getSheetByName(ARKUSZ_WYDATKI);
+  var kp = kolumnaNaglowka(w, 'Pozycja');
+  var n = w.getLastRow() - PIERWSZY_WIERSZ + 1;
+  if (n > 0) w.getRange(PIERWSZY_WIERSZ, kp, n, 1).getValues().forEach(function (x) { dolicz(x[0]); });
+  return maks;
+}
+
+/** Liczby, które wstawienie pustej pozycji nie może zmienić: tabela „Kontrola powiązań” (Podsumowanie), RAZEM
+ *  KOSZTORYS (PLAN, Wydane) i sumy w nagłówku etapu. Szuka po etykietach, nie po adresach. */
+function kontrola(ss, k, naglowek) {
   var p = ss.getSheetByName(ARKUSZ_PODSUMOWANIE).getDataRange().getValues();
   var wynik = {};
   for (var r = 0; r < p.length; r++) {
@@ -607,6 +677,11 @@ function kontrola(ss, k) {
   if (!razem) throw new Error('Kosztorys: brak wiersza ' + RAZEM_KOSZTORYS);
   wynik['RAZEM PLAN'] = k.getRange(razem, kolumnaNaglowka(k, 'PLAN')).getValue();
   wynik['RAZEM Wydane'] = k.getRange(razem, kolumnaNaglowka(k, 'Wydane')).getValue();
+  if (naglowek) {
+    var f = k.getRange(naglowek, 1, 1, k.getLastColumn()).getFormulas()[0];
+    var v = k.getRange(naglowek, 1, 1, k.getLastColumn()).getValues()[0];
+    f.forEach(function (x, i) { if (SUMA_ETAPU.test(x)) wynik['suma etapu, kolumna ' + (i + 1)] = v[i]; });
+  }
   return wynik;
 }
 
@@ -620,8 +695,18 @@ function rozne(przed, po) {
   });
 }
 
-/** Nowa pozycja w istniejącym etapie Kosztorysu. p = {etap: '47', nazwa, typ, jedn}. Zwraca {ok, lp, klucz, wiersz, juz}
- *  albo {ok: true, brak_etapu: true} albo {ok: false, blad}. naSucho – tylko plan (wiersz, Lp, zakres sumy), bez zmian. */
+/** Wiersz pozycji: komplet formuł, klucz „Lp Nazwa”, pusta Kontrola. → opis problemu albo ''. */
+function sprawdzWiersz(k, r, klucz, komplet, kol) {
+  var kolumn = k.getLastColumn();
+  if (!maKomplet(k.getRange(r, 1, 1, kolumn).getFormulas()[0], komplet)) return 'wiersz ' + r + ' bez kompletu formuł';
+  var w = k.getRange(r, 1, 1, kolumn).getValues()[0];
+  if (String(w[kol.klucz]) !== klucz) return 'klucz w wierszu ' + r + ' się nie zgadza';
+  if (String(w[kol.kontrola])) return 'kontrola w wierszu ' + r + ': ' + String(w[kol.kontrola]);
+  return '';
+}
+
+/** Nowa pozycja w istniejącym etapie Kosztorysu. p = {etap: '47', nazwa, typ, jedn}. Zwraca {ok, lp, klucz, wiersz, juz},
+ *  {ok: true, brak_etapu: true[, bez_pozycji: true]} albo {ok: false, blad}. naSucho – tylko plan, bez zmian w arkuszu. */
 function dodajPozycje(p, naSucho) {
   var etap = String(p.etap || '').trim();
   var nazwa = String(p.nazwa || '').replace(/\s+/g, ' ').trim();
@@ -634,71 +719,86 @@ function dodajPozycje(p, naSucho) {
   var ss = SpreadsheetApp.getActive();
   var k = ss.getSheetByName(ARKUSZ_KOSZTORYS);
   var kolumn = k.getLastColumn();
-  var b = blokEtapu(k.getRange(PIERWSZY_WIERSZ, 1, k.getLastRow() - PIERWSZY_WIERSZ + 1, 3).getValues(), etap);
-  if (!b.naglowek) return {ok: true, brak_etapu: true, etap: etap};
-  for (var i = 0; i < b.pozycje.length; i++) {
-    var x = b.pozycje[i];
-    if (zwykla(x.nazwa) === zwykla(nazwa)) return {ok: true, juz: true, lp: x.lp, klucz: x.lp + ' ' + x.nazwa, wiersz: x.wiersz};
-  }
-  if (!b.pozycje.length) return {ok: false, blad: 'etap ' + etap + ' nie ma żadnej pozycji – pierwszą dodaje sesja Claude Code (koszty C.7)'};
-  if (!b.razem || b.razem < b.ostatnia) return {ok: false, blad: 'Kosztorys: brak wiersza ' + RAZEM_KOSZTORYS + ' pod pozycjami'};
-  var maks = 0;
-  b.pozycje.forEach(function (x) { var m = /\.(\d+)$/.exec(x.lp); if (m) maks = Math.max(maks, Number(m[1])); });
-  var lp = etap + '.' + (maks + 1);
-  var ostatnia = b.pozycje[b.pozycje.length - 1].wiersz;
-  // przed ostatnią pozycją etapu = zawsze wewnątrz zakresów $5:$<ostatnia pozycja arkusza> (RAZEM, Etapy, Podsumowanie);
-  // etap z jedną pozycją – za nią (kolejność), chyba że to ostatnia pozycja arkusza (wtedy wiersz wypadłby z zakresów)
-  var przed = b.pozycje.length > 1 || ostatnia === b.ostatnia;
-  var nowy = przed ? ostatnia : ostatnia + 1;
-  var wzor = przed ? ostatnia + 1 : ostatnia;
-  var koniecBloku = ostatnia + 1;
-  var plan = {lp: lp, klucz: lp + ' ' + nazwa, wiersz: nowy, etap: b.etap, suma_etapu: (b.naglowek + 1) + ':' + koniecBloku};
-  if (naSucho) {
-    var kp = kontrola(ss, k);
-    return {ok: true, na_sucho: true, lp: plan.lp, klucz: plan.klucz, wiersz: plan.wiersz, suma_etapu: plan.suma_etapu,
-            przed_ostatnia: przed, kontrola: Object.keys(kp)};
-  }
-  var przedZmiana = kontrola(ss, k);
-  var formulyNaglowka = k.getRange(b.naglowek, 1, 1, kolumn).getFormulas()[0];
-  if (przed) k.insertRowBefore(ostatnia); else k.insertRowAfter(ostatnia);
+  var plan;
   try {
-    k.getRange(wzor, 1, 1, kolumn).copyTo(k.getRange(nowy, 1, 1, kolumn));   // formaty, listy, formuły (adresy względne)
-    var f = k.getRange(nowy, 1, 1, kolumn).getFormulas()[0];
-    for (var c = 2; c <= kolumn; c++) if (!f[c - 1]) k.getRange(nowy, c).clearContent();   // dane wzoru (ilość, plan ręczny…) – nie
-    k.getRange(nowy, 1).setFormula('=$A$' + b.naglowek);
-    // Lp i nazwa jako tekst: przy polskich ustawieniach „04.9” wpisane do komórki bez formatu staje się datą
+    // wszystko, co akcja czyta po nagłówkach i etykietach, sprawdzone przed jakąkolwiek zmianą
+    var kol = {plan: kolumnaNaglowka(k, 'PLAN') - 1, wydane: kolumnaNaglowka(k, 'Wydane') - 1,
+               klucz: kolumnaNaglowka(k, 'Klucz') - 1, kontrola: kolumnaNaglowka(k, 'Kontrola') - 1};
+    var n = k.getLastRow() - PIERWSZY_WIERSZ + 1;
+    var dane = k.getRange(PIERWSZY_WIERSZ, 1, n, 3).getValues();
+    var formuly = k.getRange(PIERWSZY_WIERSZ, 1, n, kolumn).getFormulas();
+    var komplet = kompletFormul(dane, formuly, [kol.plan, kol.wydane, kol.klucz, kol.kontrola]);
+    var b = blokEtapu(dane, etap);
+    if (!b.naglowek) return {ok: true, brak_etapu: true, etap: etap};
+    if (b.sieroty.length) return {ok: false, blad: 'wiersz ' + b.sieroty[0] + ' w etapie ' + etap + ' bez Lp – uzupełnij Lp albo usuń wiersz'};
+    for (var i = 0; i < b.pozycje.length; i++) {
+      var x = b.pozycje[i];
+      if (zwykla(x.nazwa) !== zwykla(nazwa)) continue;
+      var zly = sprawdzWiersz(k, x.wiersz, x.lp + ' ' + x.nazwa, komplet, kol);
+      if (zly) return {ok: false, blad: 'pozycja ' + x.lp + ' już jest, ale ' + zly + ' – popraw ją w arkuszu'};
+      return {ok: true, juz: true, lp: x.lp, klucz: x.lp + ' ' + x.nazwa, wiersz: x.wiersz};
+    }
+    if (!b.pozycje.length) return {ok: true, brak_etapu: true, bez_pozycji: true, etap: etap};
+    if (!b.razem || b.razem < b.ostatnia) return {ok: false, blad: 'Kosztorys: brak wiersza ' + RAZEM_KOSZTORYS + ' pod pozycjami'};
+    var lp = etap + '.' + (maksNumer(ss, etap, b.pozycje.map(function (x) { return x.lp; })) + 1);
+    var ostatnia = b.pozycje[b.pozycje.length - 1].wiersz;
+    // przed ostatnią pozycją etapu = zawsze wewnątrz zakresów $5:$<ostatnia pozycja arkusza> (RAZEM, Etapy, Podsumowanie);
+    // etap z jedną pozycją – za nią (kolejność), chyba że to ostatnia pozycja arkusza (wtedy wiersz wypadłby z zakresów)
+    var przed = b.pozycje.length > 1 || ostatnia === b.ostatnia;
+    var nowy = przed ? ostatnia : ostatnia + 1;
+    var wzorPrzed = wybierzWzor(b, dane, formuly, komplet);
+    if (!wzorPrzed) return {ok: false, blad: 'Kosztorys: żadna pozycja nie ma kompletu formuł – brak wzoru dla nowego wiersza'};
+    plan = {lp: lp, klucz: lp + ' ' + nazwa, wiersz: nowy, przed: przed, koniecBloku: ostatnia + 1,
+            wzor: wzorPrzed >= nowy ? wzorPrzed + 1 : wzorPrzed, b: b, kol: kol, komplet: komplet};
+    var przedZmiana = kontrola(ss, k, b.naglowek);
+    var formulyNaglowka = k.getRange(b.naglowek, 1, 1, kolumn).getFormulas()[0];
+  } catch (err) {
+    return {ok: false, blad: String(err.message || err).slice(0, 200) + ' – arkusz bez zmian'};
+  }
+  if (naSucho) {
+    return {ok: true, na_sucho: true, lp: plan.lp, klucz: plan.klucz, wiersz: plan.wiersz, przed_ostatnia: plan.przed,
+            suma_etapu: (b.naglowek + 1) + ':' + plan.koniecBloku, wzor: wzorPrzed, kontrola: Object.keys(przedZmiana)};
+  }
+  if (przed) k.insertRowBefore(ostatnia); else k.insertRowAfter(ostatnia);
+  var blad;
+  try {
+    k.getRange(plan.wzor, 1, 1, kolumn).copyTo(k.getRange(nowy, 1, 1, kolumn));   // formaty, listy, formuły (adresy względne)
+    // od razu Lp i nazwa (jako tekst – „04.9” bez formatu stałoby się datą): przerwany skrypt nie zostawi wiersza bez Lp
     k.getRange(nowy, 2, 1, 2).setNumberFormat('@');
     k.getRange(nowy, 2, 1, 4).setValues([[lp, nazwa, typ, jedn]]);
+    var f = k.getRange(nowy, 1, 1, kolumn).getFormulas()[0];
+    for (var c = 6; c <= kolumn; c++) if (!f[c - 1]) k.getRange(nowy, c).clearContent();   // dane wzoru (ilość, plan ręczny…) – nie
+    k.getRange(nowy, 1).setFormula('=$A$' + b.naglowek);
     formulyNaglowka.forEach(function (fn, i) {
       var m = SUMA_ETAPU.exec(fn);
-      if (m) k.getRange(b.naglowek, i + 1).setFormula('=SUM(' + m[1] + (b.naglowek + 1) + ':' + m[1] + koniecBloku + ')');
+      if (m) k.getRange(b.naglowek, i + 1).setFormula('=SUM(' + m[1] + (b.naglowek + 1) + ':' + m[1] + plan.koniecBloku + ')');
     });
     SpreadsheetApp.flush();
-    var blad = sprawdzWstawienie(ss, k, b, nowy, koniecBloku, plan, przedZmiana);
+    blad = sprawdzWstawienie(ss, k, plan, przedZmiana);
   } catch (err) {
-    cofnijWstawienie(k, nowy, b.naglowek, formulyNaglowka);
-    throw err;
+    blad = 'błąd skryptu po wstawieniu (' + String(err.message || err).slice(0, 150) + ')';
   }
-  if (blad) {
+  if (!blad) return {ok: true, juz: false, lp: lp, klucz: plan.klucz, wiersz: nowy};
+  try {
     cofnijWstawienie(k, nowy, b.naglowek, formulyNaglowka);
-    return {ok: false, blad: 'nowa pozycja ' + lp + ': ' + blad + ' – wstawiony wiersz usunięty, arkusz bez zmian'};
+  } catch (err) {
+    return {ok: false, blad: 'nowa pozycja ' + lp + ': ' + blad + '; wycofanie nieudane – sprawdź wiersz ' + nowy + ' (Plik → Historia wersji)'};
   }
-  return {ok: true, juz: false, lp: lp, klucz: plan.klucz, wiersz: nowy};
+  return {ok: false, blad: 'nowa pozycja ' + lp + ': ' + blad + ' – wstawiony wiersz usunięty, arkusz bez zmian'};
 }
 
-function sprawdzWstawienie(ss, k, b, nowy, koniecBloku, plan, przedZmiana) {
-  var kPlan = kolumnaNaglowka(k, 'PLAN');
+function sprawdzWstawienie(ss, k, plan, przedZmiana) {
+  var b = plan.b, nowy = plan.wiersz;
+  var kPlan = plan.kol.plan + 1;
   var razem = k.getRange(b.razem + 1, kPlan).getFormula();   // RAZEM przesunął się o wstawiony wiersz
-  var m = /[A-Z]+\$?\d+:\$?[A-Z]+\$?(\d+)/.exec(razem);   // =SUMIFS(G$5:G$92;…) → 92
-  if (!m || Number(m[1]) < koniecBloku) return 'nowy wiersz poza sumą ' + RAZEM_KOSZTORYS;
+  var m = /[A-Z]+\$?\d+:\$?[A-Z]+\$?(\d+)/.exec(razem);       // =SUMIFS(G$5:G$92;…) → 92
+  if (!m || Number(m[1]) < plan.koniecBloku) return 'nowy wiersz poza sumą ' + RAZEM_KOSZTORYS;
   var s = SUMA_ETAPU.exec(k.getRange(b.naglowek, kPlan).getFormula());
   if (!s || Number(s[2]) > nowy || Number(s[4] || s[2]) < nowy) return 'nowy wiersz poza sumą etapu';
-  var w = k.getRange(nowy, 1, 1, k.getLastColumn()).getValues()[0];
-  if (String(w[0]).trim() !== b.etap) return 'etap nowego wiersza się nie zgadza';
-  if (String(w[kolumnaNaglowka(k, 'Klucz') - 1]) !== plan.klucz) return 'klucz nowego wiersza się nie zgadza';
-  var t = String(w[kolumnaNaglowka(k, 'Kontrola') - 1]);
-  if (t) return 'kontrola nowego wiersza: ' + t;
-  var r = rozne(przedZmiana, kontrola(ss, k));
+  if (String(k.getRange(nowy, 1).getValue()).trim() !== b.etap) return 'etap nowego wiersza się nie zgadza';
+  var zly = sprawdzWiersz(k, nowy, plan.klucz, plan.komplet, plan.kol);
+  if (zly) return zly;
+  var r = rozne(przedZmiana, kontrola(ss, k, b.naglowek));
   if (r.length) return 'zmieniło się: ' + r.join(', ');
   return '';
 }
