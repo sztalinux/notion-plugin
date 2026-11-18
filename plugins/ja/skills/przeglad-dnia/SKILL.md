@@ -44,14 +44,14 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
    sekcja „Nowe” (`wpisy/references/skrzynka.md`; brak narzędzia Claude Docs → pomiń i napisz „Skrzynka – brak odczytu”), strona „📝 Wpisy” (`3faf5982-09e7-80b2-9b33-c48745d67a4f` – bloki w jej treści
    i lista podstron). Trzeci: widok
    „⚠ Błędy do zgłoszenia” w „💸 Wydatki → arkusz” (tryb view, `koszty`, sekcja E) oraz stan stron z komunikatów 💸 pod
-   „🔔 Komunikaty asystenta” we „Wpisach”. Lista „Komunikaty z automatów Maca” w poleceniu przebiegu (dokleja ją
-   `przeglad.py`, gdy coś się zepsuło albo ustąpiło) to szóste źródło – bez odczytu.
+   „🔔 Komunikaty asystenta” we „Wpisach”. Listy „Komunikaty z automatów Maca” i „Gotowe rozkminki” w poleceniu przebiegu
+   (dokleja je `przeglad.py`) to kolejne źródła – bez odczytu.
    Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Strony Dziennika (bloki 1. poziomu) i stron z widgetu **nie czytasz** –
    nie są źródłem wpisów (`wpisy`, „Źródła wpisów”); przejścia 1.1 i 1.2 robi tylko nocny przebieg (`references/przejscia.md`).
 2. **Nic nowego → koniec.** Brak bloków w treści „Wpisów” (wpis z okienkiem ❓ bez
    odpowiedzi się nie liczy) i podstron w „Wpisach”, brak pozycji w „Nowe”
    Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; szybki obsługuje tylko ❓ pod wpisami oraz 🔔 z automatów, kolejki 💸 i `SP-n`; **wszystkie inne bloki 🔔** (`KS-…`, `RES-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…`, `ZP-n`) obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
-   „Błąd”, brak listy od automatu w poleceniu i brak odpowiedzi pod blokami 🔔 (blok 🔔 bez odpowiedzi się nie liczy – inaczej
+   „Błąd”, brak list od automatu w poleceniu (komunikaty, gotowe rozkminki) i brak odpowiedzi pod blokami 🔔 (blok 🔔 bez odpowiedzi się nie liczy – inaczej
    każdy przebieg przestałby być tani) → odpowiedz jedną linią „Wpisy: nic nowego (<godzina>;
    Skrzynka: 0)”
    i zakończ. **Zero zapisów** – nie dopisuj linii „🤖”, nie zmieniaj strony.
@@ -95,7 +95,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    („rozkminki czekają: n” w „⚠ Na teraz”). Procedura tematu **tylko odczytem**: budowa – spotkanie, decyzja → `przygotowanie`
    („Bez inwestora”), technika → `analiza-techniczna`, oferta → `oferta`, terminy → `harmonogram`; osobiste – skill `ja` obszaru.
    Wynik = sekcja „🧠 Rozkminka: <temat>”: budowa → krok 3, reszta → krok 8. Bez zapisów do baz – nowe pytania, zadania
-   i decyzje → jeden blok 🔔 we „Wpisach” (klucz `rozkminka-<dd.mm>`; `wpisy/references/pytania.md`, C.7). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
+   i decyzje → jeden blok 🔔 na rozkminkę we „Wpisach” (klucz `rozkminka-<dd.mm>`, w ciągu dnia `rozkminka-<token>`; max 3 to-do; `wpisy/references/pytania.md`, C.7). Ślad zmień na `→ 🧠 rozkminka: <wzmianka wpisu>` (krok 9).
 3. **Budowa** – skill `budowa` (plugin dom-budowa), sekcja „Wieczorem”: sam zbiera dzień i najbliższe 7 dni budowy (zwraca punkty do zakładki 🏗) i dopisuje wpis
    w „📆 Przeglądy dzienne – budowa” (gdy dzień budowy był pusty – nie pisze); najpierw domyka sprzeczności z Decyzją wpisaną
    przez inwestora; ostrzeżenie pogodowe dopisuje tylko przy przekroczonym progu w dniu roboty wrażliwej wpisanej w Uwagach
