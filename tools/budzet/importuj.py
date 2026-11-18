@@ -232,7 +232,7 @@ def wiersz_z_wpisu(w, kwota_ark=None, b=None):
 ZASIEG = {}
 for t in bank:
     ZASIEG[t['konto']] = max(ZASIEG.get(t['konto'], t['data']), t['data'])
-przypiecia, obsluzone, czeka = [], set(), 0
+przypiecia, obsluzone, czeka, niepelne = [], set(), 0, {}
 for u in sorted(jednostki, key=lambda u: u['data']):
     t, pary = u.get('t'), list(zip(u['czesci'], u['wiersze']))
     if t is not None and t['mies'] == MIES:
@@ -264,12 +264,15 @@ for u in sorted(jednostki, key=lambda u: u['data']):
         continue
     if u['data'] > KONIEC:
         continue  # początek następnego miesiąca bez pary w tym – rozstrzygnie import następnego
-    if u['konto'] not in ZASIEG or ZASIEG[u['konto']] < u['data'] + timedelta(days=PRZELOM):
-        for w, r in pary:
+    pokryte = u['konto'] in ZASIEG and ZASIEG[u['konto']] >= u['data'] + timedelta(days=PRZELOM)
+    if not pokryte and u['data'] >= KONIEC - timedelta(days=PRZELOM - 1):
+        for w, r in pary:  # ostatnie dni miesiąca: para może być w wyciągu kolejnego – import kolejnego wczyta ten plik
             czeka += 1
             pominiete.append(dict(baza_wpisu(w), powod='z wpisu – wyciąg nie obejmuje jeszcze 4 dni po wpisie; czeka na import '
                                                          'kolejnego miesiąca' + (f" (wiersz {r['wiersz']})" if r else '')))
         continue
+    if not pokryte:
+        niepelne[u['konto']] = ZASIEG.get(u['konto'])
     for w, r in pary:
         if r:
             decyzja(baza_wpisu(w), zrodlo='lista', regula=w['kod'], kandydaci=[wiersz_info(r)], w_arkuszu=r['wiersz'],
@@ -431,6 +434,10 @@ for z in zam:
     decyzja(b, zrodlo='allegro', pewnosc='Zwykle' if prop else 'Pytaj', regula='ALLEGRO', propozycja=prop,
             opcje=([prop] if prop else []) + [rozbij(o) for o in z.get('opcje', [])],
             uwaga='Allegro Pay – spłata w kolejnym miesiącu zostanie pominięta' if z['pay'] else '')
+
+for konto, koniec in sorted(niepelne.items()):
+    braki.append(f"wyciąg {konto} " + (f"kończy się {koniec.strftime('%d.%m')}" if koniec else 'brak') +
+                 ' – pobierz cały miesiąc (wpisy z kart bez pary czekają na stronie decyzji)')
 
 # ---------- lista skrótów drugiej osoby (gotówka tylko z wpisów)
 KONTA = U.get('konta_list', {})

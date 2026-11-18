@@ -240,6 +240,14 @@ class PrzeplywArkusz(unittest.TestCase):
         a = [a for a in m['auto'] if a.get('ids_w') == ['wk1']]
         self.assertEqual((len(a), a[0]['kwota_ark']), (1, 100.4))  # kwota z wyciągu, wiersz z kategorią wpisu
 
+    def test_niepelny_wyciag_w_srodku_miesiaca_decyzja_i_brak(self):
+        """Czeka tylko wpis z ostatnich 4 dni miesiąca; wcześniejszy bez pary przy krótkim wyciągu – decyzja i „Brakuje”."""
+        self.wpisz('2026-10', self.karta('wk5', '2026-10-15', 40.0))
+        self.zen_wiele(('12 Oct 2026', 'INNE', '-1.00'))
+        m = self.importuj('--zen', 'zen.csv')
+        self.assertIn('wk5', [d['id'] for d in m['decyzje']])
+        self.assertTrue(any('kończy się 12.10' in b for b in m['braki']))
+
     def test_przypiecie_do_wiersza_z_wpisu(self):
         self.wpisz('2026-12', self.karta('wk2', '2026-12-30', 50.0))
         self.ark(wiersz_ark('2026-12-30', 50.0, 'K-bank', 'wk2'))

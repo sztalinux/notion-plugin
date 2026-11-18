@@ -187,6 +187,21 @@ class Synchronizacja(unittest.TestCase):
         self.assertTrue(any('niewysłany' in p and 'w3' in p for p in problemy))
         self.assertTrue(any('wobcy' in p for p in problemy))
 
+    def test_kontrola_bez_polaczenia_nie_zglasza(self):
+        def blad(k, akcja, **d):
+            raise AB.BladArkusza('timeout')
+        AB.wyslij = blad
+        os.environ.update(BUDZET_ARKUSZ_URL=K['url'], BUDZET_ARKUSZ_SEKRET=K['sekret'])
+        try:
+            with redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(AB.main(['kontrola', '--cicho']), 0)
+                self.assertEqual(AB.main(['sync', '--cicho']), 0)  # nic do wysłania – bez połączenia
+                self.zapisz('2026-12', wpis('w1', '2026-12-02'))
+                self.assertEqual(AB.main(['sync', '--cicho']), 1)  # sync zgłasza trwały problem
+        finally:
+            del os.environ['BUDZET_ARKUSZ_URL'], os.environ['BUDZET_ARKUSZ_SEKRET']
+        self.assertIn('kontrola pominięta', out.getvalue())
+
     def test_ponow(self):
         self.zapisz('2026-12', wpis('w1', '2026-12-02'))
         self.sync()

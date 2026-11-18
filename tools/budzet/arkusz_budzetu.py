@@ -306,7 +306,11 @@ def main(argv=None):
             licz, bledy = sync(k, a.proba)
             linia = 'sync' + (' (próba)' if a.proba else '') + ': ' + ', '.join(f'{n} {v}' for n, v in licz.items())
         elif a.polecenie == 'kontrola':
-            licz, problemy = kontrola(k)
+            try:
+                licz, problemy = kontrola(k)
+            except BladArkusza as e:  # chwilowy brak połączenia to nie „wpis bez wiersza” – trwały problem zgłosi sync
+                print(f'{ETYKIETA} kontrola pominięta – arkusz: {e}')
+                return 0
             linia = 'kontrola: ' + ', '.join(f'{n} {v}' for n, v in licz.items()) + f', problemy {len(problemy)}'
             bledy = ['; '.join(problemy)] if problemy else []  # jedna linia ✗ – automat przenosi ją do komunikatu 🔔
         else:

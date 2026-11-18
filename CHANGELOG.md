@@ -16,12 +16,13 @@ Budżet domowy: każdy wydatek z wpisu od razu w arkuszu „Budżet domowy”, z
   usunięcia – `sync` kasuje wiersz w arkuszu. Pliki wpisów pod blokadą.
 - `importuj.py`: płatność z wyciągu (do złotówki różnicy, ±4 dni, także przez przełom miesiąca) przypina się do wiersza z wpisu – kwota
   z wyciągu do D, ID wyciągu do O, bez nowego wiersza (`przypiecia`); wpis z karty z ID w O nie tworzy wiersza; wpis
-  z ostatnich dni miesiąca bez pary czeka na import kolejnego; wiersze z wpisów poza regułą „wpisane ręcznie do dnia X”
+  z ostatnich dni miesiąca bez pary czeka na import kolejnego (wcześniejszy przy krótkim wyciągu – decyzja i „Brakuje”); wiersze z wpisów poza regułą „wpisane ręcznie do dnia X”
   i bez scalania (jeden ID = jeden wiersz, także w `przenies.py`, który wpisuje też Notatki); bez listy gotówki
   (`--gotowka` i brak „lista wydatków gotówkowych” usunięte – gotówka tylko z wpisów); pole `grupa` łączy części płatności.
 - `kontrola.py`: duplikat liczony z kolumną O (dwa wpisy o tej samej treści to nie duplikat).
 - Procedura `budzet` (A.2, A.5, B.5, C.3, zasady), `references/arkusz.md` (formaty, formuły M:N, ID w O), README.
-- Zapas bez skryptu: wpisy czekają w pliku, `sync` i `kontrola` kończą się kodem 0 jedną linią; zamknięcie dopisuje brakujące
+- Zapas bez skryptu: wpisy czekają w pliku, `sync` i `kontrola` kończą się kodem 0 jedną linią (kontrola także przy chwilowym
+  braku połączenia); zamknięcie dopisuje brakujące
   wiersze po ID, przypięcia konektorem.
 - `AI/automaty/przeglad.py` (poza repo, osobna łatka): `arkusz_budzetu.py sync` po każdym przebiegu, w nocy `kontrola`
   (wpis bez wiersza → 🔔 od razu), pierwsza linia „✗” w opisie komunikatu, pozwolenia `ponow`, `kontrola`, `wpis.py usun`.
