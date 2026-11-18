@@ -5,6 +5,11 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## dom-budowa [3.18.4] – 2026-11-18
+
+- `koszty/references/arkusze.md`: nowy etap 47 Wyposażenie domu (stan Wykończenie) i zasada numeru nowego etapu – z zakładki
+  szacunku AI, żeby etap kosztorysu nie kolidował z szacunkiem.
+
 ## ja [1.24.0] – 2026-11-18
 
 Uproszczenie przepływu, faza 4 (D6) – rozkminki w ciągu dnia, wynik w ok. 2–3 h (P8–P9).

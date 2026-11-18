@@ -1,4 +1,4 @@
-# Arkusz „Kosztorys budowy” – układ (stan: 2026-11-11)
+# Arkusz „Kosztorys budowy” – układ (stan: 2026-11-18)
 
 Arkusz Google prowadzi inwestor i nie jest wgrywany ponownie (zmiany układu: `docs/wydatki-arkusz.md`, sekcja 8); kopia wartości do analiz: `Koszty/Kosztorys_google.json` w folderze budowy (`tools/wydatki.py
 pobierz`). Jeśli arkusz wygląda inaczej niż tu opisano – pracuj na faktycznym układzie i zgłoś aktualizację tego pliku
@@ -12,6 +12,8 @@ Instrukcja · Podsumowanie · Wydatki ⚙ · Cennik ⚙ · Etapy · Kosztorys �
 Stan zero = etapy z umowy z ekipą: 01 Przygotowanie i obsługa · 02 Droga dojazdowa · 03 Płyta fundamentowa · 04 Ściany
 piwnicy · 05 Izolacje i zasypka · 06 Strop i schody · 07 Rozszalowanie i sprzątanie · 08 Rezerwa i roboty dodatkowe.
 Koszty ogólne (stan w Etapy kol. B; do 10.11.2026 „Organizacja”): P1–P4 (sprzed budowy), 15 Obsługa budowy – kolejne etapy, 16 Narzędzia. Teren: 50 Przyłącza, zbiorniki, zjazd.
+Wykończenie: 47 Wyposażenie domu (meble – zakupy na zapas; od 18.11.2026). Numer nowego etapu bierz z zakładki szacunku AI
+(wykończenie 40–46, kolejne wolne numery dalej), żeby etap kosztorysu i szacunek się nie gryzły.
 Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje szacunek AI (zakładka i tabela wg stanów).
 
 ## Kolumny wejściowe (kremowe – wpisuje inwestor albo automat)
