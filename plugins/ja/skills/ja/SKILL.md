@@ -19,7 +19,7 @@ na rozmowę, gdy potrzebujesz ID baz (Claude Code synchronizuje ją sam, więc j
 ## Na starcie rozmowy: zmiany do harnessu
 
 Inwestor zgłasza poprawki sposobu pracy z różnych miejsc do skrzynki Notion **„🤖 Zmiany asystenta”** (Rodzaj Zasada)
-(baza „🤖 Zmiany asystenta”, Rodzaj Zasada, `collection://<ID-NOWEJ-BAZY>`, oba pluginy; `rozwoj-harnessu/references/zmiany-asystenta.md`). Na początku rozmowy (w Claude Code w repo harnessu – na polecenie „wdróż”)
+(baza „🤖 Zmiany asystenta”, Rodzaj Zasada, `collection://41cf5982-09e7-812c-a004-000b7cb2af9f`, oba pluginy; `rozwoj-harnessu/references/zmiany-asystenta.md`). Na początku rozmowy (w Claude Code w repo harnessu – na polecenie „wdróż”)
 pobierz (jedno zapytanie) wpisy ze
 Statusem „Do zrobienia” **albo pustym** – inwestor dodaje je też ręcznie bez wypełniania pól:
 

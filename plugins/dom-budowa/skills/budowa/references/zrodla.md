@@ -46,7 +46,7 @@ Pełna mapa z perspektywy „czego szukasz” (widoki, pola, słowniki): `notion
 | 🤖 Asystent AI (wersje obu pluginów, skrzynka, pomysły) | `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` |
 | 🔑 Asystent – dostęp (strona pod 🤖 Asystent AI: dostęp do indeksu wiedzy dla czatu) | `3fcf5982-09e7-810e-aaca-f2b582438924` |
 | 📓 Dziennik (strona wpisów) / 📆 Przeglądy dzienne – budowa (na DOM) | `3f8f5982-09e7-80c8-a154-c59aeb844e8f` / `3f8f5982-09e7-815e-8b03-eacaa74db190` |
-| 🤖 Zmiany asystenta (data source; dawne bazy HZ/POM/ZP w 🗄 Archiwum) | `collection://<ID-NOWEJ-BAZY>` |
+| 🤖 Zmiany asystenta (data source; dawne bazy HZ/POM/ZP w 🗄 Archiwum) | `collection://41cf5982-09e7-812c-a004-000b7cb2af9f` |
 | Dziennik budowy (data source) | `collection://cc113d57-3eaa-4f52-80f6-e4b39a4b4c92` |
 | Przewodnik po dokumentach i Notion (strona, generowana) | `3f6f5982-09e7-81f5-bade-ec877d8d936a` |
 | Harmonogram (data source) | `collection://d7a479ab-1e23-453f-8f59-55f4097f7d04` |

@@ -72,7 +72,7 @@ pod nią 🔑 Asystent – dostęp (dostęp do kopii indeksu wiedzy dla czatu).
 | Przegląd dnia budowy (dziś / jutro, „rozkminki”; ręczne przebiegi z dopiskiem „(ręczne)”) | 📆 Przeglądy dzienne – budowa (strona na dole DOM, wzmianka w zakładce Więcej); przeglądy osobiste – pod 📓 Dziennikiem (plugin `ja`) | `3f8f5982-09e7-815e-8b03-eacaa74db190` | – |
 | Zasady asystenta, wersja harnessu | 🤖 Asystent AI (najwyższy poziom Private, plugin `ja`) | `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` | – |
 | Dostęp do indeksu wiedzy z czatu (ścieżka kopii, token odczytu, blok poleceń) | 🔑 Asystent – dostęp (podstrona 🤖 Asystent AI; tylko dla asystenta, tokenu nie kopiuj nigdzie indziej) | `3fcf5982-09e7-810e-aaca-f2b582438924` | GITHUB_REPO, Token odczytu (ważny do 2027-01-14), blok poleceń |
-| Zasady, pomysły i usterki asystenta (HZ, POM, ZP) | 🤖 Asystent AI → „🤖 Zmiany asystenta” (plugin `ja`, `rozwoj-harnessu`) | `collection://<ID-NOWEJ-BAZY>` | Rodzaj, ID, Status, Procedura |
+| Zasady, pomysły i usterki asystenta (HZ, POM, ZP) | 🤖 Asystent AI → „🤖 Zmiany asystenta” (plugin `ja`, `rozwoj-harnessu`) | `collection://41cf5982-09e7-812c-a004-000b7cb2af9f` | Rodzaj, ID, Status, Procedura |
 | Stare notatki sprzed systemu | Archiwum – stare notatki (tylko do wglądu; przydatne rzeczy są w Notatniku) | `3f3f5982-09e7-817c-bab8-f439d883e6ce` | – (nie zapisuj tam) |
 
 Pulpit budowy (artefakt claude.ai; procedura `pulpit`) czyta Notatnik, Harmonogram, Checklistę budowy, Dziennik budowy, TASKS, Rejestr sprzeczności i Bazę wiedzy, a odsyła do Notion tylko statusy, odhaczenia oraz wybór i notatkę decyzji.

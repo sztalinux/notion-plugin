@@ -1,6 +1,6 @@
 # Baza „🤖 Zmiany asystenta” – jedna baza zamiast HZ, POM i ZP
 
-Baza: Notion → 🤖 Asystent AI → „🤖 Zmiany asystenta”, `collection://<ID-NOWEJ-BAZY>` (uzupełnia migracja).
+Baza: Notion → 🤖 Asystent AI → „🤖 Zmiany asystenta”, `collection://41cf5982-09e7-812c-a004-000b7cb2af9f` (baza `41cf5982-09e7-8178-a7b7-cca464e5b1cd`; migracja 18.11.2026 – strony przeniesione, adresy bez zmian).
 Zastępuje trzy bazy: „Zmiany do harnessu” (HZ), „Pomysły na rozwój” (POM) i „🧯 Znane problemy” (ZP) – stare są w 🗄 Archiwum,
 tylko do wglądu.
 
@@ -47,10 +47,12 @@ Zasada z pustym Statusem albo „Do zrobienia” = do wdrożenia (obowiązuje w 
 
 ## Widoki
 
-- „📥 Zasady do wdrożenia” – Rodzaj = Zasada, Status pusty albo Do zrobienia (skrzynka; liczba idzie do ☀️ Dziś).
-- „💡 Tablica pomysłów” – Rodzaj = Pomysł, tablica wg Statusu.
-- „🧯 Otwarte usterki” – Rodzaj = Usterka, Status inny niż Zrobione i Odrzucone, sortuj Ostatnio malejąco.
-- „Wszystko” – tabela.
+- „📥 Zasady do wdrożenia” `view://41cf5982-09e7-8121-a39c-000c8c82fccb` – Rodzaj = Zasada, Status pusty albo Do zrobienia (skrzynka; liczba idzie do ☀️ Dziś).
+- „💡 Tablica pomysłów” `view://41cf5982-09e7-81c2-8022-000c1ff69c98` – Rodzaj = Pomysł, tablica wg Statusu.
+- „🧯 Otwarte usterki” `view://41cf5982-09e7-8158-b665-000c46776845` – Rodzaj = Usterka, Status inny niż Zrobione i Odrzucone, sortuj Ostatnio malejąco.
+- „Wszystko” `view://41cf5982-09e7-81c9-874a-000cb8d7dcef` – tabela.
+
+Na stronach przeniesionych zostały wartości starych pól „Wdrożono w wersji” / „Rozwiązano w wersji” (poza schematem) – obowiązuje „Zrobiono w wersji”.
 
 ## Wpis inwestora „asystent: …”
 

@@ -5,6 +5,35 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## dom-budowa [3.18.3] – 2026-11-18
+
+- `budowa`, mapa Notion budowy, `zrodla.md`: jedna baza „🤖 Zmiany asystenta” zamiast „Zmiany do harnessu” i „Pomysły na rozwój”.
+
+## ja [1.23.0] – 2026-11-18
+
+Uproszczenie przepływu, faza 5 (D8) – decyzja inwestora: pełna migracja.
+- Trzy bazy (HZ „Zmiany do harnessu”, POM „Pomysły na rozwój”, ZP „🧯 Znane problemy”) połączone w „🤖 Zmiany asystenta”
+  (`collection://41cf5982-09e7-812c-a004-000b7cb2af9f`) z polem Rodzaj: Zasada / Pomysł / Usterka. Strony przeniesione (47/47: 15 / 29 / 3),
+  **adresy i treść bez zmian** – linki w CHANGELOG i Notion działają. Stare (puste) bazy w 🗄 Archiwum, nic nie usunięto.
+- ID jako tekst `HZ-n` / `POM-n` / `ZP-n` (numery bez zmian; nowe: najwyższy numer prefiksu + 1). Pola: HZ „Rodzaj” → „Typ zmiany”;
+  „Wdrożono w wersji” / „Rozwiązano w wersji” → „Zrobiono w wersji”; „Zgłoszono” – data kopiowana.
+- Mapowanie statusów:
+
+  | Nowy Status | HZ | POM | ZP |
+  |---|---|---|---|
+  | Nowy | pusty | Nowy | Nowy |
+  | Czeka na mnie | – | Pytania do mnie | Czeka na mnie |
+  | Przeanalizowany | – | Przeanalizowany | – |
+  | Do zrobienia | Do wdrożenia | Do zrobienia | – |
+  | W toku | – | – | W toku |
+  | Zrobione | Wdrożone | Zrobione | Rozwiązany |
+  | Odłożone | – | Odłożone | – |
+  | Odrzucone | Odrzucone | Odrzucone | Zostaje |
+
+- Nowy `rozwoj-harnessu/references/zmiany-asystenta.md` (pola, statusy, widoki, wpis „asystent: …”); `rozwoj-harnessu` A–D, `ja`, mapy Notion,
+  `przeglad-dnia` (ZP, B.2), `kontrola-spojnosci-pomysly.md`, `pytania.md` C.5, `przeglad-tygodnia-osobisty`, README, AGENTS, CLAUDE – nowa baza i statusy.
+- Poza repo: `samonaprawa/straznik.py` (ID bazy ZP → nowa baza), `pom-wdrazanie/pom.py` i `noc.py` (nazwa bazy w promptach).
+
 ## dom-budowa [3.18.2] – 2026-11-17
 
 - `dokumenty`, `indeks.md`, `indeks-sedzia.md`, `indeks-jakosc.md`: bez odwołań do listy startowej (polecenia „posortuj dokumenty”, „odśwież indeks”).
