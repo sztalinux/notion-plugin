@@ -150,6 +150,8 @@ z czatu bez Notion (`references/skrzynka.md`): te same kroki 3–7, ślad w Skrz
   (C.7, z checkboxami).
 - **Komunikat 💸** (błąd kolejki wydatków, zakłada go przebieg pod 🔔): odpowiedź i zamknięcie – `koszty`, sekcja E (plugin
   dom-budowa); bez odpowiedzi sprawdź stan strony – nie jest już „Błąd” → zamknij jako naprawione.
-- Zdjęcia we wpisie: budowa → `dziennik` (plugin dom-budowa); inne – zostaw w treści docelowej strony.
+- Zdjęcia we wpisie: paragon albo rachunek (obraz z dopiskiem, kto płacił i czym) → `budzet/references/paragony.md`
+  (obraz paragonu bez „kto i czym” → okienko ❓, nic się nie zapisuje); budowa → `dziennik` (plugin dom-budowa); inne –
+  zostaw w treści docelowej strony.
 - Dziennik to skrzynka wejściowa, nie archiwum: wpis żyje w docelowym miejscu, „Przetworzone” to ślad na kilka dni.
 - Inwestor woli pisać niż wypełniać pola – nie proponuj zamiany Dziennika na bazę.

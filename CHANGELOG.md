@@ -4,6 +4,72 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.26.0] – 2026-11-19 (POM-30)
+
+Paragony ze zdjęcia: rozpisanie na kategorie, metoda płatności i podział płatności z wyciągu bez dublowania wydatków.
+- Nowy `tools/budzet/paragon.py`: `pobierz` (zdjęcie albo PDF z adresu pliku Notion → `.dom/budzet/paragony/`, tylko https
+  i hosty plików Notion, limit rozmiaru, bez nadpisywania, HEIC → JPG przez `sips`) i `rozpisz` (pozycje z kategoriami od
+  modelu → suma na kategorię, rabaty i kaucje metodą największych reszt na groszach, kontrola suma części = suma paragonu
+  co do grosza; niezgodność, nieznany skrót albo brak „kto i czym” → kod 1, nic się nie zapisuje). Części `w<id>-1…n`
+  z polem `grupa` i `paragon`; to samo ID zastępuje cały paragon, `--budowa` dla części Inwestycja › Dom, `--proba`.
+- `wpis.py usun` z ID wpisu albo części usuwa cały paragon; Notatki wiersza „z paragonu – sklep, razem, części”.
+- `importuj.py`: lista drugiej osoby porównuje z sumą paragonu (równa → „już z paragonu”, równa jednej części → wchodzi,
+  bliska – do pięciu złotych → strona decyzji „możliwy duplikat paragonu”); wpis z `--budowa` bez pary w wyciągu nie pyta „nie ma
+  w kosztorysie”. Przypięcie płatności z karty do całej grupy (z korektą groszy na największej części) – testy.
+- Procedura `budzet` (A: paragon, wyjątek od „brak szczegółów = gotówka”) i nowe `references/paragony.md`; `wpisy` (zdjęcie
+  paragonu → `budzet`, bez „kto i czym” → ❓), `skrzynka.md`, router `ja`, `AGENTS.md`, `docs/budzet-arkusz.md`, README
+  (konektor Notion – zapas: zdjęcie wklejone w sesji).
+- Testy: `tools/test_budzet_paragon.py` (rozpisanie, pobieranie bez sieci, grupa w pliku, lista drugiej osoby, karta,
+  przełom miesiąca, paragon mieszany, poprawka i usunięcie, synchronizacja grupy z atrapą arkusza).
+- `AI/automaty/przeglad.py` (poza repo, osobna łatka): pozwolenia `paragon.py pobierz` i `paragon.py rozpisz` w przebiegach,
+  zakaz w trybie rozkminki.
+
+## dom-budowa [3.19.1] – 2026-11-19 (POM-30)
+
+- `koszty/references/wydatek-przeplyw.md`: paragon mieszany (część na budowę → strona 💸 i `paragon.py rozpisz --budowa`),
+  stan po POM-29 – gotówka i wydatki z wpisów w arkuszu budżetu od 1.12.2026 w ciągu godziny, starsze przy zamknięciu;
+  płatność z wyciągu przypina się do wiersza z wpisu; zwrot z wpisu to własny wiersz z kwotą ujemną.
+- `koszty` (B) i router `budowa`: zdjęcie paragonu z „kto i czym”, także mieszanego, prowadzi procedura `budzet`
+  (`references/paragony.md`); tu wraca tylko strona 💸 dla części budowlanej.
+
+## ja [1.25.0] – 2026-11-19 (POM-29)
+
+Budżet domowy: każdy wydatek z wpisu od razu w arkuszu „Budżet domowy”, zamknięcie miesiąca bez dubli.
+- Nowy `tools/budzet/arkusz_budzetu.py` (`sync`, `sync --proba`, `kontrola`, `ponow`, `przypnij`, `sprawdz`, `kod`) i
+  `docs/budzet-arkusz.md` z kodem osobnego, małego skryptu Apps Script arkusza budżetu (ping z wersją, odczyt kolumny O,
+  dopisz / popraw / usuń po ID, przypięcie ID wyciągu do grupy wierszy z korektą kwoty – od razu pod paragony z POM-30).
+  Zapisy z datą od 1.12.2026 idą do Transakcji w ciągu godziny (ID wpisu w O, Notatki „z wpisu”); listopad – przy zamknięciu.
+- Znacznik wysyłki w `RRRR-MM-wpisy.jsonl` (wiersz, skrót treści, czas): wysyłane tylko zapisy nowe i zmienione, ręczna
+  poprawka wiersza zostaje; `wpis.py dodaj` przenosi znacznik (także przy zmianie miesiąca), `wpis.py usun` zostawia znak
+  usunięcia – `sync` kasuje wiersz w arkuszu. Pliki wpisów pod blokadą.
+- `importuj.py`: płatność z wyciągu (do złotówki różnicy, ±4 dni, także przez przełom miesiąca) przypina się do wiersza z wpisu – kwota
+  z wyciągu do D, ID wyciągu do O, bez nowego wiersza (`przypiecia`); wpis z karty z ID w O nie tworzy wiersza; wpis
+  z ostatnich dni miesiąca bez pary czeka na import kolejnego (wcześniejszy przy krótkim wyciągu – decyzja i „Brakuje”); wiersze z wpisów poza regułą „wpisane ręcznie do dnia X”
+  i bez scalania (jeden ID = jeden wiersz, także w `przenies.py`, który wpisuje też Notatki); bez listy gotówki
+  (`--gotowka` i brak „lista wydatków gotówkowych” usunięte – gotówka tylko z wpisów); pole `grupa` łączy części płatności.
+- `kontrola.py`: duplikat liczony z kolumną O (dwa wpisy o tej samej treści to nie duplikat).
+- Procedura `budzet` (A.2, A.5, B.5, C.3, zasady), `references/arkusz.md` (formaty, formuły M:N, ID w O), README.
+- Zapas bez skryptu: wpisy czekają w pliku, `sync` i `kontrola` kończą się kodem 0 jedną linią (kontrola także przy chwilowym
+  braku połączenia); zamknięcie dopisuje brakujące
+  wiersze po ID, przypięcia konektorem.
+- `AI/automaty/przeglad.py` (poza repo, osobna łatka): `arkusz_budzetu.py sync` po każdym przebiegu, w nocy `kontrola`
+  (wpis bez wiersza → 🔔 od razu), pierwsza linia „✗” w opisie komunikatu, pozwolenia `ponow`, `kontrola`, `wpis.py usun`.
+- **Czynność inwestora (raz):** wkleić kod z `docs/budzet-arkusz.md` (sekcja 8) do Apps Script arkusza „Budżet domowy”,
+  wdrożyć jako aplikację internetową (Ja, Każdy), dopisać `BUDZET_ARKUSZ_URL` i `BUDZET_ARKUSZ_SEKRET` do `.dom/sekrety.env`,
+  sprawdzić `arkusz_budzetu.py sprawdz` i `sync --proba` (sekcja 6). 19.11: gotówkę z 1–17.11 dopisać jako wpisy.
+- Poprawki po recenzji: `importuj.py` – płatność z wyciągu przed wierszami ręcznymi zajmuje tylko wpis, który ma już wiersz
+  z ID w O; wpis tylko w pliku paruje się po nich, a płatność zajęta przez ręczny wiersz (1:1, ≈1:1, suma) albo
+  zaimportowana wcześniej po ID = wpis już w arkuszu (bez dubla i bez decyzji z kategorią); wpis z końca poprzedniego
+  miesiąca z płatnością z tamtego miesiąca – wiersz albo przypięcie w imporcie kolejnego; czekający wpis daje linię
+  w „Brakuje”, gdy wyciąg nie sięga końca miesiąca. `arkusz_budzetu.py` – `juz` przy `dopisz` (ponow, zamknięcie) od razu
+  `popraw` bieżącą treścią, potem znacznik; `blokada zaloz|zdejmij` na czas zapisu zamknięcia (sync czeka, 60 min);
+  `kontrola` – trwały błąd (sekret, wersja, nagłówki) kod 1, sieć kod 0; `HTTPException` bez tracebacku; komunikat „wiersz
+  zostaje”. `przenies.py --arkusz` – świeży odczyt pod blokadą: odrzuca wiersze z ID już w O, numery `zmiany`
+  i `przypiecia` z odczytu (wiersz bez ID tylko przy zgodnej dacie, kwocie i koncie), bez dubla ID w O. Skrypt arkusza
+  (nadal `WERSJA = 1`): `usun` zostawia wiersz z ID wyciągu (zdejmuje ID wpisu i dopisek), `dopisz` zapisuje ID w O
+  najpierw i dokłada wiersze, gdy brak wolnych, opis / tag / Notatki jako tekst. Procedura `budzet`: B.4 zakres
+  `A1:O`, C.3 pod blokadą, nowe wiersze tylko dopisaniem na końcu. Testy S1–S3b z recenzji.
+
 
 ## dom-budowa [3.19.0] – 2026-11-19 (POM-31)
 

@@ -41,10 +41,10 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     tools/zdjecia.py, tools/kopia.py  ← rozkładanie zdjęć i dokumentów z telefonu, kopia dokumentów Mac → Dysk (plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md; testy test_*.py)
     tools/kopie.py                    ← kontrola kopii zapasowych: co ma kopię, gdzie i z kiedy, tylko odczyt (docs/kopie-zapasowe.md; test_kopie.py)
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
-    tools/budzet/                     ← budżet domowy: wpisy w trakcie miesiąca (wpis.py), import wyciągów, Allegro i list → strona decyzji → Transakcje, kontrola arkusza (procedura budzet; dane poza repo w .dom/budzet)
+    tools/budzet/                     ← budżet domowy: wpisy (wpis.py) i paragony ze zdjęcia (paragon.py) od razu w arkuszu (arkusz_budzetu.py, docs/budzet-arkusz.md), import wyciągów, Allegro i listy → strona decyzji → Transakcje, kontrola arkusza (procedura budzet; dane poza repo w .dom/budzet)
     tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google, gotówka po miesiącach (docs/wydatki-arkusz.md)
     tools/pomysly_wersje.py           ← wersje z CHANGELOG (gałąź main) dla POM-n (kontrola „status pomysłu ↔ wdrożenie” w przeglądzie dnia; test_pomysly_wersje.py)
-    docs/                             ← opisy systemów dla człowieka: wiedza (mapa, runbook, rejestr decyzji), wydatki → arkusz
+    docs/                             ← opisy systemów dla człowieka: wiedza (mapa, runbook, rejestr decyzji), wydatki → arkusz, budżet → arkusz
 ```
 
 ## Jak to działa
@@ -66,6 +66,7 @@ claude.ai (telefon, czat, Cowork) ◄── pluginy ja + dom-budowa ─┘   (ka
 Mac (launchd, `AI/automaty/przeglad.py`, poza repo) ── co godzinę 8–22, w nocy (2:00), w niedzielę:
    ├─ `claude -p` + MCP Notion: Skrzynka i 📓 Dziennik → Notion (przegląd dnia, tygodnia)
    ├─ po przebiegu `tools/wydatki.py`: kolejka „💸 Wydatki → arkusz” → arkusz Google „Kosztorys budowy”
+   ├─ po przebiegu `tools/budzet/arkusz_budzetu.py`: wydatki z wpisów → arkusz Google „Budżet domowy” (w nocy kontrola wpis ↔ wiersz)
    └─ problem, który trwa (przebieg nieudany lub nieuruchomiony, logowanie MCP, błąd skryptu) → `stan.json` →
       następny udany przebieg → „🔔 Komunikaty asystenta” we „📝 Wpisach”; większe sprawy → baza „🤖 Zmiany asystenta” (Rodzaj Usterka)
 ```
@@ -81,6 +82,8 @@ z ⚠ i inwestor o tym wie.
 | Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
 | Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
 | Google Sheets / Drive + strona decyzji (artefakt, procedura `budzet`) | budżet domowy: odczyt Transakcji, zapis wierszy, decyzje inwestora | wynik `przenies.py` (`miesiace/RRRR-MM-zapis.json`) wkleja się ręcznie; decyzje można podać w czacie zamiast na stronie |
+| Notion MCP – zdjęcie paragonu we „📝 Wpisach” (`tools/budzet/paragon.py pobierz`, procedura `budzet`) | pobranie zdjęcia paragonu do `.dom/budzet/paragony/` i rozpisanie w przebiegu | sesja Claude Code: inwestor wkleja zdjęcie w rozmowę, rozpisanie tym samym `paragon.py rozpisz`; przebieg zostawia 🔔 |
+| Apps Script arkusza „Budżet domowy” (`tools/budzet/arkusz_budzetu.py`) | wydatki z wpisów od razu w Transakcjach, przypięcie płatności z wyciągu | wpisy czekają w pliku miesiąca; zamknięcie miesiąca dopisuje brakujące wiersze po ID, przypięcia – konektorem albo ręcznie (`docs/budzet-arkusz.md`, 4) |
 | Google Sheets / Drive | liczby z żywego arkusza, zmiany układu, nowy etap kosztorysu w sesji (`koszty` C.7) | kopia `Kosztorys_google.json` (Apps Script z sekretem), eksport od inwestora, `wydatki.py migruj` (`docs/wydatki-arkusz.md`; nowy etap – operacja `wstaw`); nowa pozycja w istniejącym etapie nie zależy od konektora (Apps Script) |
 | Google Drive (zdjęcia, dokumenty z telefonu, kopia) | rozkładanie `Zdjęcia/_nowe`, odczyt dokumentów z Dysku na czacie | skrypt lokalnie (z aplikacją Dysku albo po pobraniu `_nowe` / AirDropie), kopia paczką przez przeglądarkę, „prośba o dokument” jak dotąd; wgrywanie z telefonu działa zawsze (`plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`, 5) |
 | Notion – „📘 Książka domu” (procedura `ksiazka-domu`) | rozdziały etapów, „gdzie co biegnie” | szkic rozdziału jako Markdown w folderze budowy (`Książka domu/`), punkty z telefonu przez Skrzynkę; ostatni eksport PDF i zdjęcia na Dysku działają bez Notion i bez asystenta |
@@ -144,6 +147,7 @@ i nigdy nie trafiają do git. Konfiguracja – plik `.dom/sekrety.env` (tryb 600
 Trzy kanały użycia i ograniczenia: `plugins/dom-budowa/skills/wiedza/references/indeks.md`.
 Całość systemu wiedzy (części, kto co uruchamia, pomiary, decyzje): `docs/system-wiedzy.md`; instrukcja odtworzenia i naprawy (automaty, konektor Notion, rozjechany indeks, tokeny): `docs/wiedza-runbook.md`; rejestr decyzji – co wybrano, co sprawdzono i odrzucono, z liczbami z pomiarów: `docs/decyzje-system-wiedzy.md`.
 Wydatki z Notion do arkusza Google z kosztorysem (jak działa, konfiguracja krok po kroku, kod Apps Script): `docs/wydatki-arkusz.md`.
+Budżet domowy – wydatki z wpisów do arkusza „Budżet domowy” (przepływ, znacznik wysyłki, wdrożenie i kod Apps Script, sekrety `BUDZET_ARKUSZ_URL` i `BUDZET_ARKUSZ_SEKRET`): `docs/budzet-arkusz.md`.
 Zdjęcia z budowy, dokumenty z telefonu i kopia dokumentów na Dysk Google (reguły, tryby, przypadki brzegowe): `plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`.
 Kopie zapasowe wszystkiego (Mac, Dysk, Notion, repozytoria, dane asystenta) – plan, rytm, kontrola `tools/kopie.py`, odtworzenie: `docs/kopie-zapasowe.md`.
 `tools/wiedza_jakosc.py` obserwuje jakość wyszukiwania (log zapytań `szukaj`, zbiory oceny, raport tygodniowy z alarmami,

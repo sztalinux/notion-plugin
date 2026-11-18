@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Wydatek z wpisu (Dziennik, rozmowa) -> plik miesiąca budżetu domowego `listy/RRRR-MM-wpisy.jsonl` w folderze danych.
-Nic nie zapisuje do arkusza: zamknięcie miesiąca (`importuj.py`) czyta plik jak listę – gotówka i konta bez wyciągu to
-wiersze, konta z wyciągiem to podpowiedź kategorii i opisu dla transakcji z wyciągu. Procedura: plugins/ja/skills/budzet.
+Sam skrypt nie łączy się z siecią. Zapisy z datą od `ARKUSZ_OD` (wspolne.py, 1.12.2026) wysyła do arkusza
+`arkusz_budzetu.py sync` (automat po przebiegu, w Claude Code agent zaraz po zapisie) – znacznik wysyłki w polu `arkusz`.
+Starsze zapisy i te, których skrypt arkusza nie przyjął, dopisuje zamknięcie miesiąca (`importuj.py`) po ID.
+Procedura: plugins/ja/skills/budzet.
 
     python3 tools/budzet/wpis.py dodaj "<kwota>[, konto][, osoba], <kategoria>[, opis]" --data RRRR-MM-DD [--id ID] [--budowa ID] [--gotowka]
     python3 tools/budzet/wpis.py lista RRRR-MM
@@ -10,17 +12,22 @@ wiersze, konta z wyciągiem to podpowiedź kategorii i opisu dla transakcji z wy
 
 Skróty kont i osób: ustawienia.json (`skroty_kont`, `skroty_osob`); kategorii: reguly.json (`skroty`). Bez konta – gotówka;
 gotówka i konta drugiej osoby zawsze na drugą osobę. Kwota z „+” = wpływ, działanie („5300-580”) zostaje formułą.
---id: ID wpisu (blok/strona w Notion, strona 💸) – ten sam ID nadpisuje zapis zamiast dodawać drugi.
+--id: ID wpisu (blok/strona w Notion, strona 💸) – ten sam ID nadpisuje zapis zamiast dodawać drugi (także gdy zmieni się
+miesiąc daty); znacznik wysyłki zostaje, więc synchronizacja poprawi wiersz w arkuszu zamiast dopisać drugi.
 --budowa: ID strony w kolejce 💸 – wydatek na budowę, już w kosztorysie. Bez konta w treści – konto `konto_budowy`
 z ustawienia.json (brak klucza – gotówka, jak dotąd; skrypt wypisuje uwagę).
 --gotowka: wymusza gotówkę (strona 💸 ze Sposobem = Gotówka), także przy --budowa.
+usun: zapis już wysłany do arkusza dostaje znak `usuniety` – synchronizacja usuwa jego wiersz i dopiero wtedy zapis z pliku.
+Pole `grupa` – części jednego paragonu (zapisuje je paragon.py); zamknięcie miesiąca paruje płatność z wyciągu z sumą grupy.
+usun z ID części albo ID wpisu paragonu usuwa cały paragon.
 """
-import argparse, hashlib, json, re, sys
+import argparse, hashlib, re, sys
 from datetime import date, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import DANE, U, kw, opcja, wczytaj, zapisz  # noqa: E402
+from wspolne import (U, blokada_wpisow, czytaj_wpisy, kw, miesiace_wpisow, opcja, wczytaj, zapisz,  # noqa: E402
+                     zapisz_wpisy)
 
 KWOTA = re.compile(r'^(\+?)\s*(\d[\d.]*(?:\s*[+-]\s*\d[\d.]*)*)$')
 
@@ -61,19 +68,13 @@ def parsuj(tekst, skroty=None, domyslne_konto=None, wymus_konto=None):
                 kod=kod, typ=o['typ'] if o else '', kat=o['kat'] if o else '', pod=o['pod'] if o else '', opis=opis)
 
 
-def plik(mies):
-    return DANE / 'listy' / f'{mies}-wpisy.jsonl'
-
-
-def czytaj(mies):
-    p = plik(mies)
-    return [json.loads(l) for l in p.read_text(encoding='utf-8').splitlines() if l.strip()] if p.exists() else []
-
-
-def zapisz_wszystkie(mies, wpisy):
-    p = plik(mies)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(''.join(json.dumps(w, ensure_ascii=False) + '\n' for w in wpisy), encoding='utf-8')
+def znajdz(id_):
+    """(miesiąc, zapis) z dowolnego pliku miesiąca – także usunięty – albo (None, None)."""
+    for m in miesiace_wpisow():
+        for w in czytaj_wpisy(m, z_usunietymi=True):
+            if w['id'] == id_:
+                return m, w
+    return None, None
 
 
 def opis_wpisu(w):
@@ -93,10 +94,11 @@ def main():
     ap.add_argument('--gotowka', action='store_true', help='wymuś gotówkę (Sposób = Gotówka na stronie 💸)')
     A = ap.parse_args()
     if A.akcja == 'lista':
-        ws = czytaj(A.arg)
+        ws = czytaj_wpisy(A.arg, z_usunietymi=True)
         for w in ws:
-            print(w['id'], opis_wpisu(w))
-        print(f'{A.arg}: {len(ws)} wpisów')
+            print(w['id'], opis_wpisu(w) + (' [usunięty – czeka na usunięcie z arkusza]' if w.get('usuniety') else
+                                             ' [w arkuszu]' if w.get('arkusz') else ''))
+        print(f"{A.arg}: {sum(1 for w in ws if not w.get('usuniety'))} wpisów")
         return
     if A.akcja == 'ustaw-konto-budowy':
         sk = {k.lower(): v for k, v in U.get('skroty_kont', {}).items()}
@@ -109,10 +111,22 @@ def main():
         print(f'konto_budowy = {konto}')
         return
     if A.akcja == 'usun':
-        ws = czytaj(A.arg)
-        reszta = [w for w in ws if w['id'] not in (A.id_usun, 'w' + str(A.id_usun))]
-        zapisz_wszystkie(A.arg, reszta)
-        print('usunięto' if len(reszta) < len(ws) else f'✗ brak wpisu {A.id_usun}')
+        with blokada_wpisow():
+            ws = czytaj_wpisy(A.arg, z_usunietymi=True)
+            ids = (A.id_usun, 'w' + str(A.id_usun))
+            cel = next((w for w in ws if (w['id'] in ids or w.get('grupa') in ids) and not w.get('usuniety')), None)
+            if not cel:
+                print(f'✗ brak wpisu {A.id_usun}')
+                return
+            # część paragonu (pole grupa) – znika cały paragon, nie jedna kategoria
+            cele = [w for w in ws if not w.get('usuniety') and (w is cel or (cel.get('grupa') and w.get('grupa') == cel['grupa']))]
+            teraz = datetime.now().strftime('%Y-%m-%d %H:%M')
+            for w in cele:
+                if w.get('arkusz'):
+                    w['usuniety'] = teraz
+            zapisz_wpisy(A.arg, [w for w in ws if not (w in cele and not w.get('arkusz'))])
+            print(f'usunięto ({len(cele)})' + (' – wiersze w arkuszu znikną przy synchronizacji (arkusz_budzetu.py sync)'
+                                              if any(w.get('arkusz') for w in cele) else ''))
         return
     d = A.data or date.today().isoformat()
     try:
@@ -126,11 +140,14 @@ def main():
     w = dict(id='w' + (A.id or hashlib.sha1(f'{d}|{A.arg}'.encode()).hexdigest()[:10]), data=d, tekst=A.arg, **w,
              budowa=A.budowa, dodano=datetime.now().strftime('%Y-%m-%d %H:%M'))
     mies = d[:7]
-    ws = czytaj(mies)
-    stary = next((x for x in ws if x['id'] == w['id']), None)
-    ws = [x for x in ws if x['id'] != w['id']] + [w]
-    zapisz_wszystkie(mies, ws)
-    print(('zaktualizowano: ' if stary else 'dopisano: ') + opis_wpisu(w))
+    with blokada_wpisow():
+        m_stary, stary = znajdz(w['id'])
+        if stary and stary.get('arkusz'):
+            w['arkusz'] = stary['arkusz']  # wiersz już w arkuszu – synchronizacja go poprawi, nie dopisze drugiego
+        if m_stary and m_stary != mies:
+            zapisz_wpisy(m_stary, [x for x in czytaj_wpisy(m_stary, z_usunietymi=True) if x['id'] != w['id']])
+        zapisz_wpisy(mies, [x for x in czytaj_wpisy(mies, z_usunietymi=True) if x['id'] != w['id']] + [w])
+    print(('zaktualizowano: ' if stary and not stary.get('usuniety') else 'dopisano: ') + opis_wpisu(w))
     if A.budowa and not A.gotowka and not U.get('konto_budowy') and w['konto'] == U.get('gotowka_konto', 'Gotówka'):
         print('uwaga: brak klucza konto_budowy w ustawienia.json – wydatek budowy zapisany na gotówkę (jak dotąd); '
               'blok 🔔 „konto-budowy” we „Wpisach”')

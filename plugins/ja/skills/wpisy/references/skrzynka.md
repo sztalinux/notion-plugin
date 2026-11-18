@@ -24,7 +24,8 @@ może się zmienić, a bez Notion nie da się jej sprawdzić; telefon pisze, co 
   wynika z rozmowy (termin jako data, kogo dotyczy, którego etapu). Nie wpisuj nazw pól, statusów ani ID baz.
 - Brak danych (data, czego dotyczy, kto) → nie zgaduj: dopisz w tej samej linii `❓ <pytanie z propozycją>`; Mac przeniesie je
   do okienka pod wpisem w „📝 Wpisy” (`wpisy`, krok 4). Czego inwestor nie dopowiedział w rozmowie, nie dopowiadaj za niego.
-- Zdjęcia do Skrzynki nie wchodzą – powiedz inwestorowi, że zdjęcie dodaje w Notion albo na Dysku (`dziennik`, plugin dom-budowa).
+- Zdjęcia do Skrzynki nie wchodzą – powiedz inwestorowi, że zdjęcie dodaje w Notion albo na Dysku (`dziennik`, plugin dom-budowa);
+  zdjęcie paragonu – we „📝 Wpisach” z dopiskiem, kto płacił i czym (`budzet/references/paragony.md`).
 - Odpowiedź inwestorowi: „Zapisane do Skrzynki (n); w Notion po najbliższym przebiegu, do godziny”. Nie pisz „zapisano w Notion”.
 
 ## Opróżnianie (Mac: `przeglad-dnia` A.1 i B.1; w rozmowie „przerób skrzynkę”)
