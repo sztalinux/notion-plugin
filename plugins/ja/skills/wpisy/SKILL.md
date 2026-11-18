@@ -89,7 +89,8 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    - **Prośba o rozkminkę** – wpis wprost prosi o pracę myślową dla inwestora („przygotuj mi…”, „napisz mi…”, „jakie pytania
      zadać…”, „przemyśl / rozkmiń…”, „porównaj…”), nie o zapis. W rozmowie – wykonaj od razu właściwą procedurę. W przebiegu
      bez inwestora nie wykonuj jej: jasne części wpisu (zadanie, termin) zapisz normalnie, a ślad daj jako
-     `~~wpis~~ → 🧠 rozkminka wieczorem` (z obszarem: „budowa” albo nazwa obszaru) – robi ją przegląd dnia (`przeglad-dnia`, B.2a).
+     `~~wpis~~ → 🧠 rozkminka wieczorem` (z obszarem: „budowa” albo nazwa obszaru) – robi ją przegląd dnia (`przeglad-dnia`, B.2a);
+     polecenie z akapitem „Rozkminki w ciągu dnia” → ślad `→ 🧠 rozkminka w toku <token>` i linia `ROZKMINKI:` (`przeglad-dnia/references/rozkminka.md`).
      W tym śladzie zostaw pełną treść prośby, bez skrótu z kroku 6 – wieczór czyta ją stąd.
 6. **Zamknij wpis:** przenieś go do „Przetworzone” (z okienkiem: pytanie i odpowiedź w jednej linii `(❓ … → ✍️ …)`), do **zwijanego bloku dzisiejszego dnia** (`<toggle>` – zapis jak w `przeglad-dnia/references/uklad-wpisu.md`, A; nigdy `<details>`,
    tytuł „📅 <dd.mm> <dzień> · <skrót linii 🤖>”; brak – utwórz na górze), jako `~~wpis~~ → <gdzie>: <link>`;

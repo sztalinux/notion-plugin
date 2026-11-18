@@ -67,7 +67,7 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
    (`wpisy` krok 7); tytuł bloku pokazuje sumę dnia. W odpowiedzi
    podaj nowe wpisy per źródło – „Wpisy n · Skrzynka n” – żeby było
    widać, że przebieg sprawdził oba.
-5. Bez „jutra”, bez wpisów w przeglądach – to robi wieczór.
+5. Bez „jutra”, bez wpisów w przeglądach – to robi noc. Rozkminki w ciągu dnia (tryb godzinowy, „Gotowe rozkminki”) i tryb `rozkminka`: `references/rozkminka.md`.
 
 ## B. Tryb wieczorny – podsumowanie i plan
 
@@ -89,7 +89,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    w wersji”, „Do zrobienia” / „Przeanalizowany” przy wdrożeniu zapisanym w polu albo w nagłówku `CHANGELOG.md`, „gałąź …”
    już scalona. Pole wersji uzupełniasz tylko z nagłówka CHANGELOG z numerem POM; **Status zmienia dopiero ☑ inwestora**
    (blok 🔔, klucz `KS-P…`). Reguły i obsługa odpowiedzi: `references/kontrola-spojnosci-pomysly.md`.
-2a. **Rozkminki – tylko na prośbę z wpisu** (ślad `→ 🧠 rozkminka wieczorem` w dzisiejszym lub wczorajszym bloku
+2a. **Rozkminki – tylko na prośbę z wpisu** (ślad `→ 🧠 rozkminka wieczorem` albo `→ 🧠 rozkminka w toku` z listy w poleceniu – `references/rozkminka.md`, 4 – w dzisiejszym lub wczorajszym bloku
    „Przetworzone”, `wpisy` krok 5, **także ślady z kroku 1 tego przebiegu** – na stronie ich jeszcze nie ma, zapisz je od razu
    jako `→ 🧠 rozkminka: <wzmianka>`; z własnej inicjatywy nie rób – to koszt). Max 2, najstarsze pierwsze; reszta jutro
    („rozkminki czekają: n” w „⚠ Na teraz”). Procedura tematu **tylko odczytem**: budowa – spotkanie, decyzja → `przygotowanie`

@@ -5,6 +5,17 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## ja [1.24.0] – 2026-11-18
+
+Uproszczenie przepływu, faza 4 (D6) – rozkminki w ciągu dnia, wynik w ok. 2–3 h (P8–P9).
+- Nowy `przeglad-dnia/references/rozkminka.md`: szybki zaznacza prośbę śladem `→ 🧠 rozkminka w toku RZ-<dd.mm>-<n>` i linią
+  `ROZKMINKI:` (same tokeny, bez treści); osobny proces `przeglad.py rozkminka` (plist `pl.dom.przeglad-rozkminka`, 8:35–22:35)
+  pisze wyłącznie podstronę pod nową stroną „🧠 Rozkminki” (pod Dziennikiem) i zwraca `WYNIK: <token> <url>`; następny szybki dodaje
+  blok 🔔 z „Do decyzji” i zmienia ślad. Najwyżej 3 dziennie, po 22:30 i po dwóch nieudanych próbach – nocny (B.2a).
+- **Bez plista wszystko jak dawniej** (ślad `→ 🧠 rozkminka wieczorem`, nocny B.2a): akapit „Rozkminki w ciągu dnia” dokleja `przeglad.py`
+  tylko, gdy plist jest zainstalowany.
+- `przeglad.py` (poza repo): `stan.json` pod blokadą pliku i z zapisem atomowym (P9); kolejka i lista gotowych rozkminek w `stan.json`.
+
 ## dom-budowa [3.18.3] – 2026-11-18
 
 - `budowa`, mapa Notion budowy, `zrodla.md`: jedna baza „🤖 Zmiany asystenta” zamiast „Zmiany do harnessu” i „Pomysły na rozwój”.

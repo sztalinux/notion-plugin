@@ -17,6 +17,7 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 ├─ ### ❓ Czeka na Twoją odpowiedź (toggle) – przejściowo; pytania są teraz we 📝 Wpisach (🔔), sekcję usuwa faza 6
 ├─ ### Przetworzone (toggle) – zwijany blok na każdy dzień: linia „🤖” + ślad „~~wpis~~ → gdzie”
 ├─ ### 🧭 Dla asystenta (toggle) – baza 🧭 Obszary Dziennika, wzmianka przewodnika
+├─ 🧠 Rozkminki (podstrona `41cf5982-09e7-81a1-9b12-df2bcc2a7574` – wyniki rozkminek w ciągu dnia, pisze tylko tryb `rozkminka`; `przeglad-dnia/references/rozkminka.md`)
 ├─ 📆 Przeglądy dzienne (podstrona – przeglądy osobiste; budowa ma własne na DOM)
 ├─ 📅 Przeglądy tygodniowe (podstrona – tydzień osobisty; budowa ma własny na DOM)
 ├─ 🗃 Przetworzone podstrony (podstrona – archiwum wpisów pisanych jako podstrony)
