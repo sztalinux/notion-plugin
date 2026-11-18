@@ -18,8 +18,8 @@ Gdzie leżą dane i jak je zmieniać: `references/zrodla.md`; gdzie czego szuka�
 
 ## Na starcie
 
-Skrzynkę „Zmiany do harnessu” obsługuje skill `ja` (plugin `ja`, sekcja „Na starcie rozmowy”) – wczytaj
-go, jeśli nie jest wczytany; wpisy „Do wdrożenia” albo z pustym Statusem obowiązują też w sprawach budowy.
+Skrzynkę „🤖 Zmiany asystenta” (Zasady) obsługuje skill `ja` (plugin `ja`, sekcja „Na starcie rozmowy”) – wczytaj
+go, jeśli nie jest wczytany; zasady „Do zrobienia” albo z pustym Statusem obowiązują też w sprawach budowy.
 
 Poza Claude Code pobierz też (raz na rozmowę, razem ze skrzynką) stronę Notion **„📑 Przewodnik po dokumentach i Notion”**
 (`3f6f5982-09e7-81f5-bade-ec877d8d936a`): co jest w którym dokumencie, gdzie leży i gdzie czego szukać w Notion.

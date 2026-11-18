@@ -10,7 +10,7 @@ Zasada podziału: **harness = JAK pracujemy** (procedury, formaty, zasady) – t
 |---|---|---|
 | Procedury, zasady, szablony | publiczne repo GitHub `sztalinux/notion-plugin` → pluginy `dom-budowa` i `ja` na koncie Claude (aktualizacja: ręczne odświeżenie lub synchronizacja – plugin `ja`, `rozwoj-harnessu/references/claude-ai-projekt.md`) | Claude Code (`rozwoj-harnessu`, sekcja B) |
 | Zgłoszone zmiany harnessu (obowiązują od razu) | Notion → 🤖 Asystent AI (najwyższy poziom) → Zmiany do harnessu | dowolny asystent (`rozwoj-harnessu`, sekcja A) |
-| Pomysły na rozwój (do analizy; wdrożenie tylko na polecenie) | Notion → 🤖 Asystent AI → 💡 Pomysły na rozwój | inwestor wpisuje, asystent analizuje (`rozwoj-harnessu`, sekcja C) |
+| Pomysły (do analizy; wdrożenie tylko na polecenie) | Notion → 🤖 Asystent AI → 🤖 Zmiany asystenta (Rodzaj Pomysł) | inwestor wpisuje, asystent analizuje (`rozwoj-harnessu`, sekcja C) |
 | Terminy: harmonogram, zadania, czekam na, zamówienia | Notion → Harmonogram, TASKS, 🧱 Zakupy budowy (daty); kwoty i płatności – arkusz Google „Kosztorys budowy” (Etapy, Wydatki) | agent (`harmonogram`, `zakupy`), inwestor |
 | Umowy, odbiory, gwarancje | Notion → Umowy i gwarancje; skany – folder budowy | agent (`oferta`, `etap`), inwestor |
 | Luźne wpisy inwestora do rozłożenia (wszystkie obszary, także budowa) | Notion → „📓 Dziennik” (wolny tekst; podział na obszary w bazie „🧭 Obszary Dziennika”) | inwestor wpisuje, agent przetwarza (`wpisy`, plugin `ja`; sprawy budowy – `budowa`, „Luźny wpis z Dziennika”) |
@@ -46,8 +46,7 @@ Pełna mapa z perspektywy „czego szukasz” (widoki, pola, słowniki): `notion
 | 🤖 Asystent AI (wersje obu pluginów, skrzynka, pomysły) | `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` |
 | 🔑 Asystent – dostęp (strona pod 🤖 Asystent AI: dostęp do indeksu wiedzy dla czatu) | `3fcf5982-09e7-810e-aaca-f2b582438924` |
 | 📓 Dziennik (strona wpisów) / 📆 Przeglądy dzienne – budowa (na DOM) | `3f8f5982-09e7-80c8-a154-c59aeb844e8f` / `3f8f5982-09e7-815e-8b03-eacaa74db190` |
-| Zmiany do harnessu (data source) | `collection://e217448a-60ec-4af6-8584-8f368315109c` |
-| Pomysły na rozwój (data source) | `collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3` |
+| 🤖 Zmiany asystenta (data source; dawne bazy HZ/POM/ZP w 🗄 Archiwum) | `collection://<ID-NOWEJ-BAZY>` |
 | Dziennik budowy (data source) | `collection://cc113d57-3eaa-4f52-80f6-e4b39a4b4c92` |
 | Przewodnik po dokumentach i Notion (strona, generowana) | `3f6f5982-09e7-81f5-bade-ec877d8d936a` |
 | Harmonogram (data source) | `collection://d7a479ab-1e23-453f-8f59-55f4097f7d04` |

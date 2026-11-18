@@ -81,10 +81,10 @@ dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z
 zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiłoby do przeglądu budowy.
 
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
-   Komunikaty 🔔 z linią `→ ZP-n`: sprawdź Status tych wierszy „🧯 Znane problemy” (wyszukiwarka z parametrem bazy) –
-   „Rozwiązany” albo „Zostaje” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze ZP „Czeka na mnie”
-   (widok „🧯 Otwarte”) bez bloku 🔔 → dodaj blok (tamże, C.5).
-2. **Pomysły na rozwój** – bez automatycznej analizy (analiza tylko na prośbę inwestora, `rozwoj-harnessu`, sekcja C).
+   Komunikaty 🔔 z linią `→ ZP-n`: sprawdź Status tych wierszy Rodzaj Usterka w „🤖 Zmiany asystenta” (wyszukiwarka z parametrem bazy) –
+   „Zrobione” albo „Odrzucone” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze ZP „Czeka na mnie”
+   (widok „🧯 Otwarte usterki”) bez bloku 🔔 → dodaj blok (tamże, C.5).
+2. **Pomysły** – bez automatycznej analizy (analiza tylko na prośbę inwestora, `rozwoj-harnessu`, sekcja C).
    **Kontrola spójności pomysłów (grupa P)** – z jednego odczytu całej tablicy pomysłów (wszystkie statusy, nie tylko „Nowy”): „Zrobione” bez „Zrobiono
    w wersji”, „Do zrobienia” / „Przeanalizowany” przy wdrożeniu zapisanym w polu albo w nagłówku `CHANGELOG.md`, „gałąź …”
    już scalona. Pole wersji uzupełniasz tylko z nagłówka CHANGELOG z numerem POM; **Status zmienia dopiero ☑ inwestora**

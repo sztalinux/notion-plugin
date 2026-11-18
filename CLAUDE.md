@@ -13,8 +13,8 @@ z pierwszej wiadomości. Nie czytaj Notion i nie uruchamiaj skryptów na starcie
 niż 36 h → linia „Stan: brak świeżych danych z nocnego przebiegu”. Linię składa `przeglad.py` po każdym przebiegu (wersje harnessu w repo i na koncie,
 stan ostatnich przebiegów) – bez POM i ZP. Gdy konto ma starsze pluginy niż repo, powiedz to jednym zdaniem.
 
-Polecenia w trakcie sesji (działają tak samo jak dawne pozycje listy): „wdróż” (skrzynka zmian: `git pull`, wpisy „Zmiany do harnessu” ze Statusem
-„Do wdrożenia” albo pustym – `rozwoj-harnessu`, sekcja „Wdrożenie”), „zrób POM-n” i „przeanalizuj pomysły” (tylko na prośbę), „zrób ZP-n”, „odśwież indeks”
+Polecenia w trakcie sesji (działają tak samo jak dawne pozycje listy): „wdróż” (skrzynka zmian: `git pull`, wpisy „🤖 Zmiany asystenta” (Zasady) ze Statusem
+„Do zrobienia” albo pustym – `rozwoj-harnessu`, sekcja „Wdrożenie”), „zrób POM-n” i „przeanalizuj pomysły” (tylko na prośbę), „zrób ZP-n”, „odśwież indeks”
 (`python3 tools/wiedza.py sync --publikuj --cicho`), „posortuj dokumenty” (`python3 tools/dokumenty.py`, procedura `dokumenty`), „stan kopii”
 (`tools/zdjecia.py stan`, `tools/kopia.py stan`, `tools/kopie.py stan`) i „rozłóż zdjęcia” (`dziennik`, `references/zdjecia-i-kopia.md`).
 

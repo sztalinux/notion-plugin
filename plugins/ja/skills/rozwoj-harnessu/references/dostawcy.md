@@ -2,7 +2,7 @@
 
 Jedno źródło: `plugins/dom-budowa/skills/` i `plugins/ja/skills/` + `AGENTS.md` w publicznym repo GitHub `sztalinux/notion-plugin`
 (bez danych osobowych i danych budowy).
-Poprawki zgłoszone z dowolnego miejsca czekają w Notion („Zmiany do harnessu”) i obowiązują od razu.
+Poprawki zgłoszone z dowolnego miejsca czekają w Notion („🤖 Zmiany asystenta” (Zasady)) i obowiązują od razu.
 
 | Narzędzie | Skąd bierze harness | Uwagi |
 |---|---|---|

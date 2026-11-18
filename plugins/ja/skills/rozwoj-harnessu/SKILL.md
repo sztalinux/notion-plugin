@@ -1,6 +1,6 @@
 ---
 name: rozwoj-harnessu
-description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez skrzynkę „Zmiany do harnessu” w Notion oraz analiza pomysłów na rozwój setupu (baza „Pomysły na rozwój”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/arkusza, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, „zrób ZP-2”, „znane problemy”, albo pyta o przeniesienie harnessu do innego AI.
+description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez bazę „🤖 Zmiany asystenta” w Notion (zasady, pomysły, usterki) oraz analiza pomysłów na rozwój setupu (baza „Pomysły na rozwój”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/arkusza, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, „zrób ZP-2”, „znane problemy”, albo pyta o przeniesienie harnessu do innego AI.
 ---
 
 # Rozwój harnessu
@@ -13,17 +13,16 @@ Konfiguracja projektu „Dom” na claude.ai (instrukcje, wiedza): `references/c
 
 | Gdzie jesteś | Co robisz |
 |---|---|
-| Czat, telefon, Cowork, inne AI (bez repo) | **Zgłoszenie** do skrzynki w Notion – sekcja A |
+| Czat, telefon, Cowork, inne AI (bez repo) | **Zgłoszenie** do bazy „🤖 Zmiany asystenta” (Rodzaj Zasada) – sekcja A |
 | Claude Code w folderze repo | **Wdrożenie** skrzynki do plików + push – sekcja B (na polecenie „wdróż”) |
-| Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, arkusz kosztorysu) | **Pomysł** do bazy „Pomysły na rozwój” → analiza → wdrożenie na polecenie – sekcja C |
-| Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Znany problem** w bazie „🧯 Znane problemy” → naprawa w Claude Code – sekcja D |
+| Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, arkusz kosztorysu) | **Pomysł** (Rodzaj Pomysł w „🤖 Zmiany asystenta”) → analiza → wdrożenie na polecenie – sekcja C |
+| Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Usterka** (Rodzaj Usterka w „🤖 Zmiany asystenta”) → naprawa w Claude Code – sekcja D |
 
 Skrzynka = konkretna reguła, wchodzi od razu. Pomysł = coś do przemyślenia; nic nie wchodzi samo, decyduje inwestor.
 
-Skrzynka: Notion → „Zmiany do harnessu”, `collection://e217448a-60ec-4af6-8584-8f368315109c`.
-Pola: Zmiana (tytuł), Status (Do wdrożenia / Wdrożone / Odrzucone; **pusty = do wdrożenia** – inwestor dodaje wpisy ręcznie,
-bez pól), Plugin (dom-budowa / ja), Procedura, Rodzaj (Nowa zasada, Poprawka, Nowa procedura, Zmiana struktury Notion / Excela,
-Usunięcie), Treść do wdrożenia, Dlaczego, Wdrożono w wersji, Data wdrożenia, ID (HZ-n).
+Jedna baza dla zasad, pomysłów i usterek: „🤖 Zmiany asystenta” – pola, statusy, ID (`HZ-n` / `POM-n` / `ZP-n`, pole tekstowe)
+i widoki: `references/zmiany-asystenta.md`. Skrzynka = wiersze Rodzaj Zasada ze Statusem pustym albo „Do zrobienia”
+(**pusty = do wdrożenia** – inwestor dodaje wpisy ręcznie, bez pól); widok „📥 Zasady do wdrożenia".
 
 ## Kiedy proponować zmianę (pętla uczenia)
 
@@ -44,14 +43,14 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
    - **Treść do wdrożenia:** gotowy tekst reguły w trybie rozkazującym, tak jak ma trafić do procedury,
    - **Dlaczego:** 1–2 zdania kontekstu z rozmowy (data).
 2. Sprawdź w skrzynce, czy podobny wpis już nie czeka – jeśli tak, uzupełnij go zamiast dublować.
-3. Zapisz jednym wywołaniem, Status „Do wdrożenia”. Od tej chwili zmiana obowiązuje w rozmowach (procedura `budowa`,
+3. Zapisz jednym wywołaniem, Rodzaj Zasada, Status „Do zrobienia”, ID według `references/zmiany-asystenta.md`. Od tej chwili zmiana obowiązuje w rozmowach (procedura `budowa`,
    sekcja „Na starcie”); automaty Maca (przebiegi launchd) skrzynki nie czytają – stosują ją dopiero po wdrożeniu (sekcja B).
-4. Potwierdź jedną linią: „Zapisane jako HZ-n – w rozmowach obowiązuje od teraz, w automatach Maca po wdrożeniu; wejdzie do repo, gdy zaznaczysz „Skrzynka zmian” na starcie sesji Claude Code”.
+4. Potwierdź jedną linią: „Zapisane jako HZ-n – w rozmowach obowiązuje od teraz, w automatach Maca po wdrożeniu; wejdzie do repo, gdy napiszesz „wdróż” w Claude Code”.
 
 ## B. Wdrożenie (tylko Claude Code w folderze repo)
 
-1. `git pull`. Pobierz wpisy ze Statusem „Do wdrożenia” **albo pustym** (najstarsze pierwsze). Wpis dodany ręcznie z samym
-   tytułem → najpierw uzupełnij pola jednym zapisem: Status „Do wdrożenia”, Plugin, Procedura, Rodzaj, Treść do wdrożenia
+1. `git pull`. Pobierz wiersze Rodzaj Zasada ze Statusem „Do zrobienia” **albo pustym** (widok „📥 Zasady do wdrożenia”) (najstarsze pierwsze). Wpis dodany ręcznie z samym
+   tytułem → najpierw uzupełnij pola jednym zapisem: Status „Do zrobienia”, ID, Plugin, Procedura, Typ zmiany, Treść do wdrożenia
    (reguła w trybie rozkazującym, wyprowadzona z tytułu) i Dlaczego („wpis ręczny inwestora, <data>”). Nie da się ustalić,
    o co chodzi → zapytaj inwestora, nie wdrażaj.
 2. Dla każdego wpisu: znajdź właściwe miejsce (`plugins/<plugin>/skills/<procedura>/SKILL.md` lub `references/`),
@@ -72,7 +71,7 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
    Jeśli wpis ze skrzynki zawiera takie dane – wdroż regułę w wersji ogólnej („Firma A”), a konkret zostaw w Notion.
 6. `git add <zmienione pliki> && git commit -m "Harness <plugin> <wersja>: HZ-… <skrót>" && git push` – tylko pliki z tej
    sesji; obcych zmian nie komentuj (kolizję zgłaszasz tylko, gdy realnie utrudnia Twoją zmianę – `CLAUDE.md`, 0a). `tools/build.py` odtwarza dowiązania `.claude/skills/` i `.agents/skills/` – nowy skill dodaj do commita z obydwoma.
-7. W Notion oznacz wdrożone wpisy jednym przebiegiem: Status „Wdrożone”, Wdrożono w wersji, Data wdrożenia.
+7. W Notion oznacz wdrożone wpisy jednym przebiegiem: Status „Zrobione”, Zrobiono w wersji, Data wdrożenia.
    Zaktualizuj linię „Wersja” (obu pluginów) na stronie „🤖 Asystent AI” (najwyższy poziom Private, ID w `ja/references/notion-mapa.md`;
    strona to ramka nad skrzynką i pomysłami – opis procedur jest w README repo); nowa procedura = nowa opcja w polu „Procedura” skrzynki.
    **Dokumentacja dla człowieka – przy każdym wdrożeniu, nie tylko przy zmianie struktury:** przejdź listę z `ja`,
@@ -94,11 +93,10 @@ Bez zgody nic nie zapisuj. Jednorazowe prośby to nie zmiany harnessu.
 
 Zmiany, o które inwestor prosi bezpośrednio w Claude Code, wdrażasz od razu tymi samymi krokami 2–8 (bez skrzynki).
 
-## C. Pomysły na rozwój
+## C. Pomysły (Rodzaj Pomysł)
 
-Baza: Notion → 🤖 Asystent AI → „💡 Pomysły na rozwój”, `collection://fdee4f05-8f43-4be4-a0d5-2b88642fa6d3` (widok „💡 Tablica”).
-Pola: Pomysł (tytuł), Status (Nowy / Pytania do mnie / Przeanalizowany / Do zrobienia / Zrobione / Odłożone / Odrzucone;
-**pusty = Nowy**), Obszar, Nakład (S/M/L), Wymaga ode mnie, Przeanalizowano, Zrobiono w wersji, ID (POM-n).
+Wiersze Rodzaj Pomysł w „🤖 Zmiany asystenta” (widok „💡 Tablica pomysłów”; pola i statusy: `references/zmiany-asystenta.md`;
+**pusty Status = Nowy**; dawne „Pytania do mnie” = „Czeka na mnie”).
 Treść strony: pomysł inwestora (nie zmieniaj), pod nim sekcja „Analiza” pisana przez asystenta.
 
 **Zapis pomysłu** („mam pomysł…”, wpis w Dzienniku „pomysł: …” o asystencie, Notion, arkuszu kosztorysu, plikach, automatyzacji):
@@ -110,7 +108,7 @@ i słowa inwestora. Status pusty/Nowy. Poprawka sposobu pracy (jedna reguła) to
    (`ja/references/notion-mapa.md`, `budowa/references/notion-mapa.md`), inne pomysły (zależności, duplikaty). Wiersz dodany
    ręcznie z pustymi polami → uzupełnij je przy analizie (Obszar, Status, Nakład, Wymaga ode mnie).
 2. Niejasne, co inwestor chce → dopisz „### ❓ Pytania (data)” z 1–3 pytaniami i propozycją interpretacji, Status
-   „Pytania do mnie”. Odpowiedź inwestora pod pytaniami → analizuj dalej przy kolejnej prośbie inwestora.
+   „Czeka na mnie”. Odpowiedź inwestora pod pytaniami → analizuj dalej przy kolejnej prośbie inwestora.
 3. Jasne → dopisz pod pomysłem sekcję (nie nadpisuj wcześniejszych):
    ```
    ## Analiza (asystent, data)
@@ -133,12 +131,11 @@ przeczytaj stronę pomysłu z analizą, potwierdź decyzje z „Do decyzji przed
 „Zrobione”, „Zrobiono w wersji”, w treści linia „Wdrożone w <wersja> (data): co weszło, co pominięto”. Wdrożenie tylko część
 pomysłu → Status zostaje, a w „Zrobiono w wersji” dopisz „(częściowo)” (kontrola spójności tego nie flaguje).
 
-## D. Znane problemy
+## D. Usterki (Rodzaj Usterka, dawne „Znane problemy”)
 
-Baza: Notion → 🤖 Asystent AI → „🧯 Znane problemy”, `collection://f387bb3c-796f-435a-a684-819196fd6aa4`
-(widok „🧯 Otwarte” `view://414f5982-09e7-8172-abde-000c5e85c87a`: Status inny niż Rozwiązany / Zostaje).
-Pola: Problem (tytuł), Status (Nowy / Czeka na mnie / W toku / Rozwiązany / Zostaje), Obszar, Skąd (klucz komunikatu albo
-procedura), Pierwszy raz, Ostatnio, Co zrobić (jedno zdanie: następny krok i kto), Rozwiązano w wersji, ID (ZP-n).
+Wiersze Rodzaj Usterka w „🤖 Zmiany asystenta” (widok „🧯 Otwarte usterki”: Status inny niż Zrobione / Odrzucone; pola: Obszar,
+Skąd – klucz komunikatu albo procedura, Pierwszy raz, Ostatnio, Co zrobić – jedno zdanie: następny krok i kto, Zrobiono w wersji;
+`references/zmiany-asystenta.md`). Dawne „Rozwiązany” = „Zrobione”, „Zostaje” = „Odrzucone”.
 Treść strony: objaśnienie, wystąpienia z datą, ustalenia z odpowiedzi inwestora.
 
 - **Kto wpisuje:** przebieg, gdy odpowiedź pod komunikatem 🔔 wymaga pracy poza przebiegiem (`wpisy/references/pytania.md`,
@@ -147,11 +144,11 @@ Treść strony: objaśnienie, wystąpienia z datą, ustalenia z odpowiedzi inwes
 - **Problem a pomysł:** coś, co miało działać, a nie działa → tu; nowa funkcja albo zmiana sposobu pracy → sekcja C lub A.
 - **Naprawa** – w Claude Code na „zrób ZP-n” (albo gdy inwestor wskaże ZP):
   przeczytaj stronę, ustal przyczynę (log, `stan.json`, skrypt), napraw; zmiana harnessu → kroki B.2–B.8. Na końcu Status
-  „Rozwiązany”, Rozwiązano w wersji (albo „skrypt poza repo, data”), w treści linia „Naprawione (data): przyczyna, co
+  „Zrobione”, Zrobiono w wersji (albo „skrypt poza repo, data”), w treści linia „Naprawione (data): przyczyna, co
   zmieniono”. Wybór wariantu technicznego rozstrzygnij sam (domyślny z „Co zrobić”) – nie pytaj. Naprawa naprawdę wymaga
   inwestora (dostęp, kliknięcie, decyzja budowlana) → Status „Czeka na mnie” i od razu blok 🔔 w „📝 Wpisy” z pytaniem
-  (`wpisy/references/pytania.md`, C.5) – sam status w bazie nie wystarczy; nie warto → „Zostaje”.
-- Komunikat 🔔 z linią `→ ZP-n` znika z „Wpisów”, gdy wiersz jest „Rozwiązany” albo „Zostaje” (sprawdza przebieg wieczorny).
+  (`wpisy/references/pytania.md`, C.5) – sam status w bazie nie wystarczy; nie warto → „Odrzucone”.
+- Komunikat 🔔 z linią `→ ZP-n` znika z „Wpisów”, gdy wiersz jest „Zrobione” albo „Odrzucone” (sprawdza przebieg nocny).
 
 ## Nowa procedura – minimum
 

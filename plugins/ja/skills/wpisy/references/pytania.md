@@ -81,10 +81,10 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    zgłosić – np. brak logowania MCP) → sam ślad w bloku dnia „Przetworzone” w tym formacie, bez bloku 🔔.
 4. **Odpowiedź inwestora** (odczyt jak w A) = praca dla najbliższego przebiegu (szybkiego albo wieczornego): wykonaj, co się
    da w przebiegu, i przenieś blok do „Przetworzone” (`~~🔔 <skrót>~~ (❓ … → ✍️ …) → <co zrobiono>`).
-5. **Za duże na przebieg** (zmiana skryptu – patrz zakaz w C.8; decyzja techniczna – podejmij sam) → wiersz w bazie „🧯 Znane problemy”
+5. **Za duże na przebieg** (zmiana skryptu – patrz zakaz w C.8; decyzja techniczna – podejmij sam) → wiersz Rodzaj Usterka w bazie „🤖 Zmiany asystenta”
    (`rozwoj-harnessu`, D; ten sam problem już jest → zaktualizuj Ostatnio i treść), w okienku zamiast `✍️` linia
-   `→ ZP-n (<status>)`. Blok zostaje, dopóki wiersz nie ma Statusu „Rozwiązany” albo „Zostaje” – wtedy do „Przetworzone”
-   (`→ ZP-n rozwiązany` / `zostaje`); statusy ZP sprawdza tylko przebieg wieczorny.
+   `→ ZP-n (<status>)`. Blok zostaje, dopóki wiersz nie ma Statusu „Zrobione” albo „Odrzucone” – wtedy do „Przetworzone”
+   (`→ ZP-n rozwiązany` / `zostaje`); statusy ZP sprawdza tylko przebieg nocny.
    Wiersz ZP ze Statusem „Czeka na mnie” bez bloku 🔔 (założony albo zmieniony w Claude Code, nocą, ręcznie) → dodaj blok
    `🔔 <dd.mm> · ZP-n – <Problem>` z okienkiem: pogrubione pytanie z „Co zrobić” (z propozycją domyślną) i linia `✍️`;
    odpowiedź przepisz do treści strony ZP („ustalenia z odpowiedzi inwestora”) i ustaw Status „Nowy” – naprawi Claude Code.

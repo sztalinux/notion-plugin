@@ -1,6 +1,6 @@
 # Kontrola spójności: status pomysłu (POM-n) ↔ stan wdrożenia (krok 2 wieczornego przeglądu dnia)
 
-Statusy w bazie „Pomysły na rozwój” zmienia inwestor ręcznie, a wdrożenia zapisuje Claude Code (pole „Zrobiono w wersji”
+Statusy pomysłów (Rodzaj Pomysł w „🤖 Zmiany asystenta”; odczyt widokiem „💡 Tablica pomysłów”) zmienia inwestor ręcznie, a wdrożenia zapisuje Claude Code (pole „Zrobiono w wersji”
 i `CHANGELOG.md`) – więc oba bywają rozjechane. Ta grupa serii „Kontrola spójności” (klucze `KS-…`) to **P**. Wspólny
 format flag, odpowiedzi ☑ i limit 5 nowych flag na przebieg – jak w pozostałych grupach serii (`kontrola-spojnosci*.md`);
 poniżej tylko to, co szczególne dla pomysłów. **Statusu pomysłu asystent sam nie zmienia** (decyzja inwestora jest
@@ -8,7 +8,7 @@ nadrzędna) – zmienia tylko pole „Zrobiono w wersji”, i to wyłącznie z n
 
 ## Reguły
 
-Brane pod uwagę wiersze ze Statusem „Zrobione”, „Do zrobienia” albo „Przeanalizowany” (Nowy, Pytania do mnie, Odłożone,
+Brane pod uwagę wiersze ze Statusem „Zrobione”, „Do zrobienia” albo „Przeanalizowany” (Nowy, Czeka na mnie, Odłożone,
 Odrzucone – pomiń). Wartość pola „Zrobiono w wersji” ze słowem „częściowo” oznacza wdrożenie w częściach – status
 „Przeanalizowany” albo „Do zrobienia” jest wtedy celowy (P2 jej nie flaguje); wartość „gałąź … (czeka na scalenie)”
 to praca poza główną gałęzią – dopóki CHANGELOG nie ma wpisu z tym POM, nic nie rób.
@@ -48,5 +48,5 @@ Kilka nagłówków jednego POM (kolejne etapy) → wpisz wszystkie wersje po prz
 
 - Nie zmieniaj Statusu pomysłu bez ☑ inwestora i nie ruszaj treści strony pomysłu ani „Wymaga ode mnie”.
 - Nie zgaduj wersji z treści wpisu CHANGELOG ani z `git log` – tylko nagłówek z numerem POM.
-- Nie flaguj pomysłów „Nowy”, „Pytania do mnie”, „Odłożone”, „Odrzucone”; nie flaguj wdrożeń oznaczonych „częściowo”.
+- Nie flaguj pomysłów „Nowy”, „Czeka na mnie”, „Odłożone”, „Odrzucone”; nie flaguj wdrożeń oznaczonych „częściowo”.
 - Nie wdrażaj pomysłów i nie analizuj ich – analiza tylko na prośbę inwestora (`rozwoj-harnessu`, C).

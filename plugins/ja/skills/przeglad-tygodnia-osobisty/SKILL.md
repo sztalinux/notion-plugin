@@ -45,7 +45,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    - Suple: Buy = tak (licznik, nazwy);
    - Zakupy: 🛒 Zakupy „Do kupienia” (licznik, najstarsze) i z Terminem w 7 dni (wymień).
 3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i bloki 🔔 starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
-   tylko licznikiem, są w przeglądzie budowy); skrzynka „Zmiany do harnessu” – wpisy do wdrożenia starsze niż 7 dni
+   tylko licznikiem, są w przeglądzie budowy); skrzynka „🤖 Zmiany asystenta” (Zasady) – wpisy do wdrożenia starsze niż 7 dni
    (przypomnienie: napisz „wdróż” w Claude Code). Pierwszy przegląd
    w miesiącu (dzień ≤ 7): strona „📘 Instrukcja obsługi” (ID w `ja/references/notion-mapa.md`) – sekcje z linią „Stan:”
    starszą niż 60 dni wymień w „Czeka na Ciebie” („Instrukcja: n sekcji do sprawdzenia – …”); tokeny z datą ważności

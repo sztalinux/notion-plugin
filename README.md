@@ -50,7 +50,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
 ## Jak to działa
 
 ```
-Telefon / czat ── poprawka sposobu pracy ──► Notion „Zmiany do harnessu” (obowiązuje od razu)
+Telefon / czat ── poprawka sposobu pracy ──► Notion „🤖 Zmiany asystenta” (Zasady) (obowiązuje od razu)
                                                    │
 Claude Code (komputer; na starcie linia stanu, bez pytań) ◄──┘
    ├─ „Dokumenty budowy” (tools/dokumenty.py): skan folderu budowy → przewodnik na stronie Notion (+ kopia awaryjna `_Do claude.ai/`)
@@ -67,7 +67,7 @@ Mac (launchd, `AI/automaty/przeglad.py`, poza repo) ── co godzinę 8–22, w
    ├─ `claude -p` + MCP Notion: Skrzynka i 📓 Dziennik → Notion (przegląd dnia, tygodnia)
    ├─ po przebiegu `tools/wydatki.py`: kolejka „💸 Wydatki → arkusz” → arkusz Google „Kosztorys budowy”
    └─ problem, który trwa (przebieg nieudany lub nieuruchomiony, logowanie MCP, błąd skryptu) → `stan.json` →
-      następny udany przebieg → „🔔 Komunikaty asystenta” we „📝 Wpisach”; większe sprawy → baza „🧯 Znane problemy”
+      następny udany przebieg → „🔔 Komunikaty asystenta” we „📝 Wpisach”; większe sprawy → baza „🤖 Zmiany asystenta” (Rodzaj Usterka)
 ```
 
 ## Konektory i drogi zapasowe
