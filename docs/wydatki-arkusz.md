@@ -24,6 +24,7 @@ wpis w 📓 Dzienniku  ·  wiadomość do asystenta  ·  zdjęcie faktury  ·  w
    ▼
 Apps Script przypięty do arkusza (aplikacja internetowa + sekret, @OnlyCurrentDoc)
    │  Rodzaj Wydatek i Zwrot → zakładka Wydatki  ·  Wycena → Cennik  ·  Plan → Kosztorys, kolumna „Plan ręczny”
+   │  pole „Nowa pozycja” → najpierw nowy wiersz pozycji w etapie Kosztorysu (kod ≥ 5), potem jak wyżej
    ▼
 Notion: Arkusz = „W arkuszu” + Wiersz arkusza   albo   „Błąd” + powód w polu Błąd
    │  przebieg szybki: widok „⚠ Błędy do zgłoszenia” → komunikat 🔔 z okienkiem ❓ we „📝 Wpisach”, Zgłoszono = dziś
@@ -58,6 +59,7 @@ wyłączony → strony czekają w Notion, nic nie ginie. GitHub Actions nie maj�
 | oferta / cena dostawcy („X ma beton po … zł/m³ brutto”) | Rodzaj Wycena, Kwota = cena za jednostkę, Jedn., Cena podana Netto/Brutto, VAT % | idzie do Cennika, nie do Wydatków; wybór = Status wyceny „Wybrana” i ponowne wysłanie |
 | „planuję wydać ok. N”, „szacowałem N, wyszło M” | Rodzaj Plan, Kwota = plan całej pozycji brutto (+ osobno wydatek M) | `sync` wpisuje „Plan ręczny” pozycji; inny plan już jest → Błąd i pytanie, „Nadpisz plan” zastępuje |
 | „kupić X na budowę” (jeszcze nie kupione) | nic – to zakup, procedura `zakupy` | koszt powstaje dopiero przy zapłacie |
+| wydatek bez pasującej pozycji | ❓ z propozycją „Nowa pozycja: 47 \| Pozycja X \| Materiał \| kpl – tak?”; po „tak” strona z pustą Pozycją i polem Nowa pozycja | `sync` dodaje pozycję (kod ≥ 5) i wysyła wydatek w tym samym przebiegu; nowy etap – pierwsza sesja Claude Code (`koszty/references/nowa-pozycja.md`) |
 
 Pola obowiązkowe wydatku: Data, Kwota (to, co zapłacono – zwykle brutto), Pozycja z listy (= pozycja Kosztorysu, z niej
 arkusz bierze etap), Typ (Materiał / Robocizna / Sprzęt / Usługa / Formalności – zawsze). Materiał w etapach 02–08 – także
@@ -96,7 +98,7 @@ Agent nie przelicza ręcznie niczego, co liczy arkusz – zmienia dane wejściow
 |---|---|---|
 | Claude Code na Macu (rozmowa i `claude -p`) | MCP Notion | czyta i zapisuje kolejkę 💸 Wydatki |
 | `tools/wydatki.py` | `NOTION_TOKEN` + `ARKUSZ_URL` i `ARKUSZ_SEKRET` z `.dom/sekrety.env` | kolejka → arkusz, pola Arkusz/Błąd/Wiersz, lista Pozycja |
-| Apps Script | przypięty do jednego arkusza (`@OnlyCurrentDoc`) | dopisz / usuń / zmień układ – bez Dysku i innych plików |
+| Apps Script | przypięty do jednego arkusza (`@OnlyCurrentDoc`) | dopisz / usuń / zmień układ – bez Dysku i innych plików; sam z siebie (bez pliku zmian) tylko nowy wiersz pozycji w istniejącym etapie, z kontrolą przed i po |
 | Konektor Google Drive / Sheets (gdy jest w sesji Claude: Claude Code, claude.ai, telefon) | konto Google inwestora (właściciel arkusza) | odczyt żywego arkusza z formułami – pierwsze źródło liczb; zmiany układu w Claude Code (sekcja 8); nigdy wydatki, wyceny ani plany (omija kolejkę i deduplikację); przebiegi `claude -p` na nim nie polegają |
 | GitHub Actions | brak dostępu do Notion i arkusza | – |
 
@@ -120,6 +122,8 @@ Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
 | `sprawdz` | sekrety, dostęp do bazy i arkusza, wersja kodu | ręcznie, przy problemach |
 | `kod` | kod Apps Script z sekcji 9 (z `\| LANG=en_US.UTF-8 pbcopy` – do schowka; bez LANG polskie znaki się psują) | przy aktualizacji kodu |
 | `migruj <zmiany.json>` | zmiana układu na żywym arkuszu (sekcja 8) | agent w Claude Code |
+| `nowa-pozycja "47 \| Nazwa \| Typ \| Jedn." [--proba]` | pozycja w istniejącym etapie (akcja „dodaj_pozycje”, kod ≥ 5) i opcja w Notion; z `--proba` – plan na sucho (wiersz, Lp, suma etapu), nic nie zmienia | agent w Claude Code; pierwsze sprawdzenie po wdrożeniu kodu 5 |
+| `etapy [--zablokuj \| --odblokuj]` | etapy czekające na sesję (`<hub>/.dom/wydatki/etapy-do-dodania.json`, pisze `sync`); blokada – jedna sesja naraz (2 h) | sesja Claude Code (`koszty` C.7) |
 | `gotowka [--harmonogram PLIK]` | tylko odczyt: ile pieniędzy wyjdzie w którym miesiącu – kopia arkusza + Harmonogram z Notion (`NOTION_TOKEN`); tabela z kwotami na ekran, nie do logu; reguły: `koszty/references/gotowka.md` | agent na „ile gotówki potrzebuję w …”, przegląd tygodnia |
 
 Kody wyjścia: 0 OK, 1 błąd polecenia (linie `✗` pod podsumowaniem, np. timeout arkusza, Notion), 2 brak konfiguracji.
@@ -129,7 +133,7 @@ Błąd pojedynczej strony nie zmienia kodu: `sync` zapisuje go w Notion (Arkusz 
 
 Zabezpieczenia w `sync`: walidacja przed wysyłką (data, kwota, pozycja, ilość i jednostka materiału 02–08; wycena – jednostka, nazwa,
 VAT przy netto) → strona dostaje „Błąd” z powodem; wyceny czekają, gdy kod Apps Script < 2 albo Cennik w starym układzie
-(`cennik_ok`), zwroty – gdy kod < 4; kolumny z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) nigdy nie są
+(`cennik_ok`), zwroty – gdy kod < 4, strony z polem „Nowa pozycja” – gdy kod < 5; kolumny z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) nigdy nie są
 nadpisywane; zapis pod
 blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 
@@ -148,6 +152,9 @@ blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 | HTTP 404 / 403 z Notion | integracja bez dostępu do bazy (⋯ → Połączenia) albo bez prawa „Update content” |
 | data przesunięta o dzień | strefa arkusza ≠ Warsaw – Plik → Ustawienia |
 | „N wycen czeka: arkusz ma kod w wersji …” / „N wycen czeka: Cennik w starym układzie …” / „N zwrotów czeka: arkusz ma kod w wersji …” | starszy kod (sekcja 7, aktualizacja kodu; `sprawdz` pokaże wersję) albo brak zmiany układu (sekcja 8); strony czekają „Do arkusza”, `sync` kończy się kodem 1 |
+| „N stron z nową pozycją czeka: arkusz ma kod w wersji …” | kod < 5 – sekcja 7, aktualizacja kodu; strony czekają „Do arkusza” |
+| Błąd „nowa pozycja NN.n: … – wstawiony wiersz usunięty” | kontrola po wstawieniu się nie zgodziła (sumy, „Kontrola powiązań”); arkusz bez zmian. Sprawdź układ etapu (sumy w nagłówku, zakresy `$5:$<n>`) – `nowa-pozycja … --proba` pokaże plan |
+| Błąd pola „czeka na etap NN …” (Arkusz „Do arkusza”) | etapu nie ma w Kosztorysie – doda go najbliższa sesja Claude Code (`koszty` C.7); `etapy` pokazuje listę |
 | #ERROR! / dziwne liczby po zmianie układu | formuła z „,” zamiast „;” (arkusz ma polskie ustawienia) – sekcja 8, pułapki |
 
 ## 7. Konfiguracja od zera (już zrobiona – tylko przy odtwarzaniu)
@@ -179,7 +186,7 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
 1. `wydatki.py pobierz` albo odczyt konektorem – aktualne wartości i nagłówki. Odwołania do innych zakładek buduj po
    **nagłówkach żywego arkusza**, nie po literach z `arkusze.md` (kolumny bywają przesunięte).
 2. Plik zmian JSON `{"opis": …, "operacje": [ … ]}` (operacje akcji `zmien`: `zakres`, `wyczysc`, `walidacja`, `warunkowe`, `szerokosci`, `wysokosci`,
-   `zamroz`, `siatka`, `ramka`) – ręcznie albo narzędziem `python3 ~/Documents/Dom/AI/automaty/arkusz_zmiany.py` (poza
+   `zamroz`, `siatka`, `ramka`, `wstaw` – 1–5 pustych wierszy w Kosztorysie, tylko wewnątrz pozycji: `{"op": "wstaw", "arkusz": "Kosztorys", "przed": N, "ile": 2}`) – ręcznie albo narzędziem `python3 ~/Documents/Dom/AI/automaty/arkusz_zmiany.py` (poza
    repo, openpyxl; z docelowego `.xlsx`). Zapisz go w `<hub>/.dom/wydatki/` z datą, obok migawkę „przed”.
 3. **Pułapki polskich ustawień:** formuły w operacji `zakres` muszą mieć „;” jako separator i przecinek dziesiętny
    (`arkusz_zmiany.py` robi to funkcją `pl()`); reguły formatowania warunkowego pisz bez przecinków i ułamków – iloczyn
@@ -200,9 +207,14 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
  * Kosztorys w Arkuszach Google – punkt wejścia dla tools/wydatki.py (Mac). Instrukcja: docs/wydatki-arkusz.md
  * w repozytorium harnessu. Kod nie zawiera danych – działa na arkuszu, do którego jest przypięty.
  * Akcje (POST, JSON {"sekret", "akcja", ...}):
- *   ping · pozycje · dane · dopisz (wiersze[]) · usun (ids[]) · zmien (operacje[]) – zmiany układu bez ponownego importu.
+ *   ping · pozycje · dane · dopisz (wiersze[]) · usun (ids[]) · zmien (operacje[]) – zmiany układu bez ponownego importu
+ *   · dodaj_pozycje (pozycja {etap, nazwa, typ, jedn}, na_sucho) – nowy wiersz pozycji w istniejącym etapie Kosztorysu.
  * @OnlyCurrentDoc: skrypt ma dostęp wyłącznie do tego arkusza (bez Dysku, bez innych plików). Cofanie zmian – Plik →
  * Historia wersji.
+ * dodaj_pozycje: jedyna zmiana układu, którą skrypt robi sam. Wstawia wiersz wewnątrz etapu (przed ostatnią pozycją etapu,
+ * a przy etapie z jedną pozycją – za nią), kopiuje formuły i formaty z sąsiedniej pozycji, poprawia sumy w nagłówku etapu.
+ * Kontrola przed i po: „Kontrola powiązań” i RAZEM KOSZTORYS bez zmian, nowy wiersz w sumach – inaczej usuwa wstawiony
+ * wiersz i zwraca błąd. Ta sama nazwa w etapie = istniejący Lp (ponowienie nie dubluje). Etapu nie dodaje (brak_etapu).
  * dopisz: rodzaj „Wycena” → arkusz Cennik (ponowne wysłanie aktualizuje ten sam wiersz), reszta → arkusz Wydatki
  * („Zwrot” z kwotą ujemną). Wydatki P (VAT %) wpisuje i czyści tools/wydatki.py akcją zmien, nie dopisz/usun.
  * Kolumn z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) dopisz/usun nigdy nie nadpisują.
@@ -210,13 +222,18 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
  * i archiwum szacunku AI.
  */
 
-var WERSJA = 4;
+var WERSJA = 5;
 var ARKUSZ_WYDATKI = 'Wydatki';
 var ARKUSZ_KOSZTORYS = 'Kosztorys';
 var ARKUSZ_CENNIK = 'Cennik';
+var ARKUSZ_PODSUMOWANIE = 'Podsumowanie';
 var PIERWSZY_WIERSZ = 5;
 var STATUSY = ['Zrealizowane', 'Do zapłaty'];
 var TYPY = ['Materiał', 'Robocizna', 'Sprzęt', 'Usługa', 'Formalności'];
+var JEDNOSTKI = ['kpl', 'm³', 'm²', 'mb', 'kg', 't', 'szt', 'h', 'dzień', 'mies.', 'l'];
+var KONTROLA = 'Kontrola powiązań';
+var RAZEM_KOSZTORYS = 'RAZEM KOSZTORYS';
+var SUMA_ETAPU = /^=SUM\(([A-Z]+)(\d+)(?::([A-Z]+)(\d+))?\)$/;
 var STATUSY_WYCENY = ['Oferta', 'Wybrana', 'Odrzucona'];
 var ARKUSZ_SZACUNEK = 'Szacunek AI 10.2026';
 var ZAKLADKI = ['Instrukcja', 'Podsumowanie', 'Wydatki', 'Cennik', 'Etapy', 'Kosztorys', ARKUSZ_SZACUNEK];
@@ -245,6 +262,8 @@ function doPost(e) {
       case 'usun': return odpowiedz(podBlokada(function () { return usun(zadanie.ids || []); }));
       case 'dane': return odpowiedz(dane());
       case 'zmien': return odpowiedz(podBlokada(function () { return zmien(zadanie.operacje || []); }));
+      case 'dodaj_pozycje':
+        return odpowiedz(podBlokada(function () { return {ok: true, wynik: dodajPozycje(zadanie.pozycja || {}, !!zadanie.na_sucho)}; }));
       default: return odpowiedz({ok: false, blad: 'nieznana akcja'});
     }
   } catch (err) {
@@ -447,7 +466,7 @@ function dane() {
 }
 
 /** Zmiany układu i wyglądu na miejscu. Operacje: zakres, wyczysc, walidacja, warunkowe, szerokosci, wysokosci,
- *  zamroz, siatka, ramka. Dane wpisane przez inwestora zmienia tylko „zakres” – generator wysyła tam wyłącznie
+ *  zamroz, siatka, ramka, wstaw. Dane wpisane przez inwestora zmienia tylko „zakres” – generator wysyła tam wyłącznie
  *  nagłówki, formuły i formaty, nigdy kolumn z danymi. */
 function zmien(operacje) {
   var ss = SpreadsheetApp.getActive();
@@ -513,6 +532,14 @@ function zmien(operacje) {
       case 'ramka':
         a.getRange(o.a1).setBorder(true, true, true, true, true, true, o.kolor || '#E3E6EA', SpreadsheetApp.BorderStyle.SOLID);
         break;
+      case 'wstaw':
+        // puste wiersze w Kosztorysie (nowy etap bez konektora) – tylko wewnątrz pozycji, żeby zakresy sum ($5:$<ostatnia>) objęły je same
+        var ost = ostatniaPozycja(a);
+        if (o.arkusz !== ARKUSZ_KOSZTORYS || !(o.przed > PIERWSZY_WIERSZ && o.przed <= ost) || !(o.ile >= 1 && o.ile <= 5)) {
+          throw new Error('operacja ' + nr + ': wstawiać wolno 1–5 wierszy w Kosztorysie, przed wierszem ' + (PIERWSZY_WIERSZ + 1) + '–' + ost);
+        }
+        a.insertRowsBefore(o.przed, o.ile);
+        break;
       default:
         throw new Error('operacja ' + nr + ': nieznana ' + o.op);
     }
@@ -520,5 +547,167 @@ function zmien(operacje) {
   });
   SpreadsheetApp.flush();
   return {ok: true, wykonane: wykonane};
+}
+
+/** Etap „47 Wyposażenie…” / „3 …” / „P1 Działka” → „47” / „03” / „P1”; reszta → ''. */
+function numerEtapu(tekst) {
+  var m = /^(P\d|\d{1,2})(\s|$)/.exec(String(tekst).trim());
+  if (!m) return '';
+  return m[1].charAt(0) === 'P' ? m[1] : ('0' + m[1]).slice(-2);
+}
+
+function zwykla(t) {
+  return String(t).replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+/** Numer kolumny (od 1) po początku nagłówka w wierszu 4; brak → wyjątek (nic jeszcze nie zmieniono). */
+function kolumnaNaglowka(arkusz, poczatek) {
+  var nag = arkusz.getRange(PIERWSZY_WIERSZ - 1, 1, 1, arkusz.getLastColumn()).getValues()[0];
+  for (var i = 0; i < nag.length; i++) if (String(nag[i]).indexOf(poczatek) === 0) return i + 1;
+  throw new Error(arkusz.getName() + ': brak kolumny „' + poczatek + '”');
+}
+
+function ostatniaPozycja(k) {
+  var b = k.getRange(PIERWSZY_WIERSZ, 2, Math.max(k.getLastRow() - PIERWSZY_WIERSZ + 1, 1), 1).getValues();
+  for (var i = b.length - 1; i >= 0; i--) if (String(b[i][0]).trim()) return PIERWSZY_WIERSZ + i;
+  return PIERWSZY_WIERSZ;
+}
+
+/** Kosztorys A:C od wiersza 5 → nagłówek etapu (A = etap, B puste), jego pozycje, ostatnia pozycja arkusza, wiersz RAZEM. */
+function blokEtapu(dane, etap) {
+  var b = {naglowek: 0, etap: '', pozycje: [], ostatnia: 0, razem: 0};
+  var koniec = false;
+  dane.forEach(function (w, i) {
+    var r = PIERWSZY_WIERSZ + i, a = String(w[0]).trim(), lp = String(w[1]).trim(), c = String(w[2]).trim();
+    if (lp) b.ostatnia = r;
+    if (c === RAZEM_KOSZTORYS) b.razem = r;
+    if (a && !lp) {
+      if (b.naglowek) koniec = true;
+      else if (numerEtapu(a) === etap) { b.naglowek = r; b.etap = a; }
+    } else if (lp && b.naglowek && !koniec && a === b.etap) {
+      b.pozycje.push({wiersz: r, lp: lp, nazwa: c});
+    }
+  });
+  return b;
+}
+
+/** Liczby, które wstawienie pustej pozycji nie może zmienić: tabela „Kontrola powiązań” (Podsumowanie) i RAZEM
+ *  KOSZTORYS (PLAN, Wydane). Szuka po etykietach, nie po adresach. */
+function kontrola(ss, k) {
+  var p = ss.getSheetByName(ARKUSZ_PODSUMOWANIE).getDataRange().getValues();
+  var wynik = {};
+  for (var r = 0; r < p.length; r++) {
+    for (var c = 0; c + 1 < p[r].length; c++) {
+      if (String(p[r][c]).trim() !== KONTROLA) continue;
+      for (var i = 1; i <= 3 && r + i < p.length; i++) wynik[String(p[r + i][c])] = p[r + i][c + 1];
+    }
+  }
+  if (!Object.keys(wynik).length) throw new Error('Podsumowanie: brak tabeli „' + KONTROLA + '”');
+  var razem = blokEtapu(k.getRange(PIERWSZY_WIERSZ, 1, k.getLastRow() - PIERWSZY_WIERSZ + 1, 3).getValues(), '-').razem;
+  if (!razem) throw new Error('Kosztorys: brak wiersza ' + RAZEM_KOSZTORYS);
+  wynik['RAZEM PLAN'] = k.getRange(razem, kolumnaNaglowka(k, 'PLAN')).getValue();
+  wynik['RAZEM Wydane'] = k.getRange(razem, kolumnaNaglowka(k, 'Wydane')).getValue();
+  return wynik;
+}
+
+/** Nazwy wartości, które się różnią (bez samych liczb – komunikat trafia do Notion i do logu). */
+function rozne(przed, po) {
+  return Object.keys(przed).concat(Object.keys(po)).filter(function (n, i, wszystkie) {
+    if (wszystkie.indexOf(n) !== i) return false;
+    var a = przed[n], b = po[n];
+    if (typeof a === 'number' && typeof b === 'number') return Math.abs(a - b) >= 0.005;
+    return String(a) !== String(b);
+  });
+}
+
+/** Nowa pozycja w istniejącym etapie Kosztorysu. p = {etap: '47', nazwa, typ, jedn}. Zwraca {ok, lp, klucz, wiersz, juz}
+ *  albo {ok: true, brak_etapu: true} albo {ok: false, blad}. naSucho – tylko plan (wiersz, Lp, zakres sumy), bez zmian. */
+function dodajPozycje(p, naSucho) {
+  var etap = String(p.etap || '').trim();
+  var nazwa = String(p.nazwa || '').replace(/\s+/g, ' ').trim();
+  var typ = String(p.typ || ''), jedn = String(p.jedn || 'kpl');
+  if (!/^(P\d|\d{2})$/.test(etap)) return {ok: false, blad: 'etap nowej pozycji: numer, np. 47 albo P2'};
+  if (!nazwa || nazwa.length > 120) return {ok: false, blad: 'nazwa nowej pozycji: 1–120 znaków'};
+  if (/^[=+\-@']/.test(nazwa) || ZAKAZANE.test(nazwa)) return {ok: false, blad: 'nazwa nowej pozycji: bez = + - @ \' na początku i bez formuł'};
+  if (TYPY.indexOf(typ) < 0) return {ok: false, blad: 'typ nowej pozycji: ' + TYPY.join(' / ')};
+  if (JEDNOSTKI.indexOf(jedn) < 0) return {ok: false, blad: 'jednostka nowej pozycji: ' + JEDNOSTKI.join(' / ')};
+  var ss = SpreadsheetApp.getActive();
+  var k = ss.getSheetByName(ARKUSZ_KOSZTORYS);
+  var kolumn = k.getLastColumn();
+  var b = blokEtapu(k.getRange(PIERWSZY_WIERSZ, 1, k.getLastRow() - PIERWSZY_WIERSZ + 1, 3).getValues(), etap);
+  if (!b.naglowek) return {ok: true, brak_etapu: true, etap: etap};
+  for (var i = 0; i < b.pozycje.length; i++) {
+    var x = b.pozycje[i];
+    if (zwykla(x.nazwa) === zwykla(nazwa)) return {ok: true, juz: true, lp: x.lp, klucz: x.lp + ' ' + x.nazwa, wiersz: x.wiersz};
+  }
+  if (!b.pozycje.length) return {ok: false, blad: 'etap ' + etap + ' nie ma żadnej pozycji – pierwszą dodaje sesja Claude Code (koszty C.7)'};
+  if (!b.razem || b.razem < b.ostatnia) return {ok: false, blad: 'Kosztorys: brak wiersza ' + RAZEM_KOSZTORYS + ' pod pozycjami'};
+  var maks = 0;
+  b.pozycje.forEach(function (x) { var m = /\.(\d+)$/.exec(x.lp); if (m) maks = Math.max(maks, Number(m[1])); });
+  var lp = etap + '.' + (maks + 1);
+  var ostatnia = b.pozycje[b.pozycje.length - 1].wiersz;
+  // przed ostatnią pozycją etapu = zawsze wewnątrz zakresów $5:$<ostatnia pozycja arkusza> (RAZEM, Etapy, Podsumowanie);
+  // etap z jedną pozycją – za nią (kolejność), chyba że to ostatnia pozycja arkusza (wtedy wiersz wypadłby z zakresów)
+  var przed = b.pozycje.length > 1 || ostatnia === b.ostatnia;
+  var nowy = przed ? ostatnia : ostatnia + 1;
+  var wzor = przed ? ostatnia + 1 : ostatnia;
+  var koniecBloku = ostatnia + 1;
+  var plan = {lp: lp, klucz: lp + ' ' + nazwa, wiersz: nowy, etap: b.etap, suma_etapu: (b.naglowek + 1) + ':' + koniecBloku};
+  if (naSucho) {
+    var kp = kontrola(ss, k);
+    return {ok: true, na_sucho: true, lp: plan.lp, klucz: plan.klucz, wiersz: plan.wiersz, suma_etapu: plan.suma_etapu,
+            przed_ostatnia: przed, kontrola: Object.keys(kp)};
+  }
+  var przedZmiana = kontrola(ss, k);
+  var formulyNaglowka = k.getRange(b.naglowek, 1, 1, kolumn).getFormulas()[0];
+  if (przed) k.insertRowBefore(ostatnia); else k.insertRowAfter(ostatnia);
+  try {
+    k.getRange(wzor, 1, 1, kolumn).copyTo(k.getRange(nowy, 1, 1, kolumn));   // formaty, listy, formuły (adresy względne)
+    var f = k.getRange(nowy, 1, 1, kolumn).getFormulas()[0];
+    for (var c = 2; c <= kolumn; c++) if (!f[c - 1]) k.getRange(nowy, c).clearContent();   // dane wzoru (ilość, plan ręczny…) – nie
+    k.getRange(nowy, 1).setFormula('=$A$' + b.naglowek);
+    // Lp i nazwa jako tekst: przy polskich ustawieniach „04.9” wpisane do komórki bez formatu staje się datą
+    k.getRange(nowy, 2, 1, 2).setNumberFormat('@');
+    k.getRange(nowy, 2, 1, 4).setValues([[lp, nazwa, typ, jedn]]);
+    formulyNaglowka.forEach(function (fn, i) {
+      var m = SUMA_ETAPU.exec(fn);
+      if (m) k.getRange(b.naglowek, i + 1).setFormula('=SUM(' + m[1] + (b.naglowek + 1) + ':' + m[1] + koniecBloku + ')');
+    });
+    SpreadsheetApp.flush();
+    var blad = sprawdzWstawienie(ss, k, b, nowy, koniecBloku, plan, przedZmiana);
+  } catch (err) {
+    cofnijWstawienie(k, nowy, b.naglowek, formulyNaglowka);
+    throw err;
+  }
+  if (blad) {
+    cofnijWstawienie(k, nowy, b.naglowek, formulyNaglowka);
+    return {ok: false, blad: 'nowa pozycja ' + lp + ': ' + blad + ' – wstawiony wiersz usunięty, arkusz bez zmian'};
+  }
+  return {ok: true, juz: false, lp: lp, klucz: plan.klucz, wiersz: nowy};
+}
+
+function sprawdzWstawienie(ss, k, b, nowy, koniecBloku, plan, przedZmiana) {
+  var kPlan = kolumnaNaglowka(k, 'PLAN');
+  var razem = k.getRange(b.razem + 1, kPlan).getFormula();   // RAZEM przesunął się o wstawiony wiersz
+  var m = /[A-Z]+\$?\d+:\$?[A-Z]+\$?(\d+)/.exec(razem);   // =SUMIFS(G$5:G$92;…) → 92
+  if (!m || Number(m[1]) < koniecBloku) return 'nowy wiersz poza sumą ' + RAZEM_KOSZTORYS;
+  var s = SUMA_ETAPU.exec(k.getRange(b.naglowek, kPlan).getFormula());
+  if (!s || Number(s[2]) > nowy || Number(s[4] || s[2]) < nowy) return 'nowy wiersz poza sumą etapu';
+  var w = k.getRange(nowy, 1, 1, k.getLastColumn()).getValues()[0];
+  if (String(w[0]).trim() !== b.etap) return 'etap nowego wiersza się nie zgadza';
+  if (String(w[kolumnaNaglowka(k, 'Klucz') - 1]) !== plan.klucz) return 'klucz nowego wiersza się nie zgadza';
+  var t = String(w[kolumnaNaglowka(k, 'Kontrola') - 1]);
+  if (t) return 'kontrola nowego wiersza: ' + t;
+  var r = rozne(przedZmiana, kontrola(ss, k));
+  if (r.length) return 'zmieniło się: ' + r.join(', ');
+  return '';
+}
+
+function cofnijWstawienie(k, nowy, naglowek, formulyNaglowka) {
+  k.deleteRow(nowy);
+  formulyNaglowka.forEach(function (fn, i) {
+    if (SUMA_ETAPU.test(fn)) k.getRange(naglowek, i + 1).setFormula(fn);
+  });
+  SpreadsheetApp.flush();
 }
 ```

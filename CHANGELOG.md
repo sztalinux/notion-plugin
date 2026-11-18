@@ -5,6 +5,36 @@ Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno d
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
 
+## dom-budowa [3.19.0] – 2026-11-19 (POM-31)
+
+Nowa pozycja kosztorysu na jedno „tak” – automat dodaje ją sam, wydatek idzie w tym samym przebiegu.
+- `koszty` B.2: wydatek bez pasującej pozycji → ❓ z gotową propozycją („Nowa pozycja: 47 | Pozycja X | Materiał | kpl – tak?”)
+  zamiast instrukcji dodania wiersza i „odpisz »dodane«”; po „tak” albo własnej nazwie strona 💸 z polem **Nowa pozycja**.
+  Nowy `koszty/references/nowa-pozycja.md` (propozycja, format pola, zamknięcie ❓, nowy etap w sesji).
+- `koszty` C.2: zasada „automat nie zmienia układu arkusza” zawężona – automatowi wolno tylko dodać wiersz pozycji
+  w istniejącym etapie; niczego nie usuwa ani nie przenosi poza wycofaniem własnego, świeżo wstawionego wiersza.
+- Kod Apps Script **w wersji 5** (`docs/wydatki-arkusz.md`, sekcja 9): akcja `dodaj_pozycje` pod blokadą – wiersz wewnątrz
+  etapu (przed ostatnią pozycją, przy jednej pozycji za nią; nigdy za ostatnią pozycją arkusza, bo zakresy sum `$5:$<n>` by go
+  pominęły), formuły i formaty z sąsiedniej pozycji, sumy nagłówka etapu poprawione, kontrola przed i po („Kontrola
+  powiązań”, RAZEM KOSZTORYS, wiersz w sumach, T puste) – różnica = wstawiony wiersz usunięty i błąd; ta sama nazwa w etapie =
+  istniejący Lp; tryb `na_sucho`. Operacja `wstaw` w `zmien` (puste wiersze w Kosztorysie, tylko wewnątrz pozycji).
+- `tools/wydatki.py`: `sync` obsługuje pole „Nowa pozycja” (dodaje pozycję, opcję w Notion, ustawia Pozycję, czyści pole, wysyła
+  wydatek); przy kodzie < 5 strony czekają (jak zwroty przy < 4); etap spoza Kosztorysu → strona czeka „Do arkusza” z dopiskiem
+  w polu Błąd (bez 🔔), etap do `<hub>/.dom/wydatki/etapy-do-dodania.json`. Nowe polecenia `nowa-pozycja "<etap> | <nazwa> |
+  <typ> | <jedn.>" [--proba]` i `etapy [--zablokuj | --odblokuj]`. Testy: `tools/test_wydatki_pozycje.py`.
+- Nowy etap: pierwsza sesja Claude Code dodaje go sama (`koszty` C.7, konektor Arkuszy jak etap 47, bez konektora `migruj`
+  z `wstaw`) – wyjątek w zasadzie startu sesji (`CLAUDE.md`), blokada przeciw dwóm sesjom; linię stanu uzupełnia `przeglad.py`
+  (poza repo, „nowy etap kosztorysu: NN”).
+- `notatka/references/notion-schematy.md` (pole Nowa pozycja), `koszty/references/arkusze.md` (zakresy sum, gdzie wstawiać),
+  `docs/wydatki-arkusz.md` (sekcje 1, 2, 4, 5, 6, 8), `README.md` (konektory).
+- **Czynność inwestora: zaktualizuj kod arkusza do wersji 5** (`docs/wydatki-arkusz.md`, sekcja 7, „Aktualizacja kodu”);
+  do tego czasu `wydatki.py sync` odkłada strony z polem „Nowa pozycja”.
+
+## ja [1.24.1] – 2026-11-19 (POM-31)
+
+- `wpisy/references/pytania.md` C.8: wzorzec dla wydatku bez pozycji kosztorysu to teraz ❓ z gotową propozycją (wariant a),
+  nie instrukcja dla inwestora.
+
 ## dom-budowa [3.18.4] – 2026-11-18
 
 - `koszty/references/arkusze.md`: nowy etap 47 Wyposażenie domu (stan Wykończenie) i zasada numeru nowego etapu – z zakładki

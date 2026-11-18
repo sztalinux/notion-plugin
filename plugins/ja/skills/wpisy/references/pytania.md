@@ -106,7 +106,8 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    przebieg nie zrobi, wybierz jedno: (a) zrób część, którą możesz, i zadaj ❓ albo 🔔 z propozycją, na którą wystarczy krótka
    odpowiedź; (b) podaj w ❓ albo 🔔 dokładną czynność dla inwestora (gdzie kliknąć, co wpisać), a po jego „zrobione” dokończ;
    (c) tylko praca techniczna (skrypt, struktura arkusza): wiersz ZP + blok 🔔 „naprawię w najbliższej sesji Claude Code;
-   nic nie musisz robić”. Wzorzec – wydatek budowy bez pasującej pozycji w kosztorysie: `koszty`, B.2.
+   nic nie musisz robić”. Wzorzec (a) – wydatek budowy bez pasującej pozycji w kosztorysie: ❓ z gotową propozycją nowej
+   pozycji, „tak” wystarcza, resztę robi automat albo pierwsza sesja Claude Code (`koszty`, B.2; plugin dom-budowa).
 
 Zapis w Notion (przykład zmyślony; nagłówek to zwijany nagłówek h3, komunikat jego dzieckiem):
 

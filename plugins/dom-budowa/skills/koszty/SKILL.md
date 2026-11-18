@@ -10,7 +10,8 @@ Wydatki trafiają do niego przez **kolejkę w Notion „💸 Wydatki → arkusz�
 `tools/wydatki.py` na Macu po każdym przebiegu Dziennika dopisuje go do arkusza (bez AI). Jak to działa i jak
 skonfigurować: `docs/wydatki-arkusz.md` w repozytorium harnessu. Asystent:
 - nie pisze do arkusza bezpośrednio i nie trzyma własnej kopii kwot (żadnych JSON-ów, „zapamiętanych” liczb z rozmów),
-- do analiz czyta kopię wartości (niżej), a strukturę arkusza zmienia tylko na wyraźną prośbę (sekcja C).
+- do analiz czyta kopię wartości (niżej), a strukturę arkusza zmienia tylko na wyraźną prośbę (sekcja C) – poza nową
+  pozycją z pola „Nowa pozycja” (B.2, dodaje automat) i nowym etapem z linii stanu sesji (C.7).
 
 Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notatka/references/notion-schematy.md`.
 
@@ -53,11 +54,13 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
    - dopłata poza umową → „Roboty dodatkowe – poza umową” w etapie, którego dotyczy (osobny wiersz, nigdy w transzy);
    - materiał → pozycja materiału w etapie, na który poszedł (beton na chudziak → chudziak, stal na ściany → stal ścian);
    - jedna faktura na kilka pozycji → kilka wierszy (podziel kwotę wg faktury; bez rozbicia → zapytaj);
-   - brak pasującej pozycji albo niepewność → nie zgaduj: pytanie z propozycją (okienko ❓ pod wpisem we „📝 Wpisach” – `wpisy/references/pytania.md`, A;
-     w rozmowie – wprost); nowa pozycja to zmiana arkusza (sekcja C).
-     **Wydatek bez pozycji nie czeka bez ruchu inwestora:** ❓ z instrukcją 3–4 kroków w arkuszu (Kosztorys → dodaj wiersz pozycji w etapie,
-     skopiuj formuły z sąsiedniego wiersza, nazwa jak w ❓) i prośbą „odpisz »dodane«”; po odpowiedzi lista pozycji w Notion odświeża się po nocnym przebiegu (automat; w Claude Code od razu `python3 tools/wydatki.py pozycje`),
-     a przebieg zapisuje wydatek dopiero na odświeżonej liście – do tego czasu ❓ zostaje z dopiskiem „czeka na odświeżenie listy” (nigdy samą adnotacją „wymaga sesji Claude Code”).
+   - niepewne, która z istniejących → pytanie z propozycją (okienko ❓ pod wpisem we „📝 Wpisach” – `wpisy/references/pytania.md`, A;
+     w rozmowie – wprost);
+   - **brak pasującej pozycji** → ❓ z gotową propozycją nowej pozycji, bez instrukcji dla inwestora: „**Nowa pozycja:
+     47 | Pozycja X | Materiał | kpl – tak?** (albo wpisz własną nazwę)” – etap, nazwa, typ, jednostka; nowy etap z numerem
+     z zakładki szacunku AI, nazwą i stanem. „Tak” albo nazwa → strona wydatku (krok 4) z pustą Pozycją i polem
+     **Nowa pozycja** = `<etap> | <nazwa> | <typ> | <jedn.>`: `sync` doda pozycję i wyśle wydatek w tym samym przebiegu;
+     nowy etap doda pierwsza sesja Claude Code (C.7). Format, propozycja, zamknięcie ❓: `references/nowa-pozycja.md`.
 3. Sprawdź duplikat: w bazie wiersz z tą samą datą i kwotą **z tego samego źródła** (ten sam wpis, wiadomość albo nr FV) →
    zaktualizuj go zamiast dodawać drugi. Ta sama data i kwota z innego źródła albo dwie płatności nazwane wprost (np. przelew
    w dwóch częściach) → osobne wiersze, w Notatkach „druga płatność tego dnia – nie duplikat”; niepewne → pytanie. W Claude Code sprawdź też
@@ -69,7 +72,8 @@ wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to sa
    Brakujące pole, które da się uzupełnić później (sposób, nr FV) – zostaw puste; brak kwoty albo pozycji → pytanie
    zamiast zapisu (brak daty – krok 1: dzień wpisu albo wiadomości).
 5. Wysyłka zależy od kanału:
-   - **Claude Code z inwestorem:** po zapisie `python3 tools/wydatki.py sync` – od razu w arkuszu; podaj wiersz.
+   - **Claude Code z inwestorem:** po zapisie `python3 tools/wydatki.py sync` – od razu w arkuszu; podaj wiersz
+     (`czekaja_na_etap` > 0 → od razu C.7).
    - **Przebieg bez inwestora (`claude -p`):** tylko kolejka – `sync` uruchamia automat po przebiegu.
    - **claude.ai / telefon bez Notion:** Skrzynka (`budowa`, zasada 13) ze wszystkimi danymi z kroku 1 – słowami, bez nazw pól (`wpisy/references/skrzynka.md`); Mac przeniesie.
    Potwierdź jedną linią: „N wydatków: wiersze … w arkuszu” albo „w kolejce – trafią przy najbliższym przebiegu”.
@@ -119,8 +123,11 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 ## C. Zmiana w arkuszu (pozycja, kolumna, formuła)
 
 1. Opisz zmianę i jej wpływ (które arkusze i formuły) – przy większych poczekaj na „ok”.
-2. Nigdy nie proś o ponowny import pliku – arkusz żyje w Google. Prosta zmiana danych (nowa pozycja) →
-   instrukcja krok po kroku dla inwestora (kwota planu – kolejka, sekcja B3); nowa pozycja trafi na listę w Notion przy nocnym `wydatki.py pozycje` (automat).
+2. Nigdy nie proś o ponowny import pliku – arkusz żyje w Google. Nowa pozycja w istniejącym etapie → pole „Nowa pozycja”
+   (B.2) albo w Claude Code `python3 tools/wydatki.py nowa-pozycja "<etap> | <nazwa> | <typ> | <jedn.>"` (wiersz, formuły,
+   opcja w Notion – samo); kwota planu – kolejka (B3); inna prosta zmiana danych → instrukcja krok po kroku dla inwestora.
+   **Automat zmienia układ arkusza tylko w jeden sposób:** dodaje wiersz pozycji w istniejącym etapie (kontrola powiązań
+   przed i po); niczego nie usuwa ani nie przenosi poza wycofaniem własnego, świeżo wstawionego wiersza.
 3. Zmiana układu lub wyglądu (kolumny, formuły, kolory, listy) – w Claude Code, na żywym arkuszu, według
    `docs/wydatki-arkusz.md`, sekcja 8:
    - **konektor Google Sheets** (szybciej): migawka zakresu przed zmianą (z formułami), zapis, odczyt kontrolny; formuły ze
@@ -136,6 +143,9 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 5. Kolumny A–P arkusza Wydatki (P – VAT %, wpisuje `sync`), kolumny A, B, M arkusza Kosztorys i nazwy tych arkuszy czyta automat – zmiana ich kolejności
    albo nazw wymaga zmiany `tools/wydatki.py` i kodu Apps Script w tym samym kroku.
 6. Oddaj plik albo instrukcję + krótką listę zmian (arkusz, zakres, co).
+7. **Nowy etap z kolejki** (linia stanu sesji „nowy etap kosztorysu …” albo `sync` z `czekaja_na_etap` > 0): pierwsza sesja
+   Claude Code dodaje go sama, bez pytania i bez przypominania inwestorowi – blokada przeciw drugiej sesji, kroki (konektor
+   jak etap 47, bez konektora `migruj`), kontrola i meldunek jedną linią: `references/nowa-pozycja.md`, sekcja C.
 
 ## D. Płatności, transze, kredyt
 

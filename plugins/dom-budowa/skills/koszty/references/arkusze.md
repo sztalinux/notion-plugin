@@ -15,6 +15,10 @@ Koszty ogólne (stan w Etapy kol. B; do 10.11.2026 „Organizacja”): P1–P4 (
 Wykończenie: 47 Wyposażenie domu (meble – zakupy na zapas; od 18.11.2026). Numer nowego etapu bierz z zakładki szacunku AI
 (wykończenie 40–46, kolejne wolne numery dalej), żeby etap kosztorysu i szacunek się nie gryzły.
 Etapy SSO i dalsze dojdą, gdy będą oferty; do tego czasu ich koszt pokazuje szacunek AI (zakładka i tabela wg stanów).
+Nową pozycję w istniejącym etapie dodaje automat (pole „Nowa pozycja”, `references/nowa-pozycja.md`), nowy etap – sesja
+Claude Code (tamże, C). Zakresy sum (RAZEM KOSZTORYS, Etapy D–G, Podsumowanie „Kontrola powiązań”) kończą się na ostatniej
+pozycji arkusza (`$5:$<n>`), Etapy mają formuły w wierszach 5–40 – wiersz wstawiony za ostatnią pozycją arkusza wypada z sum,
+więc nowe wiersze idą zawsze wewnątrz bloków. Sumy w nagłówku etapu (`=SUM(G<od>:G<do>)`) poprawia ten, kto wstawia wiersz.
 
 ## Kolumny wejściowe (kremowe – wpisuje inwestor albo automat)
 - **Wydatki!A:Q** ⚙ – A Data · B Status (Zrealizowane / Do zapłaty) · C Kwota brutto (zwrot – z minusem) · D Etap (lista z Etapy!A) · E Pozycja
