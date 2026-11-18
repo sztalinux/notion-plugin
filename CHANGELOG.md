@@ -4,6 +4,32 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.26.0] – 2026-11-19 (POM-30)
+
+Paragony ze zdjęcia: rozpisanie na kategorie, metoda płatności i podział płatności z wyciągu bez dublowania wydatków.
+- Nowy `tools/budzet/paragon.py`: `pobierz` (zdjęcie albo PDF z adresu pliku Notion → `.dom/budzet/paragony/`, tylko https
+  i hosty plików Notion, limit rozmiaru, bez nadpisywania, HEIC → JPG przez `sips`) i `rozpisz` (pozycje z kategoriami od
+  modelu → suma na kategorię, rabaty i kaucje metodą największych reszt na groszach, kontrola suma części = suma paragonu
+  co do grosza; niezgodność, nieznany skrót albo brak „kto i czym” → kod 1, nic się nie zapisuje). Części `w<id>-1…n`
+  z polem `grupa` i `paragon`; to samo ID zastępuje cały paragon, `--budowa` dla części Inwestycja › Dom, `--proba`.
+- `wpis.py usun` z ID wpisu albo części usuwa cały paragon; Notatki wiersza „z paragonu – sklep, razem, części”.
+- `importuj.py`: lista drugiej osoby porównuje z sumą paragonu (równa → „już z paragonu”, równa jednej części → wchodzi,
+  bliska – do pięciu złotych → strona decyzji „możliwy duplikat paragonu”); wpis z `--budowa` bez pary w wyciągu nie pyta „nie ma
+  w kosztorysie”. Przypięcie płatności z karty do całej grupy (z korektą groszy na największej części) – testy.
+- Procedura `budzet` (A: paragon, wyjątek od „brak szczegółów = gotówka”) i nowe `references/paragony.md`; `wpisy` (zdjęcie
+  paragonu → `budzet`, bez „kto i czym” → ❓), `skrzynka.md`, router `ja`, `AGENTS.md`, `docs/budzet-arkusz.md`, README
+  (konektor Notion – zapas: zdjęcie wklejone w sesji).
+- Testy: `tools/test_budzet_paragon.py` (rozpisanie, pobieranie bez sieci, grupa w pliku, lista drugiej osoby, karta,
+  przełom miesiąca, paragon mieszany, poprawka i usunięcie, synchronizacja grupy z atrapą arkusza).
+- `AI/automaty/przeglad.py` (poza repo, osobna łatka): pozwolenia `paragon.py pobierz` i `paragon.py rozpisz` w przebiegach,
+  zakaz w trybie rozkminki.
+
+## dom-budowa [3.19.1] – 2026-11-19 (POM-30)
+
+- `koszty/references/wydatek-przeplyw.md`: paragon mieszany (część na budowę → strona 💸 i `paragon.py rozpisz --budowa`),
+  stan po POM-29 – gotówka i wydatki z wpisów w arkuszu budżetu od 1.12.2026 w ciągu godziny, starsze przy zamknięciu;
+  płatność z wyciągu przypina się do wiersza z wpisu; zwrot z wpisu to własny wiersz z kwotą ujemną.
+
 ## ja [1.25.0] – 2026-11-19 (POM-29)
 
 Budżet domowy: każdy wydatek z wpisu od razu w arkuszu „Budżet domowy”, zamknięcie miesiąca bez dubli.

@@ -1,11 +1,11 @@
 ---
 name: budzet
-description: Budżet domowy w arkuszu Google „Budżet domowy” – wydatki z wpisów („200, pra, o, zam”, gotówka, wydatek na budowę także do budżetu) od razu w arkuszu (automat w ciągu godziny) i miesięczne zamknięcie – wyciągi (mBank, ZEN), lista zakupów Allegro, lista wydatków drugiej osoby, strona decyzji (artefakt), zapis do Transakcji, przypięcie płatności z wyciągu do wierszy z wpisów, kontrola arkusza, przychód drugiej osoby z sald i podsumowanie miesiąca. Wpis wydatku działa też w przebiegu na Macu; zamknięcie tylko w Claude Code na Macu (skrypty tools/budzet). Używaj, gdy użytkownik mówi „zamknijmy miesiąc”, „budżet za październik”, „wrzuciłem wyciągi”, „przenieś decyzje budżetu RRRR-MM”, „podsumuj miesiąc w budżecie”, „czy przychody są dobrze policzone”, wkleja listę Allegro albo listę wydatków ze skrótami, wpisuje wydatek w skrócie „kwota, konto, osoba, kategoria, opis” albo zwykłym zdaniem („wydałem N zł na regularne i M na jedzenie na mieście”).
+description: Budżet domowy w arkuszu Google „Budżet domowy” – wydatki z wpisów („200, pra, o, zam”, gotówka, wydatek na budowę także do budżetu) od razu w arkuszu (automat w ciągu godziny) i miesięczne zamknięcie – wyciągi (mBank, ZEN), lista zakupów Allegro, lista wydatków drugiej osoby, strona decyzji (artefakt), zapis do Transakcji, przypięcie płatności z wyciągu do wierszy z wpisów, kontrola arkusza, przychód drugiej osoby z sald i podsumowanie miesiąca. Wpis wydatku działa też w przebiegu na Macu; zamknięcie tylko w Claude Code na Macu (skrypty tools/budzet). Używaj, gdy użytkownik mówi „zamknijmy miesiąc”, „budżet za październik”, „wrzuciłem wyciągi”, „przenieś decyzje budżetu RRRR-MM”, „podsumuj miesiąc w budżecie”, „czy przychody są dobrze policzone”, wkleja listę Allegro albo listę wydatków ze skrótami, wpisuje wydatek w skrócie „kwota, konto, osoba, kategoria, opis” albo zwykłym zdaniem („wydałem N zł na regularne i M na jedzenie na mieście”), dodaje zdjęcie paragonu („rozpisz paragon”).
 ---
 
 # Budżet domowy – wydatki na bieżąco i zamknięcie miesiąca
 
-Kod: `tools/budzet/` (wpis, arkusz_budzetu, importuj, przenies, kontrola, allegro, strona). **Dane są poza repo** w
+Kod: `tools/budzet/` (wpis, paragon, arkusz_budzetu, importuj, przenies, kontrola, allegro, strona). **Dane są poza repo** w
 `<folder budowy>/.dom/budzet/` (`DANE` w `tools/budzet/wspolne.py`): `ustawienia.json` (ID arkusza, adres strony, folder
 Dysku, konta, osoby, skróty kont i osób, pary pomijane, reguły specjalne), `kategorie.json`, `reguly.json` (reguły sklepów,
 skróty kategorii, sprzedawcy Allegro – źródło prawdy; zakładka „Reguły” w arkuszu to widok), `oczekujace.json` (zapowiedziane
@@ -32,9 +32,15 @@ osoby zawsze na drugą osobę. Skróty kont i osób – `ustawienia.json` (`skro
 
 **Wydatek zwykłym zdaniem** („wydałem N zł na regularne i M na jedzenie na mieście” – bez skrótu, konta i osoby) to też
 wydatek: sam przepisz go na skrót (kategorię dobierz ze skrótów w `reguly.json`, np. „N, zak reg” i „M, jedz, na mieście”)
-i zapisz krokiem 2. Nie pytaj o konto ani osobę – brak szczegółów = gotówka drugiej osoby (wydatek na budowę – konto wg pkt 1). Kilka wydatków w jednym wpisie =
+i zapisz krokiem 2. Nie pytaj o konto ani osobę – brak szczegółów = gotówka drugiej osoby (wydatek na budowę – konto wg pkt 1;
+wyjątek: paragon – niżej). Kilka wydatków w jednym wpisie =
 osobne wywołania z `--id <id>-1`, `<id>-2` (ten sam ID nadpisałby poprzedni). Pytaj tylko o brakującą kwotę albo kategorię,
 której nie da się dobrać.
+
+**Paragon ze zdjęcia** (obraz we wpisie z dopiskiem, kto płacił i czym) → `references/paragony.md`: pobranie zdjęcia
+(`paragon.py pobierz`), odczyt pozycji, rozpisanie i kontrola sumy skryptem (`paragon.py rozpisz` – części `<id>-1…n`
+z polem `grupa`), część na budowę także do kolejki 💸. **Paragon bez „kto i czym” → ❓ pod wpisem, nic się nie zapisuje**
+(wyjątek od „brak szczegółów = gotówka”). Paragon zawsze cały.
 
 1. Wydatek na budowę (ekipa, materiał, usługa) → reguła `dom-budowa/skills/koszty/references/wydatek-przeplyw.md` (kosztorys i budżet, konto, zwroty).
 2. Na Macu (przebieg albo Claude Code): `python3 tools/budzet/wpis.py dodaj "<treść wpisu>" --data <dzień wydatku albo wpisu>
@@ -55,8 +61,10 @@ której nie da się dobrać.
    `skrypt-arkusz_budzetu-sync` – zapisy czekają w pliku; przyczyny: `docs/budzet-arkusz.md`, sekcja 5.
 
 Przy zamknięciu: gotówka i konta drugiej osoby z wpisów – ID w kolumnie O = już w arkuszu, inaczej wiersz z datą i opisem
-(zapas); ta sama kwota na liście drugiej osoby jest pomijana jako „już z wpisu”. Konto z wyciągiem: płatność (do złotówki różnicy, ±4 dni,
-także przez przełom miesiąca) przypina się do wiersza z wpisu – ID wyciągu do O, kwota z wyciągu do D, bez nowego wiersza;
+(zapas); ta sama kwota na liście drugiej osoby jest pomijana jako „już z wpisu” (paragon: tylko suma całego paragonu, kwota
+bliska sumie → strona decyzji – `references/paragony.md`, 6). Konto z wyciągiem: płatność (do złotówki różnicy, ±4 dni,
+także przez przełom miesiąca) przypina się do wiersza z wpisu (paragon: do wszystkich części, gdy płatność = suma) – ID
+wyciągu do O, kwota z wyciągu do D, bez nowego wiersza;
 wpisu nie ma w arkuszu – wiersz z płatności z kategorią wpisu; wpis z ostatnich dni miesiąca bez pary, gdy wyciąg ich nie
 obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzji. Budowa z `--budowa` nie pyta „nie ma w kosztorysie”.
 

@@ -12,20 +12,22 @@ chyba że inwestor powie inaczej.
 | Na budowę, „Do zapłaty” | tak | **nie teraz** – zapis przy przejściu na Zrealizowane (pkt 3; ten sam `--id`, bez dubla) |
 | Na budowę + „tylko kosztorys” / „nie do budżetu” | tak | nie; w Notatkach strony 💸 „bez budżetu (prośba inwestora)” |
 | Na budowę + inna kategoria budżetu („to z wesela”) | tak | tak, wskazany skrót kategorii zamiast `dom` |
-| Zwrot otrzymany (Rodzaj = Zwrot, `koszty` B.7a) | tak | tak: `"+<kwota>[, konto], dom, zwrot <opis>" --budowa <id> --id <id>` – „+” = wpływ; zamknięcie miesiąca odejmuje go od wydatku na dom („zwrot pomniejsza zakup”) |
+| Zwrot otrzymany (Rodzaj = Zwrot, `koszty` B.7a) | tak | tak: `"+<kwota>[, konto], dom, zwrot <opis>" --budowa <id> --id <id>` – „+” = wpływ; w budżecie własny wiersz z kwotą ujemną (pomniejsza wydatki na dom) |
 | Zwrot obiecany (Rodzaj = Zwrot, Płatność „Do zapłaty”) | tak | nie teraz – jak „Do zapłaty” (pkt 3) |
 | Wycena (`koszty` B2), Plan (B3) | tak | nigdy |
 | Prywatny (nie budowa) | nie | tak, kategoria wg skrótów (`budzet` A) |
+| Paragon mieszany (część na budowę, część prywatna) | tak – strona 💸 na część budowlaną | tak, cały paragon: `paragon.py rozpisz … --budowa <id strony 💸>` (`ja/skills/budzet/references/paragony.md`, 4) – część Dom ma ID części paragonu, nie ID strony 💸 |
 
 „Na budowę” rozpoznajesz jak w `koszty` B (materiał, ekipa, usługa, formalności dla domu). Niepewne → ❓ „Budowa czy
 prywatne? (propozycja: …)”.
 
 ## 2. Konto (unikanie dubla przy zamknięciu miesiąca)
 
-- Strona 💸 ma Sposób = Gotówka → dopisz `--gotowka` (gotówka, osobny wiersz przy zamknięciu – jak dotąd; nadpisuje też konto z treści).
+- Strona 💸 ma Sposób = Gotówka → dopisz `--gotowka` (gotówka; nadpisuje też konto z treści). Wiersz w arkuszu budżetu:
+  od 1.12.2026 w ciągu godziny (automat `arkusz_budzetu.py sync`), starsze – przy zamknięciu miesiąca.
 - Sposób = Przelew / Karta / BLIK albo pusty, a we wpisie nie ma konta → **nie podawaj konta**: `wpis.py` z `--budowa` sam weźmie
-  `konto_budowy` z `ustawienia.json` (w folderze danych budżetu, poza repo). Konto z wyciągiem = przy zamknięciu tylko
-  podpowiedź dla transakcji z wyciągu (dopasowanie: kwota do złotówki, ±4 dni), bez drugiego wiersza.
+  `konto_budowy` z `ustawienia.json` (w folderze danych budżetu, poza repo). Konto z wyciągiem: przy zamknięciu płatność
+  z wyciągu (kwota do złotówki, ±4 dni) przypina się do wiersza z wpisu – bez drugiego wiersza.
 - Konto podane we wpisie („150, z, dom”) – zostaje.
 - **Brak klucza `konto_budowy`** → `wpis.py` zapisze gotówkę (jak dotąd) i wypisze uwagę. Wtedy jeden blok 🔔 we „Wpisach”
   (`wpisy/references/pytania.md`, C; klucz `konto-budowy` – aktualizuj, nie dubluj; odpowiedź obsługuje nocny przebieg): „Wskaż konto, z którego płacisz za
@@ -38,7 +40,8 @@ prywatne? (propozycja: …)”.
 
 ## 3. Kanały
 
-- **Mac – przebieg albo Claude Code:** pkt 1–2 od razu, po zapisie strony 💸 (ID strony = `--id` i `--budowa`).
+- **Mac – przebieg albo Claude Code:** pkt 1–2 od razu, po zapisie strony 💸 (ID strony = `--id` i `--budowa`; paragon mieszany –
+  tylko `--budowa`, wiersz wyżej). Wiersz w budżecie od 1.12.2026 w ciągu godziny, starsze przy zamknięciu miesiąca.
 - **Telefon (claude.ai bez Notion):** każdy wydatek – budowa i prywatny – do Skrzynki słowami inwestora z polem
   „Zrobić: wydatek …” (`wpisy/references/skrzynka.md`); Mac stosuje pkt 1–2 przy przeniesieniu.
 - **„Do zapłaty” → „Zrealizowane”:** nocny przebieg (`przeglad-dnia`, B) przegląda strony 💸 zmienione od wczoraj z Płatność =

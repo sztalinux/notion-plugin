@@ -12,7 +12,9 @@ Wpis z karty (konto z wyciągiem) paruje się z płatnością do złotówki ró�
 i początek następnego pliku wpisów). Wpis już w arkuszu (ID w kolumnie O) nie daje nowego wiersza: płatność przypina się do
 jego wiersza (`przypiecia` – ID wyciągu do kolumny O, kwota z wyciągu do D). Wpis bez pary z ostatnich dni miesiąca, gdy
 wyciąg jeszcze ich nie obejmuje, czeka (pominiete) – rozstrzygnie import kolejnego miesiąca. Wiersze z wpisów (ID z prefiksem
-w) nie liczą się do „wpisane ręcznie do dnia X” i nie są scalane. Pole `grupa` zapisu łączy części jednej płatności.
+w) nie liczą się do „wpisane ręcznie do dnia X” i nie są scalane. Pole `grupa` zapisu łączy części jednej płatności (paragon,
+paragon.py): płatność z wyciągu = suma grupy przypina się do wszystkich części (różnica na największej); pozycja listy drugiej
+osoby = suma paragonu na tym samym koncie -> pominięta, kwota bliska sumie (do pięciu złotych) -> decyzja, równa jednej części -> wchodzi.
 Wynik: miesiace/RRRR-MM.json – wiersze (pewne, po scaleniu), auto, decyzje (strona), pominiete, juz (z numerem wiersza),
 przypiecia, braki, salda.
 """
@@ -206,14 +208,15 @@ def baza(t):
 def decyzja(b, **kw_):
     d = dict(b, zrodlo='wyciąg', pewnosc='Pytaj', regula='', propozycja=None, opcje=[], uwaga='', moze_juz=False, kandydaci=[])
     d.update(kw_)
-    if d['propozycja'] and d['propozycja']['kat'] == 'Dom' or any(o['kat'] == 'Dom' for o in d['opcje'][:1]):
+    if not d.get('budowa') and (d['propozycja'] and d['propozycja']['kat'] == 'Dom' or any(o['kat'] == 'Dom' for o in d['opcje'][:1])):
         d['budowa'] = w_kosztorysie(d['kwota'], d['data'])
     decyzje.append(d)
 
 
 def baza_wpisu(w):
     return dict(id=w['id'], data=w['data'], konto=w['konto'], osoba=w['osoba'], kwota=w['kwota'], opis=w['tekst'],
-                skladniki=w.get('skladniki'), wpis=True, opis_w=w['opis'] or w['kod'], notatki=notatka_wpisu(w))
+                skladniki=w.get('skladniki'), wpis=True, opis_w=w['opis'] or w['kod'], notatki=notatka_wpisu(w),
+                **({'budowa': 'z wpisu – w kosztorysie budowy (💸)'} if w.get('budowa') else {}))
 
 
 def wiersz_z_wpisu(w, kwota_ark=None, b=None):
@@ -494,6 +497,19 @@ def pozycja(b, kod, budowa=''):
 
 
 WPISY_L = [w for w in WPISY if w['konto'] not in KONTA_A]
+# paragony (pole grupa): lista drugiej osoby ma całe zapłacone kwoty, więc porównuje się z sumą paragonu, nie z częścią
+PARAGONY_L = {}
+for w in WPISY_L:
+    if w.get('grupa'):
+        g = PARAGONY_L.setdefault(w['grupa'], dict(konto=w['konto'], kwota=0.0, data=w['data'],
+                                                   sklep=(w.get('paragon') or {}).get('sklep', '')))
+        g['kwota'] = round(g['kwota'] + w['kwota'], 2)
+BLISKO_PARAGONU = 5.0
+
+
+def paragon_listy(b, konto, tol):
+    return next((g for g in PARAGONY_L.values() if not g.get('para') and g['konto'] == konto
+                 and abs(g['kwota'] - b['kwota']) <= tol), None)
 
 
 def czytaj_liste(plik, domyslne_konto):
@@ -514,10 +530,22 @@ def czytaj_liste(plik, domyslne_konto):
         tid = 'l' + hashlib.sha1(f'{MIES}|{kid}|{l}|{n[(kid, l)]}'.encode()).hexdigest()[:10]
         b = dict(id=tid, data=f'{MIES}-01', konto=konto, osoba=U.get('osoba_listy'), kwota=suma if plus else -suma,
                  opis=l, skladniki=liczby if len(liczby) > 1 else None)
-        w = next((w for w in WPISY_L if not w.get('para') and w['konto'] == konto and abs(w['kwota'] - b['kwota']) < 0.005), None)
+        g = paragon_listy(b, konto, 0.005)
+        if g:
+            g['para'] = tid
+            pominiete.append(dict(b, powod=f"już z paragonu {g['data']} ({g['sklep']})"))
+            continue
+        w = next((w for w in WPISY_L if not w.get('para') and not w.get('grupa') and w['konto'] == konto
+                  and abs(w['kwota'] - b['kwota']) < 0.005), None)
         if w:
             w['para'] = tid
             pominiete.append(dict(b, powod=f"już z wpisu {w['data']}" + (f" ({w['opis']})" if w['opis'] else '')))
+            continue
+        g = paragon_listy(b, konto, BLISKO_PARAGONU)
+        if g:  # kwota bliska sumie paragonu, ale inna – nie wpisuje się sama
+            decyzja(b, zrodlo='lista', regula=kod, opcje=[opcja(*SKROTY[kod])] if kod in SKROTY else [],
+                    uwaga=f"możliwy duplikat paragonu {g['data']} ({g['sklep']}, razem {abs(g['kwota']):.2f}; różnica "
+                          f"{abs(g['kwota'] - b['kwota']):.2f}) – Pomiń, jeśli to ten sam zakup")
             continue
         pozycja(b, kod)
 

@@ -18,8 +18,8 @@ miesiąc daty); znacznik wysyłki zostaje, więc synchronizacja poprawi wiersz w
 z ustawienia.json (brak klucza – gotówka, jak dotąd; skrypt wypisuje uwagę).
 --gotowka: wymusza gotówkę (strona 💸 ze Sposobem = Gotówka), także przy --budowa.
 usun: zapis już wysłany do arkusza dostaje znak `usuniety` – synchronizacja usuwa jego wiersz i dopiero wtedy zapis z pliku.
-Pole `grupa` (POM-30: części jednego paragonu) – wspólny klucz części jednej płatności; zamknięcie miesiąca paruje płatność
-z wyciągu z sumą grupy.
+Pole `grupa` – części jednego paragonu (zapisuje je paragon.py); zamknięcie miesiąca paruje płatność z wyciągu z sumą grupy.
+usun z ID części albo ID wpisu paragonu usuwa cały paragon.
 """
 import argparse, hashlib, re, sys
 from datetime import date, datetime
@@ -114,16 +114,19 @@ def main():
         with blokada_wpisow():
             ws = czytaj_wpisy(A.arg, z_usunietymi=True)
             ids = (A.id_usun, 'w' + str(A.id_usun))
-            cel = next((w for w in ws if w['id'] in ids and not w.get('usuniety')), None)
-            if cel and cel.get('arkusz'):
-                cel['usuniety'] = datetime.now().strftime('%Y-%m-%d %H:%M')
-                zapisz_wpisy(A.arg, ws)
-                print('usunięto – wiersz w arkuszu zniknie przy synchronizacji (arkusz_budzetu.py sync)')
-            elif cel:
-                zapisz_wpisy(A.arg, [w for w in ws if w is not cel])
-                print('usunięto')
-            else:
+            cel = next((w for w in ws if (w['id'] in ids or w.get('grupa') in ids) and not w.get('usuniety')), None)
+            if not cel:
                 print(f'✗ brak wpisu {A.id_usun}')
+                return
+            # część paragonu (pole grupa) – znika cały paragon, nie jedna kategoria
+            cele = [w for w in ws if not w.get('usuniety') and (w is cel or (cel.get('grupa') and w.get('grupa') == cel['grupa']))]
+            teraz = datetime.now().strftime('%Y-%m-%d %H:%M')
+            for w in cele:
+                if w.get('arkusz'):
+                    w['usuniety'] = teraz
+            zapisz_wpisy(A.arg, [w for w in ws if not (w in cele and not w.get('arkusz'))])
+            print(f'usunięto ({len(cele)})' + (' – wiersze w arkuszu znikną przy synchronizacji (arkusz_budzetu.py sync)'
+                                              if any(w.get('arkusz') for w in cele) else ''))
         return
     d = A.data or date.today().isoformat()
     try:

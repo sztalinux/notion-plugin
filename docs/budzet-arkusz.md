@@ -13,8 +13,8 @@ Gdzie co jest opisane:
 ## 1. Przepływ danych
 
 ```
-wpis we „📝 Wpisach” · wiadomość w Claude Code · Skrzynka („Zrobić: wydatek …”)
-   │  agent: wpis.py dodaj (bez sieci) → listy/RRRR-MM-wpisy.jsonl
+wpis we „📝 Wpisach” · wiadomość w Claude Code · Skrzynka („Zrobić: wydatek …”) · zdjęcie paragonu we „📝 Wpisach”
+   │  agent: wpis.py dodaj albo paragon.py rozpisz (części <id>-1…n, bez sieci) → listy/RRRR-MM-wpisy.jsonl
    ▼
 arkusz_budzetu.py sync  – automat po każdym przebiegu na Macu; w Claude Code agent zaraz po zapisie
    │  tylko zapisy z datą od 1.12.2026 (ARKUSZ_OD w tools/budzet/wspolne.py), nowe i zmienione
@@ -60,8 +60,11 @@ niosą tylko liczby, daty i ID – bez kwot i opisów.
   Wiersz, w którym są ID kilku wpisów (np. wiersze listopadowe scalone ręcznie), nie jest poprawiany ani usuwany – błąd
   „wiersz ma też inne wpisy”.
 - Jeden ID = jeden wiersz: wiersze z wpisów nie są scalane ani przez `sync`, ani przy zamknięciu.
-- Grupa części jednej płatności (POM-30: paragon) – zapisy z tym samym polem `grupa`; `przypnij` dostaje listę ich ID,
-  różnicę wobec wyciągu bierze największa część.
+- Paragon (`tools/budzet/paragon.py`, procedura `budzet`, `references/paragony.md`) – części jednej płatności: ID
+  `w<id>-1…n`, to samo pole `grupa` (`w<id>`), pole `paragon` (sklep, suma, liczba części, plik zdjęcia). Każda część to
+  osobny wiersz (jedna wysyłka `dopisz` dla całej grupy); `przypnij` dostaje listę ich ID, różnicę wobec wyciągu bierze
+  największa część. Ponowne `rozpisz` z tym samym ID zastępuje grupę (część, której nie ma, dostaje `usuniety`);
+  `wpis.py usun` z ID wpisu albo części usuwa całą grupę.
 - Zapisy w pliku pod blokadą (`listy/.wpisy.lock`): `wpis.py` i `sync` nie nadpisują sobie zmian.
 
 ## 4. Dostęp i bezpieczeństwo

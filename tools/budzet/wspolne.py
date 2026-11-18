@@ -172,7 +172,9 @@ def formula_sumy(skl):
 
 
 def notatka_wpisu(w):
-    return 'z wpisu – w kosztorysie budowy (💸)' if w.get('budowa') else 'z wpisu'
+    p = w.get('paragon')
+    n = f"z paragonu – {p['sklep']}, razem {p['suma']:.2f}, części {p['czesci']}" if p else 'z wpisu'
+    return n + (' – w kosztorysie budowy (💸)' if w.get('budowa') else '')
 
 
 def wiersz_wpisu(w):
