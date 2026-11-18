@@ -6,22 +6,25 @@ Instrukcja, interfejs i kod Apps Script: docs/budzet-arkusz.md. Procedura: plugi
     python3 tools/budzet/arkusz_budzetu.py kontrola [--cicho]          # zapis bez wiersza / wiersz bez zapisu (tylko odczyt)
     python3 tools/budzet/arkusz_budzetu.py ponow <id> [...]            # czyści znacznik – następny sync dopisze wiersz od nowa
     python3 tools/budzet/arkusz_budzetu.py przypnij --miesiac RRRR-MM [--proba]   # przypięcia z miesiace/RRRR-MM-zapis.json
+    python3 tools/budzet/arkusz_budzetu.py blokada zaloz|zdejmij      # zamknięcie miesiąca (C.3): sync w tym czasie nic nie wysyła
     python3 tools/budzet/arkusz_budzetu.py sprawdz                     # sekrety i ping (wersja kodu, nagłówki)
     python3 tools/budzet/arkusz_budzetu.py kod | LANG=en_US.UTF-8 pbcopy   # kod Apps Script do schowka
 
 Znacznik wysyłki w zapisie: pole `arkusz` = {wiersz, skrot, czas}; wysyłane są tylko zapisy bez znacznika albo ze zmienionym
 skrótem treści (wspolne.skrot), więc ręczna poprawka wiersza w arkuszu zostaje, dopóki nie zmieni się wpis. Wiersz szuka
-skrypt po ID w kolumnie O. Brak konfiguracji (BUDZET_ARKUSZ_URL, BUDZET_ARKUSZ_SEKRET w <hub>/.dom/sekrety.env; zmienne
+skrypt po ID w kolumnie O; ID już w O (`juz` – np. po ponow albo po zamknięciu) -> od razu popraw bieżącą treścią, potem
+znacznik. Blokada zamknięcia (plik miesiace/.zamkniecie, ważna BLOKADA_MIN minut) – sync czeka, wpisy zostają w pliku. Brak konfiguracji (BUDZET_ARKUSZ_URL, BUDZET_ARKUSZ_SEKRET w <hub>/.dom/sekrety.env; zmienne
 środowiska o tych nazwach nadpisują plik) -> sync i kontrola kończą się kodem 0 jedną linią: zapisy czekają w pliku,
 zamknięcie miesiąca dopisze je po ID. Komunikaty niosą tylko liczby, daty i ID – bez kwot i opisów.
 """
-import argparse, json, os, re, sys, time
+import argparse, http.client, json, os, re, sys, time
 import urllib.error
 import urllib.request
 from datetime import datetime, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import wspolne  # noqa: E402
 from wspolne import (ARKUSZ_OD, HUB, blokada_wpisow, czytaj_wpisy, miesiace_wpisow, skrot, wczytaj,  # noqa: E402
                      wiersz_wpisu, zapisz, zapisz_wpisy)
 
@@ -31,6 +34,7 @@ PACZKA = 25
 ZALEGLE_H = 24          # kontrola: niewysłane albo nieusunięte dłużej -> problem
 DOKUMENTACJA = Path(__file__).resolve().parents[2] / 'docs' / 'budzet-arkusz.md'
 ETYKIETA = '[budzet-arkusz]'
+BLOKADA_MIN = 60        # porzuconą blokadę zamknięcia sync ignoruje po tym czasie
 
 
 class BladKonfiguracji(Exception):
@@ -38,7 +42,9 @@ class BladKonfiguracji(Exception):
 
 
 class BladArkusza(Exception):
-    pass
+    def __init__(self, tekst, siec=False):
+        super().__init__(tekst)
+        self.siec = siec  # chwilowy brak połączenia (kontrola: kod 0), w przeciwieństwie do złego sekretu, wersji, nagłówków
 
 
 def konfiguracja():
@@ -62,9 +68,9 @@ def wyslij(k, akcja, **dane):
         with urllib.request.urlopen(zad, timeout=LIMIT_S) as odp:
             tresc = odp.read().decode('utf-8', 'replace')
     except urllib.error.HTTPError as e:
-        raise BladArkusza(f'HTTP {e.code}') from None
-    except OSError as e:
-        raise BladArkusza(type(e).__name__) from None
+        raise BladArkusza(f'HTTP {e.code}', siec=e.code >= 500 or e.code == 429) from None
+    except (OSError, http.client.HTTPException) as e:
+        raise BladArkusza(type(e).__name__, siec=True) from None
     try:
         wynik = json.loads(tresc)
     except ValueError:
@@ -143,10 +149,37 @@ def zapisz_wyniki(znaczniki, usuniete):
                 zapisz_wpisy(m, reszta)
 
 
+def plik_blokady():
+    return wspolne.DANE / 'miesiace' / '.zamkniecie'
+
+
+def blokada_zamkniecia():
+    """Czas założenia świeżej blokady (napis) albo None – porzucona po BLOKADA_MIN minut się nie liczy."""
+    p = plik_blokady()
+    if not p.exists() or time.time() - p.stat().st_mtime > BLOKADA_MIN * 60:
+        return None
+    return p.read_text(encoding='utf-8').strip() or '?'
+
+
+def blokada(akcja):
+    p = plik_blokady()
+    if akcja == 'zaloz':
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(teraz(), encoding='utf-8')
+        return f'blokada zamknięcia założona ({teraz()}, ważna {BLOKADA_MIN} min) – sync nic nie wysyła'
+    if p.exists():
+        p.unlink()
+    return 'blokada zamknięcia zdjęta – uruchom sync'
+
+
 def sync(k, proba):
     dop, pop, usu, bez = plan()
     licz = {'dopisane': 0, 'juz_w_arkuszu': 0, 'poprawione': 0, 'usuniete': 0, 'bez_kategorii': len(bez), 'bledy': 0}
     bledy = []
+    zb = blokada_zamkniecia()
+    if zb and not proba:
+        print(f'{ETYKIETA} sync: zamknięcie miesiąca w toku (blokada od {zb}) – {len(dop) + len(pop) + len(usu)} zapisów czeka w pliku')
+        return licz, bledy
     if not skonfigurowane(k):
         n = len(dop) + len(pop) + len(usu)
         print(f'{ETYKIETA} sync: nieskonfigurowane (brak BUDZET_ARKUSZ_URL / BUDZET_ARKUSZ_SEKRET w .dom/sekrety.env) – '
@@ -183,6 +216,15 @@ def sync(k, proba):
                 bledy.append(f'{akcja}: {e} – zapisy czekają w pliku')
                 break
             po_id = {w['id']: w for w in paczka}
+            juz = [r for r in wyniki if r.get('ok') and r.get('juz')]
+            if juz:  # ID było już w O (ponow, zamknięcie) – wiersz dostaje bieżącą treść, dopiero potem znacznik
+                try:
+                    pop_juz = {x['id']: x for x in wyslij(k, 'popraw', wiersze=[wiersz_wpisu(po_id[r['id']]) for r in juz])['wyniki']}
+                except BladArkusza as e:
+                    pop_juz = {r['id']: {'ok': False, 'blad': str(e)} for r in juz}
+                for r in juz:
+                    x = pop_juz.get(r['id'], {'ok': False, 'blad': 'brak odpowiedzi'})
+                    r.update(ok=x.get('ok'), blad=x.get('blad'), wiersz=x.get('wiersz', r.get('wiersz')))
             for r in wyniki:
                 if r.get('ok'):
                     znaczniki[r['id']] = {'wiersz': r.get('wiersz'), 'skrot': skrot(po_id[r['id']]), 'czas': teraz()}
@@ -196,6 +238,8 @@ def sync(k, proba):
                 if r.get('ok'):
                     usuniete.add(r['id'])
                     licz['usuniete'] += 1
+                    if r.get('zostal'):
+                        print(f"  wiersz {r.get('wiersz')} zostaje – ma płatność z wyciągu (zdjęto ID wpisu {r['id']})")
                 else:
                     licz['bledy'] += 1
                     bledy.append(f"usuń {r['id']}: {str(r.get('blad'))[:120]}")
@@ -278,8 +322,8 @@ def przypnij(k, mies, proba):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('polecenie', choices=['sync', 'kontrola', 'ponow', 'przypnij', 'sprawdz', 'kod'])
-    ap.add_argument('ids', nargs='*', help='ponow: ID zapisów')
+    ap.add_argument('polecenie', choices=['sync', 'kontrola', 'ponow', 'przypnij', 'sprawdz', 'kod', 'blokada'])
+    ap.add_argument('ids', nargs='*', help='ponow: ID zapisów; blokada: zaloz albo zdejmij')
     ap.add_argument('--proba', action='store_true', help='sync, przypnij: tylko pokaż, co poszłoby do arkusza')
     ap.add_argument('--cicho', action='store_true', help='jedna linia wyniku (dla automatów)')
     ap.add_argument('--miesiac', help='przypnij: RRRR-MM')
@@ -294,7 +338,12 @@ def main(argv=None):
     if a.polecenie == 'ponow':
         if not a.ids:
             ap.error('ponow: podaj ID zapisów')
-        print(f'{ETYKIETA} ponow: wyczyszczono znacznik w {ponow(a.ids)} zapisach – następny sync dopisze wiersze')
+        print(f'{ETYKIETA} ponow: wyczyszczono znacznik w {ponow(a.ids)} zapisach – następny sync dopisze wiersz albo, gdy ID już jest w arkuszu, poprawi go')
+        return 0
+    if a.polecenie == 'blokada':
+        if a.ids not in (['zaloz'], ['zdejmij']):
+            ap.error('blokada: podaj zaloz albo zdejmij')
+        print(f'{ETYKIETA} {blokada(a.ids[0])}')
         return 0
     if a.polecenie == 'przypnij' and not a.miesiac:
         ap.error('przypnij: podaj --miesiac RRRR-MM')
@@ -308,9 +357,11 @@ def main(argv=None):
         elif a.polecenie == 'kontrola':
             try:
                 licz, problemy = kontrola(k)
-            except BladArkusza as e:  # chwilowy brak połączenia to nie „wpis bez wiersza” – trwały problem zgłosi sync
-                print(f'{ETYKIETA} kontrola pominięta – arkusz: {e}')
-                return 0
+            except BladArkusza as e:  # chwilowy brak połączenia to nie „wpis bez wiersza”; trwały błąd (sekret, wersja) – 🔔
+                if e.siec:
+                    print(f'{ETYKIETA} kontrola pominięta – arkusz: {e}')
+                    return 0
+                raise
             linia = 'kontrola: ' + ', '.join(f'{n} {v}' for n, v in licz.items()) + f', problemy {len(problemy)}'
             bledy = ['; '.join(problemy)] if problemy else []  # jedna linia ✗ – automat przenosi ją do komunikatu 🔔
         else:

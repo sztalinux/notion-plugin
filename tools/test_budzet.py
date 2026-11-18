@@ -273,6 +273,73 @@ class PrzeplywArkusz(unittest.TestCase):
         self.assertEqual(m['przypiecia'][0]['wiersze'], [{'id': 'wp-1', 'wiersz': 2, 'kwota': 30.3},
                                                         {'id': 'wp-2', 'wiersz': 3, 'kwota': None}])
 
+    def zamknij(self, mies, ark, zen, wpisy):
+        self.ark(*ark)
+        self.zen_wiele(*zen)
+        for m, ws in wpisy.items():
+            self.wpisz(m, *ws)
+        return self.importuj('--zen', 'zen.csv', mies=mies)
+
+    def test_s1_reczny_wiersz_i_wpis_bez_wiersza_bez_dubla(self):
+        """Recenzja POM-29, S1/S1b/S2: płatność zajęta przez ręczny wiersz (1:1, suma) albo po ID – wpis bez wiersza nie
+        daje drugiego wiersza ani decyzji z kategorią."""
+        x = ('30 Nov 2026', 'X', '-1.00')
+        for ark, zen, sposob in (
+                ([wiersz_ark('2026-11-10', 100.0, 'K-bank', '')], [('10 Nov 2026', 'SKLEP', '-100.00'), x], '1:1'),
+                ([wiersz_ark('2026-11-10', 150.0, 'K-bank', '')],
+                 [('10 Nov 2026', 'SKLEP', '-100.00'), ('11 Nov 2026', 'SKLEP2', '-50.00'), x], 'w sumie 2')):
+            m = self.zamknij('2026-11', ark, zen, {'2026-11': [self.karta('wa', '2026-11-10', 100.0)]})
+            self.assertEqual(m['wiersze'], [])
+            self.assertTrue(all(sposob in j['sposob'] for j in m['juz']))
+            self.assertNotIn('wa', [d['id'] for d in m['decyzje']])
+            self.assertTrue(any(p['id'] == 'wa' and 'już w arkuszu' in p['powod'] for p in m['pominiete']))
+        m = self.zamknij('2026-11', [], [('10 Nov 2026', 'SKLEP', '-100.00'), x], {'2026-11': []})
+        bid = next(d['id'] for d in m['decyzje'] if abs(d['kwota'] + 100) < 0.01)
+        m = self.zamknij('2026-11', [wiersz_ark('2026-11-10', 100.0, 'K-bank', bid)], [('10 Nov 2026', 'SKLEP', '-100.00'), x],
+                         {'2026-11': [self.karta('wa', '2026-11-10', 100.0)]})
+        self.assertEqual(([j['sposob'] for j in m['juz']], m['wiersze']), (['zaimportowane wcześniej'], []))
+        self.assertNotIn('wa', [d['id'] for d in m['decyzje']])
+
+    def test_s3_wpis_czekajacy_nie_ginie(self):
+        """S3a: wpis z końca miesiąca przy krótkim wyciągu czeka i jest linia w „Brakuje”; S3b: płatność z poprzedniego
+        miesiąca w imporcie kolejnego – wiersz z płatności; bez płatności także w kolejnym – decyzja."""
+        wc = {'2026-11': [self.karta('wc', '2026-11-29', 40.0)]}
+        m = self.zamknij('2026-11', [], [('25 Nov 2026', 'X', '-1.00')], wc)
+        self.assertTrue(any(p['id'] == 'wc' and 'czeka' in p['powod'] for p in m['pominiete']))
+        self.assertTrue(any('kończy się 25.11' in b for b in m['braki']))
+        m = self.zamknij('2026-12', [], [('25 Nov 2026', 'X', '-1.00'), ('30 Nov 2026', 'SKLEP', '-40.00'),
+                                         ('31 Dec 2026', 'X', '-1.00')], wc)
+        self.assertEqual([(w['data'], w['kwota']) for w in m['wiersze']], [('2026-11-30', 40.0)])
+        m = self.zamknij('2026-12', [], [('25 Nov 2026', 'X', '-1.00'), ('31 Dec 2026', 'X', '-1.00')], wc)
+        self.assertIn('wc', [d['id'] for d in m['decyzje']])
+
+    def test_przenies_na_swiezym_odczycie(self):
+        """Recenzja POM-29, 4–5 i 14: pod blokadą zamknięcia przenies.py liczy numery ze świeżego odczytu, odrzuca wiersze,
+        których ID jest już w O, a zwrot do wiersza bez ID przenosi tylko przy zgodnej treści."""
+        reczny = wiersz_ark('2026-12-03', 80.0, 'K-bank', '')
+        self.ark(reczny)
+        zwrot = dict(id='bzw0000001', data='2026-12-09', konto='K-bank', osoba='Osoba A', kwota=10.0, opis='ZWROT', zrodlo='zwrot',
+                     pewnosc='Zwykle', regula='', propozycja=None, opcje=[], uwaga='')
+        auto = dict(id='wz9', data='2026-12-04', konto='Gotówka', osoba='Osoba B', typ='Wydatek', kat='Zakupy', pod='Regularne',
+                    regula='zak', opis_w='x', kwota_ark=5.0, skladniki=None, ids_w=['wz9'], notatki='z wpisu')
+        (self.dane / 'miesiace').mkdir(exist_ok=True)
+        (self.dane / 'miesiace' / '2026-12.json').write_text(json.dumps(dict(
+            miesiac='2026-12', arkusz_plik='ark.json', auto=[auto], decyzje=[zwrot], wiersze=[], przypiecia=[])))
+        db = self.dane / 'miesiace' / 'db-2026-12' / 'decyzje'
+        db.mkdir(parents=True)
+        (db / 'bzw0000001.json').write_text(json.dumps({'akcja': 'odejmij', 'wiersz': 2}))
+        zapis = lambda: json.loads((self.dane / 'miesiace' / '2026-12-zapis.json').read_text(encoding='utf-8'))
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        self.assertEqual(([w[14] for w in zapis()['wiersze']], zapis()['zmiany'][0]['wiersz']), (['wz9'], 2))
+        swiezy = self.dane / 'swiezy.json'  # sync dopisał w międzyczasie wiersz z wz9 nad ręcznym (inny układ)
+        swiezy.write_text(json.dumps({'values': [['Data'], wiersz_ark('2026-12-04', 5.0, 'Gotówka', 'wz9'), reczny]}))
+        self.uruchom('przenies.py', '--miesiac', '2026-12', '--arkusz', 'swiezy.json')
+        self.assertEqual((zapis()['wiersze'], zapis()['zmiany'][0]['wiersz']), ([], 3))
+        inny = wiersz_ark('2026-12-03', 81.0, 'K-bank', '')  # ktoś zmienił kwotę ręcznego wiersza – odmowa
+        swiezy.write_text(json.dumps({'values': [['Data'], inny]}))
+        self.uruchom('przenies.py', '--miesiac', '2026-12', '--arkusz', 'swiezy.json')
+        self.assertEqual((zapis()['zmiany'], [x['id'] for x in zapis()['do_wyjasnienia']]), ([], ['bzw0000001']))
+
     def test_regula_do_dnia_x_bez_wierszy_z_wpisow(self):
         self.zen_wiele(('5 Dec 2026', 'SKLEP STALY', '-10.00'), ('30 Dec 2026', 'INNE', '-1.00'))
         self.ark(wiersz_ark('2026-12-20', 99.0, 'K-bank', 'wk3'))  # wiersz z wpisu po dacie płatności

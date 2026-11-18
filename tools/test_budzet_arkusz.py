@@ -50,9 +50,12 @@ class Atrapa:
         elif akcja == 'usun':
             for id_ in d['ids']:
                 n = self.numer(id_)
-                if n:
+                obce = [t for t in self.w[n - 2]['o'] if not t.startswith('w')] if n else []
+                if obce:  # płatność z wyciągu – wiersz zostaje bez ID wpisu
+                    self.w[n - 2]['o'] = obce
+                elif n:
                     del self.w[n - 2]
-                wyniki.append({'id': id_, 'ok': True, 'wiersz': n})
+                wyniki.append({'id': id_, 'ok': True, 'wiersz': n, 'zostal': bool(obce)})
         elif akcja == 'przypnij':
             for p in d['przypiecia']:
                 for id_ in p['ids']:
@@ -189,7 +192,7 @@ class Synchronizacja(unittest.TestCase):
 
     def test_kontrola_bez_polaczenia_nie_zglasza(self):
         def blad(k, akcja, **d):
-            raise AB.BladArkusza('timeout')
+            raise AB.BladArkusza('timeout', siec=True)
         AB.wyslij = blad
         os.environ.update(BUDZET_ARKUSZ_URL=K['url'], BUDZET_ARKUSZ_SEKRET=K['sekret'])
         try:
@@ -201,6 +204,46 @@ class Synchronizacja(unittest.TestCase):
         finally:
             del os.environ['BUDZET_ARKUSZ_URL'], os.environ['BUDZET_ARKUSZ_SEKRET']
         self.assertIn('kontrola pominięta', out.getvalue())
+
+    def test_usun_wiersz_z_platnoscia_zostaje(self):
+        self.atrapa.w.append(dict(wpis('w1', '2026-12-02'), o=['w1', 'b00000000aa'], kwota=12.5))
+        self.zapisz('2026-12', dict(wpis('w1', '2026-12-02'), arkusz={'wiersz': 2, 'skrot': 'x', 'czas': 'x'}, usuniety='2026-12-03 10:00'))
+        licz, bledy, out = self.sync()
+        self.assertEqual((licz['usuniete'], bledy, self.atrapa.w[0]['o'], self.plik('2026-12')), (1, [], ['b00000000aa'], {}))
+        self.assertIn('zostaje – ma płatność z wyciągu', out)
+
+    def test_kontrola_trwaly_blad_zglasza(self):
+        def blad(k, akcja, **d):
+            raise AB.BladArkusza('zły sekret')
+        AB.wyslij = blad
+        os.environ.update(BUDZET_ARKUSZ_URL=K['url'], BUDZET_ARKUSZ_SEKRET=K['sekret'])
+        try:
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(AB.main(['kontrola', '--cicho']), 1)
+        finally:
+            del os.environ['BUDZET_ARKUSZ_URL'], os.environ['BUDZET_ARKUSZ_SEKRET']
+
+    def test_juz_w_arkuszu_dostaje_biezaca_tresc(self):
+        """Recenzja POM-29, 3: ID już w O (ponow, zamknięcie) – popraw bieżącą treścią, dopiero potem znacznik."""
+        self.atrapa.w.append(dict(wpis('w1', '2026-12-02', kwota=-12.5), o=['w1'], kwota=12.5, opis='stary'))
+        self.zapisz('2026-12', wpis('w1', '2026-12-02', kwota=-15.0))
+        licz, _, _ = self.sync()
+        self.assertEqual((licz['juz_w_arkuszu'], self.atrapa.wywolania[-1], self.atrapa.w[0]['kwota']), (1, 'popraw', -15.0 * -1))
+        self.assertTrue(self.plik('2026-12')['w1']['arkusz'])
+
+    def test_blokada_zamkniecia(self):
+        self.zapisz('2026-12', wpis('w1', '2026-12-02'))
+        AB.blokada('zaloz')
+        with redirect_stdout(io.StringIO()) as out:
+            licz, bledy = AB.sync(K, False)
+        self.assertEqual((self.atrapa.wywolania, bledy), ([], []))
+        self.assertIn('zamknięcie miesiąca w toku', out.getvalue())
+        p = AB.plik_blokady()
+        os.utime(p, (p.stat().st_atime - 3700, p.stat().st_mtime - 3700))  # porzucona po 60 min – sync ją ignoruje
+        self.assertEqual(AB.sync(K, False)[0]['dopisane'], 1)
+        AB.blokada('zaloz')
+        AB.blokada('zdejmij')
+        self.assertIsNone(AB.blokada_zamkniecia())
 
     def test_ponow(self):
         self.zapisz('2026-12', wpis('w1', '2026-12-02'))

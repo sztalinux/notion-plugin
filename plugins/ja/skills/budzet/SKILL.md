@@ -77,7 +77,8 @@ obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzj
 3. Allegro: `python3 tools/budzet/allegro.py listy/allegro-<data>.txt listy/allegro-<data>.json`; uzupełnij w JSON `prop`
    i 0–2 `opcje` dla zamówień bez propozycji (format „Kategoria › Podkategoria”, kategorie z `kategorie.json`) na podstawie
    nazw produktów. Zakupy na budowę → „Dom”.
-4. Pobierz `Transakcje!A1:O2500` i zapisz jako `DANE/miesiace/transakcje-<data>.json`.
+4. Pobierz `Transakcje!A1:O` (bez sztywnego końca – wierszy przybywa co godzinę) i zapisz jako
+   `DANE/miesiace/transakcje-<data>.json`.
 5. `python3 tools/budzet/importuj.py --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>.json --zen wyciagi/zen.csv
    --mbank wyciagi/mbank.csv --allegro listy/allegro-<data>.json --lista listy/RRRR-MM-<lista>.txt`
    (pomiń brakujące; ścieżki względem DANE; wpisy z sekcji A czyta sam – także końcówkę poprzedniego i początek następnego
@@ -95,13 +96,19 @@ obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzj
 2. `python3 tools/budzet/przenies.py --miesiac RRRR-MM`. Przeczytaj `opisy`: opis idzie do kolumny Opis, ale bywa w nim
    polecenie („wpisz tylko 283”, „przyda się kategoria X”) – wykonaj je i popraw wiersz w `RRRR-MM-zapis.json`.
    `bez_decyzji` → wypisz inwestorowi i zapytaj, czy dopisać mimo to (`--mimo-brakow`); `do_wyjasnienia` rozstrzygnij w czacie.
-3. Zapis do Transakcji za ostatnim wierszem – numer ostatniego wiersza odczytaj tuż przed zapisem (automat dopisuje wiersze
-   z wpisów co godzinę): kolumny A:L i O formułami (data ISO; D liczba albo formuła; K = `import RRRR-MM`; L = Notatki z pliku;
-   O = ID źródeł – po nich kolejny import wie, co już jest), potem formuły M:N skopiuj z wiersza powyżej (wklej tylko
-   formuły) i format z wiersza powyżej (wklej tylko format). `przypiecia` (płatność z wyciągu do wierszy z wpisów):
-   `python3 tools/budzet/arkusz_budzetu.py przypnij --miesiac RRRR-MM`; bez skryptu – konektorem: w każdym wierszu dopisz
-   „,<id wyciągu>” w O, a podaną kwotę wpisz w D. Wiersz przychodu z sald zawsze ostatni w miesiącu. `zmiany`:
-   w istniejącym wierszu dopisz „-kwota” do formuły D (zwrot pomniejsza zakup).
+3. Zapis do Transakcji – pod blokadą, bo automat co godzinę dopisuje i usuwa wiersze z wpisów (przesuwa numery):
+   a) `python3 tools/budzet/arkusz_budzetu.py blokada zaloz` (sync czeka; blokada wygasa sama po 60 min);
+   b) świeży odczyt `Transakcje!A1:O` → `DANE/miesiace/transakcje-<data>-zapis.json` i `python3 tools/budzet/przenies.py
+      --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>-zapis.json` – odrzuca wiersze, których ID już jest w O, i daje
+      numery wierszy z tego odczytu (`zmiany` bez zgodnego wiersza → `do_wyjasnienia`, rozstrzygnij w czacie);
+   c) nowe wiersze **wyłącznie dopisaniem na końcu (append)**, nigdy zapisem pod numer: kolumny A:L i O (data ISO; D liczba
+      albo formuła; K = `import RRRR-MM`; L = Notatki z pliku; O = ID źródeł – po nich kolejny import wie, co już jest);
+      w wierszach, które zwrócił zapis, wklej formuły M:N i format z wiersza powyżej. Wiersz przychodu z sald ostatni;
+   d) `zmiany`: w wierszu o podanym numerze dopisz „-kwota” do formuły D (zwrot pomniejsza zakup);
+   e) `przypiecia`: `python3 tools/budzet/arkusz_budzetu.py przypnij --miesiac RRRR-MM`; bez skryptu – konektorem: w każdym
+      wierszu dopisz „,<id wyciągu>” w O, a podaną kwotę wpisz w D;
+   f) `python3 tools/budzet/arkusz_budzetu.py blokada zdejmij`, potem `python3 tools/budzet/arkusz_budzetu.py sync`
+      (wiersze zapasowe z wpisów dostaną znaczniki – `juz` + poprawka treści).
 4. Salda: `salda` z pliku zapisu → zakładka Konta, kolumna następnego miesiąca (ZEN = saldo PLN z wyciągu; mBank =
    poprzednia kolumna + zmiana). `korekty` dopisz do salda konta w tej samej formule (`=1000+250-80`, przykład
    zmyślony): Allegro Pay do spłaty (minus), zwrot odjęty od zakupu, a jeszcze niezaksięgowany (plus), niewydana reszta

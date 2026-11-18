@@ -35,10 +35,11 @@ wpisach – osobnej listy gotówki na koniec miesiąca nie ma.
 
 | Polecenie | Co robi | Kto woła |
 |---|---|---|
-| `sync` | zapisy bez znacznika → `dopisz` (ID już w O = tylko znacznik, bez zmiany wiersza); zmieniona treść → `popraw`; usunięte → `usun`; zapis bez kategorii czeka na zamknięcie | automat po przebiegu; agent w Claude Code po `wpis.py dodaj` / `usun` |
+| `sync` | zapisy bez znacznika → `dopisz` (ID już w O → od razu `popraw` bieżącą treścią, potem znacznik); zmieniona treść → `popraw`; usunięte → `usun`; zapis bez kategorii czeka na zamknięcie; przy blokadzie zamknięcia nic nie wysyła (kod 0) | automat po przebiegu; agent w Claude Code po `wpis.py dodaj` / `usun` |
 | `sync --proba` | co by poszło, z odczytem kolumny O (gdy skrypt jest wdrożony): nowy wiersz, już w arkuszu, popraw, usuń; nic nie zapisuje | pierwsza synchronizacja; ręcznie |
-| `kontrola` | tylko odczyt: zapis wysłany, a wiersza z jego ID nie ma; zapis niewysłany od ponad doby; wiersz z ID wpisu bez zapisu w pliku; usunięcie czekające ponad dobę – kod 1, gdy coś jest | automat po nocnym przebiegu |
-| `ponow <id>…` | czyści znacznik – następny `sync` dopisze wiersz od nowa | agent po odpowiedzi „dopisz ponownie” |
+| `kontrola` | tylko odczyt: zapis wysłany, a wiersza z jego ID nie ma; zapis niewysłany od ponad doby; wiersz z ID wpisu bez zapisu w pliku; usunięcie czekające ponad dobę – kod 1, gdy coś jest; chwilowy brak połączenia – kod 0, trwały błąd (sekret, wersja kodu, nagłówki) – kod 1 | automat po nocnym przebiegu |
+| `ponow <id>…` | czyści znacznik – następny `sync` dopisze wiersz od nowa, a gdy ID jest już w O – poprawi go bieżącą treścią | agent po odpowiedzi „dopisz ponownie” |
+| `blokada zaloz` / `blokada zdejmij` | blokada zamknięcia miesiąca (plik `miesiace/.zamkniecie` w folderze danych, ważna 60 min – porzuconą `sync` potem ignoruje): w tym czasie `sync` nic nie wysyła, więc numery wierszy się nie przesuwają, a wiersz zapasowy nie pójdzie drugi raz | agent przy zamknięciu (C.3) |
 | `przypnij --miesiac RRRR-MM [--proba]` | przypięcia z `miesiace/RRRR-MM-zapis.json` (ID wyciągu do O wszystkich wierszy grupy, kwota z wyciągu do D) | agent przy zamknięciu (C.3) |
 | `sprawdz` | sekrety i ping (nazwa arkusza, wersja kodu, nagłówki Transakcji, strefa) | ręcznie, przy problemach |
 | `kod` | kod Apps Script z sekcji 8 (`\| LANG=en_US.UTF-8 pbcopy` – do schowka) | przy wklejaniu i aktualizacji kodu |
@@ -56,6 +57,7 @@ niosą tylko liczby, daty i ID – bez kwot i opisów.
   w znaczniku jest informacyjny (usunięcie wiersza wyżej przesuwa numery).
 - `wpis.py dodaj` z tym samym `--id` przenosi znacznik (także gdy zmienił się miesiąc daty) – `sync` poprawi wiersz.
 - `wpis.py usun` dla zapisu ze znacznikiem zostawia znak `usuniety`; `sync` usuwa wiersz w arkuszu, potem zapis z pliku.
+  Wiersz z ID wyciągu w O (płatność przypięta przy zamknięciu) zostaje – skrypt zdejmuje tylko ID wpisu i dopisek „z wpisu”.
 - `popraw` nie rusza kwoty (D), gdy w O jest już ID wyciągu (kwota z wyciągu wygrywa), i zostawia pozostałe ID w O.
   Wiersz, w którym są ID kilku wpisów (np. wiersze listopadowe scalone ręcznie), nie jest poprawiany ani usuwany – błąd
   „wiersz ma też inne wpisy”.
@@ -120,9 +122,9 @@ Aktualizacja kodu: wklej nowy kod jak w kroku 1, potem Wdróż → Zarządzaj wd
 |---|---|---|
 | `ping` | – | `wersja`, `arkusz`, `wierszy`, `naglowek_ok`, `strefa` |
 | `odczyt` | – | `wiersze`: `[{wiersz, o, data, kwota}]` – każdy wiersz z niepustą kolumną O (data `RRRR-MM-DD`) |
-| `dopisz` | `wiersze`: `[W]` | `wyniki`: `[{id, ok, wiersz, juz}]` – `juz` = ID było w O, wiersz bez zmian |
+| `dopisz` | `wiersze`: `[W]` | `wyniki`: `[{id, ok, wiersz, juz}]` – `juz` = ID było w O, wiersz bez zmian (klient od razu wysyła `popraw` z bieżącą treścią) |
 | `popraw` | `wiersze`: `[W]` | `wyniki`: `[{id, ok, wiersz, kwota_z_wyciagu}]`; brak wiersza → `ok: false` |
-| `usun` | `ids`: `[id]` | `wyniki`: `[{id, ok, wiersz}]` – `wiersz: null`, gdy go nie było |
+| `usun` | `ids`: `[id]` | `wyniki`: `[{id, ok, wiersz, zostal}]` – `wiersz: null`, gdy go nie było; `zostal: true` – wiersz ma ID wyciągu w O, więc zostaje bez ID wpisu (płatność jest prawdziwa) |
 | `przypnij` | `przypiecia`: `[{id_wyciagu, ids: [id…], kwoty: {id: liczba}}]` | `wyniki`: `[{id_wyciagu, ok, wiersze}]` |
 
 `W` = `{id, data, status, typ, kwota, kat, pod, konto, osoba, opis, tag, notatki}` – `id` z prefiksem `w`, `data`
@@ -262,8 +264,11 @@ function ustawKwote(a, r, kwota) {
   if (typeof kwota === 'string') c.setFormula(kwota); else c.setValue(kwota);
 }
 
-/** Pola wpisywane A:L (bez D, gdy zachowajKwote) – wspólne dla dopisz i popraw. */
+/** Pola wpisywane A:L (bez D, gdy zachowajKwote) – wspólne dla dopisz i popraw. Opis, tag i Notatki jako tekst (@),
+ *  żeby „3/4” czy „2-3” nie stały się datą. */
 function zapiszPola(a, r, w, strefa, zachowajKwote) {
+  a.getRange(r, 9).setNumberFormat('@');
+  a.getRange(r, 11, 1, 2).setNumberFormat('@');
   a.getRange(r, 1, 1, 3).setValues([[Utilities.parseDate(w.data, strefa, 'yyyy-MM-dd'), tekst(w.status || 'Zrealizowane'),
     w.typ]]);
   if (!zachowajKwote) ustawKwote(a, r, w.kwota);
@@ -276,6 +281,8 @@ function dopisz(wiersze) {
   var strefa = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
   var kol = kolumnaO(a);
   var nowy = a.getLastRow() + 1;
+  var brak = nowy + wiersze.length - 1 - a.getMaxRows();
+  if (brak > 0) a.insertRowsAfter(a.getMaxRows(), brak);  // arkusz bez wolnych wierszy na końcu
   var wyniki = [];
   wiersze.forEach(function (w) {
     var blad = sprawdz(w);
@@ -284,10 +291,10 @@ function dopisz(wiersze) {
     if (juz.length) { wyniki.push({id: w.id, ok: true, wiersz: juz[0].wiersz, juz: true}); return; }
     var r = nowy++;
     if (r > 2) a.getRange(r - 1, 1, 1, KOL_O).copyTo(a.getRange(r, 1, 1, KOL_O), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+    a.getRange(r, KOL_O).setValue(w.id);  // ID najpierw: błąd w połowie zostawia wiersz z ID – następny sync go poprawi
     zapiszPola(a, r, w, strefa, false);
     a.getRange(r, 13, 1, 2).setFormulas([['=IF($A' + r + '="","",DATE(YEAR($A' + r + '),MONTH($A' + r + '),1))',
       '=IF($A' + r + '="","",YEAR($A' + r + '))']]);
-    a.getRange(r, KOL_O).setValue(w.id);
     a.getRange(r, 1).setNumberFormat(FORMAT_DATY);
     a.getRange(r, 4).setNumberFormat(FORMAT_KWOTY);
     a.getRange(r, 13).setNumberFormat(FORMAT_MIESIACA);
@@ -330,6 +337,13 @@ function usun(ids) {
     if (!wierszeId(kol, id).length) return {id: id, ok: true, wiersz: null};
     var k = wierszWpisu(kol, id);
     if (k.blad) return {id: id, ok: false, blad: k.blad};
+    var obce = k.tokeny.filter(function (t) { return t.charAt(0) !== 'w'; });
+    if (obce.length) {  // wiersz ma płatność z wyciągu – zostaje; znika tylko ID wpisu i dopisek „z wpisu”
+      a.getRange(k.wiersz, KOL_O).setValue(obce.join(','));
+      var notatki = a.getRange(k.wiersz, 12);
+      if (/^z (wpisu|paragonu)/.test(String(notatki.getValue()))) notatki.setValue('');
+      return {id: id, ok: true, wiersz: k.wiersz, zostal: true};
+    }
     a.deleteRow(k.wiersz);
     return {id: id, ok: true, wiersz: k.wiersz};
   })};

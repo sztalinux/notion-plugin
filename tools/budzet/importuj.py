@@ -66,8 +66,9 @@ for t in bank:
         para[t['id']] = (po_id[t['id']], 'zaimportowane wcześniej')
         po_id[t['id']]['uzyty'] = True
 
-# ---------- wpisy (wpis.py); karty: para z płatnością do złotówki różnicy, ±4 dni, także przez przełom miesiąca – przed parowaniem wierszy
-# ręcznych, bo wiersz z wpisu (ID w w kolumnie O) ma pierwszeństwo, a do „wpisane ręcznie do dnia X” się nie liczy
+# ---------- wpisy (wpis.py); karty: para z płatnością do złotówki różnicy, ±4 dni, także przez przełom miesiąca. Wpis, który ma już
+# wiersz w arkuszu (ID w w kolumnie O), paruje się przed wierszami ręcznymi (ma pierwszeństwo, a do „wpisane ręcznie do dnia X”
+# się nie liczy); wpis tylko w pliku – dopiero po nich, jak przed POM-29: płatność zajęta przez ręczny wiersz = wpis już w arkuszu
 PRZELOM = 4
 POCZ = date(R, M, 1)
 POPRZ = f'{R - (M == 1)}-{(M - 2) % 12 + 1:02d}'
@@ -92,15 +93,36 @@ for (konto, _), cz in czesci.items():
         continue  # wszystkie części już przypięte do płatności przy wcześniejszym zamknięciu
     jednostki.append(dict(konto=konto, czesci=cz, wiersze=wr, kwota=round(sum(w['kwota'] for w in cz), 2),
                           data=min(dzien_wpisu(w) for w in cz)))
-for u in sorted(jednostki, key=lambda u: u['data']):
-    k = [t for t in bank if t['id'] not in para and not t.get('jednostka') and t['konto'] == u['konto']
-         and (t['kwota'] > 0) == (u['kwota'] > 0) and abs(abs(t['kwota']) - abs(u['kwota'])) <= 1.0
-         and abs((t['data'] - u['data']).days) <= PRZELOM]
-    if k:
-        t = min(k, key=lambda t: (abs(abs(t['kwota']) - abs(u['kwota'])), abs((t['data'] - u['data']).days)))
-        t['jednostka'], u['t'] = u, t
-        if t['mies'] == MIES and any(u['wiersze']):
-            para[t['id']] = (next(r for r in u['wiersze'] if r), 'z wpisu – przypięte do wiersza')
+
+
+def kandydaci_wpisu(u, wolne):
+    return [t for t in bank if (t['id'] not in para) == wolne and not t.get('jednostka') and t['konto'] == u['konto']
+            and (t['kwota'] > 0) == (u['kwota'] > 0) and abs(abs(t['kwota']) - abs(u['kwota'])) <= 1.0
+            and abs((t['data'] - u['data']).days) <= PRZELOM]
+
+
+def najblizsza(u, k):
+    return min(k, key=lambda t: (abs(abs(t['kwota']) - abs(u['kwota'])), abs((t['data'] - u['data']).days)))
+
+
+def paruj_wpisy(z_wierszem):
+    for u in sorted(jednostki, key=lambda u: u['data']):
+        if bool(any(u['wiersze'])) != z_wierszem or u.get('t') or u.get('pokryty'):
+            continue
+        k = kandydaci_wpisu(u, True)
+        if k:
+            t = najblizsza(u, k)
+            t['jednostka'], u['t'] = u, t
+            if t['mies'] == MIES and z_wierszem:
+                para[t['id']] = (next(r for r in u['wiersze'] if r), 'z wpisu – przypięte do wiersza')
+        elif not z_wierszem:
+            k = kandydaci_wpisu(u, False)  # płatność już w arkuszu (po ID, 1:1, ≈1:1, w sumie) – wpis jest w tym wierszu
+            if k:
+                t = najblizsza(u, k)
+                t['jednostka'], u['pokryty'] = u, para[t['id']]
+
+
+paruj_wpisy(True)
 
 nasze = [r for r in ark if r['konto'] in KONTA_A and r['kwota'] is not None and not r.get('uzyty') and not z_wpisu(r)]
 pozbank = defaultdict(list)
@@ -134,6 +156,8 @@ for r in nasze:
                 para[t['id']] = (r, f'w sumie {n} płatności')
             r['uzyty'] = True
             break
+
+paruj_wpisy(False)
 
 ostatnia = {}
 for r in nasze:
@@ -238,8 +262,15 @@ for t in bank:
 przypiecia, obsluzone, czeka, niepelne = [], set(), 0, {}
 for u in sorted(jednostki, key=lambda u: u['data']):
     t, pary = u.get('t'), list(zip(u['czesci'], u['wiersze']))
-    if t is not None and t['mies'] == MIES:
-        if not any(u['wiersze']) and len(pary) == 1:
+    if u.get('pokryty'):
+        r, sp = u['pokryty']
+        for w, _ in pary:
+            if w['data'][:7] == MIES:
+                pominiete.append(dict(baza_wpisu(w), powod=f"z wpisu – płatność już w arkuszu (wiersz {r['wiersz']}, {sp})"))
+        continue
+    # płatność z tego miesiąca albo – dla wpisu z końca poprzedniego, który tam czekał – z poprzedniego (nie zaimportowana)
+    if t is not None and (t['mies'] == MIES or (t['mies'] == POPRZ and u['data'] < POCZ)):
+        if not any(u['wiersze']) and len(pary) == 1 and t['mies'] == MIES:
             t['wpis'] = u['czesci'][0]  # wpisu nie ma w arkuszu: wiersz z płatności z kategorią wpisu (pętla wyciągu)
             continue
         kw_cz = {w['id']: (r['kwota'] if r else kwota_pozycji(w['kwota'], w['typ'])) for w, r in pary}
@@ -269,6 +300,8 @@ for u in sorted(jednostki, key=lambda u: u['data']):
         continue  # początek następnego miesiąca bez pary w tym – rozstrzygnie import następnego
     pokryte = u['konto'] in ZASIEG and ZASIEG[u['konto']] >= u['data'] + timedelta(days=PRZELOM)
     if not pokryte and u['data'] >= KONIEC - timedelta(days=PRZELOM - 1):
+        if u['konto'] not in ZASIEG or ZASIEG[u['konto']] < KONIEC:
+            niepelne[u['konto']] = ZASIEG.get(u['konto'])
         for w, r in pary:  # ostatnie dni miesiąca: para może być w wyciągu kolejnego – import kolejnego wczyta ten plik
             czeka += 1
             pominiete.append(dict(baza_wpisu(w), powod='z wpisu – wyciąg nie obejmuje jeszcze 4 dni po wpisie; czeka na import '
@@ -440,7 +473,7 @@ for z in zam:
 
 for konto, koniec in sorted(niepelne.items()):
     braki.append(f"wyciąg {konto} " + (f"kończy się {koniec.strftime('%d.%m')}" if koniec else 'brak') +
-                 ' – pobierz cały miesiąc (wpisy z kart bez pary czekają na stronie decyzji)')
+                 ' – pobierz cały miesiąc (wpisy z kart bez pary są na stronie decyzji albo czekają na kolejny import)')
 
 # ---------- lista skrótów drugiej osoby (gotówka tylko z wpisów)
 KONTA = U.get('konta_list', {})
@@ -611,7 +644,8 @@ if kor:
     salda['korekty'] = dict(konto=U.get('konto_zen'), pozycje=kor)
 
 drzewo = [dict(typ=t, kat=k, pod=p) for t, ks in DRZEWO.items() for k, p in ks.items()]
-zapisz(f'miesiace/{MIES}.json', dict(miesiac=MIES, wygenerowano=datetime.now().strftime('%Y-%m-%d %H:%M'), wiersze=wiersze,
+zapisz(f'miesiace/{MIES}.json', dict(miesiac=MIES, wygenerowano=datetime.now().strftime('%Y-%m-%d %H:%M'), arkusz_plik=A.arkusz,
+                                     wiersze=wiersze,
                                      auto=auto, decyzje=decyzje, pominiete=pominiete, juz=juz, przypiecia=przypiecia,
                                      braki=braki, salda=salda,
                                      kategorie=drzewo, etykieta_listy=U.get('etykieta_listy', 'Lista wydatków'),

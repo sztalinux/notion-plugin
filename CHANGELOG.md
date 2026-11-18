@@ -55,6 +55,18 @@ Budżet domowy: każdy wydatek z wpisu od razu w arkuszu „Budżet domowy”, z
 - **Czynność inwestora (raz):** wkleić kod z `docs/budzet-arkusz.md` (sekcja 8) do Apps Script arkusza „Budżet domowy”,
   wdrożyć jako aplikację internetową (Ja, Każdy), dopisać `BUDZET_ARKUSZ_URL` i `BUDZET_ARKUSZ_SEKRET` do `.dom/sekrety.env`,
   sprawdzić `arkusz_budzetu.py sprawdz` i `sync --proba` (sekcja 6). 19.11: gotówkę z 1–17.11 dopisać jako wpisy.
+- Poprawki po recenzji: `importuj.py` – płatność z wyciągu przed wierszami ręcznymi zajmuje tylko wpis, który ma już wiersz
+  z ID w O; wpis tylko w pliku paruje się po nich, a płatność zajęta przez ręczny wiersz (1:1, ≈1:1, suma) albo
+  zaimportowana wcześniej po ID = wpis już w arkuszu (bez dubla i bez decyzji z kategorią); wpis z końca poprzedniego
+  miesiąca z płatnością z tamtego miesiąca – wiersz albo przypięcie w imporcie kolejnego; czekający wpis daje linię
+  w „Brakuje”, gdy wyciąg nie sięga końca miesiąca. `arkusz_budzetu.py` – `juz` przy `dopisz` (ponow, zamknięcie) od razu
+  `popraw` bieżącą treścią, potem znacznik; `blokada zaloz|zdejmij` na czas zapisu zamknięcia (sync czeka, 60 min);
+  `kontrola` – trwały błąd (sekret, wersja, nagłówki) kod 1, sieć kod 0; `HTTPException` bez tracebacku; komunikat „wiersz
+  zostaje”. `przenies.py --arkusz` – świeży odczyt pod blokadą: odrzuca wiersze z ID już w O, numery `zmiany`
+  i `przypiecia` z odczytu (wiersz bez ID tylko przy zgodnej dacie, kwocie i koncie), bez dubla ID w O. Skrypt arkusza
+  (nadal `WERSJA = 1`): `usun` zostawia wiersz z ID wyciągu (zdejmuje ID wpisu i dopisek), `dopisz` zapisuje ID w O
+  najpierw i dokłada wiersze, gdy brak wolnych, opis / tag / Notatki jako tekst. Procedura `budzet`: B.4 zakres
+  `A1:O`, C.3 pod blokadą, nowe wiersze tylko dopisaniem na końcu. Testy S1–S3b z recenzji.
 
 
 ## dom-budowa [3.18.4] – 2026-11-18
