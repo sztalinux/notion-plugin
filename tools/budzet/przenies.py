@@ -23,7 +23,7 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import DANE, U, arkusz, formula_sumy, nazwa, norm, wczytaj, zapisz  # noqa: E402
+from wspolne import DANE, U, arkusz, formula_sumy, indeks_id, nazwa, norm, wczytaj, zapisz  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--miesiac', required=True)
@@ -116,9 +116,21 @@ przypiecia = D.get('przypiecia', [])
 juz_sa = []
 if A.arkusz:  # pod blokadą zamknięcia: numery i filtr z bieżącego stanu arkusza, nie ze zrzutu z importu
     swiezy = arkusz(sciezka(A.arkusz))
-    w_o = {i: r for r in swiezy for i in r['ids']}
+    w_o = indeks_id(swiezy)
     juz_sa = [w for w in wiersze if any(i in w_o for i in w[14].split(',') if i)]
     wiersze = [w for w in wiersze if w not in juz_sa]
+    nowe_p = {}  # odrzucony wiersz zapasowy [ID wyciągu, ID wpisu] – ID wyciągu i kwota idą na wiersz z synchronizacji
+    for w in juz_sa:
+        tok = [i for i in w[14].split(',') if i]
+        for b in (i for i in tok if not i.startswith('w') and i not in w_o):
+            p = nowe_p.setdefault(b, dict(id_wyciagu=b, data=w[0], konto=w[6], kwota_wyciagu=None,
+                                          opis='wiersz zapasowy odrzucony – wiersz z wpisu już w arkuszu', wiersze=[]))
+            for i in (i for i in tok if i.startswith('w') and i in w_o):
+                kw_ = w[3] if isinstance(w[3], (int, float)) else None
+                p['wiersze'].append(dict(id=i, wiersz=w_o[i]['wiersz'],
+                                         kwota=kw_ if kw_ is not None and (w_o[i]['kwota'] is None or abs(kw_ - w_o[i]['kwota']) >= 0.005)
+                                         else None))
+    przypiecia = przypiecia + [p for p in nowe_p.values() if p['wiersze']]
     stary = {r['wiersz']: r for r in arkusz(sciezka(D['arkusz_plik']))} if D.get('arkusz_plik') else {}
     for z in list(zmiany):
         r0, nowy = stary.get(z['wiersz']), None

@@ -97,7 +97,9 @@ obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzj
    polecenie („wpisz tylko 283”, „przyda się kategoria X”) – wykonaj je i popraw wiersz w `RRRR-MM-zapis.json`.
    `bez_decyzji` → wypisz inwestorowi i zapytaj, czy dopisać mimo to (`--mimo-brakow`); `do_wyjasnienia` rozstrzygnij w czacie.
 3. Zapis do Transakcji – pod blokadą, bo automat co godzinę dopisuje i usuwa wiersze z wpisów (przesuwa numery):
-   a) `python3 tools/budzet/arkusz_budzetu.py blokada zaloz` (sync czeka; blokada wygasa sama po 60 min);
+   a) `python3 tools/budzet/arkusz_budzetu.py blokada zaloz` (czeka, aż skończy się trwający sync – do 2 min; potem sync nic
+      nie wysyła; blokada wygasa sama po 60 min). Przed krokiem c odnów ją tym samym poleceniem, gdy od założenia minęło
+      ponad 30 min; wygasła w trakcie → zacznij C.3 od nowa, od świeżego odczytu;
    b) świeży odczyt `Transakcje!A1:O` → `DANE/miesiace/transakcje-<data>-zapis.json` i `python3 tools/budzet/przenies.py
       --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>-zapis.json` – odrzuca wiersze, których ID już jest w O, i daje
       numery wierszy z tego odczytu (`zmiany` bez zgodnego wiersza → `do_wyjasnienia`, rozstrzygnij w czacie);
@@ -126,7 +128,8 @@ obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzj
    duplikat sprawdź z wyciągiem (w wyciągu raz, w arkuszu dwa razy) i usuń dopiero po zgodzie inwestora.
 9. Podsumowanie: policz miesiąc wg kategorii vs średnia 3 poprzednich, dopisz do `miesiace/RRRR-MM.json` pole
    `podsumowanie` {tekst, punkty[], kategorie[{kat, kwota, srednio}]}, przebuduj i opublikuj stronę. W czacie 3–6 linii:
-   co wpisano, czego nie jesteś pewien, największe zmiany miesiąca, przychód drugiej osoby rozbity jak w sekcji D.
+   co wpisano, czego nie jesteś pewien, największe zmiany miesiąca, przychód drugiej osoby rozbity jak w sekcji D; wiersz
+   z datą poprzedniego, już zamkniętego miesiąca (wpis z jego końca, płatność dopiero w tym wyciągu) – nazwij go.
 
 ## D. Przychód drugiej osoby (liczony z sald)
 

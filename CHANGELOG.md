@@ -4,6 +4,29 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.26.1] – 2026-11-19
+
+Poprawki po recenzji paragonów i budżetu domowego.
+- `paragon.py rozpisz` nie zastępuje paragonu rozliczonego – przypiętego do płatności z wyciągu (`przypiecia` i wiersze
+  w `miesiace/*-zapis.json`) albo z zamkniętego miesiąca (jest `miesiace/RRRR-MM-zapis.json`): kod 1, poprawka ręcznie
+  w arkuszu. Inny paragon z tą samą datą, sumą i sklepem → kod 1 (możliwy dubel), chyba że `--mimo-to`; zdjęcie wklejone
+  w sesji: `--id c<RRRRMMDD>-<suma w groszach>`. Zwykły wpis z ID bloku paragonu jest zastępowany razem z grupą;
+  `wpis.py dodaj` odmawia ID paragonu, `wpis.py usun` usuwa wszystko, co pasuje.
+- `arkusz_budzetu.py sync`: bezpiecznik – część paragonu z `kwota_z_wyciagu` przy innej kwocie niż w znaczniku (nowe pole
+  `kwota`) albo z `zostal` przy usunięciu to błąd (✗, kod 1 → 🔔). `sync` trzyma `flock` przez cały przebieg, `blokada
+  zaloz` czeka na niego do 120 s i odnawia czas; procedura `budzet` C.3 – odnowienie po 30 min, po wygaśnięciu od nowa.
+- `paragon.py pobierz`: błędy połączenia i adresu (`HTTPException`, `ValueError`) bez adresu w komunikacie; typ pliku po
+  nagłówku przy `application/octet-stream`; HEIF jak HEIC; nieudana zamiana HEIC → błąd. `rozpisz`: kwoty z separatorem
+  tysięcy, czytelny błąd przy trzech miejscach po przecinku.
+- Skrypt arkusza (nadal `WERSJA = 1`): `popraw` uzupełnia formuły M:N i formaty wiersza po przerwanym `dopisz`;
+  `wspolne.arkusz()` zostawia niepełny wiersz z ID w O, więc import nie dopisze drugiego.
+- `przenies.py --arkusz`: odrzucony wiersz zapasowy z ID wyciągu daje przypięcie do wiersza z synchronizacji (ID wyciągu
+  i kwota). `importuj.py`: „już w arkuszu” tylko przy płatności w ręcznym wierszu; ID wyciągu w kilku wierszach grupy →
+  zwrot i korekta w największej części (`wspolne.indeks_id`).
+- `paragony.md`: przykład z sumą i `--budowa`, adres podpisany nie trafia do notatek, wyjątek „część bliska sumie”, wiersz
+  z datą zamkniętego miesiąca; `budzet` C.9 – nazwij taki wiersz w podsumowaniu. Testy (recenzja 1, 2, 4, 6–11, 13, 14),
+  atrapa Node.
+
 ## ja [1.26.0] – 2026-11-19 (POM-30)
 
 Paragony ze zdjęcia: rozpisanie na kategorie, metoda płatności i podział płatności z wyciągu bez dublowania wydatków.

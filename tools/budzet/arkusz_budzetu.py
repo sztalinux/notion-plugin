@@ -6,11 +6,12 @@ Instrukcja, interfejs i kod Apps Script: docs/budzet-arkusz.md. Procedura: plugi
     python3 tools/budzet/arkusz_budzetu.py kontrola [--cicho]          # zapis bez wiersza / wiersz bez zapisu (tylko odczyt)
     python3 tools/budzet/arkusz_budzetu.py ponow <id> [...]            # czyści znacznik – następny sync dopisze wiersz od nowa
     python3 tools/budzet/arkusz_budzetu.py przypnij --miesiac RRRR-MM [--proba]   # przypięcia z miesiace/RRRR-MM-zapis.json
-    python3 tools/budzet/arkusz_budzetu.py blokada zaloz|zdejmij      # zamknięcie miesiąca (C.3): sync w tym czasie nic nie wysyła
+    python3 tools/budzet/arkusz_budzetu.py blokada zaloz|zdejmij      # zamknięcie miesiąca (C.3): sync w tym czasie nic nie wysyła;
+                                                                      # zaloz czeka na koniec trwającego sync (flock, do 120 s)
     python3 tools/budzet/arkusz_budzetu.py sprawdz                     # sekrety i ping (wersja kodu, nagłówki)
     python3 tools/budzet/arkusz_budzetu.py kod | LANG=en_US.UTF-8 pbcopy   # kod Apps Script do schowka
 
-Znacznik wysyłki w zapisie: pole `arkusz` = {wiersz, skrot, czas}; wysyłane są tylko zapisy bez znacznika albo ze zmienionym
+Znacznik wysyłki w zapisie: pole `arkusz` = {wiersz, skrot, czas, kwota}; wysyłane są tylko zapisy bez znacznika albo ze zmienionym
 skrótem treści (wspolne.skrot), więc ręczna poprawka wiersza w arkuszu zostaje, dopóki nie zmieni się wpis. Wiersz szuka
 skrypt po ID w kolumnie O; ID już w O (`juz` – np. po ponow albo po zamknięciu) -> od razu popraw bieżącą treścią, potem
 znacznik. Blokada zamknięcia (plik miesiace/.zamkniecie, ważna BLOKADA_MIN minut) – sync czeka, wpisy zostają w pliku. Brak konfiguracji (BUDZET_ARKUSZ_URL, BUDZET_ARKUSZ_SEKRET w <hub>/.dom/sekrety.env; zmienne
@@ -35,6 +36,7 @@ ZALEGLE_H = 24          # kontrola: niewysłane albo nieusunięte dłużej -> pr
 DOKUMENTACJA = Path(__file__).resolve().parents[2] / 'docs' / 'budzet-arkusz.md'
 ETYKIETA = '[budzet-arkusz]'
 BLOKADA_MIN = 60        # porzuconą blokadę zamknięcia sync ignoruje po tym czasie
+CZEKAJ_NA_SYNC_S = 120  # blokada zaloz czeka najwyżej tyle na koniec trwającego sync
 
 
 class BladKonfiguracji(Exception):
@@ -161,11 +163,42 @@ def blokada_zamkniecia():
     return p.read_text(encoding='utf-8').strip() or '?'
 
 
+class trwa_sync:
+    """flock na czas całego sync; blokada zaloz czeka na jego koniec (z limitem), więc zamknięcie nie zaczyna się w połowie
+    wysyłki. czekaj=None – czekaj bez limitu (sync), liczba – sekundy, potem BladArkusza (blokada zaloz)."""
+
+    def __init__(self, czekaj=None):
+        self.czekaj = czekaj
+
+    def __enter__(self):
+        import fcntl
+        p = plik_blokady().with_name('.zamkniecie.lock')
+        p.parent.mkdir(parents=True, exist_ok=True)
+        self.f = open(p, 'w')
+        if self.czekaj is None:
+            fcntl.flock(self.f, fcntl.LOCK_EX)
+            return self
+        koniec = time.monotonic() + self.czekaj
+        while True:
+            try:
+                fcntl.flock(self.f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                return self
+            except OSError:
+                if time.monotonic() >= koniec:
+                    self.f.close()
+                    raise BladArkusza(f'sync trwa dłużej niż {self.czekaj} s – blokady nie założono, spróbuj za chwilę') from None
+                time.sleep(1)
+
+    def __exit__(self, *a):
+        self.f.close()
+
+
 def blokada(akcja):
     p = plik_blokady()
-    if akcja == 'zaloz':
-        p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(teraz(), encoding='utf-8')
+    if akcja == 'zaloz':  # ponowne założenie odnawia czas
+        with trwa_sync(CZEKAJ_NA_SYNC_S):
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(teraz(), encoding='utf-8')
         return f'blokada zamknięcia założona ({teraz()}, ważna {BLOKADA_MIN} min) – sync nic nie wysyła'
     if p.exists():
         p.unlink()
@@ -173,6 +206,13 @@ def blokada(akcja):
 
 
 def sync(k, proba):
+    if proba:
+        return _sync(k, proba)
+    with trwa_sync():
+        return _sync(k, proba)
+
+
+def _sync(k, proba):
     dop, pop, usu, bez = plan()
     licz = {'dopisane': 0, 'juz_w_arkuszu': 0, 'poprawione': 0, 'usuniete': 0, 'bez_kategorii': len(bez), 'bledy': 0}
     bledy = []
@@ -224,21 +264,34 @@ def sync(k, proba):
                     pop_juz = {r['id']: {'ok': False, 'blad': str(e)} for r in juz}
                 for r in juz:
                     x = pop_juz.get(r['id'], {'ok': False, 'blad': 'brak odpowiedzi'})
-                    r.update(ok=x.get('ok'), blad=x.get('blad'), wiersz=x.get('wiersz', r.get('wiersz')))
+                    r.update(ok=x.get('ok'), blad=x.get('blad'), wiersz=x.get('wiersz', r.get('wiersz')),
+                             kwota_z_wyciagu=x.get('kwota_z_wyciagu'))
             for r in wyniki:
+                w = po_id[r['id']]
+                kwota = wiersz_wpisu(w)['kwota']
+                stara = (w.get('arkusz') or {}).get('kwota')
+                if r.get('ok') and w.get('grupa') and r.get('kwota_z_wyciagu') and stara is not None and stara != kwota:
+                    # część paragonu przypięta do wyciągu: skrypt nie zmienia D – nowa kwota części nie weszła (bezpiecznik)
+                    r.update(ok=False, blad='część paragonu przypięta do płatności z wyciągu – kwota w arkuszu bez zmian; '
+                                            'popraw wiersze grupy ręcznie')
                 if r.get('ok'):
-                    znaczniki[r['id']] = {'wiersz': r.get('wiersz'), 'skrot': skrot(po_id[r['id']]), 'czas': teraz()}
+                    znaczniki[r['id']] = {'wiersz': r.get('wiersz'), 'skrot': skrot(w), 'czas': teraz(), 'kwota': kwota}
                     licz['juz_w_arkuszu' if r.get('juz') else ('dopisane' if akcja == 'dopisz' else 'poprawione')] += 1
                 else:
                     licz['bledy'] += 1
                     bledy.append(f"{akcja} {po_id[r['id']]['data']} {r['id']}: {str(r.get('blad'))[:120]}")
     if usu:
         try:
+            grupowe = {w['id'] for _, w in usu if w.get('grupa')}
             for r in wyslij(k, 'usun', ids=[w['id'] for _, w in usu])['wyniki']:
                 if r.get('ok'):
                     usuniete.add(r['id'])
                     licz['usuniete'] += 1
-                    if r.get('zostal'):
+                    if r.get('zostal') and r['id'] in grupowe:  # bezpiecznik: część paragonu z płatnością zostaje w arkuszu
+                        licz['bledy'] += 1
+                        bledy.append(f"usuń {r['id']}: wiersz {r.get('wiersz')} części paragonu zostaje – ma płatność z wyciągu; "
+                                     'popraw wiersze grupy ręcznie')
+                    elif r.get('zostal'):
                         print(f"  wiersz {r.get('wiersz')} zostaje – ma płatność z wyciągu (zdjęto ID wpisu {r['id']})")
                 else:
                     licz['bledy'] += 1
@@ -343,7 +396,11 @@ def main(argv=None):
     if a.polecenie == 'blokada':
         if a.ids not in (['zaloz'], ['zdejmij']):
             ap.error('blokada: podaj zaloz albo zdejmij')
-        print(f'{ETYKIETA} {blokada(a.ids[0])}')
+        try:
+            print(f'{ETYKIETA} {blokada(a.ids[0])}')
+        except BladArkusza as e:
+            print(f'  ✗ blokada: {e}')
+            return 1
         return 0
     if a.polecenie == 'przypnij' and not a.miesiac:
         ap.error('przypnij: podaj --miesiac RRRR-MM')

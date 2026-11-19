@@ -114,12 +114,13 @@ def main():
         with blokada_wpisow():
             ws = czytaj_wpisy(A.arg, z_usunietymi=True)
             ids = (A.id_usun, 'w' + str(A.id_usun))
-            cel = next((w for w in ws if (w['id'] in ids or w.get('grupa') in ids) and not w.get('usuniety')), None)
-            if not cel:
+            trafione = [w for w in ws if (w['id'] in ids or w.get('grupa') in ids) and not w.get('usuniety')]
+            if not trafione:
                 print(f'✗ brak wpisu {A.id_usun}')
                 return
-            # część paragonu (pole grupa) – znika cały paragon, nie jedna kategoria
-            cele = [w for w in ws if not w.get('usuniety') and (w is cel or (cel.get('grupa') and w.get('grupa') == cel['grupa']))]
+            # wszystko, co pasuje (zwykły wpis i paragon z tym ID); część paragonu – znika cały paragon, nie jedna kategoria
+            grupy = {w['grupa'] for w in trafione if w.get('grupa')}
+            cele = [w for w in ws if not w.get('usuniety') and (w in trafione or w.get('grupa') in grupy)]
             teraz = datetime.now().strftime('%Y-%m-%d %H:%M')
             for w in cele:
                 if w.get('arkusz'):
@@ -141,6 +142,9 @@ def main():
              budowa=A.budowa, dodano=datetime.now().strftime('%Y-%m-%d %H:%M'))
     mies = d[:7]
     with blokada_wpisow():
+        if any(x.get('grupa') == w['id'] and not x.get('usuniety') for m in miesiace_wpisow() for x in czytaj_wpisy(m)):
+            print(f"✗ ID {w['id']} należy do paragonu – zmień go przez paragon.py rozpisz (ten sam --id), nie wpis.py dodaj")
+            sys.exit(1)
         m_stary, stary = znajdz(w['id'])
         if stary and stary.get('arkusz'):
             w['arkusz'] = stary['arkusz']  # wiersz już w arkuszu – synchronizacja go poprawi, nie dopisze drugiego

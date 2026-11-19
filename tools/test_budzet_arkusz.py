@@ -44,9 +44,10 @@ class Atrapa:
                     wyniki.append({'id': x['id'], 'ok': False, 'blad': 'brak wiersza z tym ID'})
                     continue
                 r = self.w[n - 2]
-                zostaw = r['kwota'] if any(not t.startswith('w') for t in r['o']) else x['kwota']
+                kzw = any(not t.startswith('w') for t in r['o'])
+                zostaw = r['kwota'] if kzw else x['kwota']
                 r.update({kk: v for kk, v in x.items() if kk != 'id'}, kwota=zostaw)
-                wyniki.append({'id': x['id'], 'ok': True, 'wiersz': n})
+                wyniki.append({'id': x['id'], 'ok': True, 'wiersz': n, 'kwota_z_wyciagu': kzw})
         elif akcja == 'usun':
             for id_ in d['ids']:
                 n = self.numer(id_)

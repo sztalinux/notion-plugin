@@ -197,12 +197,28 @@ def arkusz(sciezka):
     out = []
     for i, r in enumerate(json.loads(Path(sciezka).read_text(encoding='utf-8'))['values'][1:], start=2):
         r = r + [''] * (15 - len(r))
-        if not r[0] or not r[3]:
-            continue
+        ids = [x.strip() for x in r[14].split(',') if x.strip()]
+        if not ids and (not r[0] or not r[3]):
+            continue  # wiersz z ID zostaje nawet niepełny (przerwane dopisz) – inaczej import dopisałby drugi z tym ID
         try:
             d = datetime.strptime(r[0], '%d-%b-%Y').date()
         except ValueError:
             d = None
-        out.append(dict(wiersz=i, data=d, typ=r[2], kwota=kw(r[3]), kat=r[4], pod=r[5], konto=r[6], opis=r[8], tag=r[10],
-                        mies=r[12], ids=[x.strip() for x in r[14].split(',') if x.strip()]))
+        try:
+            kwota = kw(r[3]) if r[3] else None
+        except ValueError:
+            kwota = None
+        out.append(dict(wiersz=i, data=d, typ=r[2], kwota=kwota, kat=r[4], pod=r[5], konto=r[6], opis=r[8], tag=r[10],
+                        mies=r[12], ids=ids))
+    return out
+
+
+def indeks_id(wiersze):
+    """ID z kolumny O -> wiersz. ID wyciągu w kilku wierszach (grupa paragonu) -> wiersz największej części, bo zwrot
+    i korekta trafiają w największą część."""
+    out = {}
+    for r in wiersze:
+        for i in r['ids']:
+            if i not in out or abs(r['kwota'] or 0) > abs(out[i]['kwota'] or 0):
+                out[i] = r
     return out

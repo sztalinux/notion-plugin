@@ -39,7 +39,7 @@ wpisach – osobnej listy gotówki na koniec miesiąca nie ma.
 | `sync --proba` | co by poszło, z odczytem kolumny O (gdy skrypt jest wdrożony): nowy wiersz, już w arkuszu, popraw, usuń; nic nie zapisuje | pierwsza synchronizacja; ręcznie |
 | `kontrola` | tylko odczyt: zapis wysłany, a wiersza z jego ID nie ma; zapis niewysłany od ponad doby; wiersz z ID wpisu bez zapisu w pliku; usunięcie czekające ponad dobę – kod 1, gdy coś jest; chwilowy brak połączenia – kod 0, trwały błąd (sekret, wersja kodu, nagłówki) – kod 1 | automat po nocnym przebiegu |
 | `ponow <id>…` | czyści znacznik – następny `sync` dopisze wiersz od nowa, a gdy ID jest już w O – poprawi go bieżącą treścią | agent po odpowiedzi „dopisz ponownie” |
-| `blokada zaloz` / `blokada zdejmij` | blokada zamknięcia miesiąca (plik `miesiace/.zamkniecie` w folderze danych, ważna 60 min – porzuconą `sync` potem ignoruje): w tym czasie `sync` nic nie wysyła, więc numery wierszy się nie przesuwają, a wiersz zapasowy nie pójdzie drugi raz | agent przy zamknięciu (C.3) |
+| `blokada zaloz` / `blokada zdejmij` | blokada zamknięcia miesiąca (plik `miesiace/.zamkniecie` w folderze danych, ważna 60 min – porzuconą `sync` potem ignoruje): w tym czasie `sync` nic nie wysyła, więc numery wierszy się nie przesuwają, a wiersz zapasowy nie pójdzie drugi raz. `sync` trzyma przez cały przebieg `flock` na `miesiace/.zamkniecie.lock`; `zaloz` czeka na jego koniec do 120 s (potem kod 1) i ponownie wywołane odnawia czas | agent przy zamknięciu (C.3) |
 | `przypnij --miesiac RRRR-MM [--proba]` | przypięcia z `miesiace/RRRR-MM-zapis.json` (ID wyciągu do O wszystkich wierszy grupy, kwota z wyciągu do D) | agent przy zamknięciu (C.3) |
 | `sprawdz` | sekrety i ping (nazwa arkusza, wersja kodu, nagłówki Transakcji, strefa) | ręcznie, przy problemach |
 | `kod` | kod Apps Script z sekcji 8 (`\| LANG=en_US.UTF-8 pbcopy` – do schowka) | przy wklejaniu i aktualizacji kodu |
@@ -50,7 +50,7 @@ niosą tylko liczby, daty i ID – bez kwot i opisów.
 
 ## 3. Znacznik wysyłki i zasady
 
-- Zapis w pliku dostaje pole `arkusz` = `{"wiersz": N, "skrot": "<12 znaków>", "czas": "RRRR-MM-DD GG:MM"}`. Skrót liczy się
+- Zapis w pliku dostaje pole `arkusz` = `{"wiersz": N, "skrot": "<12 znaków>", "czas": "RRRR-MM-DD GG:MM", "kwota": D}`. Skrót liczy się
   z treści zapisu bez pól `dodano`, `arkusz`, `usuniety` (`wspolne.skrot`). `sync` wysyła zapis tylko bez znacznika albo ze
   zmienionym skrótem – ręczna poprawka wiersza w arkuszu zostaje, dopóki nie zmieni się wpis.
 - Wiersz szuka się zawsze po ID w kolumnie O (tokeny po przecinku, dokładne dopasowanie), nigdy po numerze – numer
@@ -66,7 +66,10 @@ niosą tylko liczby, daty i ID – bez kwot i opisów.
   `w<id>-1…n`, to samo pole `grupa` (`w<id>`), pole `paragon` (sklep, suma, liczba części, plik zdjęcia). Każda część to
   osobny wiersz (jedna wysyłka `dopisz` dla całej grupy); `przypnij` dostaje listę ich ID, różnicę wobec wyciągu bierze
   największa część. Ponowne `rozpisz` z tym samym ID zastępuje grupę (część, której nie ma, dostaje `usuniety`);
-  `wpis.py usun` z ID wpisu albo części usuwa całą grupę.
+  `wpis.py usun` z ID wpisu albo części usuwa całą grupę (i zwykły wpis z tym ID); `wpis.py dodaj` odmawia ID grupy.
+  Paragon przypięty do płatności z wyciągu albo z zamkniętego miesiąca (`miesiace/RRRR-MM-zapis.json`) `rozpisz` odmawia
+  zastąpić. Bezpiecznik w `sync`: część grupy, której `popraw` wrócił z `kwota_z_wyciagu` przy innej kwocie niż w znaczniku,
+  albo której `usun` wrócił z `zostal` – błąd (linia ✗ z ID, kod 1 → 🔔), bo arkusz nie przyjął nowej kwoty.
 - Zapisy w pliku pod blokadą (`listy/.wpisy.lock`): `wpis.py` i `sync` nie nadpisują sobie zmian.
 
 ## 4. Dostęp i bezpieczeństwo
@@ -276,6 +279,15 @@ function zapiszPola(a, r, w, strefa, zachowajKwote) {
     tekst(w.tag), tekst(w.notatki)]]);
 }
 
+/** Formuły M:N i formaty daty, kwoty i miesiąca – nowy wiersz albo wiersz po przerwanym dopisz. */
+function formulyIFormaty(a, r) {
+  a.getRange(r, 13, 1, 2).setFormulas([['=IF($A' + r + '="","",DATE(YEAR($A' + r + '),MONTH($A' + r + '),1))',
+    '=IF($A' + r + '="","",YEAR($A' + r + '))']]);
+  a.getRange(r, 1).setNumberFormat(FORMAT_DATY);
+  a.getRange(r, 4).setNumberFormat(FORMAT_KWOTY);
+  a.getRange(r, 13).setNumberFormat(FORMAT_MIESIACA);
+}
+
 function dopisz(wiersze) {
   var a = arkusz();
   var strefa = SpreadsheetApp.getActive().getSpreadsheetTimeZone();
@@ -293,11 +305,7 @@ function dopisz(wiersze) {
     if (r > 2) a.getRange(r - 1, 1, 1, KOL_O).copyTo(a.getRange(r, 1, 1, KOL_O), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
     a.getRange(r, KOL_O).setValue(w.id);  // ID najpierw: błąd w połowie zostawia wiersz z ID – następny sync go poprawi
     zapiszPola(a, r, w, strefa, false);
-    a.getRange(r, 13, 1, 2).setFormulas([['=IF($A' + r + '="","",DATE(YEAR($A' + r + '),MONTH($A' + r + '),1))',
-      '=IF($A' + r + '="","",YEAR($A' + r + '))']]);
-    a.getRange(r, 1).setNumberFormat(FORMAT_DATY);
-    a.getRange(r, 4).setNumberFormat(FORMAT_KWOTY);
-    a.getRange(r, 13).setNumberFormat(FORMAT_MIESIACA);
+    formulyIFormaty(a, r);
     kol.push({wiersz: r, tokeny: [w.id]});
     wyniki.push({id: w.id, ok: true, wiersz: r, juz: false});
   });
@@ -325,6 +333,7 @@ function popraw(wiersze) {
     if (k.blad) return {id: w.id, ok: false, blad: k.blad};
     var zWyciagu = k.tokeny.some(function (t) { return t.charAt(0) !== 'w'; });  // kwota z wyciągu wygrywa
     zapiszPola(a, k.wiersz, w, strefa, zWyciagu);
+    if (a.getRange(k.wiersz, 13, 1, 2).getFormulas()[0].join('') === '') formulyIFormaty(a, k.wiersz);  // ślad przerwanego dopisz
     return {id: w.id, ok: true, wiersz: k.wiersz, kwota_z_wyciagu: zWyciagu};
   })};
 }

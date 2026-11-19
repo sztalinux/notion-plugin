@@ -14,7 +14,8 @@ jego wiersza (`przypiecia` – ID wyciągu do kolumny O, kwota z wyciągu do D).
 wyciąg jeszcze ich nie obejmuje, czeka (pominiete) – rozstrzygnie import kolejnego miesiąca. Wiersze z wpisów (ID z prefiksem
 w) nie liczą się do „wpisane ręcznie do dnia X” i nie są scalane. Pole `grupa` zapisu łączy części jednej płatności (paragon,
 paragon.py): płatność z wyciągu = suma grupy przypina się do wszystkich części (różnica na największej); pozycja listy drugiej
-osoby = suma paragonu na tym samym koncie -> pominięta, kwota bliska sumie (do pięciu złotych) -> decyzja, równa jednej części -> wchodzi.
+osoby = suma paragonu na tym samym koncie -> pominięta, kwota bliska sumie (do pięciu złotych) -> decyzja, równa jednej części
+-> wchodzi (chyba że jest też bliska sumie – wtedy decyzja).
 Wynik: miesiace/RRRR-MM.json – wiersze (pewne, po scaleniu), auto, decyzje (strona), pominiete, juz (z numerem wiersza),
 przypiecia, braki, salda.
 """
@@ -26,7 +27,7 @@ from itertools import combinations
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import (DANE, DRZEWO, U, arkusz, czytaj_wpisy, kw, kwota_pozycji, nazwa, norm, notatka_wpisu,  # noqa: E402
+from wspolne import (DANE, DRZEWO, U, arkusz, czytaj_wpisy, indeks_id, kw, kwota_pozycji, nazwa, norm, notatka_wpisu,  # noqa: E402
                      opcja, rozbij, skladniki_arkusza, wczytaj, wyciagi, z_wpisu, zapisz)
 
 ap = argparse.ArgumentParser()
@@ -60,7 +61,7 @@ def pasuje(r, t):
 
 
 para = {}
-po_id = {i: r for r in ark for i in r['ids']}
+po_id = indeks_id(ark)
 for t in bank:
     if t['id'] in po_id:
         para[t['id']] = (po_id[t['id']], 'zaimportowane wcześniej')
@@ -116,7 +117,9 @@ def paruj_wpisy(z_wierszem):
             if t['mies'] == MIES and z_wierszem:
                 para[t['id']] = (next(r for r in u['wiersze'] if r), 'z wpisu – przypięte do wiersza')
         elif not z_wierszem:
-            k = kandydaci_wpisu(u, False)  # płatność już w arkuszu (po ID, 1:1, ≈1:1, w sumie) – wpis jest w tym wierszu
+            # płatność już w ręcznym wierszu (po ID, 1:1, ≈1:1, w sumie) – wpis jest w tym wierszu; wiersz innego wpisu się nie
+            # liczy (wpis o podobnej kwocie bez wiersza idzie wtedy na stronę decyzji)
+            k = [t for t in kandydaci_wpisu(u, False) if not z_wpisu(para[t['id']][0])]
             if k:
                 t = najblizsza(u, k)
                 t['jednostka'], u['pokryty'] = u, para[t['id']]
@@ -273,7 +276,7 @@ for u in sorted(jednostki, key=lambda u: u['data']):
         if not any(u['wiersze']) and len(pary) == 1 and t['mies'] == MIES:
             t['wpis'] = u['czesci'][0]  # wpisu nie ma w arkuszu: wiersz z płatności z kategorią wpisu (pętla wyciągu)
             continue
-        kw_cz = {w['id']: (r['kwota'] if r else kwota_pozycji(w['kwota'], w['typ'])) for w, r in pary}
+        kw_cz = {w['id']: (r['kwota'] if r and r['kwota'] is not None else kwota_pozycji(w['kwota'], w['typ'])) for w, r in pary}
         najw = max(u['czesci'], key=lambda w: abs(kw_cz[w['id']]))
         roznica = round(kwota_pozycji(t['kwota'], najw['typ']) - sum(kw_cz.values()), 2)
         if abs(roznica) >= 0.005:  # kwota z wyciągu wygrywa; różnicę grupy bierze największa część
@@ -282,7 +285,7 @@ for u in sorted(jednostki, key=lambda u: u['data']):
         if w_ark:
             przypiecia.append(dict(id_wyciagu=t['id'], data=t['data'].isoformat(), konto=t['konto'], kwota_wyciagu=t['kwota'],
                                    opis=t['opis'], wiersze=[dict(id=w['id'], wiersz=r['wiersz'],
-                                                                 kwota=kw_cz[w['id']] if abs(kw_cz[w['id']] - r['kwota']) >= 0.005 else None)
+                                                                 kwota=kw_cz[w['id']] if r['kwota'] is None or abs(kw_cz[w['id']] - r['kwota']) >= 0.005 else None)
                                                             for w, r in w_ark]))
         else:
             obsluzone.add(t['id'])
@@ -329,7 +332,7 @@ for p in U.get('pary_pomijane', []):
                 t['para'] = z['para'] = p['powod']
 pp = U.get('przelew_partnera')
 if pp:
-    o2a_ark = round(sum(r['kwota'] for r in ark if r['mies'] == MIES and r['typ'] == 'Przelew' and r['kat'] == pp['kategoria']
+    o2a_ark = round(sum(r['kwota'] or 0 for r in ark if r['mies'] == MIES and r['typ'] == 'Przelew' and r['kat'] == pp['kategoria']
                         and not r.get('uzyty')), 2)
     o2a_bank = [t for t in teraz if t['id'] not in para and norm(pp['klucz']) in t['no'] and t['kwota'] > 0]
     if o2a_bank and round(sum(t['kwota'] for t in o2a_bank), 2) <= o2a_ark + 0.005:
