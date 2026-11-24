@@ -205,14 +205,72 @@ class SyncNowaPozycja(unittest.TestCase):
             self.assertEqual(licz["bledy"], 1, rodzaj)
             self.assertIn("tylko dla Rodzaju Wydatek albo Wycena", a.patche[0][1]["Błąd"]["rich_text"][0]["text"]["content"])
 
+    def plan(self, id_, wiersz_strony, plan_w_arkuszu, wiersz_pozycji=88, lp="47.1"):
+        """Strona Plan (kwota 700) na pozycję `lp`; w arkuszu pozycja w wierszu `wiersz_pozycji` z planem ręcznym."""
+        a = Atrapy(plan=(lp, wiersz_pozycji, plan_w_arkuszu))
+        licz, bledy = self.uruchom([strona(id_, pozycja=f"{lp} Pozycja A", rodzaj="Plan", kwota=700, wiersz=wiersz_strony)], a)
+        return licz, bledy, [d["operacje"][0]["a1"] for x, d in a.akcje if x == "zmien"]
+
     def test_9_plan_wlasny_po_przesunieciu_wiersza(self):
-        # strona już raz wpisała plan (Wiersz arkusza = 40), wstawienie pozycji przesunęło wiersz na 41 – to nadal jej plan
-        a = Atrapy(plan=("47.1", 41, 500))
-        licz, bledy = self.uruchom([strona("a", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700, wiersz=40)], a)
-        self.assertEqual((bledy, licz["plany"], licz["bledy"]), ([], 1, 0))
-        a = Atrapy(plan=("47.1", 41, 500))
-        licz, _ = self.uruchom([strona("b", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700)], a)
-        self.assertEqual(licz["bledy"], 1)   # cudzy plan bez „Nadpisz plan” – jak dotąd
+        # strona wpisała plan 47.1 w wierszu 40 (plany.json), wstawienie pozycji przesunęło wiersz na 41 – to nadal jej plan
+        self.assertEqual(self.plan("a", None, 0, wiersz_pozycji=40)[2], ["E40"])
+        self.assertEqual(json.loads(WY.plik_planow().read_text(encoding="utf-8")), {"a": "47.1"})
+        licz, bledy, zapisy = self.plan("a", 40, 500, wiersz_pozycji=41)
+        self.assertEqual((bledy, licz["plany"], licz["bledy"], zapisy), ([], 1, 0, ["E41"]))
+        licz, _, zapisy = self.plan("b", None, 500, wiersz_pozycji=41)
+        self.assertEqual((licz["bledy"], zapisy), (1, []))   # cudzy plan bez „Nadpisz plan” – jak dotąd
+
+    def test_9_strona_sprzed_pliku_planow_ten_sam_wiersz_to_wlasny_plan(self):
+        licz, _, zapisy = self.plan("a", 88, 500)
+        self.assertEqual((licz["plany"], zapisy), (1, ["E88"]))
+        self.assertEqual(json.loads(WY.plik_planow().read_text(encoding="utf-8")), {"a": "47.1"})
+
+    def test_9_wiersz_innej_pozycji_nie_daje_prawa_do_planu(self):
+        # R3: strona wpisała kiedyś plan w wierszu 36 (inna pozycja), teraz ma Pozycję 47.1 z planem ręcznym inwestora
+        licz, _, zapisy = self.plan("p", 36, 5000)
+        self.assertEqual((licz["plany"], licz["bledy"], zapisy), (0, 1, []))
+        # to samo, gdy plany.json pamięta inną pozycję tej strony
+        WY.zapisz_plany({"p": "03.5"}, [])
+        licz, _, zapisy = self.plan("p", 88, 5000)
+        self.assertEqual((licz["bledy"], zapisy), (1, []))
+
+    def test_9_nadpisz_plan_przejmuje_plan_od_poprzedniej_strony(self):
+        WY.zapisz_plany({"a": "47.1", "c": "03.5"}, [])
+        a = Atrapy(plan=("47.1", 88, 500))
+        s = strona("b", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700)
+        s["properties"]["Nadpisz plan"] = {"checkbox": True}
+        licz, _ = self.uruchom([s], a)
+        self.assertEqual(licz["plany"], 1)
+        self.assertEqual(json.loads(WY.plik_planow().read_text(encoding="utf-8")), {"a": "", "b": "47.1", "c": "03.5"})
+        self.assertEqual(self.plan("a", 88, 900)[0]["bledy"], 1)   # „a” bez „Nadpisz plan” nie odbiera planu
+
+    def test_9_ta_sama_kwota_bez_nadpisz_nie_przejmuje_planu(self):
+        WY.zapisz_plany({"a": "47.1"}, [])
+        licz, _, zapisy = self.plan("b", None, 700)                   # komórka ma już 700 – bez zapisu
+        self.assertEqual((licz["plany"], zapisy), (1, []))
+        self.assertEqual(json.loads(WY.plik_planow().read_text(encoding="utf-8")), {"a": "47.1"})
+        WY.zapisz_plany({}, [])                                       # pozycja bez właściciela – przejmuje
+        self.plan("b", None, 700)
+        self.assertEqual(json.loads(WY.plik_planow().read_text(encoding="utf-8")), {"b": "47.1"})
+
+    def test_9_blad_zapisu_planow_nie_wstrzymuje_wydatkow(self):
+        from unittest import mock
+        for blad in (FileNotFoundError, PermissionError):   # wyścig o plik tymczasowy, katalog tylko do odczytu
+            a = Atrapy(plan=("47.1", 88, 0))
+            with mock.patch.object(WY.os, "replace", side_effect=blad("x")):
+                licz, bledy = self.uruchom([strona("p", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700),
+                                            strona("w", pozycja="47.1 Pozycja A")], a)
+            self.assertEqual((licz["plany"], licz["dopisane"]), (1, 1), blad)
+            self.assertEqual([wl["Arkusz"]["select"]["name"] for _, wl in a.patche], [WY.W_ARKUSZU] * 2)
+            self.assertTrue(any(b.startswith("plany.json: nie zapisano") for b in bledy), bledy)
+            self.assertEqual(list((WY.W.CONF / "wydatki").glob("*.tmp")), [])
+            self.assertFalse(WY.plik_planow().exists())
+
+    def test_9_wydatek_przestawiony_na_plan_nie_nadpisuje(self):
+        # R8: Wiersz arkusza = 50 pochodzi z zakładki Wydatki – to nie jest plan tej strony
+        licz, _, zapisy = self.plan("w", 50, 5000)
+        self.assertEqual((licz["plany"], licz["bledy"], zapisy), (0, 1, []))
+        self.assertFalse(WY.plik_planow().exists())
 
     def test_12_timeout_pingu_nie_wstrzymuje_planow(self):
         a = Atrapy(ping_timeout=True, plan=("47.1", 41, 0))
@@ -229,6 +287,23 @@ class SyncNowaPozycja(unittest.TestCase):
         licz, bledy = self.uruchom([strona("a", nowa="41 | Pozycja Z | Robocizna | m²")], a)
         self.assertEqual((bledy, licz["czekaja_na_etap"], licz["bledy"]), ([], 1, 0))
         self.assertNotIn("dodaj_pozycje", [x for x, _ in a.akcje])
+
+    def test_13_swieza_blokada_zadnej_pozycji_takze_w_innym_etapie(self):
+        # sesja buduje etap 41 (kolumna A pusta) – wstawienie w etapie 47 wciągnęłoby go do sąsiedniego bloku (B-2)
+        WY.zapisz_sesje({"41": {"etap": "41", "nazwa": "", "stan": "", "pozycje": [], "strony": ["x"]}},
+                        {"pozycje": ["03 | Pozycja Q | Materiał | kpl"], "strony": ["y"]})
+        WY.sesja(zablokuj=True)
+        przed = WY.plik_sesji().read_text(encoding="utf-8")
+        a = Atrapy(odpowiedzi={"47": {"ok": True, "juz": False, "lp": "47.2", "klucz": "47.2 Szafki", "wiersz": 89}})
+        licz, bledy = self.uruchom([strona("b", nowa="47 | Szafki | Materiał | kpl"), strona("c", pozycja="47.1 Pozycja A")], a)
+        self.assertEqual((bledy, licz["czekaja"], licz["czekaja_na_etap"], licz["nowe_pozycje"]), ([], 1, 0, 0))
+        self.assertNotIn("dodaj_pozycje", [x for x, _ in a.akcje])
+        self.assertEqual([w["id"] for w in a.dopisane], ["c"])               # zwykły wydatek idzie dalej
+        self.assertEqual([i for i, _ in a.patche], ["c"])                    # strona „b” bez dopisku „czeka na etap 47”
+        self.assertEqual(WY.plik_sesji().read_text(encoding="utf-8"), przed)  # pierwsze sprawdzenie zostaje na liście
+        WY.sesja(odblokuj=True)
+        licz, _ = self.uruchom([strona("b", nowa="47 | Szafki | Materiał | kpl")], Atrapy(odpowiedzi=a.odpowiedzi))
+        self.assertEqual((licz["nowe_pozycje"], licz["dopisane"]), (1, 1))
 
     def test_13_etap_bez_pozycji_czeka(self):
         a = Atrapy(odpowiedzi={"41": {"ok": True, "brak_etapu": True, "bez_pozycji": True, "etap": "41"}})
@@ -265,6 +340,15 @@ class SyncNowaPozycja(unittest.TestCase):
         licz, _ = self.uruchom([strona("a", nowa="47 | Szafki | Materiał | kpl")], a2)
         self.assertEqual(licz["nowe_pozycje"], 1)
         self.assertFalse(WY.plik_sesji().exists())
+
+    def test_15_skrot_w_polu_pelny_tekst_na_liscie_sesji(self):
+        # pole „47 | Szafki” (typ i jednostka ze strony) – na liście `sesja` pełny tekst, który przyjmie `nowa-pozycja` (D.3)
+        WY.znacznik_sprawdzenia().unlink()
+        a = Atrapy(odpowiedzi={"47": {"ok": True, "juz": False, "lp": "47.2", "klucz": "47.2 Szafki", "wiersz": 89}})
+        self.uruchom([strona("a", nowa="47 | Szafki")], a)
+        tekst_ = json.loads(WY.plik_sesji().read_text(encoding="utf-8"))["pierwsze_sprawdzenie"]["pozycje"][0]
+        self.assertEqual(tekst_, "47 | Szafki | Materiał | szt")
+        self.assertEqual(WY.nowa_pozycja(tekst_, {"typ": "", "jedn": ""})[1], "")
 
     def test_proba_nie_wola_arkusza(self):
         a = Atrapy()

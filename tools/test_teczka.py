@@ -26,7 +26,7 @@ def hub_z_plikami(pliki):
 
 
 KOMPLET = ["Umowy/Protokoły/2026-11-21_odbior-plyty.pdf", "Faktury/2026/2026-11-05_hurtownia_FV1.jpg",
-           "Faktury/2026/2026-12-01_hurtownia_FV9.jpg", "Dziennik budowy KB/2026-11-10_strona-1.jpg",
+           "Faktury/2026/2026-12-20_hurtownia_FV9.jpg", "Dziennik budowy KB/2026-11-10_strona-1.jpg",
            "Dostawy/Etap A/2026-11-06_WZ_beton.jpg", "Dostawy/Etap B/2026-12-01_WZ.jpg"]
 
 
@@ -43,7 +43,7 @@ class Zbieranie(unittest.TestCase):
         w = T.zbierz(self.hub(KOMPLET), "Etap A", OD, DO, zdjecia=["Krok 1=https://dysk/x"])
         nazwy = {k: [p.name for p in v] for k, v in w["skladniki"].items()}
         self.assertEqual(nazwy["protokoly"], ["2026-11-21_odbior-plyty.pdf"])  # po --do, ale w zapasie 14 dni
-        self.assertEqual(nazwy["faktury"], ["2026-11-05_hurtownia_FV1.jpg"])  # grudniowa poza okresem
+        self.assertEqual(nazwy["faktury"], ["2026-11-05_hurtownia_FV1.jpg"])  # grudniowa poza okresem i zapasem
         self.assertEqual(nazwy["kb"], ["2026-11-10_strona-1.jpg"])
         self.assertEqual(nazwy["dostawy"], ["2026-11-06_WZ_beton.jpg"])  # tylko folder tego etapu
         self.assertEqual(w["braki"], [])
@@ -62,6 +62,30 @@ class Zbieranie(unittest.TestCase):
     def test_pusty_folder_budowy_daje_komplet_brakow(self):
         w = T.zbierz(hub_z_plikami([]), "Etap A", OD, DO)
         self.assertEqual(len(w["braki"]), 5)  # protokół, faktury, KB, dostawy, zdjęcia
+
+    def test_faktury_z_zapasem_przed_i_po_okresie(self):
+        # materiał kupiony przed pierwszym krokiem, faktura za transzę dzień po odbiorze; poza zapasem – nie wchodzi
+        pliki = ["Faktury/2026/2026-10-19_material.jpg", "Faktury/2026/2026-11-21_transza.jpg",
+                 "Faktury/2026/2026-10-18_za-wczesna.jpg", "Faktury/2026/2026-12-05_za-pozna.jpg"]
+        w = T.zbierz(hub_z_plikami(pliki), "Etap A", OD, DO)
+        self.assertEqual([p.name for p in w["skladniki"]["faktury"]],
+                         ["2026-10-19_material.jpg", "2026-11-21_transza.jpg"])
+        self.assertFalse(any("brak faktur" in b for b in w["braki"]))
+        self.assertEqual(T.zbierz(hub_z_plikami(pliki), "Etap A", OD, DO, zapas_faktur=0)["skladniki"]["faktury"], [])
+
+    def test_faktura_z_zapasu_oznaczona_w_swojej_linii(self):
+        hub = hub_z_plikami(["Faktury/2026/2026-11-05_w-okresie.jpg", "Faktury/2026/2026-11-21_transza.jpg"]
+                            + [f"Faktury/2026/2026-11-{d:02d}_x.jpg" for d in range(6, 15)])
+        w = T.zbierz(hub, "Etap A", OD, DO)
+        z = T.zloz(hub, w, DZIS, True)
+        linie = (z["folder"] / "SPIS.md").read_text(encoding="utf-8").splitlines()
+        transza = [x for x in linie if "2026-11-21_transza" in x][0]
+        self.assertIn(T.POZA_OKRESEM, transza)
+        self.assertNotIn(T.POZA_OKRESEM, [x for x in linie if "2026-11-05_w-okresie" in x][0])
+        self.assertEqual(sum(T.POZA_OKRESEM in x for x in linie), 1)
+        r = T.raport(hub.resolve(), w, z, True)            # 11 faktur: poza okresem widoczna mimo limitu 8 linii
+        self.assertIn(f"2026-11-21_transza.jpg  {T.POZA_OKRESEM}", r)
+        self.assertIn("… i 2 więcej", r)
 
     def test_bez_daty_nie_wchodzi_i_jest_wypisany(self):
         w = T.zbierz(hub_z_plikami(KOMPLET + ["Faktury/2026/skan.jpg"]), "Etap A", OD, DO)
@@ -108,6 +132,7 @@ class Skladanie(unittest.TestCase):
         spis = (cel / "SPIS.md").read_text(encoding="utf-8")
         self.assertIn("do potwierdzenia z umową kredytową", spis)
         self.assertIn("https://dysk/x", spis)
+        self.assertIn("sprawdź, czy każda dotyczy tego etapu", spis)
 
     def test_druga_teczka_tego_samego_dnia_nie_nadpisuje(self):
         hub = hub_z_plikami(KOMPLET)

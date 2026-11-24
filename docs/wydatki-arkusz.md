@@ -57,7 +57,7 @@ wyłączony → strony czekają w Notion, nic nie ginie. GitHub Actions nie maj�
 | zwrot pieniędzy (różnica VAT od wykonawcy, zwrot towaru) | nowa strona: Rodzaj Zwrot, Kwota dodatnia, ta sama Pozycja i Typ co wydatek, bez Ilości; „Do zapłaty” = oczekiwany | arkusz: osobny wiersz z minusem (kod Apps Script ≥ 4); wydatek zostaje bez zmian, WYDANE = suma |
 | wydatek wysłany przez pomyłkę | – | `python3 tools/wydatki.py wycofaj <id strony>` (czyści wiersz, w Notion „Nie wysyłać”) |
 | oferta / cena dostawcy („X ma beton po … zł/m³ brutto”) | Rodzaj Wycena, Kwota = cena za jednostkę, Jedn., Cena podana Netto/Brutto, VAT % | idzie do Cennika, nie do Wydatków; wybór = Status wyceny „Wybrana” i ponowne wysłanie |
-| „planuję wydać ok. N”, „szacowałem N, wyszło M” | Rodzaj Plan, Kwota = plan całej pozycji brutto (+ osobno wydatek M) | `sync` wpisuje „Plan ręczny” pozycji; inny plan już jest → Błąd i pytanie, „Nadpisz plan” zastępuje |
+| „planuję wydać ok. N”, „szacowałem N, wyszło M” | Rodzaj Plan, Kwota = plan całej pozycji brutto (+ osobno wydatek M) | `sync` wpisuje „Plan ręczny” pozycji; inny plan już jest → Błąd i pytanie (nie dla planu tej pozycji wpisanego wcześniej przez tę samą stronę – `<hub>/.dom/wydatki/plany.json`), „Nadpisz plan” zastępuje |
 | „kupić X na budowę” (jeszcze nie kupione) | nic – to zakup, procedura `zakupy` | koszt powstaje dopiero przy zapłacie |
 | wydatek bez pasującej pozycji | ❓ z propozycją „Nowa pozycja: 47 \| Pozycja X \| Materiał \| kpl – tak?”; po „tak” strona z pustą Pozycją i polem Nowa pozycja | `sync` dodaje pozycję (kod ≥ 5, po pierwszym sprawdzeniu w sesji) i wysyła wydatek w tym samym przebiegu; nowy etap – pierwsza sesja Claude Code (`koszty/references/nowa-pozycja.md`); pole tylko przy Wydatku i Wycenie, wybrana Pozycja wygrywa |
 
@@ -82,7 +82,7 @@ Agent nie przelicza ręcznie niczego, co liczy arkusz – zmienia dane wejściow
   wpisuje inwestor). Zmiana ilości, ceny albo wyboru oferty przelicza PLAN, sumy etapów i Podsumowanie.
 - **Grupy materiałów (Kosztorys V, Cennik P):** jedna oferta (np. stal) zasila kilka pozycji tej samej grupy.
 - **Jednostki:** Cennik Q przelicza cenę na jednostkę bazową (t → kg), żeby oferta za tonę pasowała do pozycji w kg.
-- **VAT w Cenniku:** G = cena brutto, O = cena netto; VAT % wpisany jako 8 albo 0,08 działa tak samo.
+- **VAT w Cenniku:** G = cena brutto, O = cena netto; VAT % wpisany jako 8 albo 0,08 działa tak samo (`sync` zamienia ułamek na procenty).
 - **WYDANE:** sumy Wydatków „Zrealizowane” po pozycji i typie → Kosztorys I, Etapy H–L, Podsumowanie. Zwroty (kwoty
   ujemne) odejmują się same; „Do zapłaty” z minusem obniża zobowiązania.
 - **VAT w Wydatkach:** P = VAT % (z pola VAT % strony; `sync` wpisuje, korekta nadpisuje, `wycofaj` czyści), Q = netto
@@ -118,13 +118,13 @@ Zmian w arkuszu nie cofa skrypt – służy do tego Plik → Historia wersji.
 | `sync --proba` | pokazuje, co by poszło; nic nie zapisuje. Sprawdza tylko pola strony (data, kwota, pozycja z listy, ilość, wycena) – pozycję wobec Kosztorysu, konflikt planu i wersję kodu Apps Script sprawdza dopiero `sync` | ręcznie |
 | `pozycje` | pozycje Kosztorysu → opcje pola Pozycja w Notion | przebieg nocny; po dodaniu pozycji w arkuszu |
 | `pobierz [--gdy-starsza H]` | wartości wszystkich zakładek → `<hub>/Koszty/Kosztorys_google.json` (limit odczytu 300 s); z `--gdy-starsza` tylko, gdy kopia jest starsza niż H godzin | przebieg nocny, szybki (ponowienie); przed analizą liczb |
-| `wycofaj <id>…` | czyści wiersz w Wydatkach / Cenniku albo „Plan ręczny” (gdy stoi tam kwota z tej strony), w Notion „Nie wysyłać” | agent na prośbę |
+| `wycofaj <id>…` | czyści wiersze strony w Wydatkach / Cenniku i jej „Plan ręczny” (gdy stoi tam kwota z tej strony), w Notion „Nie wysyłać” | agent na prośbę |
 | `sprawdz` | sekrety, dostęp do bazy i arkusza, wersja kodu | ręcznie, przy problemach |
 | `kod` | kod Apps Script z sekcji 9 (z `\| LANG=en_US.UTF-8 pbcopy` – do schowka; bez LANG polskie znaki się psują) | przy aktualizacji kodu |
 | `migruj <zmiany.json>` | zmiana układu na żywym arkuszu (sekcja 8) | agent w Claude Code |
 | `nowa-pozycja "47 \| Nazwa \| Typ \| Jedn." [--proba]` | pozycja w istniejącym etapie (akcja „dodaj_pozycje”, kod ≥ 5) i opcja w Notion – działa bez znacznika; z `--proba` – plan na sucho (wiersz, Lp, suma etapu, wzór), nic nie zmienia | agent w Claude Code; pierwsze sprawdzenie (`koszty` C.8) |
 | `nowa-pozycja --potwierdz` | znacznik `<hub>/.dom/wydatki/nowa-pozycja-sprawdzona` – od niego `sync` sam wstawia pozycje (bez niego woła akcję na sucho: istniejąca pozycja przechodzi, nowa czeka) | sesja po zgodnym pierwszym sprawdzeniu |
-| `sesja [--zablokuj \| --odblokuj]` | co czeka na sesję: nowe etapy i pierwsze sprawdzenie (`<hub>/.dom/wydatki/kosztorys-do-sesji.json`, pisze `sync`; z niego linia stanu sesji); blokada – jedna sesja naraz (2 h), przy świeżej blokadzie `sync` nie rusza stron tego etapu | sesja Claude Code (`koszty` C.7–C.8) |
+| `sesja [--zablokuj \| --odblokuj]` | co czeka na sesję: nowe etapy i pierwsze sprawdzenie (`<hub>/.dom/wydatki/kosztorys-do-sesji.json`, pisze `sync`; z niego linia stanu sesji); blokada – jedna sesja naraz (2 h), przy świeżej blokadzie `sync` nie wstawia pozycji w żadnym etapie (strony z „Nową pozycją” czekają) | sesja Claude Code (`koszty` C.7–C.8) |
 | `gotowka [--harmonogram PLIK]` | tylko odczyt: ile pieniędzy wyjdzie w którym miesiącu – kopia arkusza + Harmonogram z Notion (`NOTION_TOKEN`); tabela z kwotami na ekran, nie do logu; reguły: `koszty/references/gotowka.md` | agent na „ile gotówki potrzebuję w …”, przegląd tygodnia |
 
 Kody wyjścia: 0 OK, 1 błąd polecenia (linie `✗` pod podsumowaniem, np. timeout arkusza, Notion), 2 brak konfiguracji.
@@ -134,7 +134,7 @@ Błąd pojedynczej strony nie zmienia kodu: `sync` zapisuje go w Notion (Arkusz 
 
 Zabezpieczenia w `sync`: walidacja przed wysyłką (data, kwota, pozycja, ilość i jednostka materiału 02–08; wycena – jednostka, nazwa,
 VAT przy netto) → strona dostaje „Błąd” z powodem; wyceny czekają, gdy kod Apps Script < 2 albo Cennik w starym układzie
-(`cennik_ok`), zwroty – gdy kod < 4, strony z polem „Nowa pozycja” – gdy kod < 5; kolumny z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) nigdy nie są
+(`cennik_ok`), zwroty – gdy kod < 4, strony z polem „Nowa pozycja” – gdy kod < 5; kolumny z formułami (Wydatki I, N i Q, Cennik G, K i O–Q, Kosztorys N–P) nigdy nie są
 nadpisywane; zapis pod
 blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 
@@ -184,7 +184,7 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
    (`get_spreadsheet` z `userEnteredValue`) zapisana w `<hub>/.dom/wydatki/` → zapis (`update_formulas`, `update_values`,
    `update_spreadsheet`) → odczyt kontrolny. Te same zasady co skrypt: formuły ze „;” i przecinkiem dziesiętnym
    (sprawdzone 10.11.2026 – „,” daje liczbę dziesiętną), bez nadpisywania kolumn wpisywanych (Wydatki A–H, J–M, O, P;
-   Kosztorys F, U; Cennik A–F, H–J, L–N), bez IMPORT…/IMAGE/HYPERLINK, nie w trakcie `sync`. Reguły formatowania
+   Kosztorys B–F, K, L, U, V; Cennik A–F, H–J, L–N), bez IMPORT…/IMAGE/HYPERLINK, nie w trakcie `sync`. Reguły formatowania
    warunkowego przez `update_spreadsheet` przetestuj najpierw na jednej regule. Konektora brak albo błąd → kroki 1–5 (wolniej,
    ten sam wynik). Potem i tak krok 5 (kontrola).
 1. `wydatki.py pobierz` albo odczyt konektorem – aktualne wartości i nagłówki. Odwołania do innych zakładek buduj po
@@ -223,7 +223,7 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
  * w etapie = istniejący Lp, jeśli jego wiersz jest kompletny. Wiersz etapu bez Lp = odmowa. Etapu nie dodaje (brak_etapu).
  * dopisz: rodzaj „Wycena” → arkusz Cennik (ponowne wysłanie aktualizuje ten sam wiersz), reszta → arkusz Wydatki
  * („Zwrot” z kwotą ujemną). Wydatki P (VAT %) wpisuje i czyści tools/wydatki.py akcją zmien, nie dopisz/usun.
- * Kolumn z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) dopisz/usun nigdy nie nadpisują.
+ * Kolumn z formułami (Wydatki I, N i Q, Cennik G, K i O–Q, Kosztorys N–P) dopisz/usun nigdy nie nadpisują.
  * zmien: tylko znane zakładki, bez usuwania zakładek, bez formuł IMPORT…/IMAGE/HYPERLINK; czyścić wolno tylko pusty Cennik
  * i archiwum szacunku AI.
  */
