@@ -28,7 +28,8 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
 ## Kroki
 
 1. **Budowa** – wczytaj skill `przeglad-tygodnia` (plugin dom-budowa) i wykonaj go; zapisze przegląd budowy na DOM
-   („Przeglądy tygodniowe”). Weź link do wpisu i jedną linię skrótu (do decyzji n, terminy 7 dni n).
+   („Przeglądy tygodniowe”). Weź link do wpisu, jedną linię skrótu (do decyzji n, terminy 7 dni n) i blok 🔔 porządków budowy
+   (`porzadki-budowa-<RRRR-Www>`) – zapisz go w kroku 5 razem z własnym.
 2. **Tydzień – sprawy osobiste** (odczyt):
    - „📆 Przeglądy dzienne” – wpisy z 7 dni (co się działo, co zamknięto); przy okazji napraw zepsute nagłówki dni
      (`przeglad-dnia/references/uklad-wpisu.md`, A, „Naprawa raz w tygodniu”) – bez pytania, to tylko format;

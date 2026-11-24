@@ -106,7 +106,7 @@ Przegląd budowy – tydzień <RRRR-Www> (<data>)
 **Dziennik – budowa:** m wpisów o budowie czeka na Twoją odpowiedź: <wpis> – <pytanie>
 **Sugestia na ten tydzień:** 1–3 konkretne kroki.
 **Na później (n):** licznik spraw z dalszych etapów – bez listy.
-**Porządki (n):** propozycje z sekcji „Porządki” – pytanie w 🔔 we „Wpisach” · naprawione nagłówki: n
+**Porządki (n):** propozycje z sekcji „Porządki” – pytanie w 🔔 we „Wpisach” (w rozmowie – wprost) · naprawione nagłówki: n
 </toggle>
 ```
 
@@ -134,5 +134,6 @@ budowy – archiwum” (ID w mapie; przeniesienie jak w `przeglad-tygodnia-osobi
 
 Zapis: dopisz przegląd na górze strony Notion „Przeglądy tygodniowe” (pod DOM, `3f4f5982-09e7-8144-af5e-f9521a52ea9d`)
 jako zwijany nagłówek z tytułem tygodnia – **jedno wywołanie**. W rozmowie podaj ten sam tekst. Gdy wywołał cię przegląd
-osobisty (`przeglad-tygodnia-osobisty`), zwróć mu wzmiankę do wpisu i jedną linię skrótu (do decyzji n, terminy 7 dni n).
+osobisty (`przeglad-tygodnia-osobisty`), zwróć mu wzmiankę do wpisu, jedną linię skrótu (do decyzji n, terminy 7 dni n) i blok porządków
+(sekcja „Porządki”) – zapisze go on, w swojej jednej edycji „Wpisów”; sam go nie zapisuj.
 Pusty tydzień (brak nowych rzeczy i terminów) → krótka informacja „bez zmian”, bez zapisu do Notion.
