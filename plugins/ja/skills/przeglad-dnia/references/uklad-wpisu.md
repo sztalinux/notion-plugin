@@ -1,7 +1,7 @@
 # Układ wpisu przeglądu – dzień i tydzień
 
 Dotyczy strony **☀️ Dziś** (plan dnia – sekcja D; to ją inwestor czyta rano) i czterech przeglądów: dnia (`przeglad-dnia`, B.8 –
-historia planu), dnia budowy (`budowa`, „Wieczorem”, plugin dom-budowa), tygodnia osobistego (`przeglad-tygodnia-osobisty`)
+historia planu; zaległy dzień – sekcja E), dnia budowy (`budowa`, „Wieczorem”, plugin dom-budowa), tygodnia osobistego (`przeglad-tygodnia-osobisty`)
 i tygodnia budowy (`przeglad-tygodnia`, plugin dom-budowa). Cel: inwestor rano na telefonie w 30 sekund widzi, co pilne
 i co go czeka – bez ściany tekstu.
 
@@ -222,3 +222,19 @@ numer i tytuł, link do zgłoszenia albo PR-a. Sekcje:
 
 Nic w Jirze, Azure DevOps ani WORK nie zmieniaj. Treści kodu, opisów i komentarzy nie przepisuj do Notion – tylko numery,
 tytuły, statusy i linki.
+
+## E. Zaległy dzień („przegląd dnia za DD.MM”)
+
+Po nieudanym nocnym (blok 🔔 `przebieg-wieczorny` każe tak napisać) – na polecenie w sesji Claude Code albo w rozmowie.
+Tryb wieczorny z dniem przeglądu DD.MM zamiast linii „Teraz”, tylko te kroki:
+- **3** – wpis budowy za DD.MM z dopiskiem „(zaległy)”, bez „Jutro – plan” i ostrzeżenia pogodowego (ten dzień minął);
+- **4, 5, 5a–5b** dla DD.MM; widok kroku 5 obejmuje tylko wczoraj i dziś – DD.MM starszy → zamiast 5 i 5a–5b linia
+  „zmiany zadań z DD.MM: poza zasięgiem widoku”;
+- **historia zamiast kroku 8:** na górze „📆 Przeglądy dzienne” (wstawienie bez odczytu, jak w kroku 8) zwijany nagłówek h2
+  „Przegląd dnia – <dzień tygodnia> DD.MM (zaległy)” z samą zakładką 📊 (kroki 4, 5). **Strony ☀️ Dziś nie ruszaj** – plan
+  dotyczy dzisiaj;
+- **9** – linia „🤖 zaległy DD.MM: …” w dzisiejszym bloku „Przetworzone”; blok 🔔 `przebieg-wieczorny` → „Przetworzone”
+  (`~~🔔 …~~ → przegląd za DD.MM zrobiony`).
+
+Reszty (wstęp B, kroki 1–2a, 6–7) nie rób: wpisy, odpowiedzi pod 🔔, rozkminki, plan 7 dni, suplementy, research i wydatki 💸
+robi najbliższy nocny albo zrobił już późniejszy – powtórka dublowałaby zapisy.

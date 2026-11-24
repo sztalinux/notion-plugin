@@ -15,7 +15,8 @@ w rozmowie, te same zasady:
 | Przegląd dnia | raz w nocy, 2:00 (przegląd poprzedniego dnia) | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + zmiany w zadaniach + kontrola spójności + plan dnia na stronie ☀️ Dziś |
 
 Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia” / „podsumuj dzień” = tryb wieczorny, „plan dnia” = tylko
-krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
+krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś), „przegląd dnia za DD.MM” (zaległy dzień po nieudanym
+nocnym) – `references/uklad-wpisu.md`, E.
 
 ## Zasady trybu bez inwestora (oba tryby)
 
