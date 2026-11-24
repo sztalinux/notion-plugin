@@ -582,7 +582,9 @@ def main() -> int:
         for b in bledy:
             print("  ✗", b)
         return 1 if bledy else 0
-    bledy = waliduj() + (kontrola_indeksu() if a.indeks else [])
+    bledy = waliduj()
+    if a.indeks:  # ten sam błąd z dysku i z indeksu (ta sama treść) – jedna linia
+        bledy += [b for b in kontrola_indeksu() if b.replace("(indeks) ", "", 1) not in bledy]
     if bledy:
         print("WALIDACJA – BŁĘDY:")
         for b in bledy:

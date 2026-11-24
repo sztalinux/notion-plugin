@@ -281,6 +281,15 @@ class Hooki(unittest.TestCase):
         self.zablokowany(self.push(f"v-{ASCII}"), BLAD_LISTY, "Push zablokowany")
 
     # --- F-17: treść z indeksu --------------------------------------------------------------------------
+    def test_pre_commit_jeden_blad_dla_dysku_i_indeksu(self):
+        """Z-8: ta sama treść na dysku i w indeksie – błąd wypisany raz."""
+        self.plik("docs/n.md", f"notatka {OGONEK}\n")
+        r = self.commit("docs/n.md")
+        self.zablokowany(r, "Commit zablokowany")
+        out = r.stdout + r.stderr
+        self.assertEqual(out.count(BLAD_LISTY), 1, out)
+        self.assertNotIn("(indeks)", out)
+
     def test_pre_commit_tresc_z_indeksu(self):
         self.plik("docs/probka.txt", f"notatka {OGONEK}\n")
         self.git("add", "docs/probka.txt")
