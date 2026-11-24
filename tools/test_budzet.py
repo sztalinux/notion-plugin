@@ -534,6 +534,19 @@ class PrzeplywArkusz(unittest.TestCase):
                                    '--mbank', 'wyciagi/mbank-grudzien.csv')
         self.assertEqual((kod, '✗ brak pliku wyciągu' in out, 'Traceback' in out), (1, True, False), out)
 
+    def test_a7_lista_minus_i_tysiace_nie_zmieniaja_konta(self):
+        """A-7: „-40 zak” nie jest nagłówkiem konta (następne pozycje zostają na swoim koncie), „1 234,56” to jedna kwota;
+        nagłówek: skrót z konta_list albo linia bez cyfr."""
+        self.ustaw(konta_list={'praca': 'K-praca'}, lista_domyslne_konto='Gotówka')
+        (self.dane / 'lista.txt').write_text('praca\n1 234,56 zak\n-40 zak\n100 zak\nKonto bez skrotu\n50 zak\nzak 7x\n',
+                                             encoding='utf-8')
+        m = self.importuj('--lista', 'lista.txt', mies='2026-12')
+        self.assertEqual(sorted((w['konto'], w['kwota'], w['formula']) for w in m['wiersze']),  # ten sam dzień i kategoria – scalone
+                         [('K-praca', 1334.56, '=1234.56+100.00'), ('Konto bez skrotu', 50.0, None)])
+        d = {x['opis']: x for x in m['decyzje']}
+        self.assertEqual((d['-40 zak']['konto'], d['-40 zak']['kwota'], '„+”' in d['-40 zak']['uwaga']), ('K-praca', -40.0, True))
+        self.assertIn('nie rozumiem', d['zak 7x']['uwaga'])
+
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')
         p = self.dane / 'listy' / '2026-12-wpisy.jsonl'

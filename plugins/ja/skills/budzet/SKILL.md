@@ -169,7 +169,8 @@ Przychód z jej Osobą**. Wiersz w Transakcjach (kategoria `przychod_z_sald`) ma
   własny wiersz z kwotą ujemną.
 - Allegro: wydatki z listy zamówień (data zamówienia, zwrócone pomijane); płatności Allegro w banku, spłaty Allegro Pay
   i karta podarunkowa – pomijane, żeby się nie dublowały.
-- Lista skrótów: bez dat → 1. dzień miesiąca. Gotówka (tylko z wpisów) zawsze na drugą osobę (konto i osoba z `ustawienia.json`).
+- Lista skrótów: bez dat → 1. dzień miesiąca. Nagłówek konta = skrót z `konta_list` albo linia bez cyfr; „-N …” i linia
+  z cyfrą nie do odczytania → strona decyzji. Gotówka (tylko z wpisów) zawsze na drugą osobę (konto i osoba z `ustawienia.json`).
 - Pensja w arkuszu brutto (przelew + pakiety jako osobne wiersze) – przelew z banku nie jest wtedy nowym wierszem.
 - Pary pomijane razem (np. wydatek oddany tego samego dnia) – `ustawienia.json` → `pary_pomijane`.
 - Pytaj tylko o to, czego nie da się ustalić z danych; jedna lista braków zamiast serii pytań.

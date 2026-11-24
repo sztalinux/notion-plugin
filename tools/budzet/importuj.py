@@ -604,22 +604,38 @@ def paragon_listy(b, konto, tol):
                  and abs(g['kwota'] - b['kwota']) <= tol), None)
 
 
+LICZBA_L = r'(?:\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?!\d)(?:[.,]\d{1,2})?|\d[\d.,]*)'  # „1 234,56” albo „12,50”
+
+
+def bez_tysiecy(s):
+    return re.sub(r'(?<=\d)[ \u00a0\u202f](?=\d{3}(?!\d))', '', s)
+
+
 def czytaj_liste(plik, domyslne_konto):
     konto, kid, n = domyslne_konto, domyslne_konto, Counter()
     for l in Path(plik).read_text(encoding='utf-8').splitlines():
         l = l.strip()
         if not l or l.startswith('#'):
             continue
-        m = re.match(r'^(\+?)\s*(\d[\d.,]*(?:\s*[+-]\s*\d[\d.,]*)*)\s*(.*)$', l)
-        if not m:
-            k = l.split()[0].lower()
+        m = re.match(rf'^(\+?)\s*({LICZBA_L}(?:\s*[+-]\s*{LICZBA_L})*)\s*(.*)$', l)
+        k = l.split()[0].lower()
+        if not m and (k in KONTA or k in KONTA_ID or not re.search(r'\d', l)):  # nagłówek konta (linia bez cyfr – nazwa konta)
             konto, kid = KONTA.get(k, l), KONTA_ID.get(k, KONTA.get(k, l))
             continue
         n[(kid, l)] += 1  # ID nie zależy od pozycji linii – dopisanie linii nie zmienia ID pozostałych
-        plus, kod = m.group(1), m.group(3).strip().lower()
-        liczby = [-kw(x) if z == '-' else kw(x) for z, x in re.findall(r'([+-]?)\s*(\d[\d.,]*)', m.group(2))]
-        suma = round(sum(liczby), 2)
         tid = 'l' + hashlib.sha1(f'{MIES}|{kid}|{l}|{n[(kid, l)]}'.encode()).hexdigest()[:10]
+        if not m:  # „-40 zak” albo linia z cyfrą nie do odczytania – nie nagłówek (zmieniłby konto następnych pozycji)
+            mm = re.match(rf'^-\s*({LICZBA_L})\s*(.*)$', l)
+            kod = mm.group(2).strip().lower() if mm else ''
+            decyzja(dict(id=tid, data=f'{MIES}-01', konto=konto, osoba=U.get('osoba_listy'), opis=l, skladniki=None,
+                         kwota=-kw(bez_tysiecy(mm.group(1))) if mm else 0.0),
+                    zrodlo='lista', regula=kod, opcje=[opcja(*SKROTY[kod])] if kod in SKROTY else [],
+                    uwaga='„-” na początku – zwrot zapisuje się z „+”; wydatek: wybierz kategorię, zwrot: opisz w polu opisu'
+                    if mm else 'nie rozumiem linii listy – opisz w polu opisu albo Pomiń')
+            continue
+        plus, kod = m.group(1), m.group(3).strip().lower()
+        liczby = [-kw(x) if z == '-' else kw(x) for z, x in re.findall(r'([+-]?)\s*(\d[\d.,]*)', bez_tysiecy(m.group(2)))]
+        suma = round(sum(liczby), 2)
         b = dict(id=tid, data=f'{MIES}-01', konto=konto, osoba=U.get('osoba_listy'), kwota=suma if plus else -suma,
                  opis=l, skladniki=liczby if len(liczby) > 1 else None)
         g = paragon_listy(b, konto, 0.005)
