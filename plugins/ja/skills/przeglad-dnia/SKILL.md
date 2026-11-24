@@ -83,7 +83,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
    Komunikaty 🔔 z linią `→ ZP-n`: sprawdź Status tych wierszy Rodzaj Usterka w „🤖 Zmiany asystenta” (wyszukiwarka z parametrem bazy) –
    „Zrobione” albo „Odrzucone” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze widoku „🧯 Otwarte usterki”
-   bez bloku 🔔 → dodaj blok (tamże, C.5).
+   ze Statusem „Czeka na mnie” bez bloku 🔔 → dodaj blok (tamże, C.5).
 2. **Pomysły, rozmowy i porządki** – bez analizy pomysłów (tylko na prośbę inwestora, `rozwoj-harnessu`, C) i bez odczytu tablicy
    pomysłów ani stron osób: kontrole spójności P (pomysł ↔ wdrożenie) i R (zadanie rozmowy ↔ „💬 Do przegadania”) robi przegląd
    tygodnia. Nocą tylko odpowiedzi: blok 🔔 `KS-P…` albo `KS-R…` z ☑ lub dopiskiem → zastosuj wg

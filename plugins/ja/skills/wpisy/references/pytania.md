@@ -85,9 +85,8 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    (`rozwoj-harnessu`, D; ten sam problem już jest → zaktualizuj Ostatnio i treść), w okienku zamiast `✍️` linia
    `→ ZP-n (<status>) · naprawa: napisz »zrób ZP-n« w Claude Code` (bez pytań). Blok zostaje, dopóki wiersz nie ma Statusu
    „Zrobione” albo „Odrzucone” – wtedy do „Przetworzone” (`→ ZP-n zrobione` / `odrzucone`); statusy ZP sprawdza tylko
-   przebieg nocny. Każda otwarta ZP (widok „🧯 Otwarte usterki”) ma taki blok – brak (wiersz z Claude Code, nocą, ręcznie)
-   → dodaj `🔔 <dd.mm> · ZP-n – <Problem>` z tą linią.
-   Wiersz ZP ze Statusem „Czeka na mnie” → w okienku zamiast tej linii pogrubione pytanie z „Co zrobić” (z propozycją
+   przebieg nocny. Wiersza ZP założonego w Claude Code albo ręcznie (Status „Nowy” / „W toku”) nie zgłaszaj – bloku nie dodawaj.
+   Wiersz ZP ze Statusem „Czeka na mnie” bez bloku 🔔 → dodaj `🔔 <dd.mm> · ZP-n – <Problem>`; w okienku pogrubione pytanie z „Co zrobić” (z propozycją
    domyślną) i linia `✍️`; odpowiedź przepisz do treści strony ZP („ustalenia z odpowiedzi inwestora”), ustaw Status „Nowy”
    i przywróć w okienku linię `→ ZP-n (Nowy) · naprawa: …` – blok nie idzie do „Przetworzone” przed Zrobione / Odrzucone.
 6. **Blok bez odpowiedzi nie jest nowym wpisem** – tryb szybki go pomija (`przeglad-dnia`, A.2); zmienia go tylko nowa lista
