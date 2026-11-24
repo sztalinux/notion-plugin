@@ -165,7 +165,9 @@ To jedna z pozycji planu kopii zapasowych – całość (dysk zewnętrzny, ekspo
 - **Tryb aplikacji**: `kopia.py aplikacja [--wykonaj]` – kopiuje do lokalnego folderu Dysku według tych samych reguł,
   pliki tylko na Dysku wypisuje do pobrania na Maca. Plik zmieniony po obu stronach → obie wersje (Dysk do `_Archiwum`)
   i komunikat. Porównuje też z Dyskiem: plik usunięty tam ręcznie kopiuje ponownie (`stan`: „brak na Dysku”); nowy plik
-  z Maca, a na Dysku inny pod tą samą ścieżką (inny rozmiar) → wersja z Dysku do `_Archiwum` i komunikat. Arkusze
+  z Maca, a na Dysku inny pod tą samą ścieżką (inny rozmiar) → wersja z Dysku do `_Archiwum` i komunikat. Brakuje
+  ponad 20% potwierdzonych plików i ponad 5 sztuk → folder Dysku pusty albo niezsynchronizowany: `aplikacja --wykonaj`
+  odmawia (kod 1); sprawdź Dysk w przeglądarce, uzupełnienie dopiero z `--mimo-to`. Arkusze
   i dokumenty Google nie mają pliku na Macu – zostają tylko na Dysku.
 - Kontrola Dysku: lista z konektora (ścieżki) → `kopia.py sprawdz-dysk <lista.json>` – na Dysku nie może być `.dom`,
   `AI`, `.git` ani plików z sekretami.

@@ -4,7 +4,7 @@
     python3 tools/kopia.py stan [--cicho]        # tryb (aplikacja / paczka), zmiany od ostatniej potwierdzonej kopii
     python3 tools/kopia.py paczka [--wykonaj]    # tryb paczki: <hub>/_Na Dysk/RRRR-MM-DD/ + SPIS.txt (domyślnie na sucho)
     python3 tools/kopia.py wgrane [RRRR-MM-DD]   # inwestor wgrał paczkę → stan potwierdzony
-    python3 tools/kopia.py aplikacja [--wykonaj] # tryb aplikacji: kopiuje zmiany do lokalnego folderu Dysku
+    python3 tools/kopia.py aplikacja [--wykonaj] [--mimo-to]  # tryb aplikacji: kopiuje zmiany do lokalnego folderu Dysku
     python3 tools/kopia.py sprawdz-dysk <lista.json>   # lista z konektora (nazwy, ścieżki) → czy na Dysku nie ma .dom/AI/sekretów
 
 Foldery kopiowane (lista dozwolona): DOZWOLONE niżej. Nigdy: `.dom`, `AI`, `Wiedza*`, `_Przychodzące`, `_Do claude.ai`,
@@ -176,6 +176,13 @@ def brak_na_dysku(dysk: Path, teraz: dict, r: dict) -> list:
     return [s for s in sorted(teraz) if s not in zmiany and not (dysk / s).exists()]
 
 
+BRAK_PROG_PLIKI, BRAK_PROG_UDZIAL = 5, 0.2  # więcej braków na Dysku = folder pusty albo niezsynchronizowany
+
+
+def podejrzany_brak(brak: list, potwierdzonych: int) -> bool:
+    return len(brak) > BRAK_PROG_PLIKI and len(brak) > BRAK_PROG_UDZIAL * potwierdzonych
+
+
 def kopiuj_do_aplikacji(hub: Path, dysk: Path, r: dict, wykonaj: bool, data: str, teraz: dict = None) -> list:
     """Tryb aplikacji: nowe/zmienione → Dysk; poprzednia wersja i usunięte → _Archiwum/RRRR-MM-DD; nic nie kasuje.
     Z `teraz` (skan Maca) porównuje też z Dyskiem: brakujące tam pliki kopiuje ponownie."""
@@ -246,6 +253,7 @@ def main(argv=None):
     a.add_argument("data", nargs="?")
     a = sub.add_parser("aplikacja")
     a.add_argument("--wykonaj", action="store_true")
+    a.add_argument("--mimo-to", action="store_true", help="uzupełnij braki mimo podejrzenia niezsynchronizowanego Dysku")
     a = sub.add_parser("sprawdz-dysk")
     a.add_argument("lista")
     a = ap.parse_args(argv)
@@ -265,13 +273,21 @@ def main(argv=None):
     r = roznice(pot, porownanie)
     n = len(r["nowe"]) + len(r["zmienione"]) + len(r["przeniesione"]) + len(r["usuniete"])
     dysk = folder_dysku()
+    brak = brak_na_dysku(dysk, teraz, r) if dysk else []
+    niezsync = podejrzany_brak(brak, len(pot))
+    ostrz_dysk = (f"[kopia] ⚠ folder Dysku wygląda na pusty albo niezsynchronizowany: brakuje {len(brak)} z {len(pot)} "
+                  "potwierdzonych plików – sprawdź Dysk w przeglądarce; `kopia.py aplikacja --wykonaj` uzupełni je "
+                  "dopiero z `--mimo-to`")
     if bledy:
         print(f"[kopia] ⚠ pominięte – nie da się odczytać (zepsute dowiązanie? brak uprawnień?): {len(bledy)}: "
               + ", ".join(bledy[:5]) + (" …" if len(bledy) > 5 else ""))
 
     if a.cmd == "stan":
         czeka = [p["data"] for p in stan.get("paczki", []) if not p.get("wgrana")]
-        brak = brak_na_dysku(dysk, teraz, r) if dysk else []
+        if niezsync and a.cicho:
+            print(ostrz_dysk)
+            zapisz_stan(stan)
+            return 0
         linia = (f"[kopia] tryb: {'aplikacja' if dysk else 'paczka'} · potwierdzona: {stan.get('potwierdzono') or 'nigdy'} · "
                  f"zmian od niej: {n} (nowe {len(r['nowe'])}, zmienione {len(r['zmienione'])}, "
                  f"przeniesione {len(r['przeniesione'])}, usunięte {len(r['usuniete'])})"
@@ -279,6 +295,8 @@ def main(argv=None):
                  + (f" · paczki do wgrania: {', '.join(czeka)}" if czeka else ""))
         if not (a.cicho and n == 0 and not czeka and not brak):
             print(linia)
+        if niezsync:
+            print(ostrz_dysk)
         zapisz_stan(stan)
         return 0
     if a.cmd == "paczka":
@@ -322,7 +340,14 @@ def main(argv=None):
         if not dysk:
             print("[kopia] brak lokalnego folderu Dysku – użyj trybu paczki (`kopia.py paczka`)")
             return 1
-        log = kopiuj_do_aplikacji(HUB, dysk, r, a.wykonaj, data, teraz)
+        if niezsync:
+            print(ostrz_dysk)
+            if a.wykonaj and not a.mimo_to:
+                print("[kopia] nic nie skopiowano, stan bez zmian")
+                return 1
+        log = kopiuj_do_aplikacji(HUB, dysk, r, a.wykonaj, data, None if niezsync and not a.mimo_to else teraz)
+        if niezsync and not a.mimo_to:
+            log.append(f"brak na Dysku: {len(brak)} plików – lista pominięta (folder niezsynchronizowany?)")
         for x in tylko_na_dysku(dysk, porownanie):
             log.append(f"tylko na Dysku (pobierz na Maca ręcznie): {x}")
         print(("[kopia] wykonano:" if a.wykonaj else "[kopia] PLAN (na sucho):") + f" {len(log)} pozycji")

@@ -233,6 +233,42 @@ class Polecenia(unittest.TestCase):
         self.assertFalse((dysk / "_Archiwum").exists())
         self.assertIn("Projekty/a.pdf", json.loads((self.hub / ".dom/kopia/stan.json").read_text())["potwierdzone"])
 
+    def test_bezpiecznik_pusty_folder_dysku(self):
+        # brakuje > 20% potwierdzonych i > 5 plików → folder Dysku niezsynchronizowany: aplikacja --wykonaj odmawia
+        # bez --mimo-to, stan --cicho daje jedną linię ostrzeżenia
+        pot = self.potwierdz(9)  # 10 potwierdzonych
+        dysk = self.dysk_z(pot[:4])  # brakuje 6 z 10
+        kod, out = self.kopia_kod("stan", "--cicho")
+        self.assertEqual((kod, len(out.strip().splitlines())), (0, 1))
+        self.assertIn("niezsynchronizowany", out)
+        kod, out = self.kopia_kod("aplikacja", "--wykonaj")
+        self.assertEqual(kod, 1)
+        self.assertIn("--mimo-to", out)
+        self.assertEqual(len(list(dysk.rglob("*.pdf"))), 4)
+        kod, out = self.kopia_kod("aplikacja")  # na sucho: jedna linia zamiast listy braków
+        self.assertNotIn("kopia ponownie: Projekty/p08.pdf", out)
+        self.assertEqual(self.kopia_kod("aplikacja", "--wykonaj", "--mimo-to")[0], 0)
+        self.assertEqual(len(list(dysk.rglob("*.pdf"))), 10)
+
+    def test_bezpiecznik_progi(self):
+        # 5 braków (50%, ale nie > 5) i 6 braków z 40 (15%) – zwykłe uzupełnienie
+        pot = self.potwierdz(9)
+        dysk = self.dysk_z(pot[:5])
+        self.assertEqual(self.kopia_kod("aplikacja", "--wykonaj")[0], 0)
+        self.assertEqual(len(list(dysk.rglob("*.pdf"))), 10)
+        for i in range(10, 40):
+            (self.hub / f"Projekty/p{i:02}.pdf").write_bytes(b"y" * (i + 1))
+        self.paczka("2026-11-21")
+        self.kopia("wgrane")
+        pot = sorted(json.loads((self.hub / ".dom/kopia/stan.json").read_text())["potwierdzone"])
+        self.assertEqual(len(pot), 40)
+        dysk = self.dysk_z(pot[:34])  # brakuje 6 z 40
+        kod, out = self.kopia_kod("stan", "--cicho")
+        self.assertIn("brak na Dysku: 6", out)
+        self.assertNotIn("niezsynchronizowany", out)
+        self.assertEqual(self.kopia_kod("aplikacja", "--wykonaj")[0], 0)
+        self.assertEqual(len(list(dysk.rglob("*.pdf"))), 40)
+
     def test_zepsute_dowiazanie_nie_wywraca_polecen(self):
         os.symlink(self.hub / "nie-ma.pdf", self.hub / "Projekty/skrot.pdf")
         self.assertIn("nie da się odczytać", self.kopia("stan"))
