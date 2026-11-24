@@ -54,7 +54,7 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
    nie są źródłem wpisów (`wpisy`, „Źródła wpisów”); przejścia 1.1–1.3 robi tylko nocny przebieg (`references/przejscia.md`).
 2. **Nic nowego → koniec.** Brak bloków w treści „Wpisów” (wpis z okienkiem ❓ bez
    odpowiedzi się nie liczy) i podstron w „Wpisach”, brak pozycji w „Nowe”
-   Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; szybki obsługuje tylko ❓ pod wpisami oraz 🔔 z automatów, kolejki 💸 i `SP-n`; **wszystkie inne bloki 🔔** (`KS-…`, `RES-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…`, `ZP-n`) obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
+   Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; szybki obsługuje tylko ❓ pod wpisami oraz 🔔 z automatów, kolejki 💸 i `SP-n`; **wszystkie inne bloki 🔔** (`KS-…`, `RES-n`, `luki-zadan-…`, `praca-…`, `porzadki-…`, `rozkminka-…`, `ZP-n`) obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
    „Błąd”, brak list od automatu w poleceniu (komunikaty, gotowe rozkminki) i brak odpowiedzi pod blokami 🔔 (blok 🔔 bez odpowiedzi się nie liczy – inaczej
    każdy przebieg przestałby być tani) → odpowiedz jedną linią „Wpisy: nic nowego (<godzina>;
    Skrzynka: 0)”
@@ -127,7 +127,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **Uzupełnij luki** w tych wierszach według `zadania`, sekcja D (tylko wskazane pola; Status i When nie zmieniaj; wątpliwości
    → jeden zbiorczy blok 🔔 (`wpisy/references/pytania.md`, C.7)). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie
    (krok 8) i do linii „🤖” weź liczby per kategoria, nazwy zamkniętych i zmienionych (max 5 na obszar, reszta „+k”) i listę
-   uzupełnionych pól. **Odpowiedzi na dawne bloki `luki-zadan-<dd.mm>`:** to-do = uzupełnij pole wg propozycji albo przenieś zadanie do WORK (`zadania`, D; dopisek ma pierwszeństwo), blok → „Przetworzone”; nowy blok ma ten klucz.
+   uzupełnionych pól. **Odpowiedzi na dawne bloki `luki-zadan-<dd.mm>` i `praca-…`:** to-do = uzupełnij pole wg propozycji albo przenieś zadanie do WORK (`zadania`, D; dopisek ma pierwszeństwo), blok → „Przetworzone”; nowy blok ma ten klucz.
 
    **5a. Kontrola spójności** – `references/kontrola-spojnosci.md`: zastosuj odpowiedzi inwestora na dawne flagi `KS-…`, potem
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.
