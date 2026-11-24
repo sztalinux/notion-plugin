@@ -456,22 +456,33 @@ def wczytaj_konf(sciezka: Path = None) -> dict:
 
 # ---------- tryb lokalny ----------
 
-def exif_mdls(p: Path):
-    """Data zrobienia z metadanych Spotlight (JPEG, HEIC, filmy) albo None."""
+def _data_mdls(s: str):
     try:
-        out = subprocess.run(["mdls", "-raw", "-name", "kMDItemContentCreationDate", str(p)],
-                             capture_output=True, text=True, timeout=10).stdout.strip()
-    except (OSError, subprocess.SubprocessError):
-        return None
-    if not out or out == "(null)":
-        return None
-    try:
-        return datetime.strptime(out, "%Y-%m-%d %H:%M:%S %z").isoformat()
+        return datetime.strptime(s.strip(), "%Y-%m-%d %H:%M:%S %z")
     except ValueError:
         return None
 
 
-def lista_lokalna(hub: Path, exif=exif_mdls) -> dict:
+def exif_mdls(p: Path):
+    """Data zrobienia z metadanych Spotlight (JPEG, HEIC, filmy) albo None. Plik bez EXIF ma w Spotlight datę
+    utworzenia pliku (skopiowania, rozpakowania) – taka data to nie data zrobienia, więc None."""
+    try:
+        out = subprocess.run(["mdls", "-raw", "-name", "kMDItemContentCreationDate", "-name", "kMDItemFSCreationDate",
+                              str(p)], capture_output=True, text=True, timeout=10).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None
+    wartosci = (out or "").split("\0")  # -raw: wartości w kolejności -name, rozdzielone bajtem NUL
+    tresc = _data_mdls(wartosci[0])
+    if not tresc:
+        return None
+    plik = _data_mdls(wartosci[1]) if len(wartosci) > 1 else None
+    if plik and abs((tresc - plik).total_seconds()) <= 1:
+        return None
+    return tresc.isoformat()
+
+
+def lista_lokalna(hub: Path, exif=None) -> dict:
+    exif = exif or exif_mdls
     baza = hub / ZDJECIA / NOWE
     nowe, istniejace = [], []
     if baza.exists():

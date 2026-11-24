@@ -77,6 +77,17 @@ class Daty(unittest.TestCase):
         d = Z.data_zrobienia({"nazwa": "zdjecie.jpg", "utworzono": "2026-11-18T23:30:00Z"})
         self.assertEqual(d, ("2026-11-19", True, "wgranie"))
 
+    def test_mdls_data_pliku_to_nie_exif(self):
+        # plik bez EXIF: Spotlight podaje datę utworzenia pliku (rozpakowania) – to nie jest data zrobienia (F-7)
+        rowne = subprocess.CompletedProcess([], 0, "2026-11-20 07:00:00 +0000\x002026-11-20 07:00:00 +0000", "")
+        rozne = subprocess.CompletedProcess([], 0, "2026-11-05 09:15:00 +0000\x002026-11-20 07:00:00 +0000", "")
+        with mock.patch.object(Z.subprocess, "run", return_value=rowne):
+            self.assertIsNone(Z.exif_mdls(Path("IMG_20261105_101500.jpg")))
+            d = Z.data_zrobienia({"nazwa": "IMG_20261105_101500.jpg", "zrobiono": Z.exif_mdls(Path("x.jpg"))})
+        self.assertEqual(d, ("2026-11-05", False, "nazwa"))
+        with mock.patch.object(Z.subprocess, "run", return_value=rozne):
+            self.assertEqual(Z.exif_mdls(Path("x.jpg"))[:10], "2026-11-05")
+
     def test_komunikator(self):
         self.assertEqual(Z.data_zrobienia({"nazwa": "Image 2026-11-18 at 14.02.11.jpeg"})[0], "2026-11-18")
 
