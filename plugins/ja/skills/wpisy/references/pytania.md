@@ -83,11 +83,13 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    da w przebiegu, i przenieś blok do „Przetworzone” (`~~🔔 <skrót>~~ (❓ … → ✍️ …) → <co zrobiono>`).
 5. **Za duże na przebieg** (zmiana skryptu – patrz zakaz w C.8; decyzja techniczna – podejmij sam) → wiersz Rodzaj Usterka w bazie „🤖 Zmiany asystenta” (ID `ZP-n` wg `rozwoj-harnessu/references/zmiany-asystenta.md`)
    (`rozwoj-harnessu`, D; ten sam problem już jest → zaktualizuj Ostatnio i treść), w okienku zamiast `✍️` linia
-   `→ ZP-n (<status>)`. Blok zostaje, dopóki wiersz nie ma Statusu „Zrobione” albo „Odrzucone” – wtedy do „Przetworzone”
-   (`→ ZP-n zrobione` / `odrzucone`); statusy ZP sprawdza tylko przebieg nocny.
-   Wiersz ZP ze Statusem „Czeka na mnie” bez bloku 🔔 (założony albo zmieniony w Claude Code, nocą, ręcznie) → dodaj blok
-   `🔔 <dd.mm> · ZP-n – <Problem>` z okienkiem: pogrubione pytanie z „Co zrobić” (z propozycją domyślną) i linia `✍️`;
-   odpowiedź przepisz do treści strony ZP („ustalenia z odpowiedzi inwestora”) i ustaw Status „Nowy” – naprawa na polecenie „zrób ZP-n”.
+   `→ ZP-n (<status>) · naprawa: napisz »zrób ZP-n« w Claude Code` (bez pytań). Blok zostaje, dopóki wiersz nie ma Statusu
+   „Zrobione” albo „Odrzucone” – wtedy do „Przetworzone” (`→ ZP-n zrobione` / `odrzucone`); statusy ZP sprawdza tylko
+   przebieg nocny. Każda otwarta ZP (widok „🧯 Otwarte usterki”) ma taki blok – brak (wiersz z Claude Code, nocą, ręcznie)
+   → dodaj `🔔 <dd.mm> · ZP-n – <Problem>` z tą linią.
+   Wiersz ZP ze Statusem „Czeka na mnie” → w okienku zamiast tej linii pogrubione pytanie z „Co zrobić” (z propozycją
+   domyślną) i linia `✍️`; odpowiedź przepisz do treści strony ZP („ustalenia z odpowiedzi inwestora”), ustaw Status „Nowy”
+   i przywróć w okienku linię `→ ZP-n (Nowy) · naprawa: …` – blok nie idzie do „Przetworzone” przed Zrobione / Odrzucone.
 6. **Blok bez odpowiedzi nie jest nowym wpisem** – tryb szybki go pomija (`przeglad-dnia`, A.2); zmienia go tylko nowa lista
    od automatu, odpowiedź albo zmiana stanu (pkt 2–5).
 
@@ -105,11 +107,9 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
 8. **Zakaz „czeka na sesję Claude Code”.** Nie zostawiaj sprawy z adnotacją „wymaga sesji Claude Code”. Dla każdej rzeczy, której
    przebieg nie zrobi, wybierz jedno: (a) zrób część, którą możesz, i zadaj ❓ albo 🔔 z propozycją, na którą wystarczy krótka
    odpowiedź; (b) podaj w ❓ albo 🔔 dokładną czynność dla inwestora (gdzie kliknąć, co wpisać), a po jego „zrobione” dokończ;
-   (c) tylko praca techniczna (skrypt, struktura arkusza): wiersz ZP (pkt 5) – naprawia go Claude Code na polecenie
-   „zrób ZP-n” (`rozwoj-harnessu`, D), nie „najbliższa sesja”. Usterka blokuje pracę inwestora albo powinien o niej
-   wiedzieć → blok 🔔 z linią `→ ZP-n (<status>)` (pkt 5, pierwszy akapit; „Co możesz zrobić: napisz w Claude Code
-   »zrób ZP-n«”); wymaga jego czynności (dostęp, kliknięcie, decyzja) → Status „Czeka na mnie” (pkt 5, drugi akapit);
-   inaczej bez bloku 🔔. Wzorzec (a) – wydatek budowy bez pasującej pozycji w kosztorysie: ❓ z gotową propozycją nowej
+   (c) tylko praca techniczna (skrypt, struktura arkusza): wiersz ZP i blok 🔔 z linią „naprawa: napisz »zrób ZP-n«
+   w Claude Code” (pkt 5); wymaga czynności inwestora (dostęp, kliknięcie, decyzja budowlana) → Status „Czeka na mnie”
+   (pkt 5). Wzorzec (a) – wydatek budowy bez pasującej pozycji w kosztorysie: ❓ z gotową propozycją nowej
    pozycji, „tak” wystarcza, resztę robi automat albo pierwsza sesja Claude Code (`koszty`, B.2; plugin dom-budowa).
    **Wyjątek:** nowy etap kosztorysu i pierwsze sprawdzenie nowej pozycji (`koszty` C.7–C.8) czekają na sesję Claude Code
    z dopiskiem w polu Błąd strony 💸 – to nie adnotacja do pilnowania przez inwestora: sprawa jest w linii stanu sesji
