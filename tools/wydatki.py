@@ -325,7 +325,7 @@ def sync(k: dict, proba: bool) -> tuple:
     do_wyslania = [w for w in do_wyslania if w["rodzaj"] != "Plan"]   # Apps Script wziąłby je za wydatki
     if plany:   # przed pingiem – jego timeout nie wstrzymuje planów (plan nie ma „Nowej pozycji”)
         try:
-            wyslij_plany(k, plany, licz, czysc)
+            wyslij_plany(k, plany, licz, czysc, bledy)
         except BladArkusza as e:
             bledy.append(f"plany: {e} – strony zostają w kolejce")
     potrzebna_wersja = any(w["rodzaj"] in ("Wycena", ZWROT) or w.get("poz") for w in do_wyslania)
@@ -688,17 +688,29 @@ def wczytaj_plany() -> dict:
         return {}
 
 
-def zapisz_plany(d: dict):
+def zapisz_plany(d: dict, bledy: list):
+    """Zapis atomowy z plikiem tymczasowym tego procesu (automat i sesja mogą zapisywać naraz). Błąd zapisu nie przerywa
+    `sync` ani `wycofaj` – plan jest już w arkuszu, a brak wpisu oznacza przy następnym razie stary warunek wiersza
+    (najwyżej Błąd z pytaniem „Nadpisz plan”, nigdy cichy zapis)."""
     plik = plik_planow()
-    plik.parent.mkdir(parents=True, exist_ok=True)
-    tymczasowy = plik.with_suffix(".tmp")
-    tymczasowy.write_text(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
-    os.replace(tymczasowy, plik)
+    tymczasowy = plik.with_name(f".{plik.name}.{os.getpid()}.tmp")
+    try:
+        plik.parent.mkdir(parents=True, exist_ok=True)
+        tymczasowy.write_text(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
+        os.replace(tymczasowy, plik)
+    except OSError as e:
+        bledy.append(f"{plik.name}: nie zapisano ({type(e).__name__}) – plany poszły do arkusza, własność planów "
+                     "sprawdzi następny przebieg po wierszu")
+        try:
+            tymczasowy.unlink()
+        except OSError:
+            pass
 
 
-def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset()):
+def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset(), bledy=None):
     """Rodzaj „Plan” → komórka „Plan ręczny” pozycji w Kosztorysie. Pusta albo równa – zapis; inna wartość – tylko gdy ta
     strona już tę komórkę ustawiła (plany.json) albo ma zaznaczone „Nadpisz plan”; inaczej Błąd z pytaniem."""
+    bledy = [] if bledy is None else bledy
     m = mapa_planu(k)
     zapisane = wczytaj_plany()
     for w in plany:
@@ -721,13 +733,16 @@ def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset()):
         if obecny != w["kwota"]:
             a1 = f"{m['kolumna']}{p['wiersz']}"
             arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Kosztorys", "a1": a1, "wartosci": [[w["kwota"]]]}])
-        # przed zapisem Notion – jego błąd nie odbiera stronie planu; plan należy do strony, która wpisała go ostatnia
-        # (poprzednia dostaje '' – bez planu, także bez starego warunku wiersza)
-        nowe_wpisy = {s: ("" if lp == w["lp"] else lp) for s, lp in zapisane.items()}
-        nowe_wpisy[klucz] = w["lp"]
-        if nowe_wpisy != zapisane:
-            zapisane = nowe_wpisy
-            zapisz_plany(zapisane)
+        # przed zapisem Notion – jego błąd nie odbiera stronie planu. Własność przechodzi na tę stronę, gdy sama wpisała
+        # komórkę (pustą, własny plan albo z „Nadpisz plan”) albo pozycja nie ma właściciela; poprzednia dostaje '' (bez
+        # planu, także bez starego warunku wiersza). Ta sama kwota co w komórce bez zapisu – własność zostaje.
+        wlasciciele = {s for s, lp in zapisane.items() if lp == w["lp"]}
+        if obecny != w["kwota"] or not wlasciciele:
+            nowe_wpisy = {s: ("" if lp == w["lp"] else lp) for s, lp in zapisane.items()}
+            nowe_wpisy[klucz] = w["lp"]
+            if nowe_wpisy != zapisane:
+                zapisane = nowe_wpisy
+                zapisz_plany(zapisane, bledy)
         uwaga = ("uwaga: pozycja ma wybraną ofertę – PLAN liczy się z oferty × ilość, plan ręczny jest zapasowy"
                  if (liczba(p["oferta"]) or 0) > 0 else "")
         licz["plany"] += 1
@@ -738,7 +753,7 @@ def strona(k: dict, id_: str) -> dict:
     return W.zadanie_http("GET", f"{W.NOTION_API}/v1/pages/{id_}", naglowki(k))
 
 
-def wycofaj(k: dict, ids: list) -> dict:
+def wycofaj(k: dict, ids: list, bledy=None) -> dict:
     """Czyści wiersze tych stron w arkuszu (Wydatki i Cennik; strona Plan – też swój „Plan ręczny”) i ustawia w Notion
     Arkusz = „Nie wysyłać”."""
     wymagaj(k, "token", "url", "sekret")
@@ -758,7 +773,7 @@ def wycofaj(k: dict, ids: list) -> dict:
                 licz["plany"] += 1
         zapisane = wczytaj_plany()
         if [zapisane.pop(klucz_strony(w["id"])) for w in plany if klucz_strony(w["id"]) in zapisane]:
-            zapisz_plany(zapisane)
+            zapisz_plany(zapisane, [] if bledy is None else bledy)
     # „usun” także dla stron Plan: strona mogła być wcześniej Wydatkiem albo Wyceną i mieć swój wiersz (Apps Script czyści
     # tylko wiersze ze Źródłem tej strony); jej wynik ustawia też „Nie wysyłać” w Notion
     wyniki = arkusz(k, "usun", ids=ids)["wyniki"] if ids else []
@@ -1094,7 +1109,7 @@ def main(argv=None) -> int:
             linia = ("sync" + (" (próba)" if a.proba else "") + ": " +
                      ", ".join(f"{n} {v}" for n, v in licz.items()))
         elif a.polecenie == "wycofaj":
-            w = wycofaj(k, a.ids)
+            w = wycofaj(k, a.ids, bledy)
             linia = "wycofaj: " + ", ".join(f"{n} {v}" for n, v in w.items())
         elif a.polecenie == "migruj":
             w = migruj(k, Path(a.ids[0]))

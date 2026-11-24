@@ -230,12 +230,12 @@ class SyncNowaPozycja(unittest.TestCase):
         licz, _, zapisy = self.plan("p", 36, 5000)
         self.assertEqual((licz["plany"], licz["bledy"], zapisy), (0, 1, []))
         # to samo, gdy plany.json pamięta inną pozycję tej strony
-        WY.zapisz_plany({"p": "03.5"})
+        WY.zapisz_plany({"p": "03.5"}, [])
         licz, _, zapisy = self.plan("p", 88, 5000)
         self.assertEqual((licz["bledy"], zapisy), (1, []))
 
     def test_9_nadpisz_plan_przejmuje_plan_od_poprzedniej_strony(self):
-        WY.zapisz_plany({"a": "47.1", "c": "03.5"})
+        WY.zapisz_plany({"a": "47.1", "c": "03.5"}, [])
         a = Atrapy(plan=("47.1", 88, 500))
         s = strona("b", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700)
         s["properties"]["Nadpisz plan"] = {"checkbox": True}
@@ -243,6 +243,28 @@ class SyncNowaPozycja(unittest.TestCase):
         self.assertEqual(licz["plany"], 1)
         self.assertEqual(json.loads(WY.plik_planow().read_text(encoding="utf-8")), {"a": "", "b": "47.1", "c": "03.5"})
         self.assertEqual(self.plan("a", 88, 900)[0]["bledy"], 1)   # „a” bez „Nadpisz plan” nie odbiera planu
+
+    def test_9_ta_sama_kwota_bez_nadpisz_nie_przejmuje_planu(self):
+        WY.zapisz_plany({"a": "47.1"}, [])
+        licz, _, zapisy = self.plan("b", None, 700)                   # komórka ma już 700 – bez zapisu
+        self.assertEqual((licz["plany"], zapisy), (1, []))
+        self.assertEqual(json.loads(WY.plik_planow().read_text(encoding="utf-8")), {"a": "47.1"})
+        WY.zapisz_plany({}, [])                                       # pozycja bez właściciela – przejmuje
+        self.plan("b", None, 700)
+        self.assertEqual(json.loads(WY.plik_planow().read_text(encoding="utf-8")), {"b": "47.1"})
+
+    def test_9_blad_zapisu_planow_nie_wstrzymuje_wydatkow(self):
+        from unittest import mock
+        for blad in (FileNotFoundError, PermissionError):   # wyścig o plik tymczasowy, katalog tylko do odczytu
+            a = Atrapy(plan=("47.1", 88, 0))
+            with mock.patch.object(WY.os, "replace", side_effect=blad("x")):
+                licz, bledy = self.uruchom([strona("p", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700),
+                                            strona("w", pozycja="47.1 Pozycja A")], a)
+            self.assertEqual((licz["plany"], licz["dopisane"]), (1, 1), blad)
+            self.assertEqual([wl["Arkusz"]["select"]["name"] for _, wl in a.patche], [WY.W_ARKUSZU] * 2)
+            self.assertTrue(any(b.startswith("plany.json: nie zapisano") for b in bledy), bledy)
+            self.assertEqual(list((WY.W.CONF / "wydatki").glob("*.tmp")), [])
+            self.assertFalse(WY.plik_planow().exists())
 
     def test_9_wydatek_przestawiony_na_plan_nie_nadpisuje(self):
         # R8: Wiersz arkusza = 50 pochodzi z zakładki Wydatki – to nie jest plan tej strony

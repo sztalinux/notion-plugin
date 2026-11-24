@@ -234,7 +234,7 @@ class Wycofaj(Podmiana):
 class WycofajPlan(Podmiana):
     def test_plan_czysci_komorke_i_wpis_w_planach(self):
         s = T.strona("p", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700, wiersz=88)
-        WY.zapisz_plany({"p": "47.1", "q": "03.5"})
+        WY.zapisz_plany({"p": "47.1", "q": "03.5"}, [])
         a = Arkusz(strony=[s], plan=("47.1", 88, 700))
         self.podmien(a)
         licz = WY.wycofaj(K, ["p"])
