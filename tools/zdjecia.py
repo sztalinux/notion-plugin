@@ -4,7 +4,7 @@
     python3 tools/zdjecia.py plan --lista <lista.json> [--teraz ISO] [--wyjscie plan.json] [--zablokuj]   # konektor: lista → plan (na sucho)
     python3 tools/zdjecia.py rozloz [--wykonaj]          # tryb lokalny: <hub>/Zdjęcia/_nowe → foldery kroków na Macu
     python3 tools/zdjecia.py zapisz-ruchy <plan.json> [--kto konektor] [--tylko id,id]   # dziennik ruchów po wykonaniu planu
-    python3 tools/zdjecia.py odblokuj                    # zdejmij blokadę porzuconego przebiegu konektora
+    python3 tools/zdjecia.py odblokuj                    # zdejmij blokadę (porzucony przebieg albo plan bez „ok”)
     python3 tools/zdjecia.py cofnij [--wykonaj|--zrobione]   # plan odwrotny ostatniego niecofniętego przebiegu
     python3 tools/zdjecia.py slad <plan.json>             # ślad do Notion: dzień → krok → liczba, folder
     python3 tools/zdjecia.py wg-dni                       # Mac: Zdjęcia/_wg dni/RRRR-MM-DD/ z dowiązaniami
@@ -21,8 +21,9 @@ Reguły (pełny opis dla agentów: plugins/dom-budowa/skills/dziennik/references
 - Luźne pliki: jeden krok w Dzienniku budowy tego dnia → ten krok; inaczej zostają z pytaniem.
 - Ponowny przebieg nic nie zmienia (prefiks daty nie jest dokładany drugi raz).
 - Dziennik ruchów (`ruchy.jsonl`): tryb lokalny dopisuje każdy ruch zaraz po wykonaniu (przerwany przebieg da się cofnąć);
-  konektor – `zapisz-ruchy --tylko` (pusty folder razem z ostatnim swoim plikiem). Blokada: `rozloz`, `cofnij --wykonaj`
-  i `plan --zablokuj` (zdejmuje ją `zapisz-ruchy` albo `odblokuj`) – skrypt i konektor nie rozkładają naraz.
+  konektor – `zapisz-ruchy --tylko` (pusty folder razem z ostatnim swoim plikiem). Blokada: `rozloz` i `cofnij --wykonaj`
+  (skrypt, 2 h) oraz `plan --zablokuj` przy planie z ruchami (konektor, 30 min, ponowny plan ją odświeża; zdejmuje ją
+  `zapisz-ruchy` albo `odblokuj`) – skrypt i konektor nie rozkładają naraz.
 
 Wejście planu (`--lista`, JSON): {"nowe": [{"id", "nazwa", "folder" ("" = luzem), "mime", "rozmiar", "utworzono",
 "zmieniono", "zrobiono"?}], "istniejace": [{"folder": "<ścieżka od Dom>", "nazwa", "rozmiar"}]}. Kroki i dni:
@@ -55,7 +56,8 @@ ZDJECIA, NOWE = "Zdjęcia", "_nowe"
 PRZED = "przed zakryciem"
 ARCH_DUP, ARCH_PUSTE = "_Archiwum/Duplikaty", "_Archiwum/Puste foldery"
 SWIEZE_MIN = 15
-BLOKADA_H = 2
+BLOKADA_H = 2  # skrypt; blokada konektora (plan --zablokuj) – BLOKADA_KONEKTOR_MIN
+BLOKADA_KONEKTOR_MIN = 30
 
 SLOWA_PRZED = ("przed zakryciem", "z miara", "z miarka", "przed zalaniem", "przed zasypka", "przed betonowaniem")
 DOKUMENTY = [  # (słowa w nazwie folderu, rodzaj, folder docelowy – {r} rok, {etap} etap)
@@ -454,18 +456,36 @@ class Zajete(Exception):
     pass
 
 
-def _blokada_aktywna():
-    """Treść blokady albo None (brak, nieczytelna albo starsza niż 2 h – porzucona)."""
+def _blokada():
+    """(treść blokady, aktywna?) albo (None, False). Konektor – 30 min, skrypt – 2 h; starsza = porzucona."""
     try:
         b = json.loads((DANE / "blokada.json").read_text(encoding="utf-8"))
     except (ValueError, OSError):
-        return None
-    return b if isinstance(b, dict) and time.time() - b.get("t", 0) < BLOKADA_H * 3600 else None
+        return None, False
+    if not isinstance(b, dict):
+        return None, False
+    zycie = BLOKADA_KONEKTOR_MIN * 60 if b.get("kto") == "konektor" else BLOKADA_H * 3600
+    return b, time.time() - b.get("t", 0) < zycie
 
 
-def zablokuj(kto: str):
+def _blokada_aktywna():
+    b, aktywna = _blokada()
+    return b if aktywna else None
+
+
+def opis_blokady() -> str:
+    """Do `stan`: nie | <kto> od <czas> | porzucona (<kto> od <czas>)."""
+    b, aktywna = _blokada()
+    if b is None:
+        return "porzucona (nieczytelna) – `zdjecia.py odblokuj`" if (DANE / "blokada.json").exists() else "nie"
+    kto_od = f"{b.get('kto')} od {b.get('od')}"
+    return kto_od if aktywna else f"porzucona ({kto_od}) – `zdjecia.py odblokuj`"
+
+
+def zablokuj(kto: str, odswiez: bool = False):
+    """Zakłada blokadę; aktywna blokada → Zajete. `odswiez`: blokadę tego samego wykonawcy przedłuża."""
     b = _blokada_aktywna()
-    if b:
+    if b and not (odswiez and b.get("kto") == kto):
         raise Zajete(f"rozkładanie trwa ({b.get('kto')}, od {b.get('od')})")
     DANE.mkdir(parents=True, exist_ok=True)
     (DANE / "blokada.json").write_text(json.dumps({"kto": kto, "t": time.time(),
@@ -594,6 +614,27 @@ def wykonaj_lokalnie(plan: dict, hub: Path, kto: str = "skrypt") -> int:
     return n
 
 
+def cofnij_lokalnie(c: dict, hub: Path) -> list:
+    """Wykonuje plan cofnięcia na Macu; zwraca konflikty (puste = cofnięte w całości). Plik, którego nie ma w miejscu
+    po rozłożeniu, a jest w miejscu wyjściowym – uznany za cofnięty wcześniej (ponowne `cofnij` dokańcza resztę)."""
+    konflikty = []
+    for f in c["foldery"]:  # pusty folder: zostaje w archiwum, gdy w _nowe jest już folder o tej nazwie – nie konflikt
+        z, cel = hub / f["z"] / f["folder"], hub / f["do"] / f["nowa_nazwa"]
+        if z.exists() and not cel.exists():
+            cel.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(z), str(cel))
+    for r in c["ruchy"]:
+        z, cel = hub / r["z"] / r["nazwa"], hub / r["do"] / r["nowa_nazwa"]
+        if z.exists() and not cel.exists():
+            cel.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(z), str(cel))
+        elif z.exists():
+            konflikty.append(f"{r['z']}/{r['nazwa']}: w {r['do']} jest już plik {r['nowa_nazwa']} (nic nie nadpisuję)")
+        elif not cel.exists():
+            konflikty.append(f"{r['z']}/{r['nazwa']}: nie ma pliku (przeniesiony albo przemianowany ręcznie?)")
+    return konflikty
+
+
 def wg_dni(hub: Path) -> int:
     """Zdjęcia/_wg dni/RRRR-MM-DD/ – dowiązania do zdjęć z prefiksem daty (widok dnia bez zajmowania miejsca)."""
     baza, widok, n = hub / ZDJECIA, hub / ZDJECIA / "_wg dni", 0
@@ -644,7 +685,7 @@ def main(argv=None):
     a = sub.add_parser("zapisz-ruchy")
     a.add_argument("plan")
     a.add_argument("--kto", default="konektor")
-    a.add_argument("--tylko", default="")
+    a.add_argument("--tylko", default=None, help="id wykonanych ruchów po przecinku")
     a = sub.add_parser("cofnij")
     a.add_argument("--wykonaj", action="store_true", help="lokalnie: przenieś pliki z powrotem")
     a.add_argument("--zrobione", action="store_true", help="konektor: cofnięcie wykonane – zapisz w dzienniku ruchów")
@@ -656,24 +697,35 @@ def main(argv=None):
     a = ap.parse_args(argv)
 
     if a.cmd == "plan":
-        if a.zablokuj:
-            try:
-                zablokuj("konektor")
-            except Zajete as e:
-                print(f"[zdjęcia] {e} – nie rozkładaj teraz; blokada z tej sesji (porzucony przebieg) → "
-                      "`zdjecia.py odblokuj`", file=sys.stderr)
-                return 1
         teraz = _iso(a.teraz) if a.teraz else None
         lista = json.loads(Path(a.lista).read_text(encoding="utf-8"))
         konf = wczytaj_konf(Path(a.kroki) if a.kroki else None)
         if not konf.get("kroki"):
             print("[zdjęcia] brak kroków (.dom/zdjecia/kroki.json) – zapisz je z Harmonogramu", file=sys.stderr)
         plan = planuj(lista, konf, teraz)
-        wyj = Path(a.wyjscie) if a.wyjscie else DANE / f"plan-{datetime.now(PL):%Y%m%d-%H%M%S}.json"
-        wyj.parent.mkdir(parents=True, exist_ok=True)
-        wyj.write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
+        blokuj = a.zablokuj and bool(plan["ruchy"])  # blokada tylko po udanym planie z ruchami
+        if blokuj:
+            try:
+                zablokuj("konektor", odswiez=True)
+            except Zajete as e:
+                print(f"[zdjęcia] {e} – nie rozkładaj teraz, spróbuj po zakończeniu przebiegu skryptu; "
+                      "porzucona blokada → `zdjecia.py odblokuj`", file=sys.stderr)
+                return 1
+        try:
+            wyj = Path(a.wyjscie) if a.wyjscie else DANE / f"plan-{datetime.now(PL):%Y%m%d-%H%M%S}.json"
+            wyj.parent.mkdir(parents=True, exist_ok=True)
+            wyj.write_text(json.dumps(plan, ensure_ascii=False, indent=1), encoding="utf-8")
+        except BaseException:
+            if blokuj:
+                odblokuj("konektor")
+            raise
         wypisz(plan, True)
         print(f"[zdjęcia] plan: {wyj}")
+        if blokuj:
+            print(f"[zdjęcia] blokada: konektor, {BLOKADA_KONEKTOR_MIN} min (zdejmie ją `zapisz-ruchy`; bez „ok” – "
+                  "`zdjecia.py odblokuj`)")
+        elif a.zablokuj:
+            print("[zdjęcia] brak ruchów – blokady nie zakładam")
         return 0
     if a.cmd == "rozloz":
         try:
@@ -685,11 +737,17 @@ def main(argv=None):
                     print(f"[zdjęcia] przeniesiono {n} z {len(plan['ruchy'])} – reszta pominięta (brak źródła "
                           "albo cel już istnieje); w dzienniku ruchów tylko wykonane")
         except Zajete as e:
-            print(f"[zdjęcia] {e} – następny przebieg")
+            print(f"[zdjęcia] {e} – następny przebieg (porzucona blokada → `zdjecia.py odblokuj`)")
         return 0
     if a.cmd == "zapisz-ruchy":
         plan = json.loads(Path(a.plan).read_text(encoding="utf-8"))
-        tylko = {x for x in a.tylko.split(",") if x} or None
+        tylko = None
+        if a.tylko is not None:
+            tylko = {x.strip() for x in a.tylko.split(",") if x.strip()}
+            if not tylko:
+                print("[zdjęcia] --tylko bez identyfikatorów – nic nie zapisuję (nic nie wykonano? blokadę zdejmij "
+                      "`zdjecia.py odblokuj`)", file=sys.stderr)
+                return 1
         pliki, foldery = zapisz_ruchy(plan, a.kto, tylko)
         print(f"[zdjęcia] zapisano ruchów: {pliki}" + (f", pustych folderów: {foldery}" if foldery else ""))
         if odblokuj(a.kto):
@@ -713,24 +771,23 @@ def main(argv=None):
             print(f"  {r['z']}/{r['nazwa']} → {r['do']}/{r['nowa_nazwa']}")
         for f in c["foldery"]:
             print(f"  folder {f['z']}/{f['folder']} → {f['do']}/{f['nowa_nazwa']}")
+        (DANE / "cofniecie.json").write_text(json.dumps(c, ensure_ascii=False, indent=1), encoding="utf-8")
         if a.wykonaj:
             try:
                 with Blokada("skrypt"):
-                    for f in c["foldery"]:
-                        z, cel = HUB / f["z"] / f["folder"], HUB / f["do"] / f["nowa_nazwa"]
-                        if z.exists() and not cel.exists():
-                            cel.parent.mkdir(parents=True, exist_ok=True)
-                            shutil.move(str(z), str(cel))
-                    for r in c["ruchy"]:
-                        z, cel = HUB / r["z"] / r["nazwa"], HUB / r["do"] / r["nowa_nazwa"]
-                        if z.exists() and not cel.exists():
-                            cel.parent.mkdir(parents=True, exist_ok=True)
-                            shutil.move(str(z), str(cel))
-                    oznacz_cofniety(c["przebieg"], "skrypt")
+                    konflikty = cofnij_lokalnie(c, HUB)
+                    if not konflikty:
+                        oznacz_cofniety(c["przebieg"], "skrypt")
             except Zajete as e:
-                print(f"[zdjęcia] {e} – cofnij po zakończeniu przebiegu")
+                print(f"[zdjęcia] {e} – cofnij po zakończeniu przebiegu (porzucona blokada → `zdjecia.py odblokuj`)")
                 return 1
-        (DANE / "cofniecie.json").write_text(json.dumps(c, ensure_ascii=False, indent=1), encoding="utf-8")
+            if konflikty:
+                print(f"[zdjęcia] nie cofnięto {len(konflikty)} – przebieg NIE jest oznaczony jako cofnięty:")
+                for k in konflikty:
+                    print(f"  ✗ {k}")
+                print("  Rozwiąż je i powtórz `cofnij --wykonaj` (cofnięte już pliki pominie) albo zamknij przebieg "
+                      "`cofnij --zrobione`.")
+                return 1
         return 0
     if a.cmd == "slad":
         plan = json.loads(Path(a.plan).read_text(encoding="utf-8"))
@@ -747,7 +804,7 @@ def main(argv=None):
         konf, ruchy = wczytaj_konf(), wczytaj_ruchy()
         print(f"[zdjęcia] etap: {konf.get('etap')}, kroków: {len(konf.get('kroki') or [])}, "
               f"ruchów w dzienniku: {len(ruchy)}, ostatni przebieg: {ruchy[-1]['przebieg'] if ruchy else '–'}, "
-              f"blokada: {'tak' if (DANE / 'blokada.json').exists() else 'nie'}")
+              f"blokada: {opis_blokady()}")
         return 0
     return 1
 

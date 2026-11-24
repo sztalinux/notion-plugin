@@ -182,22 +182,25 @@ Format: `{"foldery": {"Zdjęcia": "<id>", "Zdjęcia/_nowe": "<id>", "Zdjęcia/<E
 od razu. Brak `kroki.json` → zbuduj go (sekcja 3); bez kroków plan zostawia wszystko w `_nowe`.
 
 **„rozłóż zdjęcia”** (tryb 2):
-1. `python3 tools/zdjecia.py stan` (blokada? ostatni przebieg?). Odśwież `.dom/zdjecia/kroki.json` z Harmonogramu
-   i Dziennika budowy (sekcja 3).
+1. `python3 tools/zdjecia.py stan` (blokada? ostatni przebieg?). „blokada: skrypt od …” – rozkłada skrypt, wróć
+   później; „konektor od …” – rozkłada inna sesja (blokada trwa 30 min) albo poprzedni plan tej rozmowy; „porzucona” –
+   `zdjecia.py odblokuj`. Odśwież `.dom/zdjecia/kroki.json` z Harmonogramu i Dziennika budowy (sekcja 3).
 2. Konektor: `search_files` z `parentId` folderu `_nowe` (z `dysk.json`); narzędzie nie schodzi w głąb samo – wywołaj
    je osobno dla każdego podfolderu (`mimeType` folderu w wynikach). Do tego pliki folderów docelowych, do których coś
    może trafić (duplikaty). Pole rozmiaru w wynikach to `fileSize` (tekst – zamień na liczbę). Zapisz listę w
    `.dom/zdjecia/lista-<data>.json`: `nowe` – `id`, `nazwa` (title), `folder` (ścieżka od `_nowe`, "" luzem), `rozmiar`
    (fileSize), `utworzono` (createdTime), `zmieniono` (modifiedTime); `istniejace` – `folder` (ścieżka od `Dom`),
    `nazwa`, `rozmiar`.
-3. `python3 tools/zdjecia.py plan --lista <lista> --zablokuj` → plan i pytania (kod 1 = rozkłada skrypt albo inna sesja –
-   przerwij). Pokaż inwestorowi listę ruchów (zasada 10); po „ok” wykonaj, bez „ok” – `zdjecia.py odblokuj`.
+3. `python3 tools/zdjecia.py plan --lista <lista> --zablokuj` → plan i pytania. Plan z ruchami zakłada blokadę konektora
+   (30 min; ponowny plan ją odświeża), plan bez ruchów – nie. Kod 1 = rozkłada skrypt – przerwij i wróć później.
+   Pokaż inwestorowi listę ruchów (zasada 10); po „ok” wykonaj, bez „ok” – `zdjecia.py odblokuj`.
 4. Ruchy konektorem: `update_file` z `fileId`, `parentId` folderu docelowego (z `dysk.json`) i `title` = nowa nazwa –
    jedno wywołanie. Brak folderu docelowego → `create_file` z `title`, `parentId` i
    `contentMimeType = 'application/vnd.google-apps.folder'`; identyfikator dopisz do `dysk.json`. Pusty folder z `_nowe` → `_Archiwum/Puste
-   foldery`. Błąd → zatrzymaj się (zasada 7).
+   foldery`. Błąd → zatrzymaj się (zasada 7); ruchy wykonane do błędu zapisz krokiem 5.
 5. `python3 tools/zdjecia.py zapisz-ruchy <plan> --kto konektor --tylko <id wykonanych, po przecinku>` – pusty folder
-   zapisuje się sam, gdy wykonano wszystkie pliki z niego; polecenie zdejmuje blokadę.
+   zapisuje się sam, gdy wykonano wszystkie pliki z niego; polecenie zdejmuje blokadę. Nic nie wykonano → nie
+   zapisuj (puste `--tylko` = błąd), tylko `zdjecia.py odblokuj`.
 6. `python3 tools/zdjecia.py slad <plan>` → ślad w Dzienniku budowy (sekcja 10, `dziennik` E).
 7. Pytania z planu → jeden komunikat 🔔 z kluczem `zdjecia` (aktualizowany, nie powielany).
 
@@ -216,9 +219,12 @@ z telefonu i „rozłóż zdjęcia” konektorem (tryb 2), kopia – paczka; zap
 **„cofnij ostatnie rozłożenie”** – `zdjecia.py cofnij` wypisuje odwrotny plan ostatniego niecofniętego przebiegu
 (`.dom/zdjecia/cofniecie.json`). Pokaż go i po „ok” wykonaj: najpierw foldery (z `_Archiwum/Puste foldery` z powrotem do
 `_nowe`; identyfikator folderu wyszukaj po nazwie w archiwum, nazwę po powrocie bierz z planu), potem pliki (`fileId`
-z planu, `parentId` z `dysk.json` – popraw w nim ścieżki przeniesionych folderów, `title` = dawna nazwa). Lokalnie: `cofnij --wykonaj`. Po konektorze:
-`cofnij --zrobione` (oznacza przebieg jako cofnięty – kolejne „cofnij” weźmie wcześniejszy). Ślad w Notion popraw ręcznie
-(liczby i linki).
+z planu, `parentId` z `dysk.json` – popraw w nim ścieżki przeniesionych folderów, `title` = dawna nazwa). Lokalnie:
+`cofnij --wykonaj` – kod 1 i lista „✗” = część plików nie wróciła (cel zajęty, pliku nie ma); przebieg zostaje
+niecofnięty, ponowne `cofnij --wykonaj` dokończy resztę. Blokada skryptu albo konektora – po zakończeniu przebiegu,
+porzucona – `zdjecia.py odblokuj`. Po konektorze: `cofnij --zrobione` (oznacza przebieg jako cofnięty – kolejne „cofnij”
+weźmie wcześniejszy). Przebieg przerwany i dokończony to dwa przebiegi – pełny powrót wymaga dwóch „cofnij”. Ślad
+w Notion popraw ręcznie (liczby i linki).
 
 **Zdjęcia z dnia albo tygodnia**: każdy plik zaczyna się od daty, więc data w wyszukiwarce Dysku (albo Findera) pokazuje
 wszystkie zdjęcia dnia ze wszystkich folderów; wpis Dziennika budowy z dnia ma linki do folderów kroków; przegląd tygodnia
@@ -268,7 +274,8 @@ z dowiązaniami.
 | inwestor sam przeniósł zdjęcia | skrypt pomija brakujące źródło; konektor – plik nie jest już w `_nowe` | `test_rozloz_cofnij` |
 | wgrywanie trwa | folder czeka do następnego przebiegu | `test_wgrywanie_trwa` |
 | ponowny przebieg | bez zmian | `test_ponowny_przebieg_bez_zmian` |
-| skrypt i konektor naraz | blokada `.dom/zdjecia/blokada.json` (2 h): `rozloz`, `cofnij --wykonaj`, `plan --zablokuj` | `test_blokada`, `test_blokada_drogi_konektorowej` |
+| skrypt i konektor naraz | blokada `.dom/zdjecia/blokada.json`: `rozloz`, `cofnij --wykonaj` (skrypt, 2 h), `plan --zablokuj` z ruchami (konektor, 30 min) | `test_blokada`, `test_blokada_konektora_odswiezana_i_zdejmowana`, `test_nieudany_plan_i_plan_bez_ruchow_nie_blokuja` |
+| cofnięcie, gdy część plików przeniesiono albo zastąpiono ręcznie | konflikty „✗”, kod 1, przebieg zostaje do cofnięcia | `test_cofnij_z_konfliktami_nie_zamyka_przebiegu` |
 | przebieg przerwany w połowie | lokalnie każdy ruch trafia do dziennika zaraz po wykonaniu; konektor – `zapisz-ruchy --tylko` zapisuje wykonane; reszta planu przy następnym | `test_przerwanie_w_polowie_dziennik_ma_wykonane` |
 | drugi pusty folder o tej samej nazwie w archiwum | dopisek `_2` w dzienniku ruchów; cofnięcie bierze właściwy | `test_cofniecie_bierze_wlasny_folder_z_archiwum` |
 | Notion nie odpowiada | ruch zostaje, ślad przy następnym przebiegu (plan w `.dom/zdjecia/`) | – |

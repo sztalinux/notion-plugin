@@ -408,31 +408,110 @@ class Polecenia(WlasneDane):
         self.assertEqual(sorted(x.name for x in arch.iterdir()), ["wykop"])
         self.assertEqual([x.name for x in (self.hub / "Zdjęcia/_nowe/wykop").iterdir()], ["PXL_20261119_090000000.jpg"])
 
-    def test_blokada_drogi_konektorowej(self):
+    def lista(self, *pliki) -> Path:
         lista = self.dane / "lista.json"
-        lista.write_text(json.dumps({"nowe": [plik("PXL_20261118_090000000.jpg", "wykop")], "istniejace": []}),
-                         encoding="utf-8")
-        plan_json = self.dane / "plan.json"
-        argumenty = ["plan", "--lista", str(lista), "--kroki", str(self.kroki), "--teraz", "2026-11-20T12:00:00+00:00",
-                     "--wyjscie", str(plan_json), "--zablokuj"]
-        with Z.Blokada("skrypt"):
-            with mock.patch("sys.stderr", new_callable=io.StringIO):
-                self.assertEqual(Z.main(argumenty), 1)  # skrypt rozkłada → konektor nie planuje
-        self.assertEqual(Z.main(argumenty), 0)
-        self.assertEqual(json.loads((self.dane / "blokada.json").read_text())["kto"], "konektor")
+        lista.write_text(json.dumps({"nowe": list(pliki), "istniejace": []}), encoding="utf-8")
+        return lista
+
+    def plan_zablokuj(self, lista, wyjscie=None) -> int:
         with mock.patch("sys.stderr", new_callable=io.StringIO):
-            self.assertEqual(Z.main(argumenty), 1)  # druga sesja nie planuje równolegle
+            return Z.main(["plan", "--lista", str(lista), "--kroki", str(self.kroki), "--teraz", "2026-11-20T12:00:00+00:00",
+                           "--wyjscie", str(wyjscie or self.dane / "plan.json"), "--zablokuj"])
+
+    def test_nieudany_plan_i_plan_bez_ruchow_nie_blokuja(self):
+        # zła ścieżka listy, zły JSON, plan z samymi pytaniami → bez blokady (F-13)
+        with self.assertRaises(FileNotFoundError):
+            self.plan_zablokuj(self.dane / "nie-ma.json")
+        zla = self.dane / "zla.json"
+        zla.write_text("{nowe:", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            self.plan_zablokuj(zla)
+        self.assertEqual(self.plan_zablokuj(self.lista(plik("PXL_20261118_090000000.jpg", "urodziny"))), 0)
+        self.assertFalse((self.dane / "blokada.json").exists())
+        self.assertIn("brak ruchów", sys.stdout.getvalue())
+
+    def test_blokada_konektora_odswiezana_i_zdejmowana(self):
+        lista = self.lista(plik("PXL_20261118_090000000.jpg", "wykop"))
+        self.assertEqual(self.plan_zablokuj(lista), 0)
+        b1 = json.loads((self.dane / "blokada.json").read_text())
+        self.assertEqual(b1["kto"], "konektor")
+        self.assertEqual(self.plan_zablokuj(lista), 0)  # ponowny plan tej sesji odświeża blokadę
+        self.assertGreaterEqual(json.loads((self.dane / "blokada.json").read_text())["t"], b1["t"])
+        wgraj(self.hub, "wykop", "PXL_20261118_100000000.jpg", b"a" * 10)
         self.assertEqual(self.rozloz(), 0)  # skrypt czeka (komunikat, kod 0 – automat)
-        self.assertTrue((self.dane / "blokada.json").exists())
-        ids = ",".join(r["id"] for r in json.loads(plan_json.read_text())["ruchy"])
-        self.assertEqual(Z.main(["zapisz-ruchy", str(plan_json), "--tylko", ids]), 0)
+        self.assertTrue((self.hub / "Zdjęcia/_nowe/wykop/PXL_20261118_100000000.jpg").exists())
+        ids = ",".join(r["id"] for r in json.loads((self.dane / "plan.json").read_text())["ruchy"])
+        self.assertEqual(Z.main(["zapisz-ruchy", str(self.dane / "plan.json"), "--tylko", ids]), 0)
         self.assertFalse((self.dane / "blokada.json").exists())  # koniec przebiegu konektora zwalnia blokadę
-        with Z.Blokada("skrypt"):
-            self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 1)  # cofanie nie rusza plików w trakcie rozkładania
-        self.assertIsNotNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
         Z.zablokuj("konektor")
         self.assertEqual(Z.main(["odblokuj"]), 0)
         self.assertFalse((self.dane / "blokada.json").exists())
+
+    def test_blokada_skryptu_zatrzymuje_konektor_i_cofanie(self):
+        lista = self.lista(plik("PXL_20261118_090000000.jpg", "wykop"))
+        Z.zapisz_ruchy(Z.planuj(json.loads(lista.read_text()), KONF, TERAZ), "konektor")
+        with Z.Blokada("skrypt"):
+            self.assertEqual(self.plan_zablokuj(lista), 1)
+            self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 1)
+            self.assertEqual(json.loads((self.dane / "blokada.json").read_text())["kto"], "skrypt")
+        self.assertIsNotNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
+
+    def test_czas_zycia_blokady_i_stan(self):
+        def blokada(kto, minut_temu):
+            (self.dane / "blokada.json").write_text(json.dumps(
+                {"kto": kto, "t": time.time() - minut_temu * 60, "od": "2026-11-20T08:00+01:00"}))
+
+        def stan():
+            out = io.StringIO()
+            with mock.patch("sys.stdout", out):
+                Z.main(["stan"])
+            return out.getvalue()
+        self.assertIn("blokada: nie", stan())
+        blokada("konektor", 10)
+        self.assertIsNotNone(Z._blokada_aktywna())
+        self.assertIn("blokada: konektor od 2026-11-20T08:00+01:00", stan())
+        blokada("konektor", 31)  # konektor – 30 min
+        self.assertIsNone(Z._blokada_aktywna())
+        self.assertIn("blokada: porzucona (konektor od 2026-11-20T08:00+01:00) – `zdjecia.py odblokuj`", stan())
+        self.assertEqual(self.plan_zablokuj(self.lista(plik("PXL_20261118_090000000.jpg", "wykop"))), 0)
+        blokada("skrypt", 31)  # skrypt – 2 h
+        self.assertIn("blokada: skrypt od", stan())
+        blokada("skrypt", 121)
+        self.assertIn("blokada: porzucona (skrypt", stan())
+
+    def test_zapisz_ruchy_puste_tylko_to_blad(self):
+        # --tylko "" (nic nie wykonano) nie może zapisać całego planu jako wykonanego
+        lista = self.lista(plik("PXL_20261118_090000000.jpg", "wykop"))
+        self.assertEqual(self.plan_zablokuj(lista), 0)
+        with mock.patch("sys.stderr", new_callable=io.StringIO):
+            self.assertEqual(Z.main(["zapisz-ruchy", str(self.dane / "plan.json"), "--tylko", ""]), 1)
+            self.assertEqual(Z.main(["zapisz-ruchy", str(self.dane / "plan.json"), "--tylko", " , "]), 1)
+        self.assertEqual(Z.wczytaj_ruchy(), [])
+        self.assertTrue((self.dane / "blokada.json").exists())
+
+    def test_cofnij_z_konfliktami_nie_zamyka_przebiegu(self):
+        # inwestor przemianował jeden rozłożony plik i wgrał do _nowe nowy plik o nazwie drugiego → cofnięcie
+        # częściowe: konflikty, kod 1, przebieg dalej do cofnięcia; po rozwiązaniu ponowne cofnij kończy resztę
+        for n in "123":
+            wgraj(self.hub, "wykop", f"PXL_2026111{n}_090000000.jpg", n.encode() * 10)
+        self.assertEqual(self.rozloz(), 0)
+        krok = self.hub / "Zdjęcia/Etap A/01 Wykop i odbiór dna"
+        (krok / "2026-11-11_PXL_20261111_090000000.jpg").rename(krok / "2026-11-11_narożnik.jpg")
+        wgraj(self.hub, "wykop", "PXL_20261112_090000000.jpg", b"NOWE")
+        self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 1)
+        wyjscie = sys.stdout.getvalue()
+        self.assertIn("nie cofnięto 2", wyjscie)
+        self.assertIsNotNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
+        nowe = self.hub / "Zdjęcia/_nowe/wykop"
+        self.assertEqual((nowe / "PXL_20261113_090000000.jpg").read_bytes(), b"3" * 10)
+        self.assertEqual((nowe / "PXL_20261112_090000000.jpg").read_bytes(), b"NOWE")  # nic nie nadpisane
+        # rozwiązanie: inwestor odsuwa nowy plik i przywraca nazwę – cofnij dokańcza tylko brakujące
+        (nowe / "PXL_20261112_090000000.jpg").rename(self.hub / "odsuniety.jpg")
+        (krok / "2026-11-11_narożnik.jpg").rename(krok / "2026-11-11_PXL_20261111_090000000.jpg")
+        self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 0)
+        self.assertEqual(sorted(x.name for x in nowe.iterdir()),
+                         ["PXL_20261111_090000000.jpg", "PXL_20261112_090000000.jpg", "PXL_20261113_090000000.jpg"])
+        self.assertIsNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
 
 
 if __name__ == "__main__":
