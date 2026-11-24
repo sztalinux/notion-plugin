@@ -186,6 +186,8 @@ class Hooki(unittest.TestCase):
     def test_czysty_commit_i_push_nowej_galezi(self):
         self.plik("docs/czysty.md", "Zwykła notatka o procedurze, N zł.\n")
         self.plik(".DS_Store", b"\x00\x00\x00\x01Bud1\x00\x00\x10\x00")  # ignorowany przez git – nie blokuje
+        self.plik("docs/.czysty.md.swp", b"b0VIM 9.0\x00\x00\x10\x00")  # plik wymiany vima (Z-1) – też
+        self.plik("docs/czysty.md~", b"kopia\x00\x01")
         self.przeszedl(self.commit("docs/czysty.md"))
         self.git("checkout", "-q", "-b", "czysta-galaz")
         self.przeszedl(self.push("czysta-galaz"))
