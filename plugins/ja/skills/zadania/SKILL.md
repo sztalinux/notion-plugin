@@ -78,8 +78,8 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
    zadania także ręcznie w Notion, więc wpis „zrobiłem X” bywa spóźniony. Jest takie → nic nie zmieniaj w zadaniu (pozycja 🛒 – „Zakupy”, pkt 4), w śladzie
    „→ już zamknięte (ręcznie)” z odnośnikiem.
 2. Jedno trafienie → zmień status; w treści strony dopisz linię „<data>: <co się stało> (z Dziennika)”. Zadanie budowy
-   (Obszar Dom/puste) z powiązanym krokiem Harmonogramu → status kroku zostaw bez zmian – zmienia go odbiór
-   (`etap`, krok 7) albo relacja z końca kroku (`dziennik` A.2); w śladzie wzmianka kroku.
+   (Obszar Dom/puste) z powiązanym krokiem Harmonogramu → status kroku zostaw bez zmian – zmienia go tabela
+   „Status kroku” (`harmonogram` C, plugin `dom-budowa`); w śladzie wzmianka kroku.
    Zadanie z pozycją w 🛒 Zakupach (relacja Zadanie – jest tylko po stronie Zakupów, w zadaniu jej nie widać: przy
    Kategorii Zakup pozycję znajdź wyszukiwarką z parametrem bazy Zakupów po rzeczy z nazwy „Kupić X”) – w tej samej pracy Status pozycji wg „Zakupy”, pkt 4: „kupiłem” albo DONE → Kupione + Kupione dnia,
    „zamówiłem” → Zamówione (bez daty), ARCHIVED → Odpuszczone; w śladzie obie wzmianki. Wyjątek: zadanie „Zamówić

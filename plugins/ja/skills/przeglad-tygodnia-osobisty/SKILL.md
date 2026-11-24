@@ -28,7 +28,8 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
 ## Kroki
 
 1. **Budowa** – wczytaj skill `przeglad-tygodnia` (plugin dom-budowa) i wykonaj go; zapisze przegląd budowy na DOM
-   („Przeglądy tygodniowe”). Weź link do wpisu i jedną linię skrótu (do decyzji n, terminy 7 dni n).
+   („Przeglądy tygodniowe”). Weź link do wpisu, jedną linię skrótu (do decyzji n, terminy 7 dni n) i blok 🔔 porządków budowy
+   (`porzadki-budowa-<RRRR-Www>`) – zapisz go w kroku 5 razem z własnym.
 2. **Tydzień – sprawy osobiste** (odczyt):
    - „📆 Przeglądy dzienne” – wpisy z 7 dni (co się działo, co zamknięto); przy okazji napraw zepsute nagłówki dni
      (`przeglad-dnia/references/uklad-wpisu.md`, A, „Naprawa raz w tygodniu”) – bez pytania, to tylko format;
@@ -86,7 +87,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    przeglądów dziennych starsze niż 14 dni do archiwum – zrób to **przed zapisem wpisu z kroku 4**, żeby wpis od razu miał liczbę i zakres dni w linii
    „Porządki” (jedna edycja strony – `ja`, zasada 2; brak takich dni → „archiwum: nic”, także w pustym tygodniu).
    Pozostałe porządki tylko proponujesz: jeden blok 🔔 pod „🔔 Komunikaty asystenta” we „Wpisach” (`wpisy/references/pytania.md`, C.7; klucz `porzadki-<RRRR-Www>`, jedno to-do
-   na porządek, „zastosuję w nocnym przeglądzie”). Tygodniowy dodaje i aktualizuje bloki **tylko pod nagłówkiem 🔔**, jedną
+   na porządek – max 3, więcej → jedno to-do „Zastosować wszystkie porządki (lista w Szczegółach)”; „zastosuję w nocnym przeglądzie”). Tygodniowy dodaje i aktualizuje bloki **tylko pod nagłówkiem 🔔**, jedną
    punktową edycją „Wpisów” (szybki nie startuje, gdy trwa tygodniowy); listy „Komunikaty z automatów” nie dostaje. Wpis tygodniowy: tylko liczba
    (linia „Porządki”). Ta sama propozycja już czeka w 🔔 → nie dubluj.
 6. **Odpowiedź** (log): link do wpisu + liczby, w tym „archiwum: n dni”; bez treści emocji.

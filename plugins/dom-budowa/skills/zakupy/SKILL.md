@@ -38,8 +38,8 @@ Przypomnienie jest linią w przeglądzie dnia, nie powiadomieniem na telefon; pi
    znany (z niego biorą „dostawy jutro / w 7 dni” przegląd dnia i tygodnia budowy); po dostawie Dostawa = dzień faktyczny.
    Dostawa umówiona na dzień („w poniedziałek przyjedzie stal”) – jak „Zamówiłem”; wiersza nie ma (np. dokupienie braków,
    C.3) → nowy wiersz od razu „Zamówione” z Dostawą. Bez zadania w TASKS (to nie „czekam na”).
-   Pozycja ma w Uwagach wzmiankę o zadaniu „na już” założonym w 0.2 → przy „kupiłem” w tej samej pracy to zadanie → DONE
-   (ślad w obu; odwrotny kierunek – `zadania` B.2, plugin `ja`). Innych zadań nie zamykaj – nawet o tej samej rzeczy.
+   Pozycja ma w Uwagach wzmiankę o zadaniu „na już” założonym w 0.2 → przy „kupiłem” albo „zamówiłem” (jak `zadania` B,
+   plugin `ja`) w tej samej pracy to zadanie → DONE (ślad w obu; odwrotny kierunek – `zadania` B.2). Innych zadań nie zamykaj – nawet o tej samej rzeczy.
 
 ## A. Lista zakupów na etap („co kupić na ściany parteru”)
 

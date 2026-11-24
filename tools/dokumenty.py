@@ -4,7 +4,7 @@
 Folder-centrum (hub) to katalog, do którego wrzucasz wszystko od projektantów i wykonawców.
 Domyślnie: dwa poziomy nad repozytorium (…/Dom/AI/dom → …/Dom), albo zmienna DOM_HUB.
 
-    python3 tools/dokumenty.py                 # skan + przebudowa paczki + raport (lista startowa „Dokumenty budowy”)
+    python3 tools/dokumenty.py                 # skan + przebudowa paczki + raport (polecenie sesji „posortuj dokumenty”)
     python3 tools/dokumenty.py --dry-run       # to samo bez zapisu
     python3 tools/dokumenty.py ustaw "<ścieżka>" --eksport --nazwa "…" --opis "…" --kategoria "…"
     python3 tools/dokumenty.py ustaw "<ścieżka>" --bez-eksportu --opis "…" --zawartosc "…"
