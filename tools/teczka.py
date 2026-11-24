@@ -45,6 +45,15 @@ DZIALY = [  # klucz, folder w teczce, tytuł w spisie
 TYTULY = {k: t for k, _, t in DZIALY}
 
 
+POZA_OKRESEM = "⚠ poza okresem etapu – sprawdź, czy dotyczy"
+
+
+def poza_okresem(w: dict, klucz: str, cel: str) -> bool:
+    """Faktura wzięta z zapasu (data w nazwie spoza --od…--do) – oznaczana w swojej linii spisu i raportu."""
+    d = data_z_nazwy(cel.rsplit("/", 1)[-1])
+    return klucz == "faktury" and d is not None and not w["od"] <= d <= w["do"]
+
+
 def uwaga_faktur(w: dict) -> str:
     return (f"faktury z okresu ±{w['zapas_faktur']} dni – sprawdź, czy każda dotyczy tego etapu (mogą być z sąsiedniego); "
             "cudzą usuń z działu 2 Faktury")
@@ -197,7 +206,8 @@ def spis_md(hub: Path, w: dict, dzis: date, skopiowane: dict) -> str:
     for klucz, folder, tytul in DZIALY:
         pliki = skopiowane.get(klucz) or []
         L += [f"## {folder} – {tytul} ({len(pliki)})", ""]
-        L += [f"- `{cel}` ← `{zrodlo}`" for cel, zrodlo in pliki] or ["- (brak)"]
+        L += [f"- `{cel}` ← `{zrodlo}`" + (f" – {POZA_OKRESEM}" if poza_okresem(w, klucz, cel) else "")
+              for cel, zrodlo in pliki] or ["- (brak)"]
         if klucz == "faktury" and pliki and w["zapas_faktur"]:
             L.append(f"- ⚠ {uwaga_faktur(w)}")
         L.append("")
@@ -244,9 +254,11 @@ def raport(hub: Path, w: dict, z: dict, wykonaj: bool) -> str:
     for klucz, _, _ in DZIALY:
         pliki = z["skopiowane"][klucz]
         L.append(f"  {TYTULY[klucz]}: {len(pliki)}")
-        L += [f"      {cel}  ←  {zrodlo}" for cel, zrodlo in pliki[:8]]
-        if len(pliki) > 8:
-            L.append(f"      … i {len(pliki) - 8} więcej")
+        # pierwsze 8 i każda faktura spoza okresu (do sprawdzenia), niezależnie od limitu
+        pokazane = [(i, c, zr) for i, (c, zr) in enumerate(pliki) if i < 8 or poza_okresem(w, klucz, c)]
+        L += [f"      {c}  ←  {zr}" + (f"  {POZA_OKRESEM}" if poza_okresem(w, klucz, c) else "") for _, c, zr in pokazane]
+        if len(pliki) > len(pokazane):
+            L.append(f"      … i {len(pliki) - len(pokazane)} więcej")
         if klucz == "faktury" and pliki and w["zapas_faktur"]:
             L.append(f"      ⚠ {uwaga_faktur(w)}")
     L += [f"  ⚠ {b}" for b in w["braki"]]
