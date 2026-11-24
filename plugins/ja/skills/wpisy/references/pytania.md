@@ -101,6 +101,13 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    otwarte = to-do z dopiskiem `→ wpisz pod spodem`; max 3 to-do na blok. Kontekst i to, co asystent zrobi po odpowiedzi –
    w zwiniętym toggle „Szczegóły” pod pytaniem. **Odczyt:** zaznaczony to-do = zgoda; tekst dopisany pod to-do ma pierwszeństwo;
    niezaznaczony i bez dopisku = brak odpowiedzi; częściowa odpowiedź – przetwórz odpowiedziane, reszta zostaje.
+   **Porządki tygodnia** (`porzadki-…`): to-do zbiorcze „Zastosować wszystkie porządki (lista w Szczegółach)” obejmuje tylko
+   pozycje bez wyboru – lista w „Szczegółach” ponumerowana, każda pozycja to jedna konkretna czynność (propozycja domyślna,
+   np. „3. Status → Nieaktualne”), wyjątki dopiskiem pod to-do („bez 3, 5”). Pozycja z wyborem między wariantami – osobne
+   to-do („zaznacz jedno”) w limicie 3 to-do na blok; co się nie zmieści, idzie do bloku następnego tygodnia. Nocny wykonuje
+   wyłącznie pozycje wskazane jednoznacznie (☑ zbiorczego minus wyjątki z dopisku, ☑ wariantu); pozycja wątpliwa → nie
+   wykonuj, zostaje w bloku. Blok `porzadki-…` z poprzedniego tygodnia bez odpowiedzi → zastąp go nowym (lista i klucz
+   tego tygodnia), nie dokładaj drugiego.
    Blok z kluczem obsługiwanym przez nocny kończy się dopiskiem „zastosuję w nocnym przeglądzie”. Klucze `KS-…`, `RES-n`, `SP-n`, `ZP-n`, `luki-zadan-…`, `praca-…`, `porzadki-…` (`porzadki-<RRRR-Www>` osobiste, `porzadki-budowa-<RRRR-Www>` budowa), `rozkminka-…` stoją w bloku jak klucze komunikatów (kod w tekście), żeby parser znalazł pytanie po
    kluczu; ten sam klucz = aktualizacja istniejącego bloku (pkt 2). **Limit:** jeden blok = jedna flaga; najwyżej 5 nowych bloków 🔔 z kontroli spójności
    (`KS-…`, wszystkie grupy razem) na przebieg; RES-n (max 2), rozkminki (w nocy max 2, w ciągu dnia max 3), luki w zadaniach (jeden zbiorczy blok), porządki tygodnia i przejście 1.2 są poza tym limitem. **Kto obsługuje odpowiedzi:** na bloki `KS-…`, `KS-Z…`, `KS-R…`, `KS-S1-…`, `KS-P…`, `RES-n`, `luki-zadan-…`, `praca-…`, `porzadki-…`, `rozkminka-…`, `zdjecia-i-kopie` i `ZP-n` –
