@@ -85,7 +85,8 @@ miesiąca (inna kwota) nie wchodzi sama, nawet z regułą „Zawsze” – decyz
    sprawdź te bloki w tekście); uzupełnij w JSON `prop`
    i 0–2 `opcje` dla zamówień bez propozycji (format „Kategoria › Podkategoria”, kategorie z `kategorie.json`) na podstawie
    nazw produktów. Zakupy na budowę → „Dom”.
-4. Pobierz `Transakcje!A1:O` (bez sztywnego końca – wierszy przybywa co godzinę) i zapisz jako
+4. `python3 tools/budzet/arkusz_budzetu.py sync` (wpisy od 1.12 dostają wiersz z ID – import nie dopasuje ich do ręcznych
+   wierszy), potem pobierz `Transakcje!A1:O` (bez sztywnego końca – wierszy przybywa co godzinę) i zapisz jako
    `DANE/miesiace/transakcje-<data>.json`.
 5. `python3 tools/budzet/importuj.py --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>.json --zen wyciagi/zen.csv
    --mbank wyciagi/mbank.csv --allegro listy/allegro-<data>.json --lista listy/RRRR-MM-<lista>.txt`
@@ -111,12 +112,14 @@ miesiąca (inna kwota) nie wchodzi sama, nawet z regułą „Zawsze” – decyz
       ponad 30 min; wygasła w trakcie → zacznij C.3 od nowa, od świeżego odczytu;
    b) świeży odczyt `Transakcje!A1:O` → `DANE/miesiace/transakcje-<data>-zapis.json` i `python3 tools/budzet/przenies.py
       --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>-zapis.json` – odrzuca wiersze, których ID już jest w O, i daje
-      numery wierszy z tego odczytu (`zmiany` bez zgodnego wiersza → `do_wyjasnienia`, rozstrzygnij w czacie);
+      numery wierszy z tego odczytu (`zmiany` bez zgodnego wiersza → `do_wyjasnienia`, rozstrzygnij w czacie). „Możliwy
+      dubel” → usuń ręczny wiersz (bez ID), wiersz z ID wpisu zostaw – usunięty wróciłby przez 🔔 „dopisz ponownie”; ręczny
+      wiersz to suma kilku płatności → usuń wiersz z ID, potem (pod blokadą) `arkusz_budzetu.py ponow <id>` i `zamknij-wpisy <id>`;
    c) nowe wiersze **wyłącznie dopisaniem na końcu (append)**, nigdy zapisem pod numer: kolumny A:L i O (data ISO; D liczba
       albo formuła; K = `import RRRR-MM`; L = Notatki z pliku; O = ID źródeł – po nich kolejny import wie, co już jest);
       w wierszach, które zwrócił zapis, wklej formuły M:N i format z wiersza powyżej. Wiersz przychodu z sald ostatni;
-   d) `zmiany`: w wierszu o podanym numerze dopisz „-kwota” do formuły D (zwrot pomniejsza zakup) i „,<id>” zwrotu w O
-      (powtórzone C.3 nie odejmie go drugi raz);
+   d) `zmiany`: w wierszu o podanym numerze dopisz „-kwota” do formuły D (zwrot pomniejsza zakup) i „,<id>” zwrotu w O –
+      jednym wywołaniem (dwa zakresy), żeby powtórzone C.3 nie odjęło zwrotu drugi raz;
    e) `przypiecia`: `python3 tools/budzet/arkusz_budzetu.py przypnij --miesiac RRRR-MM`; bez skryptu – konektorem: w każdym
       wierszu dopisz „,<id wyciągu>” w O, a podaną kwotę wpisz w D;
    f) jeszcze pod blokadą `python3 tools/budzet/arkusz_budzetu.py zamknij-wpisy --miesiac RRRR-MM` – wpisy rozstrzygnięte
@@ -144,6 +147,9 @@ miesiąca (inna kwota) nie wchodzi sama, nawet z regułą „Zawsze” – decyz
    `podsumowanie` {tekst, punkty[], kategorie[{kat, kwota, srednio}]}, przebuduj i opublikuj stronę. W czacie 3–6 linii:
    co wpisano, czego nie jesteś pewien, największe zmiany miesiąca, przychód drugiej osoby rozbity jak w sekcji D; wiersz
    z datą poprzedniego, już zamkniętego miesiąca (wpis z jego końca, płatność dopiero w tym wyciągu) – nazwij go.
+10. Pierwsze zamknięcie na nowym kodzie (listopad 2026): wyciągi z zapasem kilku dni następnego miesiąca; decyzje „może to
+    wpis …” i pozycje „1:1 (przez przełom miesiąca)” w „Już” obejrzyj każdą, nie zatwierdzaj zbiorczo; po C.3 g
+    `arkusz_budzetu.py sync --proba` i `arkusz_budzetu.py kontrola` – 0 do dopisania, 0 problemów; potem C.8 z `--miesiac`.
 
 ## D. Przychód drugiej osoby (liczony z sald)
 
