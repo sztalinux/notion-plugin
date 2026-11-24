@@ -83,7 +83,7 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
    procedura `dziennik`; dokumenty (WZ betonu, atesty stali, karty produktów, protokoły prób) → folder budowy (`dokumenty`);
    sprawdzone punkty „✅ Checklisty budowy” z kroku 2 → Zrobione, wynik w Uwagach (usterka – punkt zostaje, link do zadania).
 6. **Płatność za etap dopiero po odbiorze** – przekaż do `koszty` (transza wg umowy, zatrzymanie), z linkiem do protokołu.
-7. **Harmonogram i gwarancja:** krok w Harmonogramie → Status „Zrobione”; odbiór końcowy umowy → w Umowach i gwarancjach
+7. **Harmonogram i gwarancja:** krok w Harmonogramie → Status „Zrobione” (`harmonogram`, „Status kroku”); odbiór końcowy umowy → w Umowach i gwarancjach
    Odbiór = data protokołu, Gwarancja do / Rękojmia do (z umowy; rękojmia ustawowo 5 lat dla budynku, jeśli umowa jej
    nie wyłącza – `[opinia]`, sprawdź umowę), Status „Odebrana”.
 8. **Książka domu:** odbiór całego etapu (odebrane albo odebrane warunkowo) → szkic rozdziału etapu i punkty „gdzie co

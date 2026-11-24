@@ -55,7 +55,7 @@ Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kro
 **Aktualizuj od razu, bez osobnej prośby** (HZ-14): gdy z rozmowy, wpisu z Dziennika albo innej procedury (dziennik,
 notatka, zakupy, etap, oferta) wynika zmiana terminu, kolejności lub zakresu kroku (umówiona dostawa betonu, inny dzień
 wykopu, krok bez uziomu, bez XPS) – w tej samej pracy zmień w Harmonogramie Termin, nazwę kroku (zakres), Status
-(Przesunięte / Potwierdzone / W trakcie) i Pewność terminu, a w Uwagach **na początku** dopisz „<data>: <powód>. Było X–Y”
+(wg tabeli „Status kroku” niżej) i Pewność terminu, a w Uwagach **na początku** dopisz „<data>: <powód>. Było X–Y”
 (starej treści nie usuwaj). **Data podana wprost przez inwestora** (w rozmowie albo we wpisie) to fakt, nie decyzja: zmień
 Termin od razu z Pewnością „Uzgodnione ustnie” – także dla kroku „Bez odwrotu” i także w przebiegu bez inwestora.
 **Przesunięcia wyliczone** (kroki zależne, krok „Bez odwrotu” bez daty od inwestora, terminy u innych) w przebiegu bez
@@ -63,8 +63,7 @@ inwestora są tylko propozycją z tabelą „było → jest” w pytaniu ❓ pod
 `ja`); w rozmowie – wg 2 i 3.
 Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym, co w niej padło.
 
-1. Zmień Termin kroku (Status „Przesunięte”, w Uwagach powód i data zmiany). „Przesunięte” trzyma tylko krok, którego
-   termin zmieniłeś, do potwierdzenia nowego terminu z ekipą – wtedy „Potwierdzone”.
+1. Zmień Termin kroku (Status wg tabeli „Status kroku” niżej, w Uwagach powód i data zmiany).
 2. Przelicz kroki, które od niego zależą (relacja Blokuje): nowy Termin z Pewnością „Szacunek” (krok z terminem
    potwierdzonym przez innych lub „Bez odwrotu” – tylko propozycja w tabeli), i pokaż ich terminy pochodne (propozycja,
    sekcja B); ich Status zostaje bez zmian.
@@ -77,6 +76,21 @@ Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym,
    pompa, kierownik, geotechnik) to przesunięcia wyliczone (wstęp C): w rozmowie – pytanie z propozycją; bez inwestora –
    zawsze okienko ❓ pod wpisem (linia w przeglądzie dnia budowy najwyżej jako dodatkowe przypomnienie). Nie wiadomo,
    którego kroku dotyczy, albo o ile → pytanie.
+
+### Status kroku – kto i kiedy zmienia
+
+Jedyne miejsce tej reguły (`dziennik` A.2, `etap` C.7 i inne procedury odsyłają tutaj); zapis w tej samej pracy, także bez
+inwestora (to fakty, nie decyzje).
+
+| Zdarzenie | Status | Zapisuje |
+|---|---|---|
+| pierwszy wpis Dziennika z pracą przy kroku („ekipa zaczęła zbrojenie płyty”) | „W trakcie” | `dziennik` A.2 |
+| przesunięcie Terminu przed startem kroku (tylko ten krok; zależne zachowują Status – C.2) | „Przesunięte” | `harmonogram` C |
+| nowy termin potwierdzony z ekipą | „Potwierdzone” | `harmonogram` C |
+| odbiór kroku wg `etap` C | „Zrobione” | `etap` C.7 |
+
+Krok „W trakcie” po zmianie końca Terminu (C.4) zostaje „W trakcie”. Status ustawiony przez inwestora (ręcznie w Notion albo
+☑ w bloku kontroli spójności `KS-H1…`) zostaje – nie cofaj go.
 
 ## D. Czekam na („geodeta tyczy w czwartek”, „ekipa ma przysłać wycenę do 15.10”)
 
