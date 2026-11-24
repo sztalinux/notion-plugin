@@ -69,7 +69,8 @@ bliska sumie → strona decyzji – `references/paragony.md`, 6). Konto z wycią
 także przez przełom miesiąca) przypina się do wiersza z wpisu (paragon: do wszystkich części, gdy płatność = suma) – ID
 wyciągu do O, kwota z wyciągu do D, bez nowego wiersza;
 wpisu nie ma w arkuszu – wiersz z płatności z kategorią wpisu; wpis z ostatnich dni miesiąca bez pary, gdy wyciąg ich nie
-obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzji. Budowa z `--budowa` nie pyta „nie ma w kosztorysie”.
+obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzji. Płatność ±1 dzień od wpisu bez pary (inna
+kwota) nie wchodzi sama, nawet z regułą „Zawsze” – decyzja z wierszem wpisu („Już w arkuszu” przypina do niego płatność). Budowa z `--budowa` nie pyta „nie ma w kosztorysie”.
 
 ## B. Zamknięcie – zebranie danych („zamknijmy miesiąc RRRR-MM”)
 

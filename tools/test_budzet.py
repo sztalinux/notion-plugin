@@ -493,6 +493,27 @@ class PrzeplywArkusz(unittest.TestCase):
         licz, bledy = self.sync_atrapa(atrapa, mimo_zamkniecia=True)
         self.assertEqual((licz['dopisane'], bledy), (1, []))
 
+    def test_a2_platnosc_inna_kwota_niz_wpis_do_decyzji_z_kandydatem(self):
+        """A-2: wpis z karty (wiersz z sync) i płatność tego dnia o innej kwocie (napiwek) z regułą „Zawsze” – nie nowy
+        wiersz obok wpisu, tylko decyzja z wierszem wpisu; „Już w arkuszu” przypina płatność do tego wiersza."""
+        self.wpisz('2026-12', self.karta('wR1', '2026-12-05', 100.0))
+        self.ark(wiersz_ark('2026-12-05', 100.0, 'K-bank', 'wR1'))
+        self.zen_wiele(('5 Dec 2026', 'SKLEP STALY', '-115.00'), ('30 Dec 2026', 'INNE', '-1.00'))
+        m = self.importuj('--zen', 'zen.csv', mies='2026-12')
+        self.assertEqual([a['regula'] for a in m['auto']], [])
+        d = [d for d in m['decyzje'] if d['regula'] == 'SKLEP STALY'][0]
+        self.assertEqual(([k['wiersz'] for k in d['kandydaci']], 'wR1' in d['uwaga']), ([2], True))
+        self.assertIn('115', [x for x in m['decyzje'] if x['id'] == 'wR1'][0]['uwaga'])
+        self.decyduj('2026-12', **{d['id']: {'akcja': 'juz', 'wiersz': 2}, 'wR1': {'akcja': 'juz', 'wiersz': 2}})
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        z = self.zapis('2026-12')
+        self.assertEqual((z['wiersze'], [(p['id_wyciagu'], p['wiersze']) for p in z['przypiecia']]),
+                         ([], [(d['id'], [{'id': 'wR1', 'wiersz': 2, 'kwota': 115.0}])]))
+        self.ark()  # wpisu nie ma w arkuszu (sync nie działał) – też decyzja, nie wiersz z reguły obok wpisu
+        m = self.importuj('--zen', 'zen.csv', mies='2026-12')
+        d = [d for d in m['decyzje'] if d['regula'] == 'SKLEP STALY'][0]
+        self.assertEqual((m['auto'], d['kandydaci'], 'przypiecie_wpisu' in d, 'wR1' in d['uwaga']), ([], [], False, True))
+
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')
         p = self.dane / 'listy' / '2026-12-wpisy.jsonl'

@@ -52,7 +52,7 @@ def kwota_ark(kwota, typ):
     return round(kwota if typ == 'Przychód' else -kwota, 2)
 
 
-pozycje, zmiany, bez, wyjasnij, opisy = [], [], [], [], []
+pozycje, zmiany, bez, wyjasnij, opisy, przyp_dec = [], [], [], [], [], []
 if 'wpisy_rozstrzygniete' not in D:
     print(f'uwaga: miesiace/{MIES}.json ze starszej wersji importu (bez wpisy_rozstrzygniete) – uruchom importuj.py ponownie, '
           'inaczej wpisy dopasowane do ręcznych wierszy nie dostaną znacznika zamknięcia')
@@ -73,6 +73,9 @@ for it in D['decyzje']:
     if not ak:
         (wyjasnij if d.get('opis') else bez).append(dict(id=it['id'], data=it['data'], opis=it['opis'], kwota=it['kwota'], uwaga=d.get('opis', '')))
         continue
+    pw = it.get('przypiecie_wpisu')  # płatność o innej kwocie niż wpis bez pary: „Już w arkuszu” przy wierszu wpisu
+    if ak == 'juz' and pw and d.get('wiersz') in [x['wiersz'] for x in pw['wiersze']]:
+        przyp_dec.append(pw)
     if ak in ('pomin', 'juz'):
         rozstrzygniete.update(([it['id']] if it['id'].startswith('w') else []) + it.get('ids_w', []))
         continue
@@ -122,7 +125,7 @@ for w in D['wiersze']:
     if U.get('przychod_z_sald') and w['kat'] == U['przychod_z_sald']['kategoria']:
         wiersze.append([w['data'], 'Zrealizowane', 'Przychód', w['formula'], w['kat'], '', '', '', '', '', TAG, '', '', '', ''])
 
-przypiecia = D.get('przypiecia', [])
+przypiecia = D.get('przypiecia', []) + przyp_dec
 juz_sa = []
 if A.arkusz:  # pod blokadą zamknięcia: numery i filtr z bieżącego stanu arkusza, nie ze zrzutu z importu
     swiezy = arkusz(sciezka(A.arkusz))

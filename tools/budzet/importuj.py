@@ -262,6 +262,24 @@ def wiersz_z_wpisu(w, kwota_ark=None, b=None):
                      notatki=notatka_wpisu(w), **({'budowa': 'z wpisu – w kosztorysie budowy (💸)'} if w.get('budowa') else {})))
 
 
+def przypiecie(u, t):
+    """Płatność t do części jednostki u -> (kwoty części w arkuszu, przypięcie do wierszy z wpisów albo None, gdy wierszy
+    nie ma). Kwota z wyciągu wygrywa; różnicę grupy bierze największa część."""
+    pary = list(zip(u['czesci'], u['wiersze']))
+    kw_cz = {w['id']: (r['kwota'] if r and r['kwota'] is not None else kwota_pozycji(w['kwota'], w['typ'])) for w, r in pary}
+    najw = max(u['czesci'], key=lambda w: abs(kw_cz[w['id']]))
+    roznica = round(kwota_pozycji(t['kwota'], najw['typ']) - sum(kw_cz.values()), 2)
+    if abs(roznica) >= 0.005:
+        kw_cz[najw['id']] = round(kw_cz[najw['id']] + roznica, 2)
+    w_ark = [(w, r) for w, r in pary if r]
+    if not w_ark:
+        return kw_cz, None
+    return kw_cz, dict(id_wyciagu=t['id'], data=t['data'].isoformat(), konto=t['konto'], kwota_wyciagu=t['kwota'], opis=t['opis'],
+                       wiersze=[dict(id=w['id'], wiersz=r['wiersz'],
+                                     kwota=kw_cz[w['id']] if r['kwota'] is None or abs(kw_cz[w['id']] - r['kwota']) >= 0.005 else None)
+                                for w, r in w_ark])
+
+
 # --- wpisy z kart: przypięcie płatności do wierszy z wpisów, wiersz z wpisu bez arkusza (zapas), czekające, decyzje
 ZASIEG = {}
 for t in bank:
@@ -284,17 +302,9 @@ for u in sorted(jednostki, key=lambda u: u['data']):
         if not any(u['wiersze']) and len(pary) == 1 and t['mies'] == MIES:
             t['wpis'] = u['czesci'][0]  # wpisu nie ma w arkuszu: wiersz z płatności z kategorią wpisu (pętla wyciągu)
             continue
-        kw_cz = {w['id']: (r['kwota'] if r and r['kwota'] is not None else kwota_pozycji(w['kwota'], w['typ'])) for w, r in pary}
-        najw = max(u['czesci'], key=lambda w: abs(kw_cz[w['id']]))
-        roznica = round(kwota_pozycji(t['kwota'], najw['typ']) - sum(kw_cz.values()), 2)
-        if abs(roznica) >= 0.005:  # kwota z wyciągu wygrywa; różnicę grupy bierze największa część
-            kw_cz[najw['id']] = round(kw_cz[najw['id']] + roznica, 2)
-        w_ark = [(w, r) for w, r in pary if r]
-        if w_ark:
-            przypiecia.append(dict(id_wyciagu=t['id'], data=t['data'].isoformat(), konto=t['konto'], kwota_wyciagu=t['kwota'],
-                                   opis=t['opis'], wiersze=[dict(id=w['id'], wiersz=r['wiersz'],
-                                                                 kwota=kw_cz[w['id']] if r['kwota'] is None or abs(kw_cz[w['id']] - r['kwota']) >= 0.005 else None)
-                                                            for w, r in w_ark]))
+        kw_cz, p = przypiecie(u, t)
+        if p:
+            przypiecia.append(p)
         else:
             obsluzone.add(t['id'])
         for w, r in pary:
@@ -329,6 +339,17 @@ for u in sorted(jednostki, key=lambda u: u['data']):
             prop = opcja(w['typ'], w['kat'], w['pod']) if w['kat'] else None
             decyzja(baza_wpisu(w), zrodlo='lista', regula=w['kod'], opcje=[prop] if prop else [],
                     uwaga='z wpisu – w wyciągu nie ma takiej płatności (±4 dni); inne konto albo inny miesiąc? Pomiń, jeśli to duplikat')
+
+# wpisy z kart bez pary (inna kwota niż płatność o więcej niż złotówkę – napiwek, literówka): płatność z tego samego konta
+# ±1 dzień nie wchodzi sama obok wpisu – decyzja z wierszem wpisu jako kandydatem
+BEZ_PARY = [u for u in jednostki if not u.get('t') and not u.get('pokryty')]
+
+
+def wpis_bez_pary(t):
+    k = [u for u in BEZ_PARY if u['konto'] == t['konto'] and (u['kwota'] > 0) == (t['kwota'] > 0)
+         and abs((u['data'] - t['data']).days) <= 1]
+    return min(k, key=lambda u: (abs((u['data'] - t['data']).days), abs(abs(u['kwota']) - abs(t['kwota'])))) if k else None
+
 
 # --- pary pomijane razem (np. wydatek oddany tego samego dnia), przelewy partnera, pensja, zapowiedziane zwroty
 for p in U.get('pary_pomijane', []):
@@ -429,8 +450,16 @@ for t in sorted(teraz, key=lambda t: (t['data'], t['konto'])):
         if zw:
             pominiete.append(dict(b, powod=f"zwrot zamówienia {zw['sprzedawca']} – zwrócone zamówienia nie są liczone"))
             continue
-    # zwrot: wpływ od sprzedawcy, u którego był wcześniej zakup -> pomniejsz ten zakup
-    if t['kier'] == 'wpływ' and not (g and (g['typ'] == 'Przelew' or (g['typ'] == 'Przychód' and g['kat'] != 'Zwroty'))) \
+    u_bp = wpis_bez_pary(t)
+    if u_bp:
+        _, przyp_u = przypiecie(u_bp, t)
+        ids_u = [w['id'] for w in u_bp['czesci']]
+        for d in decyzje:
+            if d['id'] in ids_u:
+                d['uwaga'] += (f"; w wyciągu jest płatność {t['data'].strftime('%d.%m')} {abs(t['kwota']):.2f} (inna kwota) – "
+                               'jeśli to ta, przy niej wybierz „Już w arkuszu”')
+    # zwrot: wpływ od sprzedawcy, u którego był wcześniej zakup -> pomniejsz ten zakup (wpływ przy wpisie bez pary – wyżej)
+    if not u_bp and t['kier'] == 'wpływ' and not (g and (g['typ'] == 'Przelew' or (g['typ'] == 'Przychód' and g['kat'] != 'Zwroty'))) \
             and 'CASHBACK' not in t['no']:
         slowo = next((w for w in re.split(r'[\s,*]+', t['no']) if len(w) >= 4 and not w.isdigit()
                       and w not in ('PAYPRO', 'POZNAN', 'WARSZAWA')), '')
@@ -455,18 +484,24 @@ for t in sorted(teraz, key=lambda t: (t['data'], t['konto'])):
     moze_juz = (t['konto'] in ostatnia and t['data'] <= ostatnia[t['konto']]
                 and not (g and g['klucz'] in ('CASHBACK', 'REWARD ZONE')))
     pew = (g['pewnosc'] or 'Zwykle') if g else 'Brak'
-    if pew == 'Zawsze' and not moze_juz:
+    if pew == 'Zawsze' and not moze_juz and not u_bp:
         auto.append(dict(b, typ=prop['typ'], kat=prop['kat'], pod=prop['pod'], regula=g['klucz'],
                          kwota_ark=kwota_w_arkuszu(t['kwota'], prop['typ'])))
         continue
     uw = [g['uwaga']] if g and g['uwaga'] else []
     if w:
         uw.insert(0, f"wpis: {w['tekst']}")
+    kand = kandydaci(t) if moze_juz else []
+    if u_bp:
+        kand = [wiersz_info(r) for r in u_bp['wiersze'] if r] + kand
+        uw.insert(0, f"może to wpis {', '.join(ids_u)} ({abs(u_bp['kwota']):.2f}, {u_bp['data'].strftime('%d.%m')}) – kwota inna; "
+                     + ('„Już w arkuszu” przy jego wierszu przypnie płatność (kwota z wyciągu)' if przyp_u else
+                        'wpisu nie ma w arkuszu – wybierz kategorię tylko raz: tu albo przy wpisie (drugie Pomiń)'))
     if moze_juz:
         uw.insert(0, f"na tym koncie wpisane ręcznie do {ostatnia[t['konto']].strftime('%d.%m')} – sprawdź, czy nie siedzi w sumie")
     decyzja(b, pewnosc='Zwykle' if pew == 'Zawsze' else pew, regula=g['klucz'] if g else '',
             propozycja=prop if pew in ('Zwykle', 'Zawsze') else None, opcje=opcje, uwaga='; '.join(uw), moze_juz=moze_juz,
-            kandydaci=kandydaci(t) if moze_juz else [])
+            kandydaci=kand, **({'przypiecie_wpisu': przyp_u} if u_bp and przyp_u else {}))
 
 # --- zamówienia Allegro jako wydatki
 for z in zam:
