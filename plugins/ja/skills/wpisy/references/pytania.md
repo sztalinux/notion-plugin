@@ -75,9 +75,10 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    z wzmianką wiersza Rejestru i kluczem `` `SP-n` ``, w okienku pogrubione pytanie z propozycją opcji („czy to znaczy B?”),
    linia `✍️`; odpowiedź (pkt 4) = domknięcie wg `wiedza`, sekcja C (plugin dom-budowa), blok do „Przetworzone”.
 2. **Ten sam problem po raz kolejny** (ten sam klucz albo ta sama strona 💸) → zaktualizuj istniejący blok (data, „od”,
-   licznik), nie dodawaj drugiego. Lista od automatu: na końcu odpowiedzi przebiegu linia `KOMUNIKATY: <klucz>, …` z kluczami
-   bloków zapisanych, zaktualizowanych albo zamkniętych w tym przebiegu (nic → `KOMUNIKATY: –`); klucz spoza tej linii automat
-   poda ponownie – blok albo ślad „ustąpiło” już jest → tylko aktualizacja, bez drugiego.
+   licznik), nie dodawaj drugiego. Lista od automatu: osobna, ostatnia linia odpowiedzi przebiegu `KOMUNIKATY: <klucz>, …` –
+   same klucze bloków zapisanych, zaktualizowanych albo zamkniętych w tym przebiegu, bez komentarza (słowo spoza listy = nic
+   nie potwierdzone; nic → `KOMUNIKATY: –`); klucz spoza tej linii automat poda ponownie – blok albo ślad „ustąpiło” już
+   jest → tylko aktualizacja, bez drugiego.
 3. **Ustąpiło samo** (automat podał „ustąpiło”, strona 💸 nie jest już „Błąd”) → blok do „Przetworzone” jako
    `~~🔔 <skrót>~~ → ustąpiło <dd.mm>`, bez pytania. Automat podał „bloku nie było” (problem minął, zanim dało się go
    zgłosić – np. brak logowania MCP) → sam ślad w bloku dnia „Przetworzone” w tym formacie, bez bloku 🔔.
@@ -125,7 +126,7 @@ Zapis w Notion (przykład zmyślony; nagłówek to zwijany nagłówek h3, komuni
 🔔 10.11 21:30 · przegląd nocny – przerwany limitem czasu (od 09.11, 2 razy) `przebieg-wieczorny`
 
 <callout icon="❓" color="yellow_bg">
-<b>Co możesz zrobić:</b> nic – ponowię jutro (propozycja: napisz „log”, sprawdzę przyczynę)
+<b>Co możesz zrobić:</b> napisz w Claude Code „przegląd dnia za 10.11” – zrobię zaległy przegląd; sam się nie ponowi
 
 ✍️
 </callout>
