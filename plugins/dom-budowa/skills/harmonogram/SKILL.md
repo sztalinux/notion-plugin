@@ -96,9 +96,7 @@ Krok „W trakcie” po zmianie końca Terminu (C.4) zostaje „W trakcie”. St
 
 - Cudzy termin → TASKS: Name „<kto> – <co>”, **Kto** = ta osoba/rola, Status „WAITING”, Obszar = Dom, When = termin, Desc = skąd wiadomo
   (rozmowa, data). Gdy dotyczy kroku – relacja Harmonogram.
-- Wyjątek: dostawa materiału / zamówienia w umówionym dniu („w poniedziałek przyjedzie stal”) → `zakupy` (0.3, C): wiersz
-  🧱 Zakupów budowy, Status „Zamówione”, Dostawa = ten dzień (dokupienie braków – nowy wiersz, C.3); bez zadania w TASKS –
-  dostawę jutro pokazuje wieczorny przegląd budowy z pola Dostawa.
+- Wyjątek: dostawa materiału / zamówienia w umówionym dniu → `zakupy` 0.3, bez TASKS.
 - Mój termin wobec kogoś („do piątku dam znać X”) → TASKS: Kto = Ja, Status „TO DO”, Obszar = Dom, When = termin, Deadline ☑ (rzecz obiecana komuś na dzień – `zadania`, plugin ja).
   Inne moje zadania budowy: Deadline ☑ tylko przy terminie twardym (ta sama reguła); orientacyjne po dacie nie są zaległością.
 - Po terminie: „czekam na” bez zmiany statusu → w przeglądzie (i w „co mnie czeka”) jako „przypomnij się <komu>”.

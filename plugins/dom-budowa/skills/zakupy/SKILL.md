@@ -36,6 +36,8 @@ Przypomnienie jest linią w przeglądzie dnia, nie powiadomieniem na telefon; pi
 3. „Kupiłem X na budowę” → Status **Dostarczone**, Dostawa = data; wydatek → `koszty`, sekcja B (wiersz w „💸 Wydatki → arkusz”);
    materiał z WZ / deklaracją właściwości → sekcja C.1. „Zamówiłem” → Zamówione, Dostawa = umówiony dzień dostawy, gdy
    znany (z niego biorą „dostawy jutro / w 7 dni” przegląd dnia i tygodnia budowy); po dostawie Dostawa = dzień faktyczny.
+   Dostawa umówiona na dzień („w poniedziałek przyjedzie stal”) – jak „Zamówiłem”; wiersza nie ma (np. dokupienie braków,
+   C.3) → nowy wiersz od razu „Zamówione” z Dostawą. Bez zadania w TASKS (to nie „czekam na”).
    Pozycja ma w Uwagach wzmiankę o zadaniu „na już” założonym w 0.2 → przy „kupiłem” w tej samej pracy to zadanie → DONE
    (ślad w obu; odwrotny kierunek – `zadania` B.2, plugin `ja`). Innych zadań nie zamykaj – nawet o tej samej rzeczy.
 

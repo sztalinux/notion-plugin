@@ -9,7 +9,7 @@
    „🤖 Decyzja wpisana – do domknięcia”) wg `wiedza/references/sprzecznosci.md`, „Bez inwestora” – jedyny zapis tego kroku. Z konektorem Dysku: „zdjęcia: w `_nowe` czeka n” (bez rozkładania – `dziennik/references/zdjecia-i-kopia.md`, 6).
 2. **Jutro i najbliższe 7 dni** (odczyt; „jutro” = dzień planu, `przeglad-dnia` B.8): widok Harmonogramu „🤖 Najbliższe 7 dni
    (plan dnia)” (ID w mapie – jeden mały odczyt; „📅 Oś czasu” tylko do ostrzeżenia pogodowego niżej) – kroki z Terminem w 7 dni i zaległe, kroki startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zadania), dostawy
-   jutro, 🧱 Zakupy budowy z „Zamówić do” w oknie przypomnienia wg Rodzaju (`zakupy`, „Przypomnienie”) lub po terminie, Status przed
+   jutro i „dostawa po terminie” (🧱 z Dostawą przed dniem planu, Status nadal „Zamówione” / „Potwierdzone”), 🧱 Zakupy budowy z „Zamówić do” w oknie przypomnienia wg Rodzaju (`zakupy`, „Przypomnienie”) lub po terminie, Status przed
    zamówieniem (bez Zamówione, Potwierdzone, Dostarczone, Problem i Nieaktualne), TASKS Dom z When = jutro i z Deadline ☑ po terminie (orientacyjne po dacie – sam licznik; `zadania`, plugin ja), WAITING z terminem jutro lub po, otwarte wpisy
    Notatnika z Kiedy = jutro lub po terminie; **ostrzeżenie pogodowe** tylko w dniu roboty wrażliwej wpisanej z datą w Uwagach kroku
    i przez 7 dni pielęgnacji betonu po niej, gdy próg przekroczony (progi i przebieg – `etap/references/pogoda.md`); codziennej
