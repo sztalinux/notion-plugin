@@ -66,7 +66,8 @@ z aplikacją albo AirDropem (kopia lokalna, gdy jest miejsce na dysku).
 **Data zrobienia** (dzień zawsze wg czasu polskiego, także po północy): EXIF (tylko lokalnie, `mdls`) → nazwa pliku
 z telefonu (`PXL_RRRRMMDD_GGMMSS` – czas UTC; `IMG_`/`VID_`/`RRRRMMDD_GGMMSS`, komunikatory „RRRR-MM-DD at …” – czas
 lokalny) → data wgrania (`createdTime` Dysku, UTC) z `~` w prefiksie: `RRRR-MM-DD~_nazwa` = „data wg wgrania”.
-Gdy później wyjdzie dokładna data (aplikacja, EXIF), skrypt poprawia `~` na nią. Zdjęcie z komunikatora albo zrzut
+Gdy plik z `~` wróci do `_nowe` i wyjdzie dokładna data (aplikacja, EXIF), skrypt poprawia `~` na nią; plików już
+rozłożonych nie rusza. Zdjęcie z komunikatora albo zrzut
 ekranu zwykle nie ma daty zrobienia – inwestor wgrywa oryginały z galerii.
 
 **Nazwa pliku**: `RRRR-MM-DD_<oryginalna nazwa>`; plik z prefiksem zostaje bez zmian. Ta sama nazwa i rozmiar w folderze
