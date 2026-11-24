@@ -1,10 +1,11 @@
 ---
 name: budzet
-description: Budżet domowy w arkuszu Google „Budżet domowy” – wydatki z wpisów („200, pra, o, zam”, gotówka, wydatek na budowę także do budżetu) od razu w arkuszu (automat w ciągu godziny) i miesięczne zamknięcie – wyciągi (mBank, ZEN), lista zakupów Allegro, lista wydatków drugiej osoby, strona decyzji (artefakt), zapis do Transakcji, przypięcie płatności z wyciągu do wierszy z wpisów, kontrola arkusza, przychód drugiej osoby z sald i podsumowanie miesiąca. Wpis wydatku działa też w przebiegu na Macu; zamknięcie tylko w Claude Code na Macu (skrypty tools/budzet). Używaj, gdy użytkownik mówi „zamknijmy miesiąc”, „budżet za październik”, „wrzuciłem wyciągi”, „przenieś decyzje budżetu RRRR-MM”, „podsumuj miesiąc w budżecie”, „czy przychody są dobrze policzone”, wkleja listę Allegro albo listę wydatków ze skrótami, wpisuje wydatek w skrócie „kwota, konto, osoba, kategoria, opis” albo zwykłym zdaniem („wydałem N zł na regularne i M na jedzenie na mieście”), dodaje zdjęcie paragonu („rozpisz paragon”).
+description: "Budżet domowy w arkuszu Google „Budżet domowy”: wydatek z wpisu w skrócie albo zdaniem, zdjęcie paragonu, zamknięcie miesiąca z wyciągów, Allegro i list, strona decyzji. Używaj, gdy użytkownik wpisuje „200, pra, o, zam”, „wydałem N zł na…”, „rozpisz paragon”, mówi „zamknijmy miesiąc”, „wrzuciłem wyciągi”, „przenieś decyzje budżetu RRRR-MM”, „czy przychody są dobrze policzone”."
 ---
 
 # Budżet domowy – wydatki na bieżąco i zamknięcie miesiąca
 
+Wpis wydatku działa też w przebiegu na Macu; zamknięcie tylko w Claude Code na Macu (skrypty `tools/budzet`).
 Kod: `tools/budzet/` (wpis, paragon, arkusz_budzetu, importuj, przenies, kontrola, allegro, strona). **Dane są poza repo** w
 `<folder budowy>/.dom/budzet/` (`DANE` w `tools/budzet/wspolne.py`): `ustawienia.json` (ID arkusza, adres strony, folder
 Dysku, konta, osoby, skróty kont i osób, pary pomijane, reguły specjalne), `kategorie.json`, `reguly.json` (reguły sklepów,
