@@ -1,6 +1,6 @@
 ---
 name: wiedza
-description: "Zapis wiedzy do Notion (Baza wiedzy – Tematy, Informacje, Rozmowy i źródła) z transkrypcji filmów YouTube, podcastów, artykułów ekspertów oraz z rozmów z konstruktorem, architektem, wykonawcami; wykrywanie sprzeczności (Rejestr sprzeczności) i ich rozstrzyganie po decyzji inwestora. Używaj, gdy użytkownik wkleja transkrypcję, napisy, link do filmu, notatki z filmu/artykułu, mówi „przerób ten film”, „wrzuć do wiedzy”, „dzwoniłem do konstruktora, powiedział…”, albo odpowiada na sprzeczność („SP-3: …”), albo pyta „co wiemy o…”, „co mówi baza wiedzy o…”, „jakie mamy sprzeczności w temacie…”, albo prosi „tryb głęboki”, „przeczytaj całą bazę”, „dokładnie wszystko”."
+description: "Baza wiedzy w Notion (Tematy, Informacje, Rozmowy i źródła) z filmów, artykułów i rozmów z fachowcami oraz Rejestr sprzeczności. Używaj, gdy użytkownik wkleja transkrypcję lub link do filmu, mówi „przerób ten film”, „wrzuć do wiedzy”, „dzwoniłem do konstruktora, powiedział…”, odpowiada „SP-3: …”, pyta „co wiemy o…”, „co mówi baza wiedzy o…” albo prosi „tryb głęboki”."
 ---
 
 # Wiedza – filmy, artykuły, rozmowy

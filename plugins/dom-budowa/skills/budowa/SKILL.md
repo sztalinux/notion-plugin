@@ -1,6 +1,6 @@
 ---
 name: budowa
-description: Kontekst i zasady pracy przy budowie domu jednorodzinnego (dom z piwnicą; bieżący etap wskazuje strona DOM w Notion), w tym zasady zapisu do Notion. Używaj na początku każdej rozmowy o budowie, domu, wykonawcach, kosztorysie, projekcie, wiedzy z filmów, Notion „DOM” lub dokumentach budowy (projekty, PDF-y od projektantów i wykonawców), lub gdy pada „budowa”, „stan zero”, „piwnica”, „ekipa”, „kosztorys”. Kieruje do właściwej procedury.
+description: Kontekst i zasady pracy przy budowie domu (dom z piwnicą; etap wskazuje strona DOM w Notion), w tym zasady zapisu do Notion; kieruje do procedur budowy. Używaj na początku każdej rozmowy o budowie, wykonawcach, kosztorysie, projekcie, dokumentach budowy lub Notion „DOM” i gdy pada „budowa”, „stan zero”, „piwnica”, „ekipa”, „kosztorys”.
 ---
 
 # Budowa domu – kontekst i zasady

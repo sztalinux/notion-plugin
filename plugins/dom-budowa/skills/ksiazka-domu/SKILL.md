@@ -1,6 +1,6 @@
 ---
 name: ksiazka-domu
-description: Książka domu – dokumentacja domu i budowy w Notion („📘 Książka domu” na DOM) – rozdział po każdym odebranym etapie (jak zbudowane, odstępstwa od projektu, zdjęcia przed zakryciem, dostawy i produkty, wykonawcy i gwarancje, protokoły, koszt, uwagi na przyszłość) oraz część „gdzie co biegnie” (trasy instalacji, zawory, rewizje, studzienki, uziom, strefy „nie wiercić / nie kopać”), przeglądy okresowe i spis dokumentów powykonawczych. Używaj, gdy procedura `etap` kończy odbiór etapu, gdy użytkownik mówi „napisz rozdział książki domu”, „zapisz w książce domu…”, „zawór główny jest 1,2 m od narożnika”, „gdzie biegnie rura / kabel…”, „gdzie nie wiercić”, „kto robił dach i do kiedy gwarancja”, „kiedy przegląd…”, „dokumentacja powykonawcza”, „książka domu”. Gdzie leży plik i która wersja jest aktualna – `dokumenty`.
+description: Książka domu w Notion – rozdział po odebranym etapie (jak zbudowane, odstępstwa, gwarancje) i „gdzie co biegnie” (trasy instalacji, zawory), przeglądy okresowe. Używaj po odbiorze etapu i gdy użytkownik mówi „rozdział książki domu”, „zapisz w książce domu…”, „zawór jest 1,2 m od narożnika”, „gdzie biegnie rura / kabel”, „gdzie nie wiercić”, „do kiedy gwarancja”, „kiedy przegląd…”.
 ---
 
 # Książka domu
@@ -12,6 +12,7 @@ Asystent składa szkice z danych, które już są w Notion, arkuszu i na Dysku; 
 **Gdzie:** Notion → DOM → „📘 Książka domu” (`415f5982-09e7-81e0-90a8-c003b8aaf38d`; strona na dole DOM, odnośnik w zakładce
 🗂 Więcej). Zakładki: Dane domu · A. Przebieg budowy · B. Gdzie co biegnie · Przeglądy i konserwacja · Spis dokumentów;
 pod nimi propozycja „Co zbierać od teraz”. Rozdziały etapów to podstrony książki. Format główny: Notion; PDF – sekcja E.
+Gdzie leży plik dokumentu i która wersja jest aktualna – procedura `dokumenty`, nie książka domu.
 
 ## Źródła
 

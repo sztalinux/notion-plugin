@@ -1,6 +1,6 @@
 ---
 name: etap
-description: Plan, bramki „bez odwrotu” i odbiór etapu budowy (stan zero, SSO, instalacje, wykończenie) – także przy pracach własnych. Używaj, gdy użytkownik mówi „zaczynamy etap”, „ekipa wchodzi w poniedziałek”, „jutro betonowanie / zasypka / tynki”, „co muszę mieć gotowe przed…”, „co sprawdzić zanim…”, „ekipa skończyła, co sprawdzić”, „odbiór”, „usterki”, „zmieniamy etap na SSO”, „teczka stanu zero”, „teczka do banku”, „rozliczenie transzy”, „co do banku”, albo gdy inna procedura (dziennik, oferta, zakupy) sygnalizuje początek lub koniec etapu.
+description: Plan, bramki „bez odwrotu” i odbiór etapu budowy (także przy pracach własnych) oraz teczka etapu do banku. Używaj, gdy użytkownik mówi „zaczynamy etap”, „jutro betonowanie / zasypka”, „co muszę mieć gotowe przed…”, „co sprawdzić zanim…”, „ekipa skończyła, co sprawdzić”, „odbiór”, „usterki”, „zmieniamy etap na SSO”, „teczka do banku”, „rozliczenie transzy”.
 ---
 
 # Etap budowy – plan, bramki, odbiór

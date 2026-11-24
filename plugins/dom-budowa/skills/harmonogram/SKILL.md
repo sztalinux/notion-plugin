@@ -1,6 +1,6 @@
 ---
 name: harmonogram
-description: Planowanie w czasie – harmonogram budowy (kroki z datami, kto, zależności, oś czasu w Notion), terminy wynikające z harmonogramu (kiedy zamówić, kiedy bramka, kto musi być), „czekam na” (co inni mają zrobić i do kiedy), przesuwanie terminów i „co mnie czeka”. Używaj, gdy użytkownik mówi „ekipa wchodzi 3 listopada”, „przesuwamy płytę o tydzień”, „ułóż harmonogram”, „kiedy co zamówić”, „do piątku mam dać znać…”, „X ma mi przysłać do…”, „czekam na…”, „co mnie czeka w tym / przyszłym tygodniu”, „co jest po terminie”, „kiedy skończymy stan zero”.
+description: Harmonogram budowy w czasie – kroki z datami i Statusem, przesunięcia, terminy pochodne (zamówienia, bramki, kto musi być), „czekam na” i „co mnie czeka” (budowa). Używaj, gdy użytkownik mówi „ekipa wchodzi 3 listopada”, „przesuwamy płytę o tydzień”, „ułóż harmonogram”, „kiedy co zamówić”, „do piątku mam dać znać…”, „X ma mi przysłać do…”, „czekam na…”, „co mnie czeka”, „co jest po terminie”.
 ---
 
 # Harmonogram i terminy

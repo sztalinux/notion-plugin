@@ -1,6 +1,6 @@
 ---
 name: dziennik
-description: "Dziennik inwestora – wpis z budowy po każdym dniu pracy lub wizycie (co zrobiono, kto był, pogoda, dostawy, godziny własne, problemy, ustalenia z ekipą, roboty dodatkowe, zdjęcia) do Notion „Dziennik budowy”. Używaj, gdy użytkownik relacjonuje dzień na budowie („dziś na budowie…”, „ekipa zrobiła…”, „byłem na działce”, „przyjechał beton”), wysyła zdjęcia z budowy, podaje swoje godziny pracy, mówi o problemie lub usterce, o robotach dodatkowych („ekipa chce dopłatę za…”), albo pyta „co się działo w zeszłym tygodniu”. Także zdjęcia na Dysku Google: „rozłóż zdjęcia”, „wgrałem zdjęcia”, „gdzie są zdjęcia …”, „cofnij ostatnie rozłożenie”."
+description: Dziennik inwestora – wpis z dnia na budowie do Notion „Dziennik budowy” (co zrobiono, kto był, pogoda, dostawy, godziny własne, problemy, usterki, roboty dodatkowe) i zdjęcia na Dysku. Używaj, gdy użytkownik relacjonuje dzień („dziś na budowie…”, „przyjechał beton”), podaje swoje godziny, mówi „ekipa chce dopłatę za…”, „rozłóż zdjęcia”, „gdzie są zdjęcia…”, „co się działo w zeszłym tygodniu”.
 ---
 
 # Dziennik budowy (inwestora)

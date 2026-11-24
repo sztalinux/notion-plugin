@@ -1,6 +1,6 @@
 ---
 name: przygotowanie
-description: Przygotowanie inwestora do konkretnej sytuacji na budowie – spotkania, rozmowy, decyzji – z wiedzą dopasowaną do naszego etapu (karta przygotowania – pytania, czerwone flagi, co zabrać, co zanotować po). Używaj, gdy użytkownik mówi „jutro mam spotkanie z kierownikiem / konstruktorem / wykonawcą / geodetą”, „o co powinienem zapytać”, „przygotuj mnie do…”, „na co uważać przy…”, „mam 3 wykonawców – jak wybrać jednego”, „kogo wybrać”, „idę do hurtowni / do urzędu / na odbiór”, „dzwonię do referencji”, „co muszę wiedzieć przed…”.
+description: Przygotowanie inwestora do spotkania, rozmowy albo decyzji na budowie – karta z pytaniami, czerwonymi flagami, co zabrać i co zanotować. Używaj, gdy użytkownik mówi „jutro mam spotkanie z kierownikiem / konstruktorem / wykonawcą”, „o co zapytać”, „przygotuj mnie do…”, „na co uważać przy…”, „mam 3 wykonawców – kogo wybrać”, „idę do urzędu / na odbiór”, „dzwonię do referencji”.
 ---
 
 # Przygotowanie do sytuacji
