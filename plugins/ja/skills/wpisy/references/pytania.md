@@ -80,7 +80,9 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    nie potwierdzone; nic → `KOMUNIKATY: –`); klucz spoza tej linii automat poda ponownie – blok albo ślad „ustąpiło” już
    jest → tylko aktualizacja, bez drugiego.
 3. **Ustąpiło samo** (automat podał „ustąpiło”, strona 💸 nie jest już „Błąd”) → blok do „Przetworzone” jako
-   `~~🔔 <skrót>~~ → ustąpiło <dd.mm>`, bez pytania. Automat podał „bloku nie było” (problem minął, zanim dało się go
+   `~~🔔 <skrót>~~ → ustąpiło <dd.mm>`, bez pytania. Blok `przebieg-wieczorny` z „przegląd dnia za DD.MM” w treści jeszcze
+   stoi → zaległego dnia nikt nie przejrzał (przegląd zaległy sam przenosi blok – `przeglad-dnia/references/uklad-wpisu.md`, E):
+   w śladzie dopisz „dzień DD.MM nieprzejrzany – »przegląd dnia za DD.MM«”. Automat podał „bloku nie było” (problem minął, zanim dało się go
    zgłosić – np. brak logowania MCP) → sam ślad w bloku dnia „Przetworzone” w tym formacie, bez bloku 🔔.
 4. **Odpowiedź inwestora** (odczyt jak w A) = praca dla najbliższego przebiegu (szybkiego albo wieczornego): wykonaj, co się
    da w przebiegu, i przenieś blok do „Przetworzone” (`~~🔔 <skrót>~~ (❓ … → ✍️ …) → <co zrobiono>`).
