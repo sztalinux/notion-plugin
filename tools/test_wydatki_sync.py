@@ -166,6 +166,21 @@ class Korekta(Podmiana):
         self.assertEqual((bledy, licz["dopisane"], licz["poprawione"], a.zrodla), ([], 0, 1, {"a": 10, "b": 11}))
 
 
+class StawkaVat(Podmiana):
+    def test_ulamek_i_procent_daja_to_samo_w_wydatkach_i_cenniku(self):
+        # Apps Script dzieli VAT % przez 100 (Cennik F) – ułamek 0,08 musi do niego dojść jako 8
+        for vat in (8, 0.08):
+            a = Arkusz(wersja=5)
+            w = T.strona("c", rodzaj="Wycena", kwota=12)
+            w["properties"]["VAT %"] = {"number": vat}
+            self.podmien(a, [wydatek("a", vat=vat * 23 / 8), w])
+            licz, bledy = WY.sync(K, proba=False)
+            self.assertEqual((bledy, licz["dopisane"], licz["wyceny"]), ([], 1, 1), vat)
+            wyslane = {w_["id"]: w_["vat"] for x, d in a.akcje if x == "dopisz" for w_ in d["wiersze"]}
+            self.assertEqual(wyslane["c"], 8, vat)
+            self.assertEqual([o["wartosci"] for x, d in a.akcje if x == "zmien" for o in d["operacje"]], [[[0.23]]], vat)
+
+
 class Czekanie(Podmiana):
     def test_zwrot_przy_kodzie_3_czeka_a_wydatek_idzie(self):
         a = Arkusz(wersja=3)

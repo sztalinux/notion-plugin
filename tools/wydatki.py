@@ -205,6 +205,9 @@ def na_wiersz(strona: dict) -> dict:
         "nowa": tekst(p.get("Nowa pozycja") or {}),
         "blad_tekst": tekst(p.get("Błąd") or {}),
     }
+    if liczba(w["vat"]) is not None and 0 < w["vat"] < 1:
+        # stawka wpisana ułamkiem (0,23) → procenty (23): Apps Script dzieli VAT % przez 100 (Cennik), op_vat tak samo
+        w["vat"] = round(w["vat"] * 100, 2)
     if w["rodzaj"] == ZWROT:
         if isinstance(w["kwota"], (int, float)):
             w["kwota"] = -abs(w["kwota"])

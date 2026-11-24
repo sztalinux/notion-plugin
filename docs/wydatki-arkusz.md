@@ -82,7 +82,7 @@ Agent nie przelicza ręcznie niczego, co liczy arkusz – zmienia dane wejściow
   wpisuje inwestor). Zmiana ilości, ceny albo wyboru oferty przelicza PLAN, sumy etapów i Podsumowanie.
 - **Grupy materiałów (Kosztorys V, Cennik P):** jedna oferta (np. stal) zasila kilka pozycji tej samej grupy.
 - **Jednostki:** Cennik Q przelicza cenę na jednostkę bazową (t → kg), żeby oferta za tonę pasowała do pozycji w kg.
-- **VAT w Cenniku:** G = cena brutto, O = cena netto; VAT % wpisany jako 8 albo 0,08 działa tak samo.
+- **VAT w Cenniku:** G = cena brutto, O = cena netto; VAT % wpisany jako 8 albo 0,08 działa tak samo (`sync` zamienia ułamek na procenty).
 - **WYDANE:** sumy Wydatków „Zrealizowane” po pozycji i typie → Kosztorys I, Etapy H–L, Podsumowanie. Zwroty (kwoty
   ujemne) odejmują się same; „Do zapłaty” z minusem obniża zobowiązania.
 - **VAT w Wydatkach:** P = VAT % (z pola VAT % strony; `sync` wpisuje, korekta nadpisuje, `wycofaj` czyści), Q = netto
