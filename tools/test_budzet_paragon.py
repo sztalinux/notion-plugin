@@ -243,6 +243,20 @@ class Przeplyw30(unittest.TestCase):
         self.assertIn('usunięto (3)', self.uruchom('wpis.py', 'usun', '2026-12', 'p1'))
         self.assertEqual(self.wpisy(), [])
 
+    def test_a9_id_czesci_i_wydatkow_z_bloku_bez_nadpisania(self):
+        """A-9: wydatki z bloku (--id <id>-1, -2) i paragon z tego bloku (części w<id>-1…n) – odmowa w obu kierunkach."""
+        for t, i in (('30, g, zak', 'b7-1'), ('12, g, zak', 'b7-2')):
+            self.uruchom('wpis.py', 'dodaj', t, '--data', '2026-12-05', '--id', i)
+        przed = self.wpisy()
+        self.assertIn('zwykłe wydatki', self.paragon(*self.POZ, id_='b7', kod=1))
+        self.assertIn('zwykłe wydatki', self.paragon(*self.POZ, id_='b7', kod=1, dod=('--mimo-to',)))
+        self.assertEqual(self.wpisy(), przed)
+        self.paragon(*self.POZ, id_='b8')
+        przed = self.wpisy()
+        r = subprocess.run([sys.executable, str(NARZ / 'wpis.py'), 'dodaj', '99, zak', '--data', '2026-12-05', '--id', 'b8-1'],
+                           env=dict(os.environ, BUDZET_DANE=str(self.dane)), capture_output=True, text=True)
+        self.assertEqual((r.returncode, 'część paragonu' in r.stdout, self.wpisy()), (1, True, przed))
+
     def test_ten_sam_paragon_drugi_raz_ostrzega(self):
         """Recenzja 8: inna grupa z tą samą datą, sumą i sklepem – kod 1, chyba że --mimo-to."""
         self.paragon(*self.POZ, id_='c20261205-3350')

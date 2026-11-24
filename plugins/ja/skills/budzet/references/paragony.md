@@ -74,7 +74,9 @@ nie sprawdza), każdą pozycję z kwotą końcową linii (po ilości × cenie), 
 - Poprawka („ser to nie regularne”) → `rozpisz` z tym samym `--id` i poprawionymi pozycjami: zastępuje cały paragon (część,
   której już nie ma, znika z arkusza przy `sync`; zwykły wydatek zapisany wcześniej z tym samym ID bloku też). Usunięcie:
   `python3 tools/budzet/wpis.py usun RRRR-MM <id wpisu albo części>` – cały paragon i wpis z tym ID. Ten sam ID bloku nie
-  idzie do `wpis.py dodaj`, gdy jest już paragonem (skrypt odmawia).
+  idzie do `wpis.py dodaj`, gdy jest już paragonem (skrypt odmawia – także ID części `<id>-k`).
+- `✗ … zwykłe wydatki z tego wpisu` – blok ma już wydatki `--id <id>-1…` (sekcja A procedury): ten sam zakup → usuń je
+  (`wpis.py usun`) i rozpisz ponownie; inny zakup albo niejasne → ❓ pod wpisem.
 - **Paragon rozliczony** – przypięty do płatności z wyciągu albo z zamkniętego miesiąca: `rozpisz` odmawia (`✗ … nie
   zastępuję go`), bo kwoty w arkuszu są już z wyciągu. Odpisz w ❓ pod wpisem, że kategorie trzeba poprawić ręcznie
   w arkuszu (które wiersze – ID części w kolumnie O). To samo, gdy `sync` zgłosi „część paragonu przypięta do płatności”.

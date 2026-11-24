@@ -34,7 +34,8 @@ osoby zawsze na drugą osobę. Skróty kont i osób – `ustawienia.json` (`skro
 wydatek: sam przepisz go na skrót (kategorię dobierz ze skrótów w `reguly.json`, np. „N, zak reg” i „M, jedz, na mieście”)
 i zapisz krokiem 2. Nie pytaj o konto ani osobę – brak szczegółów = gotówka drugiej osoby (wydatek na budowę – konto wg pkt 1;
 wyjątek: paragon – niżej). Kilka wydatków w jednym wpisie =
-osobne wywołania z `--id <id>-1`, `<id>-2` (ten sam ID nadpisałby poprzedni). Pytaj tylko o brakującą kwotę albo kategorię,
+osobne wywołania z `--id <id>-1`, `<id>-2` (ten sam ID nadpisałby poprzedni; to też ID części paragonu – skrypty odmówią
+kolizji, `references/paragony.md`). Pytaj tylko o brakującą kwotę albo kategorię,
 której nie da się dobrać.
 
 **Paragon ze zdjęcia** (obraz we wpisie z dopiskiem, kto płacił i czym) → `references/paragony.md`: pobranie zdjęcia

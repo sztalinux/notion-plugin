@@ -71,7 +71,7 @@ niosą tylko liczby, daty i ID – bez kwot i opisów.
   `w<id>-1…n`, to samo pole `grupa` (`w<id>`), pole `paragon` (sklep, suma, liczba części, plik zdjęcia). Każda część to
   osobny wiersz (jedna wysyłka `dopisz` dla całej grupy); `przypnij` dostaje listę ich ID, różnicę wobec wyciągu bierze
   największa część. Ponowne `rozpisz` z tym samym ID zastępuje grupę (część, której nie ma, dostaje `usuniety`);
-  `wpis.py usun` z ID wpisu albo części usuwa całą grupę (i zwykły wpis z tym ID); `wpis.py dodaj` odmawia ID grupy.
+  `wpis.py usun` z ID wpisu albo części usuwa całą grupę (i zwykły wpis z tym ID); `wpis.py dodaj` odmawia ID grupy i ID części, a `rozpisz` – ID części zajętego przez zwykły wydatek.
   Paragon przypięty do płatności z wyciągu albo z zamkniętego miesiąca (`miesiace/RRRR-MM-zapis.json`) `rozpisz` odmawia
   zastąpić. Bezpiecznik w `sync`: część grupy, której `popraw` wrócił z `kwota_z_wyciagu` przy innej kwocie niż w znaczniku,
   albo której `usun` wrócił z `zostal` – błąd (linia ✗ z ID, kod 1 → 🔔), bo arkusz nie przyjął nowej kwoty.

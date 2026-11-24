@@ -151,6 +151,10 @@ def main():
         if any(x.get('grupa') == w['id'] and not x.get('usuniety') for m in miesiace_wpisow() for x in czytaj_wpisy(m)):
             print(f"✗ ID {w['id']} należy do paragonu – zmień go przez paragon.py rozpisz (ten sam --id), nie wpis.py dodaj")
             sys.exit(1)
+        if any(x.get('grupa') and x['id'] == w['id'] and not x.get('usuniety') for m in miesiace_wpisow() for x in czytaj_wpisy(m)):
+            print(f"✗ ID {w['id']} to część paragonu {w['id'].rsplit('-', 1)[0]} – nadpisanie zgubiłoby ją z grupy; kilka wydatków "
+                  'z bloku z paragonem: zmień paragon (paragon.py rozpisz) albo ❓ pod wpisem')
+            sys.exit(1)
         m_stary, stary = znajdz(w['id'])
         if stary and stary.get('arkusz'):
             w['arkusz'] = stary['arkusz']  # wiersz już w arkuszu – synchronizacja go poprawi, nie dopisze drugiego
