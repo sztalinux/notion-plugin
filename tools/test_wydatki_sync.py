@@ -67,6 +67,19 @@ class Wycofaj(Podmiana):
         self.assertEqual(json.loads(WY.plik_planow().read_text(encoding="utf-8")), {"q": "03.5"})
         self.assertEqual(a.patche[-1][1]["Arkusz"]["select"]["name"], "Nie wysyłać")
 
+    def test_plan_ktory_byl_wydatkiem_czysci_tez_wiersz_wydatkow(self):
+        # R6: strona dopisała wiersz 50 w Wydatkach jako Wydatek, potem dostała Rodzaj Plan
+        id_ = "12345678-aaaa-bbbb-cccc-1234567890ab"
+        s = T.strona(id_, pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700, wiersz=50)
+        a = Arkusz(strony=[s], plan=("47.1", 88, 0), usun={id_: {"wydatki": [50]}})
+        self.podmien(a)
+        licz = WY.wycofaj(K, [id_])
+        self.assertEqual((licz["wiersze_wydatkow"], licz["plany"]), (1, 0))
+        self.assertIn(("usun", {"ids": [id_]}), a.akcje)
+        self.assertIn(("zmien", {"operacje": [{"op": "zakres", "arkusz": "Wydatki", "a1": "P50", "wartosci": [[""]]}]}),
+                      a.akcje)
+        self.assertEqual([i for i, _ in a.patche], [id_])   # jeden zapis w Notion, nie dwa
+
 
 if __name__ == "__main__":
     unittest.main()

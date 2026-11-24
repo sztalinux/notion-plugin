@@ -4,7 +4,7 @@
     python3 tools/wydatki.py sync [--proba] [--cicho]   # wiersze „Do arkusza” (i z pustym Arkusz) → Wydatki / Cennik
     python3 tools/wydatki.py pozycje [--cicho]          # lista pozycji z arkusza Kosztorys → opcje pola Pozycja w Notion
     python3 tools/wydatki.py pobierz [--cicho] [--gdy-starsza H]   # wartości arkusza (JSON) do <hub>/Koszty/Kosztorys_google.json
-    python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (i Cennika), w Notion „Nie wysyłać”
+    python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (Cennika, plan ręczny), w Notion „Nie wysyłać”
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
     python3 tools/wydatki.py kod | LANG=en_US.UTF-8 pbcopy             # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
     python3 tools/wydatki.py migruj <zmiany.json>        # zmiana układu na arkuszu (cofanie: Plik → Historia wersji)
@@ -735,7 +735,8 @@ def strona(k: dict, id_: str) -> dict:
 
 
 def wycofaj(k: dict, ids: list) -> dict:
-    """Czyści wiersze tych stron w arkuszu (Wydatki i Cennik) i ustawia w Notion Arkusz = „Nie wysyłać”."""
+    """Czyści wiersze tych stron w arkuszu (Wydatki i Cennik; strona Plan – też swój „Plan ręczny”) i ustawia w Notion
+    Arkusz = „Nie wysyłać”."""
     wymagaj(k, "token", "url", "sekret")
     # id z adresu strony (bez myślników) → kanoniczne id z Notion: Apps Script porównuje Źródło „notion:<id>” dosłownie
     strony = [strona(k, i.strip()) for i in ids if i.strip()]
@@ -754,11 +755,8 @@ def wycofaj(k: dict, ids: list) -> dict:
         zapisane = wczytaj_plany()
         if [zapisane.pop(klucz_strony(w["id"])) for w in plany if klucz_strony(w["id"]) in zapisane]:
             zapisz_plany(zapisane)
-        id_planow = {w["id"].replace("-", "") for w in plany}
-        ids = [i for i in ids if i.replace("-", "") not in id_planow]
-        for w in plany:
-            W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{w['id']}", naglowki(k),
-                           {"properties": {"Arkusz": {"select": {"name": "Nie wysyłać"}}, "Wiersz arkusza": {"number": None}}})
+    # „usun” także dla stron Plan: strona mogła być wcześniej Wydatkiem albo Wyceną i mieć swój wiersz (Apps Script czyści
+    # tylko wiersze ze Źródłem tej strony); jej wynik ustawia też „Nie wysyłać” w Notion
     wyniki = arkusz(k, "usun", ids=ids)["wyniki"] if ids else []
     wiersze_vat = [n for r in wyniki for n in r.get("wydatki") or []]
     if wiersze_vat:   # kol. P wpisuje sync, nie Apps Script – czyści ją też ten skrypt
