@@ -184,8 +184,9 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
 
 ## Start
 
-1. Repo sklonowane do `Dom/AI/dom` (folder budowy = dwa poziomy wyżej; inny – zmienna `DOM_HUB`),
-   `git config core.hooksPath .githooks`, `git config user.email <id>+<login>@users.noreply.github.com`
+1. Repo sklonowane do `Dom/AI/dom` (folder budowy = dwa poziomy wyżej; inny – zmienna `DOM_HUB`; z kopii roboczej git
+   `.claude/worktrees/<nazwa>` narzędzia liczą go od głównej kopii – `tools/hub.py` – a polecenia zapisujące bez jawnego
+   `DOM_HUB` odmawiają), `git config core.hooksPath .githooks`, `git config user.email <id>+<login>@users.noreply.github.com`
    (autor commitów jest publiczny; imię inwestora dozwolone, e-mail tylko noreply). Lista słów zakazanych: `Dom/.dom/zakazane-w-repo.txt`
    (nazwiska, firmy, miejscowość – po jednym w linii; plik poza repo; bez niej walidacja i hooki zatrzymują się kodem 1 –
    świadomie same wzorce: `DOM_BEZ_LISTY=1`).
