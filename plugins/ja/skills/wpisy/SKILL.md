@@ -14,19 +14,18 @@ jeszcze nie widział):
 
 ```
 📓 Dziennik
-	<toggle> Jak używać </toggle>
-	Piszesz we 📝 Wpisach (nie tu) – bloki 1. poziomu Dziennika nie są już źródłem wpisów (od ja 1.19.0)
-	▸ ### ❓ Czeka na Twoją odpowiedź (zwijany nagłówek)  ← przejściowo; pytania są teraz we 📝 Wpisach (🔔), sekcję usuwa przejście 1.3 (`przeglad-dnia/references/przejscia.md`)
-	▸ ### Przetworzone (zwijany nagłówek)
-		▸ 📅 13.10 wt · 🤖 przetworzono 3 · czeka na Ciebie 1 · jutro 2   ← zwijany blok dnia, najnowszy na górze
-			🤖 13.10 noc: dziennik – przetworzono 3 (emocje 1, zadania 2), … (pełna linia)
-			- ~~wpis~~ → Wpisy emocji: <link>
-	▸ ### 🧭 Dla asystenta (zwijany nagłówek)  ← baza Obszary; nie ruszaj
+	<toggle> Jak używać </toggle>  ← w nim zdanie „Piszesz we 📝 Wpisach…” (bloki 1. poziomu Dziennika nie są źródłem wpisów od ja 1.19.0)
 	📝 Wpisy (podstrona) ← inwestor pisze tu wprost w treści albo zakłada wpisy jako osobne strony; bloki i podstrony = nowe wpisy
 		▸ ### 🔔 Komunikaty asystenta (zwijany nagłówek)  ← na górze; problemy bez wpisu (automaty, 💸) – references/pytania.md, C; nie są wpisami
 		wpis niejasny                                     ← czeka tu, aż inwestor odpowie
 			❓ {okienko} **Co miałeś na myśli – X czy Y?** (propozycja: …)
 				✍️ odpowiedź inwestora
+	▸ ### ❓ Czeka na Twoją odpowiedź (zwijany nagłówek)  ← tylko zdanie „Pytania są teraz we 📝 Wpisach (🔔)” (znacznik przejścia 1.2); zostaje
+	▸ ### Przetworzone (zwijany nagłówek)
+		▸ 📅 13.10 wt · 🤖 przetworzono 3 · czeka na Ciebie 1 · jutro 2   ← zwijany blok dnia, najnowszy na górze
+			🤖 13.10 noc: dziennik – przetworzono 3 (emocje 1, zadania 2), … (pełna linia)
+			- ~~wpis~~ → Wpisy emocji: <link>
+	▸ ### 🧭 Dla asystenta (zwijany nagłówek)  ← baza Obszary; nie ruszaj
 	🗃 Przetworzone podstrony, 🗃 Przetworzone – archiwum, 🧠 Rozkminki, 📆 Przeglądy dzienne / 📅 tygodniowe (podstrony) ← nie są wpisami
 Private (najwyższy poziom)
 	📌 DASHBOARD, 🛖 DOM, 📓 Dziennik, … 🔒 Prywatne   ← stałe strony (lista w ja/references/notion-mapa.md; chroni 🔒 Prywatne)
@@ -107,10 +106,10 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    „Wpisów” (punktowa, podstron nie ruszaj) zdejmuje przetworzone bloki z ich okienkami, dodaje okienka pod niejasnymi
    (przy przejściu 1.1 także dopisuje tu stare wpisy z Dziennika i widgetu) – po niej treść „Wpisów” to tylko nagłówek 🔔 z komunikatami, wpisy z okienkami ❓, podstrony i 1 pusta linia
    (zmiany w 🔔 idą w tej samej edycji).
-   Po edycji Dziennika (po przejściu) na 1. poziomie zostaje tylko to, co stałe – „Jak używać” (ze zdaniem „Piszesz we 📝 Wpisach”), dwoma nagłówkami (do przejścia 1.3 trzema – z „❓”), sześcioma stałymi podstronami (lista wyżej) i 1–2 pustymi
+   Po edycji Dziennika (po przejściu) na 1. poziomie zostaje tylko to, co stałe – „Jak używać” (ze zdaniem „Piszesz we 📝 Wpisach”), trzema nagłówkami („❓” z samym zdaniem-znacznikiem), sześcioma stałymi podstronami („📝 Wpisy” i lista wyżej) i 1–2 pustymi
    liniami do pisania. Każda zamiana (`old_str`) obejmuje tylko blok, który przenosisz, albo jedną linię-kotwicę – nigdy
-   całej sekcji. Po edycji odczyt kontrolny: nagłówki z treścią sprzed edycji (punkty „❓”) i sześć podstron są na
-   miejscu (brak „❓” po przejściu 1.3 jest poprawny); brak czegoś → przywróć z odczytu sprzed edycji i odnotuj w linii „🤖”. Linia „🤖” idzie na górę bloku dnia:
+   całej sekcji. Po edycji odczyt kontrolny: trzy nagłówki z treścią sprzed edycji i sześć podstron są na
+   miejscu; brak czegoś → przywróć z odczytu sprzed edycji i odnotuj w linii „🤖”. Linia „🤖” idzie na górę bloku dnia:
    ```
    🤖 15.10 noc: dziennik – przetworzono 5 (budowa 2, emocje 1, zadania 2), czeka na Ciebie 1 · jutro: 3
    ```

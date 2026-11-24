@@ -71,7 +71,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    z punktami; najpierw po terminie i czekające; nieudane odczyty jedną linią na końcu):
    ```
    **Po terminie:** zadanie z Deadline – od kiedy → zamknąć, przesunąć czy odpuścić? · czekam na – przypomnij się <komu> · po dacie orientacyjnej: n (bez pytań)
-   **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia
+   **Czeka na Ciebie:** n pytań pod wpisami i w 🔔 (najstarsze: …), HZ-x do wdrożenia
    **Zrobione:** 3–6 punktów (prywatne / dziecko / praca)
    **Najbliższy tydzień:** zadania z terminem wg dni, wesele (30 dni), „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Emocje i praca (liczby):** n wpisów emocji, najczęściej: …, śr. intensywność x; praca: n dni, śr. ocena y; wzorzec: …

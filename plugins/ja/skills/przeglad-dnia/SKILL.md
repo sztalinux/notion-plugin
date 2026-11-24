@@ -51,7 +51,7 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
    „🔔 Komunikaty asystenta” we „Wpisach”. Listy „Komunikaty z automatów Maca” i „Gotowe rozkminki” w poleceniu przebiegu
    (dokleja je `przeglad.py`) to kolejne źródła – bez odczytu.
    Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Strony Dziennika (bloki 1. poziomu) i stron z widgetu **nie czytasz** –
-   nie są źródłem wpisów (`wpisy`, „Źródła wpisów”); przejścia 1.1–1.3 robi tylko nocny przebieg (`references/przejscia.md`).
+   nie są źródłem wpisów (`wpisy`, „Źródła wpisów”); przejścia 1.1 i 1.2 robi tylko nocny przebieg (`references/przejscia.md`).
 2. **Nic nowego → koniec.** Brak bloków w treści „Wpisów” (wpis z okienkiem ❓ bez
    odpowiedzi się nie liczy) i podstron w „Wpisach”, brak pozycji w „Nowe”
    Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; szybki obsługuje tylko ❓ pod wpisami oraz 🔔 z automatów, kolejki 💸 i `SP-n`; **wszystkie inne bloki 🔔** (`KS-…`, `RES-n`, `luki-zadan-…`, `praca-…`, `porzadki-…`, `rozkminka-…`, `ZP-n`) obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
@@ -75,7 +75,7 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
 
 ## B. Tryb wieczorny – podsumowanie i plan
 
-Na początku nocnego przebiegu sprawdź przejścia 1.1–1.3 (`references/przejscia.md`) i wykonaj je, gdy warunek nie jest spełniony. Wydatki 💸 „Do zapłaty” → „Zrealizowane” do budżetu: `dom-budowa/skills/koszty/references/wydatek-przeplyw.md`, pkt 3.
+Na początku nocnego przebiegu sprawdź przejścia 1.1 i 1.2 (`references/przejscia.md`) i wykonaj je, gdy warunek nie jest spełniony. Wydatki 💸 „Do zapłaty” → „Zrealizowane” do budżetu: `dom-budowa/skills/koszty/references/wydatek-przeplyw.md`, pkt 3.
 
 Budowa i sprawy osobiste mają **osobne przeglądy**, żeby intensywny dzień na budowie nie zasłaniał reszty:
 budowa → „📆 Przeglądy dzienne – budowa” na stronie DOM (pisze skill `budowa`, sekcja „Wieczorem”); reszta → „📆 Przeglądy
