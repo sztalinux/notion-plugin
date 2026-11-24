@@ -66,7 +66,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 | Inwestor pisze | Status |
 |---|---|
 | „zrobiłem X”, „X zrobione”, „załatwione” | DONE |
-| „zamówiłem X”, „kupiłem X” przy otwartym zadaniu „Zamówić X” / „Kupić X” o tej jednej rzeczy (każdy obszar, także rzecz na budowę – `zakupy` 0.3 odsyła tutaj) | DONE (pozycja w 🛒 albo 🧱 – pkt 2); zadanie zbiorcze („Zamówić suple: a, b, c”) – pkt 2, wyjątek; pasują dwa zadania → nic nie zamykaj, ślad jak w „Zakupy”, pkt 4 |
+| „zamówiłem X”, „kupiłem X” przy otwartym zadaniu „Zamówić X” / „Kupić X” o tej jednej rzeczy (każdy obszar, także rzecz na budowę – `zakupy` 0.3 odsyła tutaj) | DONE (pozycja w 🛒 albo 🧱 – pkt 2); zadanie zbiorcze („Zamówić suple: a, b, c”) – pkt 2, wyjątek; pasuje kilka zadań → nic nie zamykaj, pytanie pod wpisem (pkt 4) |
 | „zacząłem”, „w toku”, „robię” | IN PROGRESS |
 | „czekam na … (od kogo)” | WAITING (+ kto w Desc albo Kto) |
 | „przesuwam na …”, „w przyszłym tygodniu” | zostaje, When = nowy termin |
