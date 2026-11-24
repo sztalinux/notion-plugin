@@ -32,7 +32,8 @@ wrażliwych”. Krok „Zrobione” nie wyłącza dni pielęgnacji. Przebieg ma 
 **Odczyt** (jedyne miejsce tej reguły – `budowa/references/wieczorem.md`, krok 2, odsyła tutaj; ID widoków
 w `budowa/references/notion-mapa.md`): jeden odczyt widoku „📅 Oś czasu” (bez filtra, pokazuje Uwagi;
 „🤖 Najbliższe 7 dni” pomija kroki „Zrobione”) – kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra,
-w każdym Statusie, z ich Uwagami; stron kroków nie otwieraj.
+w każdym Statusie, z ich Uwagami; stron kroków nie otwieraj. W nocnym przebiegu kontrola spójności (`przeglad-dnia`, 5a)
+czyta ten widok wcześniej – użyj jej wyniku, bez drugiego odczytu.
 W ich Uwagach szukaj roboty z tabeli z datą. Nic nie pasuje → koniec, bez szukania prognozy.
 
 1. **Miejscowość** weź ze ściągi (Notion → DOM → „📐 Dane projektu”). Do wyszukiwania w sieci podaj **tylko miejscowość** –

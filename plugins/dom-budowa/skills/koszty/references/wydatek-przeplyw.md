@@ -41,7 +41,8 @@ Konto jest tylko w budżecie domowym. W kosztorysie wystarczy Sposób (Gotówka 
   tylko `--budowa`, wiersz wyżej). Wiersz w budżecie od 1.12.2026 w ciągu godziny, starsze przy zamknięciu miesiąca.
 - **Telefon (claude.ai bez Notion):** każdy wydatek – budowa i prywatny – do Skrzynki słowami inwestora z polem
   „Zrobić: wydatek …” (`wpisy/references/skrzynka.md`); Mac stosuje pkt 1–2 przy przeniesieniu.
-- **„Do zapłaty” → „Zrealizowane”:** nocny przebieg (`przeglad-dnia`, B) przegląda strony 💸 zmienione od wczoraj z Płatność =
-  Zrealizowane, Rodzaj wydatek lub zwrot, bez „bez budżetu” i bez „budżet – z wyciągu” w Notatkach; brak wpisu o ich ID w `wpis.py lista RRRR-MM` (lista pokazuje ID z prefiksem `w`) (miesiąc
+- **„Do zapłaty” → „Zrealizowane”:** nocny przebieg (`przeglad-dnia`, B) czyta widok 💸 „🤖 Zrealizowane – 2 miesiące (budżet)”
+  (ID w `budowa/references/notion-mapa.md`; Płatność = Zrealizowane, bez wycen i planów, od najnowszej Daty – baza nie ma daty edycji)
+  od góry do pierwszej strony z Datą starszą niż 2 miesiące; pomija „bez budżetu” i „budżet – z wyciągu” w Notatkach; brak wpisu o ich ID w `wpis.py lista RRRR-MM` (lista pokazuje ID z prefiksem `w`) (miesiąc
   daty zapłaty) → zapis wg pkt 1–2. Ten sam `--id` nie dubluje, więc powtórka jest bezpieczna. (Decyzja: logika po stronie
   przebiegu, nie w `wydatki.py sync` – sync to narzędzie arkusza kosztorysu i nie zna wyjątków z pkt 1, np. innej kategorii.)
