@@ -13,9 +13,9 @@
    zamówieniem (bez Zamówione, Potwierdzone, Dostarczone, Problem i Nieaktualne), TASKS Dom z When = jutro i z Deadline ☑ po terminie (orientacyjne po dacie – sam licznik; `zadania`, plugin ja), WAITING z terminem jutro lub po, otwarte wpisy
    Notatnika z Kiedy = jutro lub po terminie; **ostrzeżenie pogodowe** tylko w dniu roboty wrażliwej wpisanej z datą w Uwagach kroku
    i przez 7 dni pielęgnacji betonu po niej, gdy próg przekroczony (progi i przebieg – `etap/references/pogoda.md`); codziennej
-   prognozy nie ma. Odczyt do ostrzeżenia pogodowego: kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra, z ich
-   Uwagami – niezrobione są już w wyniku „🤖 Najbliższe 7 dni” (tryb widoku zwraca wszystkie pola, także Uwagi), a kroki
-   „Zrobione”, które ten widok pomija, weź z jednego odczytu widoku „📅 Oś czasu” (bez filtra); stron kroków nie otwieraj.
+   prognozy nie ma. Odczyt do ostrzeżenia pogodowego: jeden odczyt widoku „📅 Oś czasu” (bez filtra, pokazuje Uwagi;
+   „🤖 Najbliższe 7 dni” pomija kroki „Zrobione”) – kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra,
+   w każdym Statusie, z ich Uwagami; stron kroków nie otwieraj.
 3. **Wpis w „📆 Przeglądy dzienne – budowa”** (`3f8f5982-09e7-815e-8b03-eacaa74db190`, strona na DOM) – gdy dziś albo jutro coś jest
    (albo rozkminka): zwijany nagłówek h2 „Przegląd dnia budowy – <dzień tygodnia> <data>” na górze, zapis i układ wg `przeglad-dnia/references/uklad-wpisu.md`
    (plugin `ja`): ⚠ Na teraz · Jutro – plan (z linią „⚠️ Pogoda jutro” tylko przy przekroczonym progu) · Dziś · Decyzje i pytania (SP domknięte dziś) · 🧠 Rozkminka (tylko z `przeglad-dnia`, B.2a; ręcznie –

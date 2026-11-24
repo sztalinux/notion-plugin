@@ -30,9 +30,9 @@ Inne dni, robota bez daty w Uwagach albo robota spoza tabeli → nic: bez progno
 wrażliwych”. Krok „Zrobione” nie wyłącza dni pielęgnacji. Przebieg ma być tani.
 
 **Odczyt** (to samo zdanie w `budowa/references/wieczorem.md`, krok 2; ID widoków w `budowa/references/notion-mapa.md`):
-Odczyt do ostrzeżenia pogodowego: kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra, z ich
-Uwagami – niezrobione są już w wyniku „🤖 Najbliższe 7 dni” (tryb widoku zwraca wszystkie pola, także Uwagi), a kroki
-„Zrobione”, które ten widok pomija, weź z jednego odczytu widoku „📅 Oś czasu” (bez filtra); stron kroków nie otwieraj.
+Odczyt do ostrzeżenia pogodowego: jeden odczyt widoku „📅 Oś czasu” (bez filtra, pokazuje Uwagi;
+„🤖 Najbliższe 7 dni” pomija kroki „Zrobione”) – kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra,
+w każdym Statusie, z ich Uwagami; stron kroków nie otwieraj.
 W ich Uwagach szukaj roboty z tabeli z datą. Nic nie pasuje → koniec, bez szukania prognozy.
 
 1. **Miejscowość** weź ze ściągi (Notion → DOM → „📐 Dane projektu”). Do wyszukiwania w sieci podaj **tylko miejscowość** –
