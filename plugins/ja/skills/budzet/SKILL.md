@@ -80,7 +80,8 @@ kwota) nie wchodzi sama, nawet z regułą „Zawsze” – decyzja z wierszem wp
    „Co przygotowuje inwestor” → **jedna lista do inwestora**. Bez wyciągów nie ruszaj; reszta może dojść później – strona
    pokaże ramkę „Brakuje”.
 2. Pobierz pliki do `DANE/wyciagi/` i `DANE/listy/`.
-3. Allegro: `python3 tools/budzet/allegro.py listy/allegro-<data>.txt listy/allegro-<data>.json`; uzupełnij w JSON `prop`
+3. Allegro: `python3 tools/budzet/allegro.py listy/allegro-<data>.txt listy/allegro-<data>.json` („pominięte” > 0 →
+   sprawdź te bloki w tekście); uzupełnij w JSON `prop`
    i 0–2 `opcje` dla zamówień bez propozycji (format „Kategoria › Podkategoria”, kategorie z `kategorie.json`) na podstawie
    nazw produktów. Zakupy na budowę → „Dom”.
 4. Pobierz `Transakcje!A1:O` (bez sztywnego końca – wierszy przybywa co godzinę) i zapisz jako

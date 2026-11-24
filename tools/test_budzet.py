@@ -51,6 +51,17 @@ class Testy(unittest.TestCase):
         self.assertTrue(z[0]['zwrocony'] and z[0]['pay'])
         self.assertEqual(z[0]['produkty'], ['Testowy produkt A ×2'])
         self.assertEqual((z[1]['data'], z[1]['suma'], z[1]['pay']), ('2026-11-01', 1063.41, False))
+        for spacja in (' ', ' '):  # A-15: twarda spacja przed walutą (tekst ze strony) nie gubi zamówienia
+            self.assertEqual([(x['suma'], x['produkty']) for x in allegro.parsuj(LISTA.replace(' ' + WAL, spacja + WAL))],
+                             [(x['suma'], x['produkty']) for x in z])
+
+    def test_allegro_skrypt_liczy_bloki(self):
+        d = Path(tempfile.mkdtemp())
+        (d / 'a.txt').write_text(LISTA + 'Zaznacz zakup: bez daty i sumy\n', encoding='utf-8')
+        r = subprocess.run([sys.executable, str(NARZ / 'allegro.py'), str(d / 'a.txt'), str(d / 'a.json')],
+                           env=dict(os.environ, BUDZET_DANE=str(d)), capture_output=True, text=True)
+        self.assertEqual((r.returncode, '3 bloków, 2 zamówień' in r.stdout, 'pominięte (bez daty albo sumy): 1' in r.stdout),
+                         (0, True, True), r.stdout + r.stderr)
 
     def test_kwoty_i_normalizacja(self):
         self.assertEqual(wspolne.kw('3,896.00 ' + WAL), 3896.0)
