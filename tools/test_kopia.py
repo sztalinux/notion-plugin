@@ -86,6 +86,15 @@ class Paczka(unittest.TestCase):
         self.assertEqual((dysk / "_Archiwum/2026-11-21/Projekty/a.pdf").read_bytes(), b"a")
         self.assertTrue((dysk / "_Archiwum/2026-11-21/Umowy/b.pdf").exists())
 
+    def test_zepsute_dowiazanie_pominiete(self):
+        # zepsute dowiązanie nie wywraca skanu – pozycja w błędach odczytu (F-15)
+        os.symlink(self.hub / "nie-ma.pdf", self.hub / "Projekty/skrot.pdf")
+        bledy = []
+        teraz = K.skanuj(self.hub, None, bledy)
+        self.assertEqual(sorted(teraz), ["Projekty/a.pdf", "Umowy/b.pdf"])
+        self.assertEqual(bledy, ["Projekty/skrot.pdf"])
+
+
 class Dzien(datetime):
     """Data „dzisiaj” w poleceniach kopia.py – testy nie zależą od dzisiejszej daty."""
     dzis = datetime(2026, 11, 20, 12)
@@ -151,6 +160,12 @@ class Polecenia(unittest.TestCase):
         self.assertIn("paczki do wgrania: 2026-11-22", linia)
         self.kopia("wgrane", "2026-11-22")
         self.assertIn("zmian od niej: 0", self.kopia("stan"))
+
+    def test_zepsute_dowiazanie_nie_wywraca_polecen(self):
+        os.symlink(self.hub / "nie-ma.pdf", self.hub / "Projekty/skrot.pdf")
+        self.assertIn("nie da się odczytać", self.kopia("stan"))
+        self.paczka("2026-11-20")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=1)

@@ -55,8 +55,9 @@ def sha(p: Path) -> str:
     return h.hexdigest()
 
 
-def skanuj(hub: Path, poprzedni: dict = None) -> dict:
-    """{ścieżka: {"rozmiar", "mtime", "sha256"}} dla dozwolonych folderów; sha liczony tylko dla zmienionych."""
+def skanuj(hub: Path, poprzedni: dict = None, bledy: list = None) -> dict:
+    """{ścieżka: {"rozmiar", "mtime", "sha256"}} dla dozwolonych folderów; sha liczony tylko dla zmienionych.
+    Plik nieczytelny (zepsute dowiązanie, brak uprawnień) – pominięty, ścieżka do `bledy`."""
     poprzedni, out = poprzedni or {}, {}
     for folder in DOZWOLONE:
         baza = hub / folder
@@ -69,12 +70,16 @@ def skanuj(hub: Path, poprzedni: dict = None) -> dict:
                 rel = nfc(p.relative_to(hub).as_posix())
                 if not dozwolony(rel):
                     continue
-                st = p.stat()
-                stary = poprzedni.get(rel)
-                if stary and stary.get("rozmiar") == st.st_size and stary.get("mtime") == int(st.st_mtime):
-                    out[rel] = stary
-                else:
-                    out[rel] = {"rozmiar": st.st_size, "mtime": int(st.st_mtime), "sha256": sha(p)}
+                try:
+                    st = p.stat()
+                    stary = poprzedni.get(rel)
+                    if stary and stary.get("rozmiar") == st.st_size and stary.get("mtime") == int(st.st_mtime):
+                        out[rel] = stary
+                    else:
+                        out[rel] = {"rozmiar": st.st_size, "mtime": int(st.st_mtime), "sha256": sha(p)}
+                except OSError:
+                    if bledy is not None:
+                        bledy.append(rel)
     return out
 
 
@@ -220,11 +225,15 @@ def main(argv=None):
         print("[kopia] na Dysku: " + ("✗ " + ", ".join(map(str, zle)) if zle else "brak .dom, AI i sekretów ✓"))
         return 1 if zle else 0
 
-    teraz = skanuj(HUB, {**stan["potwierdzone"], **stan.get("ostatni_skan", {})})
+    bledy = []
+    teraz = skanuj(HUB, {**stan["potwierdzone"], **stan.get("ostatni_skan", {})}, bledy)
     stan["ostatni_skan"] = teraz
     r = roznice({k: v for k, v in stan["potwierdzone"].items() if dozwolony(k)}, teraz)
     n = len(r["nowe"]) + len(r["zmienione"]) + len(r["przeniesione"]) + len(r["usuniete"])
     dysk = folder_dysku()
+    if bledy:
+        print(f"[kopia] ⚠ pominięte – nie da się odczytać (zepsute dowiązanie? brak uprawnień?): {len(bledy)}: "
+              + ", ".join(bledy[:5]) + (" …" if len(bledy) > 5 else ""))
 
     if a.cmd == "stan":
         czeka = [p["data"] for p in stan.get("paczki", []) if not p.get("wgrana")]

@@ -15,6 +15,7 @@ from unittest import mock
 
 HUB = Path(tempfile.mkdtemp(prefix="kopie-test-"))
 os.environ["DOM_HUB"] = str(HUB)
+os.environ.pop("KOPIA_DANE", None)  # stan kopii w <HUB>/.dom/kopia, nie w katalogu z otoczenia
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import kopie as K  # noqa: E402
 
@@ -155,6 +156,18 @@ class Dokumenty(unittest.TestCase):
         self.assertEqual(w["stan"], "✓")
         self.assertEqual(w["kiedy"], "2026-11-10")
         self.assertIn("zmian od kopii: 0", w["szczegol"])
+
+    def test_zepsute_dowiazanie_bez_wyjatku(self):
+        # zepsute dowiązanie w folderze z listy kopii – pozycja z opisem, nie traceback (F-15)
+        hub = Path(tempfile.mkdtemp(prefix="kopie-link-"))
+        (hub / ".dom" / "kopia").mkdir(parents=True)
+        (hub / "Projekty").mkdir()
+        os.symlink(hub / "nie-ma.pdf", hub / "Projekty" / "skrot.pdf")
+        (hub / ".dom" / "kopia" / "stan.json").write_text(json.dumps(
+            {"potwierdzone": {}, "potwierdzono": "2026-11-19", "paczki": []}))
+        w = K.dokumenty(hub, DZIS)
+        self.assertEqual(w["stan"], "⚠")
+        self.assertIn("nieczytelne: 1", w["szczegol"])
 
     def test_uszkodzony_stan_bez_wyjatku(self):
         hub = Path(tempfile.mkdtemp(prefix="kopie-stan-"))
