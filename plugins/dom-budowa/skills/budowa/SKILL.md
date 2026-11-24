@@ -18,10 +18,10 @@ Gdzie leżą dane i jak je zmieniać: `references/zrodla.md`; gdzie czego szuka�
 
 ## Na starcie
 
-Skrzynkę „🤖 Zmiany asystenta” (Zasady) obsługuje skill `ja` (plugin `ja`, sekcja „Na starcie rozmowy”) – wczytaj
+Skrzynkę zmian („📥 Zasady do wdrożenia” w „🤖 Zmiany asystenta”) obsługuje skill `ja` (plugin `ja`, sekcja „Na starcie rozmowy”) – wczytaj
 go, jeśli nie jest wczytany; zasady „Do zrobienia” albo z pustym Statusem obowiązują też w sprawach budowy.
 
-Poza Claude Code pobierz też (raz na rozmowę, razem ze skrzynką) stronę Notion **„📑 Przewodnik po dokumentach i Notion”**
+Poza Claude Code pobierz też (raz na rozmowę, razem ze skrzynką zmian) stronę Notion **„📑 Przewodnik po dokumentach i Notion”**
 (`3f6f5982-09e7-81f5-bade-ec877d8d936a`): co jest w którym dokumencie, gdzie leży i gdzie czego szukać w Notion.
 Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna, nic nie trzeba wgrywać.
 
@@ -37,7 +37,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | pyta o projekt, rysunek, umowę, normę, technologię, „czy to dobrze” | `analiza-techniczna` |
 | wkleja transkrypcję filmu/artykuł; relacjonuje rozmowę („dzwoniłem do konstruktora…”); odpowiada „SP-n: …” | `wiedza` |
 | pyta „co nowego”, „podsumuj tydzień” (budowa) | `przeglad-tygodnia` |
-| „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` (plugin `ja`); przegląd dnia budowy – sekcja „Wieczorem” niżej |
+| „przegląd dnia”, nocny przebieg na Macu | `przeglad-dnia` (plugin `ja`); przegląd dnia budowy – sekcja „Wieczorem” niżej |
 | „przegląd dnia budowy”, „co dziś na budowie i co jutro” | sekcja „Wieczorem” niżej |
 | dostał nowe pliki od projektanta/wykonawcy, pyta o dokument, „co wgrać do claude.ai”, „wgrałem” (paczka, kopia, faktura z telefonu), „aplikacja Dysku nie działa” | `dokumenty` |
 | „zaczynamy etap”, „jutro betonowanie – co sprawdzić”, „ekipa skończyła”, odbiór, usterki, „teczka do banku” | `etap` |
