@@ -46,6 +46,9 @@ R, M = map(int, MIES.split('-'))
 KONIEC = date(R, M, monthrange(R, M)[1])
 
 ark = arkusz(sciezka(A.arkusz))
+for r in ark:  # miesiąc wiersza z daty (A), nie z kolumny M – pusta albo nieprzeciągnięta formuła M nie wyklucza wiersza
+    if r['data']:
+        r['mies'] = r['data'].strftime('%Y-%m')
 bank = wyciagi(sciezka(A.zen), sciezka(A.mbank))
 KONTA_A = (U.get('konto_zen'), U.get('konto_mbank'))
 
@@ -141,10 +144,13 @@ pozbank = defaultdict(list)
 for t in bank:
     if t['id'] not in para and not t.get('jednostka'):
         pozbank[(t['konto'], t['mies'])].append(t)
+        pozbank[t['konto']].append(t)
+PRZELOM_1_1 = 3  # ręczny wiersz z końca miesiąca, płatność zaksięgowana na początku następnego
 for r in nasze:
-    k = [t for t in pozbank[(r['konto'], r['mies'])] if t['id'] not in para and abs(t['kwota']) == r['kwota'] and pasuje(r, t)]
+    k = [t for t in pozbank[r['konto']] if t['id'] not in para and abs(t['kwota']) == r['kwota'] and pasuje(r, t)
+         and (t['mies'] == r['mies'] or (r['data'] and abs((t['data'] - r['data']).days) <= PRZELOM_1_1))]
     if k:
-        t = min(k, key=lambda t: abs((t['data'] - r['data']).days) if r['data'] else 0)
+        t = min(k, key=lambda t: (abs((t['data'] - r['data']).days) if r['data'] else 0, t['mies'] != r['mies']))
         para[t['id']] = (r, '1:1')
         r['uzyty'] = True
 for r in nasze:  # ręcznie wpisane z zaokrągleniem albo literówką: do złotówki różnicy, ±3 dni, jedyny kandydat
