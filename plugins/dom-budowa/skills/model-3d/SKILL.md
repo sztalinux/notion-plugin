@@ -36,7 +36,8 @@ procedur, commitów harnessu ani do Notion bez prośby.
 4. **Fakt z projektu ≠ szacunek.** W odpowiedzi rozróżniaj: wymiar z rysunku, wartość przyjęta, pomysł do decyzji.
    Decyzje budowlane (układ, materiały, otwory) należą do inwestora – zapytaj z propozycją domyślną; wariant techniczny
    modelowania wybierz sam.
-5. **Bez zasobów z internetu.** Materiały są proceduralne, w realnej skali; meble i rośliny buduje skrypt.
+5. **Zasoby z internetu tylko po zgodzie inwestora na listę** (źródło, licencja, rozmiar); domyślnie proceduralnie: materiały
+   w realnej skali, meble i rośliny buduje skrypt.
 6. **Blender jest jeden.** Budowanie i zrzuty rób sam, po kolei; czytanie rysunków możesz rozdzielić na pomocników
    (każdy zwraca fragment danych z niepewnościami), w miarę możliwości na tańszym modelu.
 
