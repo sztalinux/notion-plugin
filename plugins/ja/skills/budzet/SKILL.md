@@ -85,7 +85,8 @@ kwota) nie wchodzi sama, nawet z regułą „Zawsze” – decyzja z wierszem wp
    `DANE/miesiace/transakcje-<data>.json`.
 5. `python3 tools/budzet/importuj.py --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>.json --zen wyciagi/zen.csv
    --mbank wyciagi/mbank.csv --allegro listy/allegro-<data>.json --lista listy/RRRR-MM-<lista>.txt`
-   (pomiń brakujące; ścieżki względem DANE; wpisy z sekcji A czyta sam – także końcówkę poprzedniego i początek następnego
+   (pomiń brakujące – podany, a nieistniejący plik to ✗; ścieżki względem DANE; „Brakuje” wymienia każdy wyciąg, który nie
+   obejmuje całego miesiąca; wpisy z sekcji A czyta sam – także końcówkę poprzedniego i początek następnego
    miesiąca; `--salda-wpisane`, gdy salda są już w Konta).
    W listach kwota może być działaniem („5300-580 wyn”) – w arkuszu zostaje formuła.
 6. `python3 tools/budzet/strona.py --dist <folder w scratchpadzie>` i opublikuj na adres `strona_url`: strona

@@ -524,6 +524,16 @@ class PrzeplywArkusz(unittest.TestCase):
             self.assertEqual((len(m['przypiecia']), [d['id'] for d in m['decyzje'] if d['kwota'] > 0 or d['id'] == 'wP1'], m['auto']),
                              (1, [], []), kwota)
 
+    def test_a4_wyciag_niepelny_albo_brak_pliku(self):
+        """A-4: wyciąg kończący się w połowie miesiąca – linia w „Brakuje” także bez wpisów; podany, a brakujący plik – stop."""
+        self.zen_wiele(('3 Dec 2026', 'SKLEP STALY', '-10.00'))
+        m = self.importuj('--zen', 'zen.csv', mies='2026-12')
+        self.assertTrue(any('K-bank kończy się 03.12' in b for b in m['braki']), m['braki'])
+        self.assertTrue(any('wyciąg K-mb brak' in b for b in m['braki']), m['braki'])
+        kod, out = Przeplyw.proces(self, 'importuj.py', '--miesiac', '2026-12', '--arkusz', 'ark.json', '--zen', 'zen.csv',
+                                   '--mbank', 'wyciagi/mbank-grudzien.csv')
+        self.assertEqual((kod, '✗ brak pliku wyciągu' in out, 'Traceback' in out), (1, True, False), out)
+
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')
         p = self.dane / 'listy' / '2026-12-wpisy.jsonl'

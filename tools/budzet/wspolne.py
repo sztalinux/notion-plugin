@@ -76,7 +76,10 @@ def wyciagi(zen=None, mbank=None):
     """Transakcje ze wszystkich miesięcy w plikach; id stabilne między uruchomieniami (hash pól + numer powtórzenia).
     ZEN: CSV z liniami po „Transactions:” (każda linia to CSV w cudzysłowie, z saldem); mBank: CSV „;” od „#Data operacji”."""
     bank = []
-    if zen and Path(zen).exists():
+    for plik in (zen, mbank):  # podany, a nieistniejący plik (literówka, niepobrany) – stop, nie cichy brak transakcji
+        if plik and not Path(plik).exists():
+            raise SystemExit(f'✗ brak pliku wyciągu {plik}')
+    if zen:
         lines = Path(zen).read_text(encoding='utf-8-sig').splitlines()
         st = next((i for i, l in enumerate(lines) if l.startswith('Transactions:')), None)
         if st is None:
@@ -91,7 +94,7 @@ def wyciagi(zen=None, mbank=None):
                 continue
             bank.append(dict(konto=U.get('konto_zen', 'ZEN'), data=datetime.strptime(f[0], '%d %b %Y').date(),
                              opis=re.sub(r'\s+', ' ', f[2]).strip(), kwota=kw(f[3]), saldo=kw(f[11]) if len(f) > 11 and f[11] else None))
-    if mbank and Path(mbank).exists():
+    if mbank:
         lines = Path(mbank).read_text(encoding='utf-8-sig').splitlines()
         st = next((i for i, l in enumerate(lines) if l.startswith('#Data operacji')), None)
         if st is None:

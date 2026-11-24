@@ -524,6 +524,10 @@ for z in zam:
             opcje=([prop] if prop else []) + [rozbij(o) for o in z.get('opcje', [])],
             uwaga='Allegro Pay – spłata w kolejnym miesiącu zostanie pominięta' if z['pay'] else '')
 
+if teraz:  # każde konto z wyciągiem, także bez wpisów: transakcji spoza zakresu pliku nie wczyta import żadnego miesiąca
+    for konto in KONTA_A:
+        if konto and konto not in niepelne and ZASIEG.get(konto, POCZ) < KONIEC:
+            niepelne[konto] = ZASIEG.get(konto)
 for konto, koniec in sorted(niepelne.items()):
     braki.append(f"wyciąg {konto} " + (f"kończy się {koniec.strftime('%d.%m')}" if koniec else 'brak') +
                  ' – pobierz cały miesiąc (wpisy z kart bez pary są na stronie decyzji albo czekają na kolejny import)')
