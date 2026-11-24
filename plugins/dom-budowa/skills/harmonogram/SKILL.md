@@ -73,7 +73,7 @@ Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym,
    wcześniej”) to fakt od inwestora, nie decyzja – także w przebiegu bez inwestora: przedłuż albo skróć koniec Terminu
    kroku (Status „W trakcie”); w Uwagach „+N dni – wpis z <data>”. Kroki zależne (Blokuje) – najwcześniej dzień po nowym
    końcu poprzednika (krok z zapasem zostaje) – oraz krok „Bez odwrotu” bez daty od inwestora i terminy u innych (dostawa,
-   pompa, kierownik, geotechnik) to przesunięcia wyliczone (wstęp C): w rozmowie – pytanie z propozycją; bez inwestora –
+   pompa, kierownik, geotechnik) to przesunięcia wyliczone (wstęp C): w rozmowie – wg 2 i 3; bez inwestora –
    zawsze okienko ❓ pod wpisem (linia w przeglądzie dnia budowy najwyżej jako dodatkowe przypomnienie). Nie wiadomo,
    którego kroku dotyczy, albo o ile → pytanie.
 
