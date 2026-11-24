@@ -331,13 +331,17 @@ def kontrola(k):
     return licz, problemy
 
 
-def ponow(ids):
+def ponow(ids, usuniete=None):
+    """-> liczba wyczyszczonych znaczników. Usunięty zapis zostaje ze znacznikiem (ID do listy usuniete) – sync ponowi
+    usunięcie wiersza; bez znacznika utknąłby: ani usunięcie, ani dopisanie."""
     ids = set(ids) | {'w' + i for i in ids}
-    n = 0
+    n, usuniete = 0, usuniete if usuniete is not None else []
     with blokada_wpisow():
         for m in miesiace_wpisow():
             ws = czytaj_wpisy(m, z_usunietymi=True)
             hit = [w for w in ws if w['id'] in ids and w.get('arkusz')]
+            usuniete += [w['id'] for w in hit if w.get('usuniety')]
+            hit = [w for w in hit if not w.get('usuniety')]
             for w in hit:
                 del w['arkusz']
             if hit:
@@ -391,7 +395,11 @@ def main(argv=None):
     if a.polecenie == 'ponow':
         if not a.ids:
             ap.error('ponow: podaj ID zapisów')
-        print(f'{ETYKIETA} ponow: wyczyszczono znacznik w {ponow(a.ids)} zapisach – następny sync dopisze wiersz albo, gdy ID już jest w arkuszu, poprawi go')
+        usuniete = []
+        n = ponow(a.ids, usuniete)
+        print(f'{ETYKIETA} ponow: wyczyszczono znacznik w {n} zapisach – następny sync dopisze wiersz albo, gdy ID już jest w arkuszu, poprawi go')
+        for i in usuniete:
+            print(f'  {i}: usunięty we wpisach – znacznik zostaje, sync ponowi usunięcie wiersza (nic nie rób)')
         return 0
     if a.polecenie == 'blokada':
         if a.ids not in (['zaloz'], ['zdejmij']):

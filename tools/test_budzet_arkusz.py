@@ -254,6 +254,18 @@ class Synchronizacja(unittest.TestCase):
         licz, _, _ = self.sync()
         self.assertEqual((licz['dopisane'], len(self.atrapa.w)), (1, 1))
 
+    def test_a11_ponow_na_usunietym_nie_zdejmuje_znacznika(self):
+        """A-11: „dopisz ponownie” na zapisie usuniętym – znacznik zostaje, sync usuwa wiersz (nie utyka)."""
+        self.zapisz('2026-12', wpis('wU1', '2026-12-02'))
+        self.sync()
+        ws = self.plik('2026-12')
+        ws['wU1']['usuniety'] = '2026-12-03 09:00'
+        self.zapisz('2026-12', *ws.values())
+        usuniete = []
+        self.assertEqual((AB.ponow(['wU1'], usuniete), usuniete), (0, ['wU1']))
+        licz, _, _ = self.sync()
+        self.assertEqual((licz['usuniete'], self.atrapa.w, self.plik('2026-12')), (1, [], {}))
+
     def test_przypnij_z_pliku_zamkniecia(self):
         self.zapisz('2026-12', wpis('wp-1', '2026-12-02', kwota=-30.0), wpis('wp-2', '2026-12-02', kwota=-20.0))
         self.sync()

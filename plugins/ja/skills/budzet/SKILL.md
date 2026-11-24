@@ -59,6 +59,7 @@ z polem `grupa`), część na budowę także do kolejki 💸. **Paragon bez „k
 5. Komunikat 🔔 `skrypt-arkusz_budzetu-kontrola` (nocna kontrola: wpis bez wiersza w arkuszu): odpowiedź „dopisz ponownie”
    → `python3 tools/budzet/arkusz_budzetu.py ponow <id>`; „usuń” → `python3 tools/budzet/wpis.py usun RRRR-MM <id>`
    (`wpisy/references/pytania.md`, C). Wiersz z ID wpisu bez zapisu w pliku – zaproponuj inwestorowi usunięcie wiersza w arkuszu.
+   „Usunięty we wpisach, wiersz wciąż w arkuszu” – nic nie rób: `sync` ponowi usunięcie (`ponow` takiego zapisu nie rusza).
    `skrypt-arkusz_budzetu-sync` – zapisy czekają w pliku; przyczyny: `docs/budzet-arkusz.md`, sekcja 5.
 
 Przy zamknięciu: gotówka i konta drugiej osoby z wpisów – ID w kolumnie O = już w arkuszu, inaczej wiersz z datą i opisem
