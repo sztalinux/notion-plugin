@@ -267,5 +267,14 @@ class Hooki(unittest.TestCase):
             self.git("worktree", "remove", "--force", str(wt), sprawdz=False)
             self.git("branch", "-q", "-D", "wt-test", sprawdz=False)
 
+    # --- F-16: odesłania do nieistniejącej procedury ---------------------------------------------------
+    def test_usuniety_skill(self):
+        shutil.rmtree(self.repo / "plugins" / "ja" / "skills" / "suple")
+        r = subprocess.run([sys.executable, "tools/build.py", "--tylko-walidacja"], cwd=self.repo,
+                           capture_output=True, text=True, env=self.env)
+        self.zablokowany(r, "AGENTS.md: odesłanie do nieistniejącej procedury plugins/ja/skills/suple/SKILL.md",
+                         "skills/ja/SKILL.md: mapa procedur wskazuje nieistniejącą procedurę `suple`")
+
+
 if __name__ == "__main__":
     unittest.main()

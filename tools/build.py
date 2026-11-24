@@ -87,6 +87,10 @@ def waliduj() -> list:
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8") if (ROOT / "CHANGELOG.md").exists() else ""
     agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
     nazwy_skilli = {}
+    wszystkie = {d.name for pl in pluginy() for d in skille(pl)}
+    for p, s in sorted(set(re.findall(r"plugins/([\w-]+)/skills/([\w-]+)/SKILL\.md", agents))):
+        if not (PLUGINS / p / "skills" / s / "SKILL.md").exists():
+            bledy.append(f"AGENTS.md: odesłanie do nieistniejącej procedury plugins/{p}/skills/{s}/SKILL.md")
     for pl in pluginy():
         try:
             plugin = json.loads((pl / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))
@@ -114,6 +118,10 @@ def waliduj() -> list:
             bledy.append(f"{pl.name}: brak skilla kontekstowego (słownik KONTEKST w tools/build.py)")
             continue
         router = (pl / "skills" / kontekst / "SKILL.md").read_text(encoding="utf-8")
+        for linia in router.splitlines():  # mapa procedur: pierwsza nazwa w `…` w ostatniej kolumnie tabeli
+            m = re.match(r"`([a-z0-9-]+)`", linia.strip().strip("|").split("|")[-1].strip()) if linia.startswith("|") else None
+            if m and m.group(1) not in wszystkie:
+                bledy.append(f"skills/{kontekst}/SKILL.md: mapa procedur wskazuje nieistniejącą procedurę `{m.group(1)}`")
         for d in skille(pl):
             if d.name in nazwy_skilli:
                 bledy.append(f"{d.name}: ta sama nazwa skilla w {nazwy_skilli[d.name]} i {pl.name} – nazwy muszą być unikalne")
