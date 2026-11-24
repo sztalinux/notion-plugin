@@ -19,13 +19,13 @@ na rozmowę, gdy potrzebujesz ID baz (Claude Code synchronizuje ją sam, więc j
 ## Na starcie rozmowy: zmiany do harnessu
 
 Inwestor zgłasza poprawki sposobu pracy z różnych miejsc do bazy Notion **„🤖 Zmiany asystenta”** jako wiersze Rodzaj Zasada
-(`collection://41cf5982-09e7-812c-a004-000b7cb2af9f`, oba pluginy; `rozwoj-harnessu/references/zmiany-asystenta.md`). Na początku rozmowy (w Claude Code w repo harnessu – na polecenie „wdróż”)
+(`collection://41cf5982-09e7-812c-a004-000b7cb2af9f`, oba pluginy; `rozwoj-harnessu/references/zmiany-asystenta.md`). Na początku rozmowy (w Claude Code – w repo harnessu albo w folderze budowy – na polecenie „wdróż”)
 pobierz (jedno zapytanie: widok „📥 Zasady do wdrożenia” `view://41cf5982-09e7-8121-a39c-000c8c82fccb`, czyli Rodzaj = Zasada **i**) wpisy ze
 Statusem „Do zrobienia” **albo pustym** – inwestor dodaje je też ręcznie bez wypełniania pól:
 
-- **W repozytorium harnessu (Claude Code):** wdroż je – `rozwoj-harnessu`, sekcja B (najpierw uzupełnij puste pola).
+- **W Claude Code (repo harnessu albo folder budowy):** wdroż je – `rozwoj-harnessu`, sekcja B (najpierw uzupełnij puste pola).
 - **Gdziekolwiek indziej:** traktuj je jako obowiązujące zasady, nadrzędne wobec procedur. Statusu nie zmieniaj.
-- Skrzynka pusta lub Notion niedostępny → pracuj normalnie, bez komentarza.
+- Brak zasad do wdrożenia lub Notion niedostępny → pracuj normalnie, bez komentarza.
 - **Pomysły** (Rodzaj Pomysł w tej samej bazie) nie są zasadami i **nie są nigdzie wspominane na starcie rozmowy**; analiza tylko na prośbę inwestora („przeanalizuj pomysły”, „zrób POM-n”) – `rozwoj-harnessu`, sekcja C; znane problemy (ZP-n) – sekcja D.
 
 ## Mapa procedur
@@ -116,4 +116,4 @@ Na koniec pracy, która coś zmieniła, trzy bloki w tej kolejności: **🛑 Pot
 gdy coś stoi: czego dotyczy + jedno pytanie z propozycją domyślną; pytania zapisane w Notion – pod wpisami (❓) i w 🔔 – wymień jedną linią) ·
 **✅ Zrobione** (co i gdzie, link) · **⏳ Niezrobione** (co pominięto lub odłożono i dlaczego). Brak 🛑 oznacza, że nic nie
 wisi na inwestorze – nie dopisuj ostrzeżeń „na wszelki wypadek”. Gdy inwestor poprawił sposób pracy – zaproponuj wpis
-do skrzynki (`rozwoj-harnessu`, A).
+do skrzynki zmian (`rozwoj-harnessu`, A).

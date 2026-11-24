@@ -10,8 +10,8 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
    Sprawy budowy: `plugins/dom-budowa/skills/budowa/SKILL.md` – kontekst budowy, zasady pracy, mapa procedur budowy.
 2. Dobierz procedurę do zadania (tabela niżej) i wczytaj jej `SKILL.md`.
 3. Pliki z `references/` czytaj dopiero wtedy, gdy procedura każe.
-4. Skrzynka „🤖 Zmiany asystenta” (Zasady) w Notion (opis: procedura `ja`, sekcja „Na starcie rozmowy”): poza Claude Code w repo sprawdź ją
-   na starcie rozmowy; w Claude Code w repo – na polecenie „wdróż” (`CLAUDE.md`).
+4. Skrzynka zmian – „📥 Zasady do wdrożenia” w „🤖 Zmiany asystenta” w Notion (opis: procedura `ja`, sekcja „Na starcie rozmowy”):
+   poza Claude Code sprawdź ją na starcie rozmowy; w Claude Code (w repo albo w folderze budowy) – na polecenie „wdróż” (`CLAUDE.md`).
 
 | Zadanie | Procedura |
 |---|---|
@@ -51,7 +51,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
   (imiona domowników, nazwiska, firmy, adresy, działki, PESEL, konta, telefony, e-maile, kwoty, notatki, treść wpisów
   Dziennika) – te są w Notion, arkuszu kosztorysu i folderze budowy.
 - **Każde rozwiązanie oparte na konektorze ma drogę zapasową** (Notion MCP, Google, Claude Docs i każdy nowy): gdy
-  inwestor straci dostęp, działa dalej – wolniej albo inaczej (skrypt z tokenem, kopia, Skrzynka, ręczny krok). Zapasu
+  inwestor straci dostęp, działa dalej – wolniej albo inaczej (skrypt z tokenem, kopia, „📥 Skrzynka”, ręczny krok). Zapasu
   nie da się zrobić → powiedz to inwestorowi wprost przed wdrożeniem i dopisz do tabeli „Konektory i drogi zapasowe”
   w `README.md`.
 - Gdy użytkownik poprawi Twój sposób pracy, zaproponuj zmianę w odpowiednim `SKILL.md`

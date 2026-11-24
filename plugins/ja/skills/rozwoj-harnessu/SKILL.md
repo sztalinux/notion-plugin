@@ -18,10 +18,10 @@ Konfiguracja projektu „Dom” na claude.ai (instrukcje, wiedza): `references/c
 | Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, arkusz kosztorysu) | **Pomysł** (Rodzaj Pomysł w „🤖 Zmiany asystenta”) → analiza → wdrożenie na polecenie – sekcja C |
 | Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Usterka** (Rodzaj Usterka w „🤖 Zmiany asystenta”) → naprawa w Claude Code na polecenie „zrób ZP-n” – sekcja D |
 
-Skrzynka = konkretna reguła, wchodzi od razu. Pomysł = coś do przemyślenia; nic nie wchodzi samo, decyduje inwestor.
+Zasada (skrzynka zmian) = konkretna reguła, wchodzi od razu. Pomysł = coś do przemyślenia; nic nie wchodzi samo, decyduje inwestor.
 
 Jedna baza dla zasad, pomysłów i usterek: „🤖 Zmiany asystenta” – pola, statusy, ID (`HZ-n` / `POM-n` / `ZP-n`, pole tekstowe)
-i widoki: `references/zmiany-asystenta.md`. Skrzynka = wiersze Rodzaj Zasada ze Statusem pustym albo „Do zrobienia”
+i widoki: `references/zmiany-asystenta.md`. Skrzynka zmian = wiersze Rodzaj Zasada ze Statusem pustym albo „Do zrobienia”
 (**pusty = do wdrożenia** – inwestor dodaje wpisy ręcznie, bez pól); widok „📥 Zasady do wdrożenia".
 
 ## Kiedy proponować zmianę (pętla uczenia)
