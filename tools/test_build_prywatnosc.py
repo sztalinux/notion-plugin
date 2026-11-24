@@ -30,6 +30,54 @@ LISTA = f"# zmyślona lista testowa\n{ASCII}\n{OGONEK}\n{DWA}\n"
 BLAD_LISTY = "słowo z listy zakazanych"
 
 
+class Lista(unittest.TestCase):
+    """F-3 (a), (b): dopasowanie bez ogonków na granicy słowa, wpisy wielowyrazowe – na zmyślonej liście."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = Path(tempfile.mkdtemp(prefix="prywatnosc-lista-"))
+        (cls.tmp / "lista.txt").write_text(LISTA, encoding="utf-8")
+        cls.stara = build.ZAKAZANE
+        build.ZAKAZANE = cls.tmp / "lista.txt"
+        cls.zak = build.zakazane_slowa()
+
+    @classmethod
+    def tearDownClass(cls):
+        build.ZAKAZANE = cls.stara
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def lapie(self, tekst):
+        return any(BLAD_LISTY in b for b in build.sprawdz_tekst("x", z(tekst), self.zak))
+
+    def test_lapie(self):
+        for t in ("plumb§atek", "PLUMB§ATEK", "plumb§atekowi",
+                  "plumb§ątek", "Plumb§ątek, sprawa", "u pana Plumb§ątek.",  # (a) wpis ASCII, w tekście ogonek
+                  "Żwir§kowo", "zwir§kowo", "ZWIR§KOWO",
+                  "Jan Zmyś§lak", "Jan Zmys§lak", "Zmyś§lak Jan", "Zmys§lak  Jan", "Jan-Zmyś§lak",
+                  "**Jan** Zmyś§lak", "Jan_Zmyś§lak", "Jan\u00a0Zmyś§lak", "JAN ZMYŚ§LAK",
+                  "Jan Zmy\u200b§ślak", "JanZmyś§lak.md", "Zmys§lak, Jan"):
+            self.assertTrue(self.lapie(t), z(t))
+
+    def test_dwie_linie(self):
+        b = build.sprawdz_tekst("x", z("wstęp\nrozmowa: Jan\nZmyś§lak powiedział\nkoniec"), self.zak)
+        self.assertEqual(b, ["x:2: słowo z listy zakazanych – repo jest publiczne, usuń lub uogólnij"])
+
+    def test_zwykly_tekst_przechodzi(self):
+        for t in ("Jan", "Zmyślona historia", "pan Jan i pani Ewa", "plumbum", "atek", "zaplumbowany",
+                  "Żwir i kowadło", "żwirek", "kowo", "Jan Zmyślony", "N zł"):
+            self.assertFalse(self.lapie(t), t)
+
+    def test_prefiks_tokenu_tylko_doslownie(self):
+        """Wpis z „_” (prefiks tokenu) nie jest rozbijany na słowa – nazwa usługi w zwykłym zdaniu przechodzi."""
+        zak = self.zak + [z("abc§d_efg§h_")]
+        self.assertFalse(build.sprawdz_tekst("x", z("klucz Abc§d Efg§h w komentarzu"), zak))
+        self.assertTrue(build.sprawdz_tekst("x", z("abc§d_efg§h_1234"), zak))
+
+    def test_osoba(self):
+        self.assertTrue(build.sprawdz_osobe("autor", z("Plumb§ątek"), "1+x@users.noreply.github.com", self.zak))
+        self.assertEqual(build.sprawdz_osobe("autor", "tester", "1+x@users.noreply.github.com", self.zak), [])
+
+
 class JakoTekst(unittest.TestCase):
     """F-1: UTF-16 bez BOM czytany jako tekst, binarne → None."""
 

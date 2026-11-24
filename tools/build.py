@@ -16,6 +16,7 @@ Wynik w dist/:
     claude-ai-projekt/instrukcje.md – instrukcje projektu „Dom” na claude.ai
 """
 import argparse
+import functools
 import json
 import os
 import re
@@ -189,7 +190,19 @@ WZORCE = [
     # bez znaczenia – P05-13); przykłady w procedurach pisz „N zł”, „N tys. zł”
     (re.compile(r"(?<![\w.,])\d(?:[\d \u00a0.,]*\d)?\s?(?:k|tys\.?|mln|mld)?\s?(?:zł(?:otych|ote|oty)?|zl|pln)(?!\w)|\bpln\s?\d",
                 re.I), "kwota"),
+    # zapisy, które omijały wzorce wyżej (F-3): „N,- zł”, „zł N”, telefon z kropkami, „nr ewid. N/N”, skrót ulicy
+    # bez spacji przed nazwą albo z nazwą małą literą, e-mail z „[at]” / „(małpa)”
+    (re.compile(r"(?<![\w.,])\d[\d \u00a0.]*,-\s?(?:zł|zl|pln)(?!\w)|(?<!\w)(?:zł|zl)\s?\d", re.I), "kwota"),
+    (re.compile(r"(?<![\w.])\d{3}\.\d{3}\.\d{3}(?![\w.])"), "numer telefonu"),
+    (re.compile(r"\b(?:nr\.?\s*ew\w*|dz(?:iałk\w*)?\.?\s+ew\w*)\.?\s*(?:nr\.?\s*)?\d+/\d+", re.I), "numer działki"),
+    (re.compile(r"\b[Uu]l\.\s*[a-ząćęłńóśźż]{3,}|\b[Uu]l\.[A-ZĄĆĘŁŃÓŚŹŻ]"), "adres"),
+    (re.compile(r"(?<=[\w.+-])\s*[\[(]\s*(?:at|małpa|malpa)\s*[\])]\s*[\w-]+(?:\.[\w-]+)*\.[a-z]{2,}", re.I), "adres e-mail"),
 ]
+# wzorce, których każde trafienie zawiera cyfrę – wstępny odsiew w sprawdz_tekst tylko na liniach z cyfrą (czas
+# pre-commit); nowy wzorzec bez opisu z tej listy sprawdzany jest na całym tekście
+Z_CYFRA = {"numer telefonu", "numer działki", "kod pocztowy", "PESEL", "PESEL (11 cyfr)", "numer konta", "NIP",
+           "numer księgi wieczystej", "kwota"}
+LINIA_Z_CYFRA = re.compile(r"^.*\d.*$", re.M)
 DOZWOLONE = [re.compile(r"noreply@anthropic\.com"),            # stopka Co-Authored-By
              re.compile(r"[\w.+-]+@users\.noreply\.github\.com")]  # anonimowy adres GitHuba
 BINARNE = {".xlsx", ".xls", ".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png", ".heic", ".zip",
@@ -274,17 +287,71 @@ def zignorowane(sciezki: list) -> set:
     return set(r.stdout.decode().split("\0")) - {""} if r.returncode == 0 else set()
 
 
+NIEWIDOCZNE = re.compile(r"[\u00ad\u200b-\u200f\u2060\ufeff]")  # miękki łącznik, spacje zerowej szerokości
+
+
+def zloz(s: str) -> str:
+    """Postać do porównania z listą bez ogonków: małe litery ASCII i cyfry, bez znaków niewidocznych; każdy inny znak
+    (spacja, łącznik, podkreślnik, gwiazdki Markdown, interpunkcja) → spacja. Znaki nowej linii zostają."""
+    s = unicodedata.normalize("NFKD", NIEWIDOCZNE.sub("", s.lower().replace("ł", "l")))
+    return re.sub(r"[^a-z0-9\n]+", " ", re.sub(r"[\u0300-\u036f]", "", s))
+
+
+@functools.lru_cache(maxsize=4)
+def warianty_listy(zakazane: tuple) -> tuple:
+    """Wpisy listy bez ogonków jako całe słowa – uzupełnienie dosłownego porównania w sprawdz_tekst (F-3): wpis
+    zapisany bez polskich znaków łapie tekst z ogonkami, wpis wielowyrazowy także w odwrotnej kolejności, sklejony,
+    z łącznikiem, gwiazdkami i rozbity na dwie linie. Całe słowa, bo krótkie wpisy trafiałyby w środek zwykłych słów.
+    Wpisy z „_” (prefiksy tokenów) tylko dosłownie – po rozbiciu stałyby się zwykłymi słowami.
+    Wynik: (zbiór słów, {pierwsze słowo: [dalsze słowa, …]})."""
+    pojedyncze, wielo = set(), {}
+    for w in zakazane:
+        t = zloz(w).split()
+        if not t or "_" in w:
+            continue
+        pojedyncze.add("".join(t))
+        if len(t) > 1:
+            for kolejnosc in (t, t[::-1]):
+                wielo.setdefault(kolejnosc[0], []).append(tuple(kolejnosc[1:]))
+    return frozenset(pojedyncze), wielo
+
+
+def linie_z_lista(linie: list, zakazane: list) -> set:
+    """Numery linii (od 1) z wpisem listy w postaci złożonej; wpis rozbity na dwie linie → numer pierwszej."""
+    pojedyncze, wielo = warianty_listy(tuple(zakazane))
+    z = zloz("\n".join(linie))
+    slowa = set(z.split())
+    if not (slowa & pojedyncze or slowa & wielo.keys()):
+        return set()  # zwykły przypadek: jedno przejście po tekście, bez liczenia linii
+    pozycje = []
+    for numer, linia in enumerate(z.split("\n"), 1):
+        pozycje += [(s, numer) for s in linia.split()]
+    wynik = set()
+    for i, (slowo, nr) in enumerate(pozycje):
+        if slowo in pojedyncze or any(tuple(s for s, _ in pozycje[i + 1:i + 1 + len(dalej)]) == dalej
+                                      for dalej in wielo.get(slowo, ())):
+            wynik.add(nr)
+    return wynik
+
+
 def sprawdz_tekst(etykieta: str, tekst: str, zakazane: list) -> list:
     bledy = []
     tekst = unicodedata.normalize("NFC", tekst)  # nazwy skopiowane z Findera bywają w NFD – lista jest w NFC
     for rx in DOZWOLONE:
         tekst = rx.sub("", tekst)
-    for nr, linia in enumerate(tekst.splitlines(), 1):
-        for rx, opis in WZORCE:
+    linie = tekst.splitlines()
+    zlozone = linie_z_lista(linie, zakazane)
+    # wstępny odsiew na całym tekście (czas pre-commit): wzorzec albo wpis, którego nie ma w całości, nie trafi w linię
+    z_cyfra = "\n".join(LINIA_Z_CYFRA.findall(tekst))
+    wzorce = [(rx, opis) for rx, opis in WZORCE if rx.search(z_cyfra if opis in Z_CYFRA else tekst)]
+    calosc = tekst.lower()
+    kandydaci = [w for w in zakazane if all(c in calosc for c in w.split())]
+    for nr, linia in enumerate(linie, 1):
+        for rx, opis in wzorce:
             if rx.search(linia):
                 bledy.append(f"{etykieta}:{nr}: wygląda na {opis} – repo jest publiczne")
-        niskie = re.sub(r"\s+", " ", linia.lower())  # „Imię  Nazwisko” z podwójną spacją albo tabulatorem
-        if any(w in niskie for w in zakazane):
+        niskie = re.sub(r"\s+", " ", linia.lower()) if kandydaci else ""  # „Imię  Nazwisko” z podwójną spacją
+        if any(w in niskie for w in kandydaci) or nr in zlozone:
             bledy.append(f"{etykieta}:{nr}: słowo z listy zakazanych – repo jest publiczne, usuń lub uogólnij")
     return bledy
 
@@ -322,7 +389,7 @@ def sprawdz_osobe(etykieta: str, imie: str, email: str, zakazane: list) -> list:
     if not any(rx.fullmatch(email) for rx in DOZWOLONE):
         bledy.append(f"{etykieta}: e-mail „{email}” trafi do publicznej historii – ustaw "
                      "`git config user.email <id>+<login>@users.noreply.github.com`")
-    if any(w in unicodedata.normalize("NFC", imie).lower() for w in zakazane):
+    if any(w in unicodedata.normalize("NFC", imie).lower() for w in zakazane) or linie_z_lista([imie], zakazane):
         bledy.append(f"{etykieta}: imię/nazwisko „{imie}” jest na liście zakazanych – ustaw `git config user.name <login>`")
     return bledy
 
