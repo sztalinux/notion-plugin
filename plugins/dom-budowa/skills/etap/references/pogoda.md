@@ -29,8 +29,8 @@ na pogodę, którą inwestor wpisał z datą w Uwagach kroku Harmonogramu (np. �
 Inne dni, robota bez daty w Uwagach albo robota spoza tabeli → nic: bez prognozy, bez linii i bez dopisku „bez robót
 wrażliwych”. Krok „Zrobione” nie wyłącza dni pielęgnacji. Przebieg ma być tani.
 
-**Odczyt** (to samo zdanie w `budowa/references/wieczorem.md`, krok 2; ID widoków w `budowa/references/notion-mapa.md`):
-Odczyt do ostrzeżenia pogodowego: jeden odczyt widoku „📅 Oś czasu” (bez filtra, pokazuje Uwagi;
+**Odczyt** (jedyne miejsce tej reguły – `budowa/references/wieczorem.md`, krok 2, odsyła tutaj; ID widoków
+w `budowa/references/notion-mapa.md`): jeden odczyt widoku „📅 Oś czasu” (bez filtra, pokazuje Uwagi;
 „🤖 Najbliższe 7 dni” pomija kroki „Zrobione”) – kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra,
 w każdym Statusie, z ich Uwagami; stron kroków nie otwieraj.
 W ich Uwagach szukaj roboty z tabeli z datą. Nic nie pasuje → koniec, bez szukania prognozy.
