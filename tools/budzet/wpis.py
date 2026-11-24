@@ -115,6 +115,7 @@ def main():
         ws = czytaj_wpisy(A.arg, z_usunietymi=True)
         for w in ws:
             print(w['id'], opis_wpisu(w) + (' [usunięty – czeka na usunięcie z arkusza]' if w.get('usuniety') else
+                                             ' [zamknięty – w ręcznym wierszu]' if (w.get('arkusz') or {}).get('zamkniecie') else
                                              ' [w arkuszu]' if w.get('arkusz') else ''))
         print(f"{A.arg}: {sum(1 for w in ws if not w.get('usuniety'))} wpisów")
         return
