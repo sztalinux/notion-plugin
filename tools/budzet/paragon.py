@@ -21,7 +21,7 @@ miesiace/RRRR-MM-zapis.json) -> kod 1, poprawka ręcznie w arkuszu. Inna grupa z
 Usunięcie całego paragonu: wpis.py usun RRRR-MM <id wpisu albo części>.
 """
 import argparse, http.client, json, re, shutil, subprocess, sys, urllib.error, urllib.parse, urllib.request
-from datetime import date, datetime
+from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -244,7 +244,7 @@ def rozpoznaj(tresc):
 
 def pobierz(url, data, id_, katalog=None, otworz=None):
     """-> ścieżka pliku w <dane>/paragony/; plik już jest -> ta sama ścieżka bez pobierania."""
-    date.fromisoformat(data)
+    wspolne.data_iso(data)
     if not ID.match(id_):
         raise BladParagonu('ID wpisu tylko z liter, cyfr i myślników')
     url = sprawdz_adres(url)
@@ -311,7 +311,7 @@ def main(argv=None):
             return 0
         if not ID.match(a.id):
             raise BladParagonu('ID wpisu tylko z liter, cyfr i myślników')
-        date.fromisoformat(a.data)
+        wspolne.data_iso(a.data)
         if not a.suma or not a.sklep:
             raise BladParagonu('podaj --suma i --sklep (z paragonu)')
         platnosc(a.platnosc)

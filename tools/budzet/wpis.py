@@ -24,7 +24,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import (U, blokada_wpisow, czytaj_wpisy, kw, miesiace_wpisow, opcja, wczytaj,  # noqa: E402
+from wspolne import (U, blokada_wpisow, czytaj_wpisy, data_iso, kw, miesiace_wpisow, opcja, wczytaj,  # noqa: E402
                      zapisz_wpisy)
 
 KWOTA = re.compile(r'^(\+?)\s*(\d[\d.]*(?:\s*[+-]\s*\d[\d.]*)*)$')
@@ -138,7 +138,7 @@ def main():
         return
     d = A.data or date.today().isoformat()
     try:
-        date.fromisoformat(d)
+        data_iso(d)
         gotowka = U.get('gotowka_konto', 'Gotówka')
         w = parsuj(A.arg, wymus_konto=gotowka if A.gotowka else None)
     except ValueError as e:

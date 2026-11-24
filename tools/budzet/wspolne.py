@@ -53,6 +53,13 @@ def kw(s):
     return round(float(s), 2)
 
 
+def data_iso(d):
+    """'RRRR-MM-DD' -> date; inny zapis -> ValueError (Python ≥ 3.11 przyjmuje też '20261205' – plik miesiąca dostałby złą nazwę)."""
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', d or ''):
+        raise ValueError(f'data „{d}” – podaj RRRR-MM-DD')
+    return date.fromisoformat(d)
+
+
 def opcja(typ, kat, pod):
     kat, pod = nazwa(kat), nazwa(pod)
     return dict(typ=typ, kat=kat, pod=pod, etykieta=f'{kat} › {pod}' if pod else kat)

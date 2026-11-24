@@ -183,6 +183,16 @@ class Przeplyw30(unittest.TestCase):
         self.assertEqual(ws[0]['paragon'], dict(sklep='Sklep A', suma=33.5, czesci=2, zdjecie=''))
         self.assertEqual(ws[0]['opis'], 'Sklep A: chleb, ser?')
 
+    def test_a16_data_bez_myslnikow_odrzucona(self):
+        """A-16: Python ≥ 3.11 przyjmuje „20261205” – plik miesiąca dostałby nazwę, której nie widzi żadne narzędzie."""
+        self.assertIn('RRRR-MM-DD', self.paragon(*self.POZ, data='20261205', kod=1))
+        r = subprocess.run([sys.executable, str(NARZ / 'wpis.py'), 'dodaj', '10, zak', '--data', '20261205', '--id', 'd1'],
+                           env=dict(os.environ, BUDZET_DANE=str(self.dane)), capture_output=True, text=True)
+        self.assertEqual((r.returncode, 'RRRR-MM-DD' in r.stdout), (1, True))
+        with self.assertRaises(ValueError):
+            wspolne.data_iso('20261205')
+        self.assertEqual(list((self.dane / 'listy').glob('*')) if (self.dane / 'listy').exists() else [], [])
+
     def test_proba_niezgodnosc_i_brak_platnosci_nic_nie_zapisuja(self):
         self.assertIn('próba', self.paragon(*self.POZ, dod=('--proba',)))
         self.assertIn('różnica', self.paragon('10, zak', '20, chem', kod=1))
