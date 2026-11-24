@@ -5,12 +5,19 @@ Instrukcja, interfejs i kod Apps Script: docs/budzet-arkusz.md. Procedura: plugi
     python3 tools/budzet/arkusz_budzetu.py sync [--proba] [--cicho]   # nowe i zmienione zapisy od ARKUSZ_OD -> wiersze; usunięte -> usuń
     python3 tools/budzet/arkusz_budzetu.py kontrola [--cicho]          # zapis bez wiersza / wiersz bez zapisu (tylko odczyt)
     python3 tools/budzet/arkusz_budzetu.py ponow <id> [...]            # czyści znacznik – następny sync dopisze wiersz od nowa
+    python3 tools/budzet/arkusz_budzetu.py zamknij-wpisy --miesiac RRRR-MM   # znacznik zamknięcia wpisom rozstrzygniętym bez
+                                                                      # wiersza z ID (miesiace/RRRR-MM-zapis.json); zamknij-wpisy <id>…
+                                                                      # – te zapisy (wiersz w arkuszu poprawiony ręcznie)
     python3 tools/budzet/arkusz_budzetu.py przypnij --miesiac RRRR-MM [--proba]   # przypięcia z miesiace/RRRR-MM-zapis.json
     python3 tools/budzet/arkusz_budzetu.py blokada zaloz|zdejmij      # zamknięcie miesiąca (C.3): sync w tym czasie nic nie wysyła;
                                                                       # zaloz czeka na koniec trwającego sync (flock, do 120 s)
     python3 tools/budzet/arkusz_budzetu.py sprawdz                     # sekrety i ping (wersja kodu, nagłówki)
     python3 tools/budzet/arkusz_budzetu.py kod | LANG=en_US.UTF-8 pbcopy   # kod Apps Script do schowka
 
+Znacznik zamknięcia `arkusz` = {zamkniecie: RRRR-MM, skrot, czas}: wpis rozstrzygnięty przy zamknięciu bez ID w kolumnie O
+(ręczny wiersz, Pomiń) – sync go nie wysyła (także przy zmianie treści – kontrola to zgłasza), ponow go nie zdejmuje. sync sam
+oznacza zapisy z list `wpisy_rozstrzygniete` wszystkich zamkniętych miesięcy, a zapisu z miesiąca zamkniętego starszą wersją
+(plik zapisu bez tej listy) nie dopisuje bez --mimo-zamkniecia (✗ – mógł już być w ręcznym wierszu).
 Znacznik wysyłki w zapisie: pole `arkusz` = {wiersz, skrot, czas, kwota}; wysyłane są tylko zapisy bez znacznika albo ze zmienionym
 skrótem treści (wspolne.skrot), więc ręczna poprawka wiersza w arkuszu zostaje, dopóki nie zmieni się wpis. Wiersz szuka
 skrypt po ID w kolumnie O; ID już w O (`juz` – np. po ponow albo po zamknięciu) -> od razu popraw bieżącą treścią, potem
@@ -117,21 +124,65 @@ def zapisy():
     return out
 
 
-def plan():
-    """-> (dopisz, popraw, usun, bez kategorii) – listy (miesiąc, zapis)."""
-    dop, pop, usu, bez = [], [], [], []
+def pliki_zamkniecia():
+    """{miesiąc: lista wpisy_rozstrzygniete albo None (plik zapisu ze starszej wersji, bez listy)}."""
+    out = {}
+    for p in sorted((wspolne.DANE / 'miesiace').glob('????-??-zapis.json')):
+        try:
+            z = json.loads(p.read_text(encoding='utf-8'))
+        except ValueError:
+            raise SystemExit(f'✗ {p.name}: to nie JSON') from None
+        out[p.name[:7]] = z.get('wpisy_rozstrzygniete') if isinstance(z, dict) else None
+    return out
+
+
+def plan(mimo_zamkniecia=False):
+    """-> (dopisz, popraw, usun, bez kategorii, odmowa) – listy (miesiąc, zapis). Odmowa: zapis bez znacznika z miesiąca
+    zamkniętego bez listy wpisy_rozstrzygniete (mógł być rozstrzygnięty ręcznym wierszem)."""
+    dop, pop, usu, bez, odm = [], [], [], [], []
+    zamk = pliki_zamkniecia()
     for m, w in zapisy():
         zn = w.get('arkusz')
         if w.get('usuniety'):
             if zn:
                 usu.append((m, w))
+        elif zn and zn.get('zamkniecie'):
+            continue  # rozstrzygnięty przy zamknięciu bez wiersza z ID – nic do wysłania
         elif not w.get('kat'):
             bez.append((m, w))  # nieznany skrót kategorii – wiersz doda zamknięcie miesiąca po decyzji
         elif not zn:
-            dop.append((m, w))
+            (odm if m in zamk and zamk[m] is None and not mimo_zamkniecia else dop).append((m, w))
         elif zn.get('skrot') != skrot(w):
             pop.append((m, w))
-    return dop, pop, usu, bez
+    return dop, pop, usu, bez, odm
+
+
+def zamknij_wpisy(mies=None, ids=None):
+    """Znacznik zamknięcia dla wpisów z list wpisy_rozstrzygniete (mies – jeden miesiąc, None – wszystkie zamknięte) albo
+    dla podanych ids (odświeża też znacznik zamknięcia po ręcznej poprawce wiersza). Zwykłego znacznika wysyłki nie rusza.
+    Pod blokadą plików wpisów, idempotentne. -> liczba oznaczonych."""
+    if ids is not None:
+        cel = {i: None for i in set(ids) | {'w' + i for i in ids}}
+    else:
+        zamk = pliki_zamkniecia()
+        if mies and mies not in zamk:
+            raise SystemExit(f'✗ brak miesiace/{mies}-zapis.json – najpierw przenies.py --miesiac {mies}')
+        cel = {i: m for m, lista in zamk.items() if (mies is None or m == mies) for i in (lista or [])}
+    n = 0
+    if not cel:
+        return n
+    with blokada_wpisow():
+        for m in miesiace_wpisow():
+            ws = czytaj_wpisy(m, z_usunietymi=True)
+            hit = [w for w in ws if w['id'] in cel and not w.get('usuniety')
+                   and (not w.get('arkusz') or (ids is not None and w['arkusz'].get('zamkniecie')))]
+            for w in hit:
+                w['arkusz'] = {'zamkniecie': cel[w['id']] or (w['arkusz'] or {}).get('zamkniecie') or m, 'skrot': skrot(w),
+                               'czas': teraz()}
+            if hit:
+                zapisz_wpisy(m, ws)
+                n += len(hit)
+    return n
 
 
 def zapisz_wyniki(znaczniki, usuniete):
@@ -205,21 +256,28 @@ def blokada(akcja):
     return 'blokada zamknięcia zdjęta – uruchom sync'
 
 
-def sync(k, proba):
+def sync(k, proba, mimo_zamkniecia=False):
     if proba:
-        return _sync(k, proba)
+        return _sync(k, proba, mimo_zamkniecia)
     with trwa_sync():
-        return _sync(k, proba)
+        return _sync(k, proba, mimo_zamkniecia)
 
 
-def _sync(k, proba):
-    dop, pop, usu, bez = plan()
+def _sync(k, proba, mimo_zamkniecia=False):
+    zb = blokada_zamkniecia()
+    oznaczone = 0 if proba or zb else zamknij_wpisy()  # bezpiecznik: pominięty krok zamknij-wpisy nie daje dubla
+    dop, pop, usu, bez, odm = plan(mimo_zamkniecia)
     licz = {'dopisane': 0, 'juz_w_arkuszu': 0, 'poprawione': 0, 'usuniete': 0, 'bez_kategorii': len(bez), 'bledy': 0}
     bledy = []
-    zb = blokada_zamkniecia()
     if zb and not proba:
         print(f'{ETYKIETA} sync: zamknięcie miesiąca w toku (blokada od {zb}) – {len(dop) + len(pop) + len(usu)} zapisów czeka w pliku')
         return licz, bledy
+    if oznaczone:
+        licz['zamkniete'] = oznaczone
+    for m, w in odm:
+        licz['bledy'] += 1
+        bledy.append(f"dopisz {w['data']} {w['id']}: miesiąc {m} zamknięty starszą wersją (bez listy wpisów rozstrzygniętych) – "
+                     f"wpis mógł już wejść ręcznym wierszem; jest w arkuszu -> zamknij-wpisy {w['id']}, nie ma -> sync --mimo-zamkniecia")
     if not skonfigurowane(k):
         n = len(dop) + len(pop) + len(usu)
         print(f'{ETYKIETA} sync: nieskonfigurowane (brak BUDZET_ARKUSZ_URL / BUDZET_ARKUSZ_SEKRET w .dom/sekrety.env) – '
@@ -319,6 +377,12 @@ def kontrola(k):
             if w['id'] in mapa and w['usuniety'] < granica:
                 problemy.append(f"usunięty we wpisach, wiersz {mapa[w['id']]} wciąż w arkuszu: {w['data']} {w['id']}")
             continue
+        zn = w.get('arkusz') or {}
+        if zn.get('zamkniecie'):  # w ręcznym wierszu bez ID – brak wiersza z ID to norma
+            if zn.get('skrot') != skrot(w):
+                problemy.append(f"zmieniony po zamknięciu {zn['zamkniecie']} (wiersz bez ID) – popraw wiersz ręcznie, potem "
+                                f"zamknij-wpisy {w['id']}: {w['data']} {w['id']}")
+            continue
         if w['id'] in mapa:
             licz['w_arkuszu'] += 1
         elif w.get('arkusz'):
@@ -340,8 +404,8 @@ def ponow(ids, usuniete=None):
         for m in miesiace_wpisow():
             ws = czytaj_wpisy(m, z_usunietymi=True)
             hit = [w for w in ws if w['id'] in ids and w.get('arkusz')]
-            usuniete += [w['id'] for w in hit if w.get('usuniety')]
-            hit = [w for w in hit if not w.get('usuniety')]
+            usuniete += [w['id'] for w in hit if w.get('usuniety') or w['arkusz'].get('zamkniecie')]
+            hit = [w for w in hit if not w.get('usuniety') and not w['arkusz'].get('zamkniecie')]
             for w in hit:
                 del w['arkusz']
             if hit:
@@ -379,11 +443,13 @@ def przypnij(k, mies, proba):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('polecenie', choices=['sync', 'kontrola', 'ponow', 'przypnij', 'sprawdz', 'kod', 'blokada'])
-    ap.add_argument('ids', nargs='*', help='ponow: ID zapisów; blokada: zaloz albo zdejmij')
+    ap.add_argument('polecenie', choices=['sync', 'kontrola', 'ponow', 'zamknij-wpisy', 'przypnij', 'sprawdz', 'kod', 'blokada'])
+    ap.add_argument('ids', nargs='*', help='ponow, zamknij-wpisy: ID zapisów; blokada: zaloz albo zdejmij')
     ap.add_argument('--proba', action='store_true', help='sync, przypnij: tylko pokaż, co poszłoby do arkusza')
     ap.add_argument('--cicho', action='store_true', help='jedna linia wyniku (dla automatów)')
-    ap.add_argument('--miesiac', help='przypnij: RRRR-MM')
+    ap.add_argument('--miesiac', help='przypnij, zamknij-wpisy: RRRR-MM')
+    ap.add_argument('--mimo-zamkniecia', action='store_true',
+                    help='sync: dopisz też zapisy z miesięcy zamkniętych starszą wersją (bez listy wpisów rozstrzygniętych)')
     a = ap.parse_args(argv)
     if a.polecenie == 'kod':
         m = re.search(r'```javascript\n(.*?)```', DOKUMENTACJA.read_text(encoding='utf-8'), re.S)
@@ -399,7 +465,14 @@ def main(argv=None):
         n = ponow(a.ids, usuniete)
         print(f'{ETYKIETA} ponow: wyczyszczono znacznik w {n} zapisach – następny sync dopisze wiersz albo, gdy ID już jest w arkuszu, poprawi go')
         for i in usuniete:
-            print(f'  {i}: usunięty we wpisach – znacznik zostaje, sync ponowi usunięcie wiersza (nic nie rób)')
+            print(f'  {i}: znacznik zostaje – usunięty we wpisach (sync ponowi usunięcie wiersza) albo rozstrzygnięty przy '
+                  'zamknięciu ręcznym wierszem (ponowne dopisanie zdublowałoby wydatek)')
+        return 0
+    if a.polecenie == 'zamknij-wpisy':
+        if not a.miesiac and not a.ids:
+            ap.error('zamknij-wpisy: podaj --miesiac RRRR-MM albo ID zapisów')
+        n = zamknij_wpisy(a.miesiac, a.ids or None)
+        print(f'{ETYKIETA} zamknij-wpisy: znacznik zamknięcia w {n} zapisach – sync ich nie dopisze')
         return 0
     if a.polecenie == 'blokada':
         if a.ids not in (['zaloz'], ['zdejmij']):
@@ -417,7 +490,7 @@ def main(argv=None):
     bledy = []
     try:
         if a.polecenie == 'sync':
-            licz, bledy = sync(k, a.proba)
+            licz, bledy = sync(k, a.proba, a.mimo_zamkniecia)
             linia = 'sync' + (' (próba)' if a.proba else '') + ': ' + ', '.join(f'{n} {v}' for n, v in licz.items())
         elif a.polecenie == 'kontrola':
             try:

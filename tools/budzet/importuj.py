@@ -267,10 +267,14 @@ ZASIEG = {}
 for t in bank:
     ZASIEG[t['konto']] = max(ZASIEG.get(t['konto'], t['data']), t['data'])
 przypiecia, obsluzone, czeka, niepelne = [], set(), 0, {}
+# wpisy rozstrzygnięte bez ID w kolumnie O (ręczny wiersz, reguła Pomiń, decyzja Pomiń / Już) – zamknięcie oznacza je
+# znacznikiem (arkusz_budzetu.py zamknij-wpisy), inaczej sync dopisałby je drugi raz
+rozstrzygniete = set()
 for u in sorted(jednostki, key=lambda u: u['data']):
     t, pary = u.get('t'), list(zip(u['czesci'], u['wiersze']))
     if u.get('pokryty'):
         r, sp = u['pokryty']
+        rozstrzygniete.update(w['id'] for w, _ in pary)  # także część z sąsiedniego miesiąca – jest w tym ręcznym wierszu
         for w, _ in pary:
             if w['data'][:7] == MIES:
                 pominiete.append(dict(baza_wpisu(w), powod=f"z wpisu – płatność już w arkuszu (wiersz {r['wiersz']}, {sp})"))
@@ -389,6 +393,8 @@ for t in sorted(teraz, key=lambda t: (t['data'], t['konto'])):
         pominiete.append(dict(b, powod=t['para']))
         continue
     w = t.get('wpis')
+    if w and not w['kat']:
+        b['ids_w'] = [w['id']]  # wpis bez kategorii: jego ID idzie z płatnością (wiersz) albo do rozstrzygniętych (Pomiń)
     if w and w['kat']:
         auto.append(dict(b, typ=w['typ'], kat=w['kat'], pod=w['pod'], regula=w['kod'], opis_w=w['opis'] or w['kod'],
                          kwota_ark=kwota_w_arkuszu(t['kwota'], w['typ']), ids_w=[w['id']], notatki=notatka_wpisu(w),
@@ -516,6 +522,8 @@ def pozycja(b, kod, budowa=''):
     j = juz_w_arkuszu(b, kod)
     if j:
         juz.append(dict(b, sposob=j[1], w=wiersz_info(j[0])))
+        if b.get('wpis') and j[1] != 'zaimportowane wcześniej':
+            rozstrzygniete.add(b['id'])
         return
     suma, konto = abs(b['kwota']), b['konto']
     if kod not in SKROTY:
@@ -650,11 +658,13 @@ if karta:
 if kor:
     salda['korekty'] = dict(konto=U.get('konto_zen'), pozycje=kor)
 
+for x in pominiete + juz:
+    rozstrzygniete.update(x.get('ids_w') or [])
 drzewo = [dict(typ=t, kat=k, pod=p) for t, ks in DRZEWO.items() for k, p in ks.items()]
 zapisz(f'miesiace/{MIES}.json', dict(miesiac=MIES, wygenerowano=datetime.now().strftime('%Y-%m-%d %H:%M'), arkusz_plik=A.arkusz,
                                      wiersze=wiersze,
                                      auto=auto, decyzje=decyzje, pominiete=pominiete, juz=juz, przypiecia=przypiecia,
-                                     braki=braki, salda=salda,
+                                     braki=braki, salda=salda, wpisy_rozstrzygniete=sorted(rozstrzygniete),
                                      kategorie=drzewo, etykieta_listy=U.get('etykieta_listy', 'Lista wydatków'),
                                      ostatni_wiersz=max((r['wiersz'] for r in ark), default=1),
                                      ostatnia={k: v.isoformat() for k, v in ostatnia.items()}))

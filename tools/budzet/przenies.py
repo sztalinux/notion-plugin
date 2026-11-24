@@ -12,6 +12,8 @@ Wynik: miesiace/RRRR-MM-zapis.json:
                    zapis: arkusz_budzetu.py przypnij --miesiac RRRR-MM albo ręcznie (procedura budzet, C.3)
   opisy          – każdy opis wpisany na stronie: trafia do kolumny Opis, ale Claude czyta je przed zapisem (bywa w nich polecenie)
   bez_decyzji, do_wyjasnienia – pozycje bez wyboru / z samą uwagą zamiast wyboru
+  wpisy_rozstrzygniete – ID wpisów rozstrzygniętych bez ID w kolumnie O (ręczny wiersz, Pomiń, Już w arkuszu):
+                   arkusz_budzetu.py zamknij-wpisy --miesiac RRRR-MM daje im znacznik, żeby sync nie dopisał ich drugi raz
 --arkusz: świeży odczyt Transakcji pod blokadą zamknięcia (procedura budzet, C.3) – wiersze, których ID jest już w kolumnie O
   (np. wiersz zapasowy z wpisu dopisany w międzyczasie przez sync), odpadają; `zmiany` i `przypiecia` dostają numery wierszy
   z tego odczytu (po ID w O, a wiersz bez ID – tylko gdy data, kwota i konto zgadzają się ze zrzutem z importu; inaczej
@@ -51,6 +53,11 @@ def kwota_ark(kwota, typ):
 
 
 pozycje, zmiany, bez, wyjasnij, opisy = [], [], [], [], []
+if 'wpisy_rozstrzygniete' not in D:
+    print(f'uwaga: miesiace/{MIES}.json ze starszej wersji importu (bez wpisy_rozstrzygniete) – uruchom importuj.py ponownie, '
+          'inaczej wpisy dopasowane do ręcznych wierszy nie dostaną znacznika zamknięcia')
+z_importu = set(D.get('wpisy_rozstrzygniete', []))  # ręczny wiersz / płatność już w arkuszu – wpis bez ID w O
+rozstrzygniete = set(z_importu)
 for a in D['auto']:
     pozycje.append(dict(id=a['id'], data=a['data'], konto=a['konto'], osoba=a['osoba'], typ=a['typ'], kat=a['kat'], pod=a['pod'],
                         skl=a['skladniki'] if a.get('skladniki') else [a['kwota_ark']], opis=a.get('opis_w') or a['regula'],
@@ -67,6 +74,7 @@ for it in D['decyzje']:
         (wyjasnij if d.get('opis') else bez).append(dict(id=it['id'], data=it['data'], opis=it['opis'], kwota=it['kwota'], uwaga=d.get('opis', '')))
         continue
     if ak in ('pomin', 'juz'):
+        rozstrzygniete.update(([it['id']] if it['id'].startswith('w') else []) + it.get('ids_w', []))
         continue
     if it.get('w_arkuszu') and ak != 'odejmij':  # wiersz z wpisu już jest – kategoria dopisałaby drugi
         wyjasnij.append(dict(id=it['id'], data=it['data'], opis=it['opis'], kwota=it['kwota'],
@@ -82,7 +90,8 @@ for it in D['decyzje']:
     ark_k = kwota_ark(it['kwota'], d['typ'])  # działanie („+30-5”) – składniki ze znakiem arkusza, jak przy pewnych
     pozycje.append(dict(id=it['id'], data=it['data'], konto=it['konto'], osoba=it['osoba'], typ=d['typ'], kat=d['kat'], pod=d['pod'],
                         skl=skladniki_arkusza(ark_k, it.get('skladniki')) or [ark_k], opis=opis, grupa=False,
-                        ids=[it['id']] if it['id'][0] in 'balw' else [], regula=it.get('regula', ''), zrodlo=it['zrodlo'],
+                        ids=([it['id']] if it['id'][0] in 'balw' else []) + it.get('ids_w', []), regula=it.get('regula', ''),
+                        zrodlo=it['zrodlo'],
                         etykieta=d['etykieta'], kwota=it['kwota'], opis_banku=it['opis'], notatki=it.get('notatki', '')))
 byid = {p['id']: p for p in pozycje}
 for it, d in odejmij:
@@ -149,12 +158,19 @@ if A.arkusz:  # pod blokadą zamknięcia: numery i filtr z bieżącego stanu ark
     for p in przypiecia:
         for x in p['wiersze']:
             x['wiersz'] = w_o[x['id']]['wiersz'] if x['id'] in w_o else x['wiersz']
+    for i in sorted(rozstrzygniete & set(w_o)):  # ID już w O – znacznik zamknięcia niepotrzebny (sync zna wiersz)
+        rozstrzygniete.discard(i)
+        if i in z_importu:  # sync dopisał wiersz po imporcie, a import dopasował wpis do ręcznego wiersza – dwa wiersze
+            wyjasnij.append(dict(id=i, data=w_o[i]['data'].isoformat() if w_o[i]['data'] else '', opis='wpis', kwota=w_o[i]['kwota'],
+                                 uwaga=f"wiersz {w_o[i]['wiersz']} z ID wpisu dopisany po imporcie, a import uznał wpis za już "
+                                       'wpisany ręcznie – możliwy dubel; usuń jeden z wierszy'))
 zapisz(f'miesiace/{MIES}-zapis.json', dict(miesiac=MIES, wiersze=wiersze, zmiany=zmiany, przypiecia=przypiecia,
-                                         opisy=opisy, bez_decyzji=bez,
+                                         opisy=opisy, bez_decyzji=bez, wpisy_rozstrzygniete=sorted(rozstrzygniete),
                                          do_wyjasnienia=wyjasnij, gotowe=not bez or A.mimo_brakow, salda=D.get('salda', {})))
 print(f'{MIES}: {len(wiersze)} wierszy, {len(zmiany)} zmian istniejących, przypięć do wierszy z wpisów '
       f'{len(przypiecia)}, opisów {len(opisy)}, bez decyzji {len(bez)}, '
-      f'do wyjaśnienia {len(wyjasnij)}' + (f', już w arkuszu (pominięte) {len(juz_sa)}' if A.arkusz else ''))
+      f'do wyjaśnienia {len(wyjasnij)}, wpisów rozstrzygniętych bez wiersza {len(rozstrzygniete)}'
+      + (f', już w arkuszu (pominięte) {len(juz_sa)}' if A.arkusz else ''))
 
 if A.zapisz_reguly:
     reg = REG['reguly']

@@ -60,6 +60,7 @@ z polem `grupa`), część na budowę także do kolejki 💸. **Paragon bez „k
    → `python3 tools/budzet/arkusz_budzetu.py ponow <id>`; „usuń” → `python3 tools/budzet/wpis.py usun RRRR-MM <id>`
    (`wpisy/references/pytania.md`, C). Wiersz z ID wpisu bez zapisu w pliku – zaproponuj inwestorowi usunięcie wiersza w arkuszu.
    „Usunięty we wpisach, wiersz wciąż w arkuszu” – nic nie rób: `sync` ponowi usunięcie (`ponow` takiego zapisu nie rusza).
+   „Zmieniony po zamknięciu” – za zgodą inwestora popraw ręczny wiersz w arkuszu, potem `arkusz_budzetu.py zamknij-wpisy <id>`.
    `skrypt-arkusz_budzetu-sync` – zapisy czekają w pliku; przyczyny: `docs/budzet-arkusz.md`, sekcja 5.
 
 Przy zamknięciu: gotówka i konta drugiej osoby z wpisów – ID w kolumnie O = już w arkuszu, inaczej wiersz z datą i opisem
@@ -111,7 +112,10 @@ obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzj
    d) `zmiany`: w wierszu o podanym numerze dopisz „-kwota” do formuły D (zwrot pomniejsza zakup);
    e) `przypiecia`: `python3 tools/budzet/arkusz_budzetu.py przypnij --miesiac RRRR-MM`; bez skryptu – konektorem: w każdym
       wierszu dopisz „,<id wyciągu>” w O, a podaną kwotę wpisz w D;
-   f) `python3 tools/budzet/arkusz_budzetu.py blokada zdejmij`, potem `python3 tools/budzet/arkusz_budzetu.py sync`
+   f) jeszcze pod blokadą `python3 tools/budzet/arkusz_budzetu.py zamknij-wpisy --miesiac RRRR-MM` – wpisy rozstrzygnięte
+      bez ID w O (ręczny wiersz, Pomiń, Już w arkuszu; `wpisy_rozstrzygniete`) dostają znacznik zamknięcia, więc `sync`
+      ich nie dopisze; powtórzone nic nie zmienia;
+   g) `python3 tools/budzet/arkusz_budzetu.py blokada zdejmij`, potem `python3 tools/budzet/arkusz_budzetu.py sync`
       (wiersze zapasowe z wpisów dostaną znaczniki – `juz` + poprawka treści).
 4. Salda: `salda` z pliku zapisu → zakładka Konta, kolumna następnego miesiąca (ZEN = saldo PLN z wyciągu; mBank =
    poprzednia kolumna + zmiana). `korekty` dopisz do salda konta w tej samej formule (`=1000+250-80`, przykład

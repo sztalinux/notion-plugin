@@ -39,6 +39,7 @@ wpisach – osobnej listy gotówki na koniec miesiąca nie ma.
 | `sync --proba` | co by poszło, z odczytem kolumny O (gdy skrypt jest wdrożony): nowy wiersz, już w arkuszu, popraw, usuń; nic nie zapisuje | pierwsza synchronizacja; ręcznie |
 | `kontrola` | tylko odczyt: zapis wysłany, a wiersza z jego ID nie ma; zapis niewysłany od ponad doby; wiersz z ID wpisu bez zapisu w pliku; usunięcie czekające ponad dobę – kod 1, gdy coś jest; chwilowy brak połączenia – kod 0, trwały błąd (sekret, wersja kodu, nagłówki) – kod 1 | automat po nocnym przebiegu |
 | `ponow <id>…` | czyści znacznik – następny `sync` dopisze wiersz od nowa, a gdy ID jest już w O – poprawi go bieżącą treścią; zapisu usuniętego (`usuniety`) nie rusza – `sync` ponowi usunięcie | agent po odpowiedzi „dopisz ponownie” |
+| `zamknij-wpisy --miesiac RRRR-MM` / `zamknij-wpisy <id>…` | znacznik zamknięcia wpisom z listy `wpisy_rozstrzygniete` w `miesiace/RRRR-MM-zapis.json` (rozstrzygnięte bez ID w O: ręczny wiersz, Pomiń, Już w arkuszu) albo podanym ID (odświeża znacznik po ręcznej poprawce wiersza); zwykłego znacznika nie rusza; powtórzone nic nie zmienia. `sync` sam robi to samo dla wszystkich zamkniętych miesięcy (bezpiecznik) | agent przy zamknięciu (C.3 f, pod blokadą) |
 | `blokada zaloz` / `blokada zdejmij` | blokada zamknięcia miesiąca (plik `miesiace/.zamkniecie` w folderze danych, ważna 60 min – porzuconą `sync` potem ignoruje): w tym czasie `sync` nic nie wysyła, więc numery wierszy się nie przesuwają, a wiersz zapasowy nie pójdzie drugi raz. `sync` trzyma przez cały przebieg `flock` na `miesiace/.zamkniecie.lock`; `zaloz` czeka na jego koniec do 120 s (potem kod 1) i ponownie wywołane odnawia czas | agent przy zamknięciu (C.3) |
 | `przypnij --miesiac RRRR-MM [--proba]` | przypięcia z `miesiace/RRRR-MM-zapis.json` (ID wyciągu do O wszystkich wierszy grupy, kwota z wyciągu do D) | agent przy zamknięciu (C.3) |
 | `sprawdz` | sekrety i ping (nazwa arkusza, wersja kodu, nagłówki Transakcji, strefa) | ręcznie, przy problemach |
@@ -55,6 +56,10 @@ niosą tylko liczby, daty i ID – bez kwot i opisów.
   zmienionym skrótem – ręczna poprawka wiersza w arkuszu zostaje, dopóki nie zmieni się wpis.
 - Wiersz szuka się zawsze po ID w kolumnie O (tokeny po przecinku, dokładne dopasowanie), nigdy po numerze – numer
   w znaczniku jest informacyjny (usunięcie wiersza wyżej przesuwa numery).
+- Znacznik zamknięcia `{"zamkniecie": "RRRR-MM", "skrot", "czas"}` – wpis jest w ręcznym wierszu bez swojego ID: `sync` go
+  nie wysyła (także po zmianie treści – wtedy `kontrola` zgłasza „zmieniony po zamknięciu”), `ponow` go nie zdejmuje. Zapis
+  bez znacznika z miesiąca zamkniętego starszą wersją (plik zapisu bez `wpisy_rozstrzygniete`) `sync` odrzuca (✗) – dopisze go
+  dopiero `sync --mimo-zamkniecia`.
 - `wpis.py dodaj` z tym samym `--id` przenosi znacznik (także gdy zmienił się miesiąc daty) – `sync` poprawi wiersz.
 - `wpis.py usun` dla zapisu ze znacznikiem zostawia znak `usuniety`; `sync` usuwa wiersz w arkuszu, potem zapis z pliku.
   Wiersz z ID wyciągu w O (płatność przypięta przy zamknięciu) zostaje – skrypt zdejmuje tylko ID wpisu i dopisek „z wpisu”.
@@ -99,6 +104,8 @@ po ID (`importuj.py` – zapis bez ID w kolumnie O = nowy wiersz), a przypięcia
 | „arkusz ma kod w wersji N” | starszy kod – wklej nowy (sekcja 6, aktualizacja); zapisy czekają |
 | „nagłówki Transakcji inne niż oczekiwane” | ktoś zmienił kolumny A–O – popraw arkusz albo kod (`NAGLOWEK` w sekcji 8 i `references/arkusz.md`) |
 | „wiersz ma też inne wpisy” | wiersz scalony ręcznie z kilku wpisów – popraw go ręcznie albo rozdziel (jeden ID = jeden wiersz) |
+| `kontrola`: zmieniony po zamknięciu | wpis z ręcznym wierszem (bez ID) zmieniony po zamknięciu miesiąca – popraw wiersz ręcznie, potem `zamknij-wpisy <id>` |
+| `sync`: miesiąc zamknięty starszą wersją | wpis jest już w arkuszu (ręczny wiersz) → `zamknij-wpisy <id>`; nie ma go → `sync --mimo-zamkniecia` |
 | `kontrola`: brak wiersza | wiersz z ID wpisu skasowany w arkuszu – inwestor decyduje: `ponow <id>` (dopisz ponownie) albo `wpis.py usun` |
 | `✗ RRRR-MM-wpisy.jsonl: linia N to nie JSON` | uszkodzona linia w pliku wpisów (ręczna edycja) – popraw albo usuń tę linię; do tego czasu `wpis.py`, `sync`, `kontrola` i import stoją (kod 1) |
 | data przesunięta o dzień | daty idą w strefie arkusza (Plik → Ustawienia); nie zmieniaj strefy bez sprawdzenia wierszy |

@@ -414,6 +414,85 @@ class PrzeplywArkusz(unittest.TestCase):
         d = {w[14]: w[3] for w in self.zapis('2026-12')['wiersze']}
         self.assertEqual((d['wzw1'], d['wzw2']), ('=-30.00+5.00', '=-30.00+5.00'))
 
+    def sync_atrapa(self, atrapa, **kw):
+        """arkusz_budzetu.sync w tym procesie na folderze testu, z atrapą skryptu arkusza zamiast sieci."""
+        import io
+        from contextlib import redirect_stdout
+        import arkusz_budzetu as AB
+        import test_budzet_arkusz as TA
+        stare, AB.wyslij, wspolne.DANE = wspolne.DANE, atrapa, self.dane
+        try:
+            with redirect_stdout(io.StringIO()):
+                return AB.sync(TA.K, False, **kw)
+        finally:
+            wspolne.DANE = stare
+
+    def kontrola_atrapa(self, atrapa):
+        import arkusz_budzetu as AB
+        import test_budzet_arkusz as TA
+        stare, AB.wyslij, wspolne.DANE = wspolne.DANE, atrapa, self.dane
+        try:
+            return AB.kontrola(TA.K)[1]
+        finally:
+            wspolne.DANE = stare
+
+    def test_a1_wpis_z_recznym_wierszem_nie_wraca_przez_sync(self):
+        """A-1: wpis rozstrzygnięty przy zamknięciu bez ID w O (ręczny wiersz, Pomiń) – sync po zamknięciu nic nie dopisuje,
+        także gdy krok zamknij-wpisy pominięto; zmiana wpisu po zamknięciu – kontrola, nie popraw."""
+        import test_budzet_arkusz as TA
+        self.uruchom('wpis.py', 'dodaj', '80, zak, bazar', '--data', '2026-12-05', '--id', 'blokA')  # sync nie działa
+        self.uruchom('wpis.py', 'dodaj', '15, xyz', '--data', '2026-12-06', '--id', 'blokB')  # nieznany skrót -> Pomiń
+        self.ark([*wiersz_ark('2026-12-05', 80.0, 'Gotówka', '')[:7], 'Osoba B', *wiersz_ark('2026-12-05', 80.0, 'Gotówka', '')[8:]])
+        m = self.importuj(mies='2026-12')
+        self.assertEqual(m['wpisy_rozstrzygniete'], ['wblokA'])
+        self.decyduj('2026-12', wblokB={'akcja': 'pomin'})
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        self.assertEqual((self.zapis('2026-12')['wpisy_rozstrzygniete'], self.zapis('2026-12')['wiersze']), (['wblokA', 'wblokB'], []))
+        reczny = dict(o=[], data='2026-12-05', kwota=80.0)
+        atrapa = TA.Atrapa([reczny])
+        licz, bledy = self.sync_atrapa(atrapa)  # bezpiecznik: bez zamknij-wpisy sync sam oznacza
+        self.assertEqual((licz['dopisane'], licz.get('zamkniete'), bledy, atrapa.w), (0, 2, [], [reczny]))
+        self.assertIn('0 zapisach', self.uruchom('arkusz_budzetu.py', 'zamknij-wpisy', '--miesiac', '2026-12'))  # idempotentne
+        p = self.dane / 'listy' / '2026-12-wpisy.jsonl'
+        ws = [json.loads(l) for l in p.read_text(encoding='utf-8').splitlines()]
+        self.assertEqual([w['arkusz']['zamkniecie'] for w in ws], ['2026-12', '2026-12'])
+        for w in ws:
+            w['dodano'] = '2026-01-01 08:00'  # dawno – kontrola zgłosiłaby niewysłany, gdyby znacznik nie działał
+        p.write_text(''.join(json.dumps(w, ensure_ascii=False) + '\n' for w in ws), encoding='utf-8')
+        self.assertEqual(self.kontrola_atrapa(atrapa), [])
+        self.uruchom('wpis.py', 'dodaj', '82, zak, bazar', '--data', '2026-12-05', '--id', 'blokA')  # poprawka po zamknięciu
+        licz, bledy = self.sync_atrapa(atrapa)
+        self.assertEqual((licz['dopisane'], licz['poprawione'], bledy, atrapa.w), (0, 0, [], [reczny]))
+        self.assertTrue(any('zmieniony po zamknięciu' in x and 'wblokA' in x for x in self.kontrola_atrapa(atrapa)))
+        self.assertIn('rozstrzygnięty przy zamknięciu', self.uruchom('arkusz_budzetu.py', 'ponow', 'blokA'))
+        self.uruchom('arkusz_budzetu.py', 'zamknij-wpisy', 'blokA')  # wiersz poprawiony ręcznie – odśwież znacznik
+        self.assertEqual(self.kontrola_atrapa(atrapa), [])
+
+    def test_a1_przenies_na_swiezym_odczycie_wykrywa_dubel(self):
+        """A-1: sync dopisał wpis po imporcie, a import dopasował go do ręcznego wiersza – do wyjaśnienia, bez znacznika."""
+        self.uruchom('wpis.py', 'dodaj', '80, zak', '--data', '2026-12-05', '--id', 'blokA')
+        reczny = [*wiersz_ark('2026-12-05', 80.0, 'Gotówka', '')[:7], 'Osoba B', *wiersz_ark('2026-12-05', 80.0, 'Gotówka', '')[8:]]
+        self.ark(reczny)
+        self.importuj(mies='2026-12')
+        (self.dane / 'swiezy.json').write_text(json.dumps({'values': [['Data'], reczny,
+                                                                      wiersz_ark('2026-12-05', 80.0, 'Gotówka', 'wblokA')]}))
+        self.uruchom('przenies.py', '--miesiac', '2026-12', '--arkusz', 'swiezy.json')
+        z = self.zapis('2026-12')
+        self.assertEqual((z['wpisy_rozstrzygniete'], [x['id'] for x in z['do_wyjasnienia']]), ([], ['wblokA']))
+
+    def test_a1_miesiac_zamkniety_starsza_wersja_odmowa(self):
+        """A-1, bezpiecznik: plik zapisu bez listy wpisów rozstrzygniętych (starsza wersja) – sync nie dopisuje bez flagi."""
+        import test_budzet_arkusz as TA
+        self.uruchom('wpis.py', 'dodaj', '80, zak', '--data', '2026-12-05', '--id', 'blokA')
+        (self.dane / 'miesiace').mkdir(exist_ok=True)
+        (self.dane / 'miesiace' / '2026-12-zapis.json').write_text(json.dumps({'wiersze': [], 'przypiecia': []}))
+        atrapa = TA.Atrapa()
+        licz, bledy = self.sync_atrapa(atrapa)
+        self.assertEqual((licz['dopisane'], len(bledy), atrapa.w), (0, 1, []))
+        self.assertIn('--mimo-zamkniecia', bledy[0])
+        licz, bledy = self.sync_atrapa(atrapa, mimo_zamkniecia=True)
+        self.assertEqual((licz['dopisane'], bledy), (1, []))
+
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')
         p = self.dane / 'listy' / '2026-12-wpisy.jsonl'
