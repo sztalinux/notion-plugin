@@ -490,6 +490,10 @@ def kontrola_refow(nazwy: list, obiekt: str) -> list:
         bledy += sprawdz_tekst(f"tag {obiekt[:7]} nazwa", pola.get("tag", ""), zakazane)
         bledy += sprawdz_tekst(f"tag {obiekt[:7]} opis", opis, zakazane)
         obiekt = pola.get("object", "")  # tag na tag
+    typ = git("cat-file", "-t", obiekt).strip() if obiekt else "commit"
+    if typ != "commit":  # blob/drzewo: rev-list nie zwraca commitów, więc treść nie byłaby sprawdzona
+        bledy.append(f"ref wskazuje obiekt typu {typ} ({obiekt[:7]}), nie commit – jego treść nie przechodzi kontroli; "
+                     "wysyłaj gałęzie i tagi wskazujące commity")
     return bledy
 
 

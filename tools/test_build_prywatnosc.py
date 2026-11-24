@@ -280,6 +280,15 @@ class Hooki(unittest.TestCase):
         self.git("tag", f"v-{ASCII}")
         self.zablokowany(self.push(f"v-{ASCII}"), BLAD_LISTY, "Push zablokowany")
 
+    def test_tag_na_blob_albo_drzewo(self):
+        """U-4: tag lekki albo adnotowany wskazujący blob lub drzewo – treść poza rev-list, więc push blokowany."""
+        self.plik("docs/n.md", f"notatka {OGONEK}\n")
+        blob = self.git("hash-object", "-w", "docs/n.md").stdout.strip()
+        self.git("tag", "v-blob", blob)
+        self.zablokowany(self.push("v-blob"), "nie commit", "Push zablokowany")
+        self.git("tag", "-a", "v-drzewo", "-m", "wydanie testowe", "HEAD^{tree}")
+        self.zablokowany(self.push("v-drzewo"), "nie commit", "Push zablokowany")
+
     # --- F-17: treść z indeksu --------------------------------------------------------------------------
     def test_pre_commit_jeden_blad_dla_dysku_i_indeksu(self):
         """Z-8: ta sama treść na dysku i w indeksie – błąd wypisany raz."""
