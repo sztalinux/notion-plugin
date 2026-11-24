@@ -89,8 +89,8 @@ inwestora (to fakty, nie decyzje).
 | nowy termin potwierdzony z ekipą | „Potwierdzone” | `harmonogram` C |
 | odbiór kroku wg `etap` C | „Zrobione” | `etap` C.7 |
 
-Krok „W trakcie” po zmianie końca Terminu (C.4) zostaje „W trakcie”. Status ustawiony przez inwestora (ręcznie w Notion albo
-☑ w bloku kontroli spójności `KS-H1…`) zostaje – nie cofaj go.
+Krok „W trakcie” po zmianie końca Terminu (C.4) zostaje „W trakcie”. Status ustawiony przez inwestora (ręcznie w Notion, na pulpicie –
+`pulpit`, albo ☑ w bloku kontroli spójności `KS-H1…`) zostaje – nie cofaj go.
 
 ## D. Czekam na („geodeta tyczy w czwartek”, „ekipa ma przysłać wycenę do 15.10”)
 
