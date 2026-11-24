@@ -1,7 +1,8 @@
 #!/bin/sh
 # Blokuje commit, jeśli do publicznego repo trafiłyby dane osobowe lub projektowe.
 # Włączenie: git config core.hooksPath .githooks
-python3 tools/build.py --tylko-walidacja || {
+# Pełny skan drzewa roboczego + nazwy i treść plików z indeksu (--indeks) – to, co naprawdę wejdzie do commita.
+python3 tools/build.py --tylko-walidacja --indeks || {
   echo ""
   echo "Commit zablokowany: popraw powyższe miejsca (dane trzymaj w Notion/Excelu/folderze budowy)."
   exit 1
