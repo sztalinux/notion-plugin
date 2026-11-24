@@ -254,9 +254,10 @@ def jako_tekst(dane: bytes):
     Także „Tekst Unicode” z Excela/Notatnika (UTF-16 z BOM) i polski Windows (cp1250)."""
     if dane[:2] in (b"\xff\xfe", b"\xfe\xff"):
         try:
-            return dane.decode("utf-16")
+            tekst = dane.decode("utf-16")
         except UnicodeDecodeError:
             return None
+        return None if "\0" in tekst else tekst  # np. UTF-32 LE (BOM FF FE 00 00) – znaki U+0000 między literami
     if b"\0" in dane:
         return utf16_bez_bom(dane)
     try:

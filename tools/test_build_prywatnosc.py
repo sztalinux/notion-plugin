@@ -93,6 +93,11 @@ class JakoTekst(unittest.TestCase):
         for kod in ("utf-16-le", "utf-16-be"):
             self.assertEqual(build.jako_tekst("notatka: zażółć gęślą\n".encode(kod)), "notatka: zażółć gęślą\n")
 
+    def test_bom_z_trescia_nie_utf16(self):
+        """U-1: BOM FF FE, ale treść nie jest UTF-16 (UTF-32 LE) – nieczytelne, a nie tekst ze znakami U+0000."""
+        self.assertIsNone(build.jako_tekst(b"\xff\xfe\x00\x00" + "notatka".encode("utf-32-le")))
+        self.assertEqual(build.jako_tekst("notatka".encode("utf-16")), "notatka")  # UTF-16 z BOM dalej jako tekst
+
     def test_binarne(self):
         self.assertIsNone(build.jako_tekst(b"PK\x03\x04\x14\x00\x00\x00\x08\x00abc\x00\x01"))
         self.assertIsNone(build.jako_tekst(b"\x00\x00\x00\x01Bud1\x00\x00\x10\x00\x00\x00\x08\x00a\x00b"))
@@ -235,7 +240,8 @@ class Hooki(unittest.TestCase):
     def test_binarne_i_nieznane(self):
         zip_bez_rozszerzenia = b"PK\x03\x04\x14\x00\x00\x00\x08\x00" + ASCII.encode() + b"\x00\x01\x02"
         for sciezka, tresc in (("docs/kosztorys.xlsm", b"PK\x03\x04 arkusz"), ("docs/kosztorys", zip_bez_rozszerzenia),
-                               ("docs/notatka.txt", f"notatka {OGONEK}\n".encode("utf-16-le"))):
+                               ("docs/notatka.txt", f"notatka {OGONEK}\n".encode("utf-16-le")),
+                               ("docs/utf32.txt", b"\xff\xfe\x00\x00" + f"notatka {OGONEK}\n".encode("utf-32-le"))):
             with self.subTest(sciezka):
                 self.setUp()
                 self.plik(sciezka, tresc)
