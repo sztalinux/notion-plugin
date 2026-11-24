@@ -88,11 +88,13 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    Komunikaty 🔔 z linią `→ ZP-n`: sprawdź Status tych wierszy Rodzaj Usterka w „🤖 Zmiany asystenta” (wyszukiwarka z parametrem bazy) –
    „Zrobione” albo „Odrzucone” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze ZP „Czeka na mnie”
    (widok „🧯 Otwarte usterki”) bez bloku 🔔 → dodaj blok (tamże, C.5).
-2. **Pomysły i rozmowy** – bez analizy pomysłów (tylko na prośbę inwestora, `rozwoj-harnessu`, C) i bez odczytu tablicy
+2. **Pomysły, rozmowy i porządki** – bez analizy pomysłów (tylko na prośbę inwestora, `rozwoj-harnessu`, C) i bez odczytu tablicy
    pomysłów ani stron osób: kontrole spójności P (pomysł ↔ wdrożenie) i R (zadanie rozmowy ↔ „💬 Do przegadania”) robi przegląd
    tygodnia. Nocą tylko odpowiedzi: blok 🔔 `KS-P…` albo `KS-R…` z ☑ lub dopiskiem → zastosuj wg
    `references/kontrola-spojnosci-pomysly.md` („Przebieg”, 1) albo `-rozmowy.md` („Odczyt”, 3 – z odczytem tej jednej strony,
-   której dotyczy odpowiedź); bez odpowiedzi nie czytaj tych plików.
+   której dotyczy odpowiedź); bez odpowiedzi nie czytaj tych plików. Tak samo porządki tygodnia: blok 🔔 `porzadki-<RRRR-Www>`
+   albo `porzadki-budowa-<RRRR-Www>` z ☑ lub dopiskiem → wykonaj zatwierdzone wsadowo wg `przeglad-tygodnia-osobisty`, D
+   (osobiste) albo `przeglad-tygodnia`, „Porządki” (plugin dom-budowa; budowa), blok → „Przetworzone” (z liczbą wykonanych).
 2a. **Rozkminki – tylko na prośbę z wpisu** (ślad `→ 🧠 rozkminka wieczorem` albo `→ 🧠 rozkminka w toku` z listy w poleceniu – `references/rozkminka.md`, 4 – w dzisiejszym lub wczorajszym bloku
    „Przetworzone”, `wpisy` krok 5, **także ślady z kroku 1 tego przebiegu** – na stronie ich jeszcze nie ma, zapisz je od razu
    jako `→ 🧠 rozkminka: <wzmianka>`; z własnej inicjatywy nie rób – to koszt). Max 2, najstarsze pierwsze; reszta jutro
