@@ -34,7 +34,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     plugins/dom-budowa/skills/        ← procedury budowy
     .claude/skills/, .agents/skills/  ← dowiązania na każdy skill obu pluginów (odtwarza tools/build.py)
     .claude/settings.json             ← zezwolenia (hooków startowych nie ma – na starcie sesji jedna linia stanu: CLAUDE.md)
-    .githooks/                        ← pre-commit (pliki, autor), commit-msg (wiadomość), pre-push (każdy wysyłany commit)
+    .githooks/                        ← pre-commit (pliki, indeks, autor), commit-msg (wiadomość), pre-push (każdy wysyłany commit, nazwy gałęzi i tagów)
     tools/build.py                    ← walidacja (w tym dane osobowe) + dowiązania skilli + paczki dist/ (po jednej na plugin)
     tools/dokumenty.py                ← indeks folderu budowy i paczka dla claude.ai
     tools/teczka.py                   ← teczka etapu / transzy do banku: składa dokumenty etapu w Teczki/<Etap>/ ze spisem braków (etap D; testy test_teczka.py)

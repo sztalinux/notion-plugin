@@ -25,7 +25,7 @@ Polecenia w trakcie sesji (działają tak samo jak dawne pozycje listy): „wdr�
 ### Zasady pracy w repo
 
 0. Przed pierwszym commitem w sesji (jeśli `git config core.hooksPath` nie zwraca `.githooks`): `git config core.hooksPath .githooks`
-   – włącza hooki prywatności: `pre-commit` (pliki + autor), `commit-msg` (wiadomość), `pre-push` (każdy wysyłany commit).
+   – włącza hooki prywatności: `pre-commit` (pliki, indeks, autor), `commit-msg` (wiadomość), `pre-push` (każdy wysyłany commit, nazwy gałęzi i tagów).
    Autor commitów: imię inwestora albo login – dozwolone; e-mail tylko `…@users.noreply.github.com` (historia jest publiczna).
    W historii nigdy nie mogą się znaleźć dane innych osób (projektanci, wykonawcy, urzędy) – raz wypchniętych
    nie da się skutecznie usunąć, więc kontrola musi zadziałać przed pushem. Nie przepisuj opublikowanej historii
