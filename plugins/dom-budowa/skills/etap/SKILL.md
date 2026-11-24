@@ -78,8 +78,7 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 3. Protokół (tabela): element | wymaganie i źródło (`[projekt]` / norma / `[opinia]`) | wynik | usterka | termin usunięcia | kto.
 4. Zaproponuj wynik: **odebrane / odebrane warunkowo (lista usterek) / nieodebrane** – decyduje inwestor
    z kierownikiem budowy; asystent nie odbiera.
-5. Zapis: usterki → TASKS (Kto = Ekipa, When = termin usunięcia) i Notatnik (Typ „Ryzyko” lub „Pytanie”, Do kogo = Ekipa,
-   bez Kiedy – link do zadania; `harmonogram`, Zasady); wpis z odbioru →
+5. Zapis: usterki → TASKS wg `dziennik` A.2 (wiersz „usterka do poprawy”); wpis z odbioru →
    procedura `dziennik`; dokumenty (WZ betonu, atesty stali, karty produktów, protokoły prób) → folder budowy (`dokumenty`);
    sprawdzone punkty „✅ Checklisty budowy” z kroku 2 → Zrobione, wynik w Uwagach (usterka – punkt zostaje, link do zadania).
 6. **Płatność za etap dopiero po odbiorze** – przekaż do `koszty` (transza wg umowy, zatrzymanie), z linkiem do protokołu.

@@ -21,7 +21,8 @@ branżą i adresatem, tak żeby dało się ją filtrować i zamknąć.
    | do doczytania / pomysł | Notatnik budowy | Typ „Doczytać” / „Pomysł” |
    | konkretne działanie z terminem | TASKS | Status „TO DO”, When = termin, Kto = Ja, Obszar = Dom; Deadline ☑ tylko przy terminie twardym (`zadania`, plugin ja – „Termin twardy czy orientacyjny”) |
    | ktoś inny ma coś zrobić do daty („czekam na”) | TASKS | Status „WAITING”, Kto = ta osoba, Obszar = Dom, When – procedura `harmonogram`, D |
-   | relacja z dnia na budowie, dostawa, usterka, roboty dodatkowe | → procedura `dziennik` | stąd ustalenia i zadania wracają tu |
+   | usterka do poprawy przez ekipę | TASKS | wg `dziennik` A.2, wiersz „usterka do poprawy” (Kto = Ekipa, Status „WAITING”) |
+   | relacja z dnia na budowie, dostawa, roboty dodatkowe | → procedura `dziennik` | stąd ustalenia i zadania wracają tu |
    | koszt / płatność | → procedura `koszty` | nie zapisuj kwot tylko w Notion |
    | oferta / wycena | → procedura `oferta` | |
    | kilka luźnych, niejasnych wpisów naraz / „przerób dziennik” | → procedura `wpisy` (plugin `ja`) | wyjaśnia, potem wraca tu |

@@ -29,7 +29,8 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    | dostawa, zakup, zaliczka, gotówka dla ekipy | `koszty`, sekcja B – wiersze w „💸 Wydatki → arkusz” (Zrealizowane / Do zapłaty) |
    | dostawa albo zakup materiału na budowę | `zakupy`, sekcja C albo 0.3 – tylko wiersz w 🧱 Zakupach budowy (Status, Dostawa = data, Dokumenty); wydatek raz – wiersz wyżej |
    | ustalenie, pytanie, ryzyko, decyzja | `notatka` – Notatnik budowy z Etapem i Do kogo |
-   | usterka do poprawy, rzecz do zrobienia z terminem | `notatka` – TASKS (When), Kto = Ekipa |
+   | usterka do poprawy (także z odbioru – `etap` C.5; jedyne miejsce tej reguły) | TASKS: Kto = Ekipa, Status „WAITING” (widok „⏳ Czekam na”), Obszar = Dom, When = termin usunięcia, relacja Harmonogram; we wpisie – relacja Zadania. Notatnik tylko, gdy trzeba coś ustalić (Typ „Pytanie”, Do kogo = Ekipa, bez Kiedy – link do zadania) |
+   | inna rzecz do zrobienia z terminem | `notatka` – TASKS (When; Kto i Status wg jej tabeli) |
    | „ekipa chce dopłatę za…” (roboty dodatkowe) | sekcja B |
    | pierwszy dzień prac przy kroku („ekipa zaczęła zbrojenie płyty”) | Harmonogram – Status kroku „W trakcie” (`harmonogram`, „Status kroku”) |
    | koniec kroku / etapu, „jutro betonujemy” | `etap` – odbiór albo bramka; Status kroku wg `harmonogram` („Status kroku”: „Zrobione” dopiero z odbiorem) |
