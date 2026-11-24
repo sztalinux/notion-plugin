@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Zdjęcia i dokumenty z telefonu: rozkładanie skrzynki `Zdjęcia/_nowe` do folderów kroków (POM-1, etap C–D).
 
-    python3 tools/zdjecia.py plan --lista <lista.json> [--teraz ISO] [--wyjscie plan.json]   # konektor: lista → plan (na sucho)
+    python3 tools/zdjecia.py plan --lista <lista.json> [--teraz ISO] [--wyjscie plan.json] [--zablokuj]   # konektor: lista → plan (na sucho)
     python3 tools/zdjecia.py rozloz [--wykonaj]          # tryb lokalny: <hub>/Zdjęcia/_nowe → foldery kroków na Macu
     python3 tools/zdjecia.py zapisz-ruchy <plan.json> [--kto konektor] [--tylko id,id]   # dziennik ruchów po wykonaniu planu
+    python3 tools/zdjecia.py odblokuj                    # zdejmij blokadę porzuconego przebiegu konektora
     python3 tools/zdjecia.py cofnij [--wykonaj|--zrobione]   # plan odwrotny ostatniego niecofniętego przebiegu
     python3 tools/zdjecia.py slad <plan.json>             # ślad do Notion: dzień → krok → liczba, folder
     python3 tools/zdjecia.py wg-dni                       # Mac: Zdjęcia/_wg dni/RRRR-MM-DD/ z dowiązaniami
@@ -19,6 +20,9 @@ Reguły (pełny opis dla agentów: plugins/dom-budowa/skills/dziennik/references
   `przed zakryciem/`; słowa „faktura”, „WZ”, „dziennik KB”… → dokument. Niepewne → zostaje, pytanie 🔔.
 - Luźne pliki: jeden krok w Dzienniku budowy tego dnia → ten krok; inaczej zostają z pytaniem.
 - Ponowny przebieg nic nie zmienia (prefiks daty nie jest dokładany drugi raz).
+- Dziennik ruchów (`ruchy.jsonl`): tryb lokalny dopisuje każdy ruch zaraz po wykonaniu (przerwany przebieg da się cofnąć);
+  konektor – `zapisz-ruchy --tylko` (pusty folder razem z ostatnim swoim plikiem). Blokada: `rozloz`, `cofnij --wykonaj`
+  i `plan --zablokuj` (zdejmuje ją `zapisz-ruchy` albo `odblokuj`) – skrypt i konektor nie rozkładają naraz.
 
 Wejście planu (`--lista`, JSON): {"nowe": [{"id", "nazwa", "folder" ("" = luzem), "mime", "rozmiar", "utworzono",
 "zmieniono", "zrobiono"?}], "istniejace": [{"folder": "<ścieżka od Dom>", "nazwa", "rozmiar"}]}. Kroki i dni:
@@ -365,24 +369,52 @@ def _dziennik() -> Path:
     return DANE / "ruchy.jsonl"
 
 
-def zapisz_ruchy(plan: dict, kto: str, tylko=None) -> int:
+def _teraz() -> str:
+    return datetime.now(PL).isoformat(timespec="seconds")
+
+
+def _przebieg(plan: dict) -> str:
+    return plan.get("utworzono") or _teraz()
+
+
+def _wpis_pliku(r: dict, przebieg: str, kto: str) -> dict:
+    return {"przebieg": przebieg, "czas": _teraz(), "kto": kto, "id": r.get("id"), "z": r["z"], "nazwa": r["nazwa"],
+            "do": r["do"], "nowa_nazwa": r["nowa_nazwa"]}
+
+
+def _wpis_folderu(p: dict, przebieg: str, kto: str, w_archiwum: str = None) -> dict:
+    """Wpis pustego folderu; `w_archiwum` tylko gdy nazwa w archiwum jest inna (dopisek `_2`). Stary format = bez niego."""
+    w = {"przebieg": przebieg, "czas": _teraz(), "kto": kto, "folder": p["z"], "do": p["do"]}
+    if w_archiwum and w_archiwum != p["z"].rsplit("/", 1)[-1]:
+        w["w_archiwum"] = w_archiwum
+    return w
+
+
+def _dopisz(wpisy: list):
+    if not wpisy:
+        return
     DANE.mkdir(parents=True, exist_ok=True)
-    przebieg = plan.get("utworzono") or datetime.now(PL).isoformat(timespec="seconds")
-    n = 0
     with _dziennik().open("a", encoding="utf-8") as f:
-        for r in plan.get("ruchy") or []:
-            if tylko and r.get("id") not in tylko:
-                continue
-            f.write(json.dumps({"przebieg": przebieg, "czas": datetime.now(PL).isoformat(timespec="seconds"),
-                                "kto": kto, "id": r.get("id"), "z": r["z"], "nazwa": r["nazwa"],
-                                "do": r["do"], "nowa_nazwa": r["nowa_nazwa"]}, ensure_ascii=False) + "\n")
-            n += 1
-        for p in plan.get("puste_foldery") or []:
-            if tylko:
-                continue
-            f.write(json.dumps({"przebieg": przebieg, "czas": datetime.now(PL).isoformat(timespec="seconds"),
-                                "kto": kto, "folder": p["z"], "do": p["do"]}, ensure_ascii=False) + "\n")
-    return n
+        for w in wpisy:
+            f.write(json.dumps(w, ensure_ascii=False) + "\n")
+        f.flush()
+        os.fsync(f.fileno())
+
+
+def _caly_folder(p: dict, ruchy: list, tylko) -> bool:
+    """Konektor (`--tylko`): pusty folder idzie do dziennika, gdy wykonano wszystkie ruchy plików z niego."""
+    z_folderu = [r for r in ruchy if r["z"] == p["z"] or r["z"].startswith(p["z"] + "/")]
+    return bool(z_folderu) and all(r.get("id") in tylko for r in z_folderu)
+
+
+def zapisz_ruchy(plan: dict, kto: str, tylko=None) -> tuple:
+    """Dziennik ruchów po wykonaniu planu konektorem. Zwraca (plików, folderów)."""
+    przebieg, ruchy = _przebieg(plan), plan.get("ruchy") or []
+    pliki = [_wpis_pliku(r, przebieg, kto) for r in ruchy if not tylko or r.get("id") in tylko]
+    foldery = [_wpis_folderu(p, przebieg, kto) for p in plan.get("puste_foldery") or []
+               if not tylko or _caly_folder(p, ruchy, tylko)]
+    _dopisz(pliki + foldery)
+    return len(pliki), len(foldery)
 
 
 def wczytaj_ruchy() -> list:
@@ -402,8 +434,11 @@ def plan_cofniecia(ruchy: list) -> dict:
     wybrane = [r for r in ruchy if r["przebieg"] == ost]
     pliki = [{"id": r.get("id"), "z": r["do"], "nazwa": r["nowa_nazwa"], "do": r["z"], "nowa_nazwa": r["nazwa"]}
              for r in reversed(wybrane) if "nazwa" in r]
-    foldery = [{"folder": r["folder"].rsplit("/", 1)[-1], "z": r["do"], "do": r["folder"].rsplit("/", 1)[0]}
-               for r in wybrane if "folder" in r]
+    foldery = []  # "folder" = nazwa w archiwum (stary format: jak w _nowe), "nowa_nazwa" = nazwa po powrocie do _nowe
+    for r in wybrane:
+        if "folder" in r:
+            rodzic, nazwa = r["folder"].rsplit("/", 1)
+            foldery.append({"folder": r.get("w_archiwum") or nazwa, "z": r["do"], "do": rodzic, "nowa_nazwa": nazwa})
     return {"przebieg": ost, "ruchy": pliki, "foldery": foldery}
 
 
@@ -419,30 +454,55 @@ class Zajete(Exception):
     pass
 
 
+def _blokada_aktywna():
+    """Treść blokady albo None (brak, nieczytelna albo starsza niż 2 h – porzucona)."""
+    try:
+        b = json.loads((DANE / "blokada.json").read_text(encoding="utf-8"))
+    except (ValueError, OSError):
+        return None
+    return b if isinstance(b, dict) and time.time() - b.get("t", 0) < BLOKADA_H * 3600 else None
+
+
+def zablokuj(kto: str):
+    b = _blokada_aktywna()
+    if b:
+        raise Zajete(f"rozkładanie trwa ({b.get('kto')}, od {b.get('od')})")
+    DANE.mkdir(parents=True, exist_ok=True)
+    (DANE / "blokada.json").write_text(json.dumps({"kto": kto, "t": time.time(),
+                                                   "od": datetime.now(PL).isoformat(timespec="minutes")}),
+                                       encoding="utf-8")
+
+
+def odblokuj(kto: str = None) -> bool:
+    """Zdejmuje blokadę (z `kto` – tylko założoną przez tego wykonawcę). True, gdy zdjęto."""
+    p = DANE / "blokada.json"
+    if not p.exists():
+        return False
+    if kto:
+        try:
+            if json.loads(p.read_text(encoding="utf-8")).get("kto") != kto:
+                return False
+        except (ValueError, OSError, AttributeError):
+            pass
+    try:
+        p.unlink()
+    except OSError:
+        return False
+    return True
+
+
 class Blokada:
     """Skrypt i konektor nie rozkładają naraz. Blokada starsza niż 2 h jest uznawana za porzuconą."""
 
     def __init__(self, kto: str):
-        self.p, self.kto = DANE / "blokada.json", kto
+        self.kto = kto
 
     def __enter__(self):
-        DANE.mkdir(parents=True, exist_ok=True)
-        if self.p.exists():
-            try:
-                b = json.loads(self.p.read_text(encoding="utf-8"))
-                if time.time() - b.get("t", 0) < BLOKADA_H * 3600:
-                    raise Zajete(f"rozkładanie trwa ({b.get('kto')}, od {b.get('od')})")
-            except (ValueError, OSError):
-                pass
-        self.p.write_text(json.dumps({"kto": self.kto, "t": time.time(),
-                                      "od": datetime.now(PL).isoformat(timespec="minutes")}), encoding="utf-8")
+        zablokuj(self.kto)
         return self
 
     def __exit__(self, *a):
-        try:
-            self.p.unlink()
-        except OSError:
-            pass
+        odblokuj()
 
 
 # ---------- konfiguracja (kroki) ----------
@@ -508,8 +568,9 @@ def lista_lokalna(hub: Path, exif=None) -> dict:
     return {"nowe": nowe, "istniejace": istniejace}
 
 
-def wykonaj_lokalnie(plan: dict, hub: Path) -> int:
-    n = 0
+def wykonaj_lokalnie(plan: dict, hub: Path, kto: str = "skrypt") -> int:
+    """Ruchy planu na Macu. Każdy wykonany ruch trafia do dziennika zaraz po przeniesieniu (pominięty – nie)."""
+    przebieg, n = _przebieg(plan), 0
     for r in plan["ruchy"]:
         zrodlo = hub / r["z"] / r["nazwa"]
         cel = hub / r["do"] / r["nowa_nazwa"]
@@ -517,6 +578,7 @@ def wykonaj_lokalnie(plan: dict, hub: Path) -> int:
             continue  # inwestor przeniósł sam albo kolizja – nic nie nadpisujemy
         cel.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(str(zrodlo), str(cel))
+        _dopisz([_wpis_pliku(r, przebieg, kto)])
         n += 1
     for p in plan["puste_foldery"]:
         z = hub / p["z"]
@@ -526,6 +588,7 @@ def wykonaj_lokalnie(plan: dict, hub: Path) -> int:
                 cel = cel.with_name(_z_numerem(cel.name))
             cel.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(str(z), str(cel))
+            _dopisz([_wpis_folderu(p, przebieg, kto, cel.name)])
     return n
 
 
@@ -572,6 +635,7 @@ def main(argv=None):
     a.add_argument("--kroki")
     a.add_argument("--teraz")
     a.add_argument("--wyjscie")
+    a.add_argument("--zablokuj", action="store_true", help="konektor: załóż blokadę na czas przebiegu (zdejmuje zapisz-ruchy)")
     a = sub.add_parser("rozloz")
     a.add_argument("--wykonaj", action="store_true")
     a.add_argument("--kroki")
@@ -586,9 +650,17 @@ def main(argv=None):
     a.add_argument("plan")
     sub.add_parser("wg-dni")
     sub.add_parser("stan")
+    sub.add_parser("odblokuj")
     a = ap.parse_args(argv)
 
     if a.cmd == "plan":
+        if a.zablokuj:
+            try:
+                zablokuj("konektor")
+            except Zajete as e:
+                print(f"[zdjęcia] {e} – nie rozkładaj teraz; blokada z tej sesji (porzucony przebieg) → "
+                      "`zdjecia.py odblokuj`", file=sys.stderr)
+                return 1
         teraz = _iso(a.teraz) if a.teraz else None
         lista = json.loads(Path(a.lista).read_text(encoding="utf-8"))
         konf = wczytaj_konf(Path(a.kroki) if a.kroki else None)
@@ -605,17 +677,24 @@ def main(argv=None):
         try:
             with Blokada("skrypt"):
                 plan = planuj(lista_lokalna(HUB), wczytaj_konf(Path(a.kroki) if a.kroki else None))
-                if a.wykonaj:
-                    wykonaj_lokalnie(plan, HUB)
-                    zapisz_ruchy(plan, "skrypt")
+                n = wykonaj_lokalnie(plan, HUB, "skrypt") if a.wykonaj else None
                 wypisz(plan, not a.wykonaj)
+                if n is not None and n != len(plan["ruchy"]):
+                    print(f"[zdjęcia] przeniesiono {n} z {len(plan['ruchy'])} – reszta pominięta (brak źródła "
+                          "albo cel już istnieje); w dzienniku ruchów tylko wykonane")
         except Zajete as e:
             print(f"[zdjęcia] {e} – następny przebieg")
         return 0
     if a.cmd == "zapisz-ruchy":
         plan = json.loads(Path(a.plan).read_text(encoding="utf-8"))
         tylko = {x for x in a.tylko.split(",") if x} or None
-        print(f"[zdjęcia] zapisano ruchów: {zapisz_ruchy(plan, a.kto, tylko)}")
+        pliki, foldery = zapisz_ruchy(plan, a.kto, tylko)
+        print(f"[zdjęcia] zapisano ruchów: {pliki}" + (f", pustych folderów: {foldery}" if foldery else ""))
+        if odblokuj(a.kto):
+            print("[zdjęcia] blokada zdjęta")
+        return 0
+    if a.cmd == "odblokuj":
+        print("[zdjęcia] blokada zdjęta" if odblokuj() else "[zdjęcia] brak blokady")
         return 0
     if a.cmd == "cofnij":
         c = plan_cofniecia(wczytaj_ruchy())
@@ -631,19 +710,24 @@ def main(argv=None):
         for r in c["ruchy"]:
             print(f"  {r['z']}/{r['nazwa']} → {r['do']}/{r['nowa_nazwa']}")
         for f in c["foldery"]:
-            print(f"  folder {f['z']}/{f['folder']} → {f['do']}")
+            print(f"  folder {f['z']}/{f['folder']} → {f['do']}/{f['nowa_nazwa']}")
         if a.wykonaj:
-            for f in c["foldery"]:
-                z, cel = HUB / f["z"] / f["folder"], HUB / f["do"] / f["folder"]
-                if z.exists() and not cel.exists():
-                    cel.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.move(str(z), str(cel))
-            for r in c["ruchy"]:
-                z, cel = HUB / r["z"] / r["nazwa"], HUB / r["do"] / r["nowa_nazwa"]
-                if z.exists() and not cel.exists():
-                    cel.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.move(str(z), str(cel))
-            oznacz_cofniety(c["przebieg"], "skrypt")
+            try:
+                with Blokada("skrypt"):
+                    for f in c["foldery"]:
+                        z, cel = HUB / f["z"] / f["folder"], HUB / f["do"] / f["nowa_nazwa"]
+                        if z.exists() and not cel.exists():
+                            cel.parent.mkdir(parents=True, exist_ok=True)
+                            shutil.move(str(z), str(cel))
+                    for r in c["ruchy"]:
+                        z, cel = HUB / r["z"] / r["nazwa"], HUB / r["do"] / r["nowa_nazwa"]
+                        if z.exists() and not cel.exists():
+                            cel.parent.mkdir(parents=True, exist_ok=True)
+                            shutil.move(str(z), str(cel))
+                    oznacz_cofniety(c["przebieg"], "skrypt")
+            except Zajete as e:
+                print(f"[zdjęcia] {e} – cofnij po zakończeniu przebiegu")
+                return 1
         (DANE / "cofniecie.json").write_text(json.dumps(c, ensure_ascii=False, indent=1), encoding="utf-8")
         return 0
     if a.cmd == "slad":

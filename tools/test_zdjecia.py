@@ -234,9 +234,46 @@ class Plan(unittest.TestCase):
         self.assertIn("01 Wykop i odbiór dna (2) https://example.invalid/f1", pole)
 
 
-class Lokalnie(unittest.TestCase):
+class Dziennik(WlasneDane):
+    def test_konektor_z_tylko_zapisuje_pusty_folder(self):
+        # droga konektorowa zawsze z --tylko: pusty folder też musi trafić do dziennika, inaczej cofnij go nie zna (F-4)
+        p = plan([plik("PXL_20261118_090000000.jpg", "wykop"), plik("PXL_20261118_100000000.jpg", "wykop"),
+                  plik("PXL_20261118_110000000.jpg")])
+        self.assertEqual(len(p["puste_foldery"]), 1)
+        Z.zapisz_ruchy(p, "konektor", {r["id"] for r in p["ruchy"]})
+        c = Z.plan_cofniecia(Z.wczytaj_ruchy())
+        self.assertEqual(len(c["ruchy"]), 3)
+        self.assertEqual(c["foldery"], [{"folder": "wykop", "z": Z.ARCH_PUSTE, "do": "Zdjęcia/_nowe", "nowa_nazwa": "wykop"}])
+
+    def test_konektor_czesc_plikow_folder_zostaje(self):
+        p = plan([plik("PXL_20261118_090000000.jpg", "wykop"), plik("PXL_20261118_100000000.jpg", "wykop")])
+        Z.zapisz_ruchy(p, "konektor", {p["ruchy"][0]["id"]})
+        c = Z.plan_cofniecia(Z.wczytaj_ruchy())
+        self.assertEqual((len(c["ruchy"]), c["foldery"]), (1, []))
+
+    def test_stary_i_nowy_format_folderu(self):
+        # stary wpis (bez nazwy w archiwum) – nazwa z ścieżki; nowy – nazwa z dopiskiem _2 (F-12)
+        wpisy = [{"przebieg": "P1", "czas": "c", "kto": "konektor", "folder": "Zdjęcia/_nowe/wykop", "do": Z.ARCH_PUSTE},
+                 {"przebieg": "P2", "czas": "c", "kto": "skrypt", "folder": "Zdjęcia/_nowe/wykop", "do": Z.ARCH_PUSTE,
+                  "w_archiwum": "wykop_2"}]
+        self.assertEqual(Z.plan_cofniecia(wpisy[:1])["foldery"][0],
+                         {"folder": "wykop", "z": Z.ARCH_PUSTE, "do": "Zdjęcia/_nowe", "nowa_nazwa": "wykop"})
+        self.assertEqual(Z.plan_cofniecia(wpisy)["foldery"][0],
+                         {"folder": "wykop_2", "z": Z.ARCH_PUSTE, "do": "Zdjęcia/_nowe", "nowa_nazwa": "wykop"})
+
+
+def wgraj(hub, folder, nazwa, tresc):
+    p = hub / "Zdjęcia" / "_nowe" / folder / nazwa
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_bytes(tresc)
+    dawno = time.time() - 86400  # wgrane wczoraj – nie „wgrywanie trwa”, niezależnie od dzisiejszej daty
+    os.utime(p, (dawno, dawno))
+    return p
+
+
+class Lokalnie(WlasneDane):
     def setUp(self):
-        self.hub = Path(tempfile.mkdtemp(prefix="hub-", dir=TMP))
+        super().setUp()
         n = self.hub / "Zdjęcia" / "_nowe"
         (n / "wykop").mkdir(parents=True)
         (n / "wykop" / "PXL_20261118_090000000.jpg").write_bytes(b"a" * 10)
@@ -255,15 +292,53 @@ class Lokalnie(unittest.TestCase):
         self.assertTrue(cel.exists())
         self.assertTrue((self.hub / "_Archiwum/Puste foldery/wykop").exists())
         self.assertTrue((self.hub / "Zdjęcia/_nowe/nieznane/PXL_20261118_090000000.jpg").exists())
-        Z.zapisz_ruchy(p, "skrypt")
-        c = Z.plan_cofniecia(Z.wczytaj_ruchy())
+        c = Z.plan_cofniecia(Z.wczytaj_ruchy())  # dziennik zapisuje samo wykonanie
         self.assertEqual(len(c["ruchy"]), 1)
         self.assertEqual(c["ruchy"][0]["do"], "Zdjęcia/_nowe/wykop")
+        self.assertEqual(len(c["foldery"]), 1)
         Z.oznacz_cofniety(c["przebieg"], "skrypt")
         self.assertIsNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
         # ponowny przebieg: nic do zrobienia poza czekającym
         p2 = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)
         self.assertEqual(p2["ruchy"], [])
+
+    def test_przerwanie_w_polowie_dziennik_ma_wykonane(self):
+        # Ctrl-C / uśpienie przy 2. ruchu: pierwszy przeniesiony plik musi być w dzienniku (F-5)
+        nowy = wgraj(self.hub, "wykop", "PXL_20261117_090000000.jpg", b"c" * 10)
+        stare = datetime(2026, 11, 20, 10, tzinfo=timezone.utc).timestamp()
+        os.utime(nowy, (stare, stare))
+        p = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)
+        self.assertEqual(len(p["ruchy"]), 2)
+        prawdziwy, licznik = Z.shutil.move, [0]
+
+        def move(a, b):
+            licznik[0] += 1
+            if licznik[0] == 2:
+                raise KeyboardInterrupt("przerwano")
+            return prawdziwy(a, b)
+        with mock.patch.object(Z.shutil, "move", side_effect=move):
+            with self.assertRaises(KeyboardInterrupt):
+                Z.wykonaj_lokalnie(p, self.hub)
+        ruchy = Z.wczytaj_ruchy()
+        self.assertEqual(len(ruchy), 1)
+        self.assertTrue((self.hub / ruchy[0]["do"] / ruchy[0]["nowa_nazwa"]).exists())
+
+    def test_pominiety_ruch_bez_wpisu(self):
+        # cel już istnieje (inna treść) → ruch pominięty i nie trafia do dziennika – cofnij nie zabierze cudzego pliku (F-5)
+        p = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)
+        cel = self.hub / p["ruchy"][0]["do"] / p["ruchy"][0]["nowa_nazwa"]
+        cel.parent.mkdir(parents=True)
+        cel.write_bytes(b"INNY")
+        self.assertEqual(Z.wykonaj_lokalnie(p, self.hub), 0)
+        self.assertEqual([r for r in Z.wczytaj_ruchy() if "nazwa" in r], [])
+
+    def test_mdls_bez_exif_daje_date_z_nazwy(self):
+        wynik = subprocess.CompletedProcess([], 0, "2026-11-25 07:00:00 +0000\x002026-11-25 07:00:00 +0000", "")
+        with mock.patch.object(Z.subprocess, "run", return_value=wynik):
+            lista = Z.lista_lokalna(self.hub)
+        p = Z.planuj(lista, KONF, TERAZ)
+        self.assertEqual(p["ruchy"][0]["nowa_nazwa"], "2026-11-18_PXL_20261118_090000000.jpg")
+        self.assertEqual(p["ruchy"][0]["data_zrodlo"], "nazwa")
 
     def test_wg_dni(self):
         p = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)
@@ -277,6 +352,74 @@ class Lokalnie(unittest.TestCase):
             with self.assertRaises(Z.Zajete):
                 with Z.Blokada("konektor"):
                     pass
+
+
+class Polecenia(WlasneDane):
+    """main(): rozloz --wykonaj, cofnij --wykonaj, blokada drogi konektorowej (F-12, F-13, F-20)."""
+
+    def setUp(self):
+        super().setUp()
+        self.kroki = self.dane / "kroki.json"
+        self.kroki.write_text(json.dumps(KONF, ensure_ascii=False), encoding="utf-8")
+        self.cicho = mock.patch("sys.stdout", new_callable=io.StringIO)
+        self.cicho.start()
+        self.addCleanup(self.cicho.stop)
+
+    def rozloz(self):
+        with mock.patch.object(Z, "exif_mdls", return_value=None):
+            return Z.main(["rozloz", "--wykonaj", "--kroki", str(self.kroki)])
+
+    def test_rozloz_i_cofnij_wykonaj(self):
+        wgraj(self.hub, "wykop", "PXL_20261118_090000000.jpg", b"a" * 10)
+        wgraj(self.hub, "nieznane", "PXL_20261118_100000000.jpg", b"b" * 10)
+        self.assertEqual(self.rozloz(), 0)
+        cel = self.hub / "Zdjęcia/Etap A/01 Wykop i odbiór dna/2026-11-18_PXL_20261118_090000000.jpg"
+        self.assertTrue(cel.exists())
+        self.assertEqual(len(Z.wczytaj_ruchy()), 2)  # plik i pusty folder
+        self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 0)
+        self.assertFalse(cel.exists())
+        self.assertTrue((self.hub / "Zdjęcia/_nowe/wykop/PXL_20261118_090000000.jpg").exists())
+        self.assertFalse((self.hub / Z.ARCH_PUSTE / "wykop").exists())
+        self.assertIsNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
+
+    def test_cofniecie_bierze_wlasny_folder_z_archiwum(self):
+        # drugi pusty folder o tej samej nazwie dostaje _2 – cofnięcie ma wziąć właśnie jego (F-12)
+        wgraj(self.hub, "wykop", "PXL_20261118_090000000.jpg", b"a" * 10)
+        p1 = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, datetime.now(timezone.utc) - timedelta(hours=1))
+        Z.wykonaj_lokalnie(p1, self.hub)
+        wgraj(self.hub, "wykop", "PXL_20261119_090000000.jpg", b"b" * 11)
+        self.assertEqual(self.rozloz(), 0)
+        arch = self.hub / Z.ARCH_PUSTE
+        self.assertEqual(sorted(x.name for x in arch.iterdir()), ["wykop", "wykop_2"])
+        self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 0)
+        self.assertEqual(sorted(x.name for x in arch.iterdir()), ["wykop"])
+        self.assertEqual([x.name for x in (self.hub / "Zdjęcia/_nowe/wykop").iterdir()], ["PXL_20261119_090000000.jpg"])
+
+    def test_blokada_drogi_konektorowej(self):
+        lista = self.dane / "lista.json"
+        lista.write_text(json.dumps({"nowe": [plik("PXL_20261118_090000000.jpg", "wykop")], "istniejace": []}),
+                         encoding="utf-8")
+        plan_json = self.dane / "plan.json"
+        argumenty = ["plan", "--lista", str(lista), "--kroki", str(self.kroki), "--teraz", "2026-11-20T12:00:00+00:00",
+                     "--wyjscie", str(plan_json), "--zablokuj"]
+        with Z.Blokada("skrypt"):
+            with mock.patch("sys.stderr", new_callable=io.StringIO):
+                self.assertEqual(Z.main(argumenty), 1)  # skrypt rozkłada → konektor nie planuje
+        self.assertEqual(Z.main(argumenty), 0)
+        self.assertEqual(json.loads((self.dane / "blokada.json").read_text())["kto"], "konektor")
+        with mock.patch("sys.stderr", new_callable=io.StringIO):
+            self.assertEqual(Z.main(argumenty), 1)  # druga sesja nie planuje równolegle
+        self.assertEqual(self.rozloz(), 0)  # skrypt czeka (komunikat, kod 0 – automat)
+        self.assertTrue((self.dane / "blokada.json").exists())
+        ids = ",".join(r["id"] for r in json.loads(plan_json.read_text())["ruchy"])
+        self.assertEqual(Z.main(["zapisz-ruchy", str(plan_json), "--tylko", ids]), 0)
+        self.assertFalse((self.dane / "blokada.json").exists())  # koniec przebiegu konektora zwalnia blokadę
+        with Z.Blokada("skrypt"):
+            self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 1)  # cofanie nie rusza plików w trakcie rozkładania
+        self.assertIsNotNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
+        Z.zablokuj("konektor")
+        self.assertEqual(Z.main(["odblokuj"]), 0)
+        self.assertFalse((self.dane / "blokada.json").exists())
 
 
 if __name__ == "__main__":
