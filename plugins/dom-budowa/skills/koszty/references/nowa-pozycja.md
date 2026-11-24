@@ -89,9 +89,10 @@ z pierwszej wiadomości. Polecenia w katalogu repo harnessu.
    - Operacje `zakres` z tymi samymi formułami, wartościami i tłem (`tla`) co w kroku 2, w tej samej kolejności: kolumna A na
      końcu, w osobnym pliku zmian. Komórka B pozycji z `"formaty": [["@"]]`, żeby Lp był tekstem.
    - Potem `pobierz` i kontrola jak w 2.5.
-4. `python3 tools/wydatki.py sync` – akcja „dodaj_pozycje” znajdzie pozycję po nazwie, ustawi Pozycję i wyśle wydatek. Dalsze
-   pozycje tego etapu z listy doda sama, gdy jest znacznik pierwszego sprawdzenia (inaczej najpierw sekcja D).
-   Na koniec `python3 tools/wydatki.py sesja --odblokuj`.
+4. Najpierw `python3 tools/wydatki.py sesja --odblokuj`, potem `python3 tools/wydatki.py sync` – przy świeżej blokadzie `sync`
+   nie wstawia pozycji (strony czekają), a etap jest już kompletny. Akcja „dodaj_pozycje” znajdzie pozycję po nazwie, ustawi
+   Pozycję i wyśle wydatek. Dalsze pozycje tego etapu z listy doda sama, gdy jest znacznik pierwszego sprawdzenia. Na liście
+   z kroku 1 czeka też pierwsze sprawdzenie → bez odblokowania i bez `sync` od razu sekcja D (oba w D.5).
 5. Meldunek jedną linią (bez kwot): „Kosztorys: dodałem etap NN Nazwa (stan) z pozycją NN.1 – wydatek w arkuszu, wiersz N.”
    Nie wyszło → „Kosztorys: etapu NN nie dodałem – <przyczyna>; wydatek czeka w kolejce.” i blokada zdjęta; ta sama przyczyna
    drugi raz → wiersz Usterka (`rozwoj-harnessu`, D).
@@ -101,8 +102,8 @@ z pierwszej wiadomości. Polecenia w katalogu repo harnessu.
 Jednorazowo po wdrożeniu kodu 5, tak samo bez pytania jak sekcja C (w tej samej blokadzie `sesja --zablokuj`). Kod akcji nie
 był nigdy uruchomiony na żywym arkuszu, więc pierwsze prawdziwe wstawienie robi sesja z kontrolą, a nie nocny automat.
 
-1. `python3 tools/wydatki.py sprawdz` – kod w wersji < 5 → nic nie rób, meldunek „Kosztorys: nowa pozycja czeka na wklejenie
-   kodu arkusza w wersji 5” (czynność inwestora jest w 🔔 z `sync`).
+1. `python3 tools/wydatki.py sprawdz` – kod w wersji < 5 → nic więcej nie rób: `sesja --odblokuj` i meldunek „Kosztorys: nowa
+   pozycja czeka na wklejenie kodu arkusza w wersji 5” (czynność inwestora jest w 🔔 z `sync`).
 2. `python3 tools/wydatki.py pobierz` i kopia `Koszty/Kosztorys_google.json` jako
    `<hub>/.dom/wydatki/migawka-RRRR-MM-DD-przed-pierwsza-pozycja.json`. Z konektorem odczytaj też sumy nagłówka etapu, RAZEM
    i „Kontrolę powiązań”.
@@ -111,8 +112,8 @@ był nigdy uruchomiony na żywym arkuszu, więc pierwsze prawdziwe wstawienie ro
 4. Konektorem: nowy wiersz (formuły jak w sąsiedniej pozycji, Lp tekstem, Klucz „Lp Nazwa”, Kontrola pusta), sumy nagłówka
    etapu (zakres obejmuje nowy wiersz, wartości jak przed), RAZEM i „Kontrola powiązań” jak przed. Bez konektora – `pobierz`
    i porównanie z migawką z kroku 2 (te same wartości plus nowy wiersz).
-5. Zgodne → `python3 tools/wydatki.py nowa-pozycja --potwierdz` (znacznik), `python3 tools/wydatki.py sync` (strona dostanie
-   istniejący Lp, wydatek pójdzie), `sesja --odblokuj`. Meldunek: „Kosztorys: pierwsza nowa pozycja NN.n sprawdzona – od teraz
+5. Zgodne → `python3 tools/wydatki.py nowa-pozycja --potwierdz` (znacznik), `sesja --odblokuj`, potem
+   `python3 tools/wydatki.py sync` (strona dostanie istniejący Lp, wydatek pójdzie). Meldunek: „Kosztorys: pierwsza nowa pozycja NN.n sprawdzona – od teraz
    automat dodaje je sam.”
 6. Niezgodne → konektorem usuń własny wiersz i przywróć formuły sum nagłówka z migawki. Bez konektora blok 🔔
    (`pytania.md`, C) z dokładną czynnością: „Plik → Historia wersji → przywróć wersję sprzed <gg:mm>”. Znacznika nie twórz.
