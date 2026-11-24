@@ -23,7 +23,7 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import DANE, U, arkusz, formula_sumy, indeks_id, nazwa, norm, wczytaj, zapisz  # noqa: E402
+from wspolne import DANE, U, arkusz, formula_sumy, indeks_id, nazwa, norm, skladniki_arkusza, wczytaj, zapisz  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--miesiac', required=True)
@@ -79,8 +79,9 @@ for it in D['decyzje']:
         opis = d.get('opis') or ('Allegro: ' + ', '.join(it.get('produkty', [])))[:100]
     else:
         opis = d.get('opis') or it.get('opis_w') or it.get('regula') or it['opis'][:30]
+    ark_k = kwota_ark(it['kwota'], d['typ'])  # działanie („+30-5”) – składniki ze znakiem arkusza, jak przy pewnych
     pozycje.append(dict(id=it['id'], data=it['data'], konto=it['konto'], osoba=it['osoba'], typ=d['typ'], kat=d['kat'], pod=d['pod'],
-                        skl=it['skladniki'] if it.get('skladniki') else [kwota_ark(it['kwota'], d['typ'])], opis=opis, grupa=False,
+                        skl=skladniki_arkusza(ark_k, it.get('skladniki')) or [ark_k], opis=opis, grupa=False,
                         ids=[it['id']] if it['id'][0] in 'balw' else [], regula=it.get('regula', ''), zrodlo=it['zrodlo'],
                         etykieta=d['etykieta'], kwota=it['kwota'], opis_banku=it['opis'], notatki=it.get('notatki', '')))
 byid = {p['id']: p for p in pozycje}

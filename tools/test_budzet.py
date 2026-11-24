@@ -367,6 +367,25 @@ class PrzeplywArkusz(unittest.TestCase):
         self.assertEqual(w[:12] + [w[14]], [r['data'], r['status'], r['typ'], r['kwota'], r['kat'], r['pod'], r['konto'], r['osoba'],
                                             r['opis'], '', r['tag'], r['notatki'], r['id']])
 
+    def decyduj(self, mies, **dec):
+        db = self.dane / 'miesiace' / f'db-{mies}' / 'decyzje'
+        db.mkdir(parents=True, exist_ok=True)
+        for id_, d in dec.items():
+            (db / f'{id_}.json').write_text(json.dumps(d))
+
+    def zapis(self, mies):
+        return json.loads((self.dane / 'miesiace' / f'{mies}-zapis.json').read_text(encoding='utf-8'))
+
+    def test_a6_zwrot_dzialaniem_z_decyzji_ujemny(self):
+        """A-6: zwrot zapisany działaniem z kategorią rozstrzyganą na stronie – ten sam znak co przy znanym skrócie."""
+        self.uruchom('wpis.py', 'dodaj', '+30-5, xyz', '--data', '2026-12-03', '--id', 'zw1')
+        self.uruchom('wpis.py', 'dodaj', '+30-5, zak', '--data', '2026-12-03', '--id', 'zw2')
+        self.importuj(mies='2026-12')
+        self.decyduj('2026-12', wzw1={'akcja': 'kategoria', 'typ': 'Wydatek', 'kat': 'Zakupy', 'pod': 'Regularne'})
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        d = {w[14]: w[3] for w in self.zapis('2026-12')['wiersze']}
+        self.assertEqual((d['wzw1'], d['wzw2']), ('=-30.00+5.00', '=-30.00+5.00'))
+
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')
         p = self.dane / 'listy' / '2026-12-wpisy.jsonl'
