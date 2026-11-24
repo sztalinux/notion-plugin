@@ -3,11 +3,16 @@
 
     python3 tools/test_kopia.py
 """
+import contextlib
+import io
+import json
 import os
 import sys
 import tempfile
 import unittest
+from datetime import datetime
 from pathlib import Path
+from unittest import mock
 
 TMP = Path(tempfile.mkdtemp(prefix="kopia-test-"))
 os.environ["KOPIA_DANE"] = str(TMP / "stan")
@@ -81,6 +86,71 @@ class Paczka(unittest.TestCase):
         self.assertEqual((dysk / "_Archiwum/2026-11-21/Projekty/a.pdf").read_bytes(), b"a")
         self.assertTrue((dysk / "_Archiwum/2026-11-21/Umowy/b.pdf").exists())
 
+class Dzien(datetime):
+    """Data „dzisiaj” w poleceniach kopia.py – testy nie zależą od dzisiejszej daty."""
+    dzis = datetime(2026, 11, 20, 12)
+
+    @classmethod
+    def now(cls, tz=None):
+        return cls.dzis
+
+
+class Polecenia(unittest.TestCase):
+    """main(): paczka --wykonaj, wgrane, stan (F-14, F-15, F-20). Bez folderu Dysku (DYSK_DOM wskazuje brak)."""
+
+    def setUp(self):
+        self.hub = Path(tempfile.mkdtemp(prefix="hub-", dir=TMP))
+        (self.hub / "Projekty").mkdir()
+        (self.hub / "Projekty/a.pdf").write_bytes(b"a")
+        for latka in (mock.patch.object(K, "HUB", self.hub), mock.patch.object(K, "STAN_DIR", self.hub / ".dom/kopia"),
+                      mock.patch.object(K, "datetime", Dzien),
+                      mock.patch.dict(os.environ, {"DYSK_DOM": str(self.hub / "nie-ma-dysku")})):
+            latka.start()
+            self.addCleanup(latka.stop)
+
+    def kopia(self, *argv) -> str:
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(K.main(list(argv)), 0)
+        return out.getvalue()
+
+    def paczka(self, dzien: str):
+        Dzien.dzis = datetime.fromisoformat(dzien + "T12:00")
+        self.kopia("paczka", "--wykonaj")
+        return json.loads((self.hub / ".dom/kopia/stan.json").read_text())
+
+    def test_paczka_i_wgrane(self):
+        stan = self.paczka("2026-11-20")
+        folder = self.hub / stan["paczki"][-1]["folder"]
+        self.assertEqual((folder / "Projekty/a.pdf").read_bytes(), b"a")
+        self.assertTrue((folder / "SPIS.txt").exists())
+        self.assertIn("paczki do wgrania: 2026-11-20", self.kopia("stan"))
+        self.kopia("wgrane")
+        self.assertIn("zmian od niej: 0", self.kopia("stan"))
+        self.assertIn("aktualna", self.kopia("paczka"))
+
+    def test_wgrane_starszej_po_nowszej_nie_cofa_stanu(self):
+        # wgrane <nowsza> obejmuje starsze paczki; wgrane <starsza> nie cofa potwierdzonego stanu (F-14)
+        self.paczka("2026-11-20")
+        (self.hub / "Projekty/b.pdf").write_bytes(b"b")
+        self.paczka("2026-11-22")
+        self.kopia("wgrane", "2026-11-22")
+        linia = self.kopia("stan")
+        self.assertNotIn("paczki do wgrania", linia)
+        self.assertIn("potwierdzona: 2026-11-22", linia)
+        self.assertIn("brak paczki", self.kopia("wgrane", "2026-11-20"))
+        self.assertIn("potwierdzona: 2026-11-22", self.kopia("stan"))
+
+    def test_wgrane_starszej_przed_nowsza(self):
+        self.paczka("2026-11-20")
+        (self.hub / "Projekty/b.pdf").write_bytes(b"b")
+        self.paczka("2026-11-22")
+        self.kopia("wgrane", "2026-11-20")
+        linia = self.kopia("stan")
+        self.assertIn("potwierdzona: 2026-11-20", linia)
+        self.assertIn("paczki do wgrania: 2026-11-22", linia)
+        self.kopia("wgrane", "2026-11-22")
+        self.assertIn("zmian od niej: 0", self.kopia("stan"))
 
 if __name__ == "__main__":
     unittest.main(verbosity=1)

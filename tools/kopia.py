@@ -250,19 +250,28 @@ def main(argv=None):
         zapisz_stan(stan)
         return 0
     if a.cmd == "wgrane":
-        czeka = [p for p in stan.get("paczki", []) if not p.get("wgrana") and (not a.data or p["data"] == a.data)]
-        if not czeka:
+        czeka = [p for p in stan.get("paczki", []) if not p.get("wgrana")]
+        wybrane = [p for p in czeka if not a.data or p["data"] == a.data]
+        if not wybrane:
             print("[kopia] brak paczki czekającej na wgranie")
             return 0
-        ost = czeka[-1]
-        for p in czeka:
+        ost = wybrane[-1]
+        starsze = [p for p in czeka if p["data"] <= ost["data"] and p is not ost]  # nowsza zawiera ich zmiany
+        for p in starsze + [ost]:
             p["wgrana"] = True
-        stan["potwierdzone"] = ost["pliki"]
-        stan["potwierdzono"] = ost["data"]
+        if ost["data"] >= (stan.get("potwierdzono") or "")[:10]:
+            stan["potwierdzone"] = ost["pliki"]
+            stan["potwierdzono"] = ost["data"]
+            print(f"[kopia] potwierdzona kopia z {ost['data']} (folder {ost['folder']} na Macu można usunąć po sprawdzeniu)")
+        else:
+            print(f"[kopia] paczka z {ost['data']} starsza niż potwierdzona kopia z {stan['potwierdzono']} – oznaczona "
+                  "jako wgrana, potwierdzony stan bez zmian")
+        if starsze:
+            print("[kopia] starsze paczki oznaczone jako wgrane (nowsza zawiera ich zmiany): "
+                  + ", ".join(p["folder"] for p in starsze))
         for p in stan["paczki"]:
             p.pop("pliki", None) if p.get("wgrana") else None
         zapisz_stan(stan)
-        print(f"[kopia] potwierdzona kopia z {ost['data']} (folder {ost['folder']} na Macu można usunąć po sprawdzeniu)")
         return 0
     if a.cmd == "aplikacja":
         if not dysk:
