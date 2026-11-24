@@ -1094,6 +1094,10 @@ def main(argv=None) -> int:
         return 0
     if a.polecenie in ("wycofaj", "migruj") and not a.ids or a.polecenie == "nowa-pozycja" and not (a.ids or a.potwierdz):
         ap.error(f"{a.polecenie}: brak argumentu (id stron / plik zmian / opis pozycji)")
+    tylko_odczyt = (a.polecenie in ("sprawdz", "gotowka") or a.polecenie == "sesja" and not (a.zablokuj or a.odblokuj)
+                    or a.polecenie in ("sync", "nowa-pozycja") and a.proba and not a.potwierdz)
+    if not tylko_odczyt and W.hub.zapis_zablokowany(W.REPO, W.CONF, W.HUB):
+        return 1
     if a.polecenie == "sesja":
         print(sesja(a.zablokuj, a.odblokuj))
         return 0

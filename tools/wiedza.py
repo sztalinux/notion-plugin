@@ -71,8 +71,11 @@ from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import hub  # noqa: E402
+
 REPO = Path(__file__).resolve().parent.parent
-HUB = Path(os.environ.get("DOM_HUB") or REPO.parent.parent).expanduser().resolve()
+HUB = hub.folder_budowy(REPO)
 CONF = HUB / ".dom"
 KATALOG = CONF / "wiedza"
 DB_DOMYSLNA = KATALOG / "wiedza.sqlite"
@@ -1716,7 +1719,7 @@ def zapisz_log_szukaj(a, start: float, widoczne: list, czesciowe: bool, pelnych:
     """Jeden wiersz logu zapytań (opis w nagłówku modułu); przy kilku zapytaniach – wiersz na każde, z polem
     `wiele` (ile zapytań w wywołaniu). Najlepsza próba: nic nie drukuje, nie tworzy katalogów i nie rzuca wyjątków."""
     try:
-        if os.environ.get("WIEDZA_LOG") == "0" or not KATALOG.is_dir():
+        if os.environ.get("WIEDZA_LOG") == "0" or not KATALOG.is_dir() or hub.tylko_odczyt(REPO, KATALOG):
             return
         if sciezka_bazy(a).resolve().parent != KATALOG.resolve():
             return
