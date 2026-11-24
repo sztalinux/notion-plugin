@@ -54,7 +54,7 @@ Pobierz w jak najmniejszej liczbie zapytań:
       lub decyzjom; Informacje „Sporne” bez wpisu w Rejestrze;
     - sprawy blokujące bieżący etap bez Priorytetu „Krytyczne” (np. termin przed startem etapu, a Priorytet „Ważne”) –
       nie widać ich w „🔴 Do zamknięcia” na DOM;
-    - Dziennik: problemy bez wpisu w Notatniku/TASKS; TASKS „DONE”, a powiązany wpis Notatnika otwarty;
+    - Dziennik: problemy bez wpisu w Notatniku/TASKS (pomiń te z dopiskiem „zamknięte na miejscu” – `dziennik` A.2); TASKS „DONE”, a powiązany wpis Notatnika otwarty;
     - zadania budowy ↔ kroki Harmonogramu (grupy H1–H4): pełny przebieg wg `ja/skills/przeglad-dnia/references/kontrola-spojnosci.md`
       (bez warunku „zmienione dziś” z przeglądu dnia); flagi tylko jako bloki 🔔 z kluczem `KS-…` (`wpisy/references/pytania.md`, C.7; liczą się do limitu 5), bez zmian bez ☑ inwestora;
       zadanie lub krok w koszu Notion (strona oznaczona jako usunięta) – pomiń bez flagi; H2 z wyborem DONE albo ARCHIVED;

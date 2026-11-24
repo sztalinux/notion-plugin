@@ -31,6 +31,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    | ustalenie, pytanie, ryzyko, decyzja | `notatka` – Notatnik budowy z Etapem i Do kogo |
    | usterka do poprawy (także z odbioru – `etap` C.5; jedyne miejsce tej reguły) | TASKS: Kto = Ekipa, Status „WAITING” (widok „⏳ Czekam na”), Obszar = Dom, When = termin usunięcia, relacja Harmonogram; we wpisie – relacja Zadania. Notatnik tylko, gdy trzeba coś ustalić (Typ „Pytanie”, Do kogo = Ekipa, bez Kiedy – link do zadania) |
    | inna rzecz do zrobienia z terminem | `notatka` – TASKS (When; Kto i Status wg jej tabeli) |
+   | problem jednorazowy, rozwiązany na miejscu (awaria pompy, przestój) | tylko pole „Problemy / usterki” z dopiskiem „zamknięte na miejscu” – bez zadania i wpisu w Notatniku (przegląd tygodnia go nie flaguje) |
    | „ekipa chce dopłatę za…” (roboty dodatkowe) | sekcja B |
    | pierwszy dzień prac przy kroku („ekipa zaczęła zbrojenie płyty”) | Harmonogram – Status kroku „W trakcie” (`harmonogram`, „Status kroku”) |
    | koniec kroku / etapu, „jutro betonujemy” | `etap` – odbiór albo bramka; Status kroku wg `harmonogram` („Status kroku”: „Zrobione” dopiero z odbiorem) |
