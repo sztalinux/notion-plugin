@@ -16,7 +16,7 @@ jeszcze nie widział):
 📓 Dziennik
 	<toggle> Jak używać </toggle>
 	Piszesz we 📝 Wpisach (nie tu) – bloki 1. poziomu Dziennika nie są już źródłem wpisów (od ja 1.19.0)
-	▸ ### ❓ Czeka na Twoją odpowiedź (zwijany nagłówek)  ← przejściowo; pytania są teraz we 📝 Wpisach (🔔), sekcję usuwa faza 6
+	▸ ### ❓ Czeka na Twoją odpowiedź (zwijany nagłówek)  ← przejściowo; pytania są teraz we 📝 Wpisach (🔔), sekcję usuwa przejście 1.3 (`przeglad-dnia/references/przejscia.md`)
 	▸ ### Przetworzone (zwijany nagłówek)
 		▸ 📅 13.10 wt · 🤖 przetworzono 3 · czeka na Ciebie 1 · jutro 2   ← zwijany blok dnia, najnowszy na górze
 			🤖 13.10 wieczór: dziennik – przetworzono 3 (emocje 1, zadania 2), … (pełna linia)
@@ -27,7 +27,7 @@ jeszcze nie widział):
 		wpis niejasny                                     ← czeka tu, aż inwestor odpowie
 			❓ {okienko} **Co miałeś na myśli – X czy Y?** (propozycja: …)
 				✍️ odpowiedź inwestora
-	🗃 Przetworzone podstrony, 🗃 Przetworzone – archiwum, 📆 Przeglądy dzienne / 📅 tygodniowe (podstrony) ← nie są wpisami
+	🗃 Przetworzone podstrony, 🗃 Przetworzone – archiwum, 🧠 Rozkminki, 📆 Przeglądy dzienne / 📅 tygodniowe (podstrony) ← nie są wpisami
 Private (najwyższy poziom)
 	📌 DASHBOARD, 🛖 DOM, 📓 Dziennik, … 🔒 Prywatne   ← stałe strony (lista w ja/references/notion-mapa.md; chroni 🔒 Prywatne)
 ```
@@ -36,7 +36,7 @@ Private (najwyższy poziom)
 podstrona** (tytuł + treść = wpis), (2) pozycje sekcji „Nowe” dokumentu „📥 Skrzynka” (`references/skrzynka.md`), (3) odpowiedzi
 inwestora w okienkach ❓ i pod blokami 🔔. Wyjątki (nie wpisy): „Jak używać”, puste linie, nagłówek „🔔 Komunikaty asystenta”
 z blokami pod nim (komunikat staje się pracą dopiero po odpowiedzi – `references/pytania.md`, C) i stałe podstrony „📆 Przeglądy dzienne”,
-„📅 Przeglądy tygodniowe”, „🗃 Przetworzone podstrony”, „🗃 Przetworzone – archiwum”.
+„📅 Przeglądy tygodniowe”, „🗃 Przetworzone podstrony”, „🗃 Przetworzone – archiwum”, „🧠 Rozkminki”.
 **Nie są już źródłem** (od ja 1.19.0): bloki 1. poziomu strony „📓 Dziennik” i strony na najwyższym poziomie Private spoza listy
 stałych stron (widget „nowa strona”). Nie przetwarzaj ich; wyjątek – **przejście 1.1** (tylko nocny przebieg, dopóki w „Jak używać” Dziennika brak zdania „Piszesz we 📝 Wpisach”; `przeglad-dnia/references/przejscia.md`): przenieś jeszcze te stare źródła do „📝 Wpisów” jako zwykłe wpisy (blok → na koniec treści Wpisów; strona z widgetu
 → jej treść jako blok we Wpisach, strona pod „🗃 Przetworzone podstrony”), od następnego przebiegu ich nie czytaj.
@@ -107,10 +107,10 @@ wpisów inwestora – tylko dopisuj pod nimi i przenoś między strefami.
    „Wpisów” (punktowa, podstron nie ruszaj) zdejmuje przetworzone bloki z ich okienkami, dodaje okienka pod niejasnymi
    (przy przejściu 1.1 także dopisuje tu stare wpisy z Dziennika i widgetu) – po niej treść „Wpisów” to tylko nagłówek 🔔 z komunikatami, wpisy z okienkami ❓, podstrony i 1 pusta linia
    (zmiany w 🔔 idą w tej samej edycji).
-   Po edycji Dziennika (po przejściu) na 1. poziomie zostaje tylko to, co stałe – „Jak używać” (ze zdaniem „Piszesz we 📝 Wpisach”), trzema nagłówkami, pięcioma stałymi podstronami (lista wyżej) i 1–2 pustymi
+   Po edycji Dziennika (po przejściu) na 1. poziomie zostaje tylko to, co stałe – „Jak używać” (ze zdaniem „Piszesz we 📝 Wpisach”), dwoma nagłówkami (do przejścia 1.3 trzema – z „❓”), sześcioma stałymi podstronami (lista wyżej) i 1–2 pustymi
    liniami do pisania. Każda zamiana (`old_str`) obejmuje tylko blok, który przenosisz, albo jedną linię-kotwicę – nigdy
-   całej sekcji. Po edycji odczyt kontrolny: trzy nagłówki z treścią sprzed edycji (punkty „❓”) i pięć podstron są na
-   miejscu; brak czegoś → przywróć z odczytu sprzed edycji i odnotuj w linii „🤖”. Linia „🤖” idzie na górę bloku dnia:
+   całej sekcji. Po edycji odczyt kontrolny: nagłówki z treścią sprzed edycji (punkty „❓”) i sześć podstron są na
+   miejscu (brak „❓” po przejściu 1.3 jest poprawny); brak czegoś → przywróć z odczytu sprzed edycji i odnotuj w linii „🤖”. Linia „🤖” idzie na górę bloku dnia:
    ```
    🤖 15.10 wieczór: dziennik – przetworzono 5 (budowa 2, emocje 1, zadania 2), czeka na Ciebie 1 · jutro: 3
    ```

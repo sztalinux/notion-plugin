@@ -14,7 +14,7 @@ Strona **📓 Dziennik** `3f8f5982-09e7-80c8-a154-c59aeb844e8f` (najwyższy pozi
 │   tylko niejasne – z okienkiem ❓ pytania asystenta i linią ✍️ na odpowiedź); na górze zwijany nagłówek
 │   „🔔 Komunikaty asystenta” – problemy bez wpisu (automaty Maca, skrypty, błędy kolejki 💸), nie są wpisami
 │   (`wpisy/references/pytania.md`, C); tu też wszystkie pytania z tła (RES-n, KS-…) jako 🔔 z checkboxami (C.7)
-├─ ### ❓ Czeka na Twoją odpowiedź (toggle) – przejściowo; pytania są teraz we 📝 Wpisach (🔔), sekcję usuwa faza 6
+├─ ### ❓ Czeka na Twoją odpowiedź (toggle) – przejściowo; pytania są teraz we 📝 Wpisach (🔔), sekcję usuwa przejście 1.3 (`przeglad-dnia/references/przejscia.md`)
 ├─ ### Przetworzone (toggle) – zwijany blok na każdy dzień: linia „🤖” + ślad „~~wpis~~ → gdzie”
 ├─ ### 🧭 Dla asystenta (toggle) – baza 🧭 Obszary Dziennika, wzmianka przewodnika
 ├─ 🧠 Rozkminki (podstrona `41cf5982-09e7-81a1-9b12-df2bcc2a7574` – wyniki rozkminek w ciągu dnia, pisze tylko tryb `rozkminka`; `przeglad-dnia/references/rozkminka.md`)
