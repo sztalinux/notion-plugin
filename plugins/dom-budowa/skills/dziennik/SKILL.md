@@ -54,7 +54,10 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
 3. Zasada: **cena uzgodniona na piśmie przed wykonaniem** (SMS/mail wystarczy). Zaproponuj treść wiadomości
    do wykonawcy (co, cena, termin, że wchodzi do protokołu odbioru).
 4. Zapis: uzgodniona kwota → plan pozycji „Roboty dodatkowe – poza umową” w etapie (kolejka, Rodzaj = Plan – `koszty`, sekcja B3;
-   Kwota = plan całej pozycji brutto: dotychczasowy plan tej pozycji + ta dopłata),
+   Kwota = plan całej pozycji brutto z kwot uzgodnionych z ekipą, podanych przez inwestora). Kolejna dopłata w tym etapie
+   (pozycja ma już plan): Kwota = dotychczasowy plan z arkusza (`koszty`, „Gdzie są liczby”) + ta dopłata, zaznacz
+   „Nadpisz plan”, w Notatkach składniki – bez tego `sync` zwróci Błąd. Nie masz arkusza ani jego kopii (np. czat bez
+   konektora i eksportu) → sumy nie licz: pytanie (❓ pod wpisem albo w rozmowie) z propozycją kwoty planu;
    zapłata → wydatek na tę pozycję (`koszty`, sekcja B); wpis w dzienniku; decyzja → Notatnik (Typ „Decyzja”).
 
 ## C. Godziny własne i narzędzia
