@@ -3,6 +3,10 @@ __pycache__/
 *.pyc
 .DS_Store
 .idea/
+# pliki wymiany i kopie edytorów (vim, emacs) – nieczytelne jako tekst; bez tego blokowałyby każdy commit
+*.swp
+*.swo
+*~
 # dane prywatne (Excel z kontaktami wykonawców) – lokalnie, poza gitem
 dane/
 # dokumenty nigdy w repo (repo jest publiczne)
@@ -39,6 +43,8 @@ dane/
 # ustawienia lokalne Claude Code (prywatne dla danego komputera) i kopie robocze sesji równoległych
 .claude/settings.local.json
 .claude/worktrees/
+# stan narzędzi uruchomionych z kopii roboczej (.claude/worktrees/<n>) – trafia tu zamiast do folderu budowy
+.claude/.dom/
 # lokalne bazy SQLite (indeks wiedzy) – nigdy w repo
 *.sqlite
 *.sqlite3

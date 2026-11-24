@@ -67,6 +67,14 @@ class Lista(unittest.TestCase):
                   "Żwir i kowadło", "żwirek", "kowo", "Jan Zmyślony", "N zł"):
             self.assertFalse(self.lapie(t), t)
 
+    def test_odmiana_z_ogonkami(self):
+        """U-6: wpis bez ogonków, tekst z ogonkami w odmianie – słowo zaczynające się od wpisu (wpisy od 4 znaków)."""
+        for t in ("z panem Plumb§ątekiem", "Plumb§ątekowi", "plumb§ątekowa sprawa", "**Plumb§ątekowie**"):
+            self.assertTrue(self.lapie(t), z(t))
+        krotki = self.zak + ["zab"]
+        self.assertFalse(build.sprawdz_tekst("x", "żabka i żaba", krotki))  # krótki wpis: tylko całe słowo
+        self.assertTrue(build.sprawdz_tekst("x", "pan Żab", krotki))
+
     def test_prefiks_tokenu_tylko_doslownie(self):
         """Wpis z „_” (prefiks tokenu) nie jest rozbijany na słowa – nazwa usługi w zwykłym zdaniu przechodzi."""
         zak = self.zak + [z("abc§d_efg§h_")]
@@ -84,6 +92,11 @@ class JakoTekst(unittest.TestCase):
     def test_utf16_bez_bom(self):
         for kod in ("utf-16-le", "utf-16-be"):
             self.assertEqual(build.jako_tekst("notatka: zażółć gęślą\n".encode(kod)), "notatka: zażółć gęślą\n")
+
+    def test_bom_z_trescia_nie_utf16(self):
+        """U-1: BOM FF FE, ale treść nie jest UTF-16 (UTF-32 LE) – nieczytelne, a nie tekst ze znakami U+0000."""
+        self.assertIsNone(build.jako_tekst(b"\xff\xfe\x00\x00" + "notatka".encode("utf-32-le")))
+        self.assertEqual(build.jako_tekst("notatka".encode("utf-16")), "notatka")  # UTF-16 z BOM dalej jako tekst
 
     def test_binarne(self):
         self.assertIsNone(build.jako_tekst(b"PK\x03\x04\x14\x00\x00\x00\x08\x00abc\x00\x01"))
@@ -173,6 +186,8 @@ class Hooki(unittest.TestCase):
     def test_czysty_commit_i_push_nowej_galezi(self):
         self.plik("docs/czysty.md", "Zwykła notatka o procedurze, N zł.\n")
         self.plik(".DS_Store", b"\x00\x00\x00\x01Bud1\x00\x00\x10\x00")  # ignorowany przez git – nie blokuje
+        self.plik("docs/.czysty.md.swp", b"b0VIM 9.0\x00\x00\x10\x00")  # plik wymiany vima (Z-1) – też
+        self.plik("docs/czysty.md~", b"kopia\x00\x01")
         self.przeszedl(self.commit("docs/czysty.md"))
         self.git("checkout", "-q", "-b", "czysta-galaz")
         self.przeszedl(self.push("czysta-galaz"))
@@ -213,11 +228,22 @@ class Hooki(unittest.TestCase):
         self.przeszedl(self.git("commit", "-q", "--no-verify", "--no-edit", sprawdz=False))
         self.zablokowany(self.push("HEAD:refs/heads/scalenie"), "docs/s.md:1: " + BLAD_LISTY, "Push zablokowany")
 
+    def test_pre_push_zmiana_typu(self):
+        """U-3: dowiązanie zamienione na plik z danymi (commit --no-verify) – pre-push sprawdza zmianę typu."""
+        (self.repo / "docs").mkdir(exist_ok=True)
+        os.symlink("czysty.md", self.repo / "docs" / "dowiazanie.md")
+        self.przeszedl(self.commit("docs/dowiazanie.md"))
+        (self.repo / "docs" / "dowiazanie.md").unlink()
+        self.plik("docs/dowiazanie.md", f"notatka {OGONEK}\n")
+        self.przeszedl(self.commit("docs/dowiazanie.md", bez_hookow=True))
+        self.zablokowany(self.push("HEAD:refs/heads/zmiana-typu"), "docs/dowiazanie.md:1: " + BLAD_LISTY, "Push zablokowany")
+
     # --- F-1: treść nieczytelna jako tekst -------------------------------------------------------------
     def test_binarne_i_nieznane(self):
         zip_bez_rozszerzenia = b"PK\x03\x04\x14\x00\x00\x00\x08\x00" + ASCII.encode() + b"\x00\x01\x02"
         for sciezka, tresc in (("docs/kosztorys.xlsm", b"PK\x03\x04 arkusz"), ("docs/kosztorys", zip_bez_rozszerzenia),
-                               ("docs/notatka.txt", f"notatka {OGONEK}\n".encode("utf-16-le"))):
+                               ("docs/notatka.txt", f"notatka {OGONEK}\n".encode("utf-16-le")),
+                               ("docs/utf32.txt", b"\xff\xfe\x00\x00" + f"notatka {OGONEK}\n".encode("utf-32-le"))):
             with self.subTest(sciezka):
                 self.setUp()
                 self.plik(sciezka, tresc)
@@ -254,7 +280,25 @@ class Hooki(unittest.TestCase):
         self.git("tag", f"v-{ASCII}")
         self.zablokowany(self.push(f"v-{ASCII}"), BLAD_LISTY, "Push zablokowany")
 
+    def test_tag_na_blob_albo_drzewo(self):
+        """U-4: tag lekki albo adnotowany wskazujący blob lub drzewo – treść poza rev-list, więc push blokowany."""
+        self.plik("docs/n.md", f"notatka {OGONEK}\n")
+        blob = self.git("hash-object", "-w", "docs/n.md").stdout.strip()
+        self.git("tag", "v-blob", blob)
+        self.zablokowany(self.push("v-blob"), "nie commit", "Push zablokowany")
+        self.git("tag", "-a", "v-drzewo", "-m", "wydanie testowe", "HEAD^{tree}")
+        self.zablokowany(self.push("v-drzewo"), "nie commit", "Push zablokowany")
+
     # --- F-17: treść z indeksu --------------------------------------------------------------------------
+    def test_pre_commit_jeden_blad_dla_dysku_i_indeksu(self):
+        """Z-8: ta sama treść na dysku i w indeksie – błąd wypisany raz."""
+        self.plik("docs/n.md", f"notatka {OGONEK}\n")
+        r = self.commit("docs/n.md")
+        self.zablokowany(r, "Commit zablokowany")
+        out = r.stdout + r.stderr
+        self.assertEqual(out.count(BLAD_LISTY), 1, out)
+        self.assertNotIn("(indeks)", out)
+
     def test_pre_commit_tresc_z_indeksu(self):
         self.plik("docs/probka.txt", f"notatka {OGONEK}\n")
         self.git("add", "docs/probka.txt")
