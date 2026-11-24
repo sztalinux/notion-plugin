@@ -111,7 +111,8 @@ kwota) nie wchodzi sama, nawet z regułą „Zawsze” – decyzja z wierszem wp
    c) nowe wiersze **wyłącznie dopisaniem na końcu (append)**, nigdy zapisem pod numer: kolumny A:L i O (data ISO; D liczba
       albo formuła; K = `import RRRR-MM`; L = Notatki z pliku; O = ID źródeł – po nich kolejny import wie, co już jest);
       w wierszach, które zwrócił zapis, wklej formuły M:N i format z wiersza powyżej. Wiersz przychodu z sald ostatni;
-   d) `zmiany`: w wierszu o podanym numerze dopisz „-kwota” do formuły D (zwrot pomniejsza zakup);
+   d) `zmiany`: w wierszu o podanym numerze dopisz „-kwota” do formuły D (zwrot pomniejsza zakup) i „,<id>” zwrotu w O
+      (powtórzone C.3 nie odejmie go drugi raz);
    e) `przypiecia`: `python3 tools/budzet/arkusz_budzetu.py przypnij --miesiac RRRR-MM`; bez skryptu – konektorem: w każdym
       wierszu dopisz „,<id wyciągu>” w O, a podaną kwotę wpisz w D;
    f) jeszcze pod blokadą `python3 tools/budzet/arkusz_budzetu.py zamknij-wpisy --miesiac RRRR-MM` – wpisy rozstrzygnięte

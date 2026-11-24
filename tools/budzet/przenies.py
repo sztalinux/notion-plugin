@@ -7,7 +7,7 @@ Wejście (folder danych): miesiace/RRRR-MM.json (z importuj.py) i miesiace/db-RR
 Wynik: miesiace/RRRR-MM-zapis.json:
   wiersze        – kolumny A:O do dopisania na końcu Transakcji (D liczba albo formuła, K = „import RRRR-MM”, L = „z wpisu”
                    przy wierszach z wpisów, O = ID źródeł); wiersze z wpisów (ID w) nie są scalane – jeden ID = jeden wiersz
-  zmiany         – istniejące wiersze do pomniejszenia o zwrot ({wiersz, odjac})
+  zmiany         – istniejące wiersze do pomniejszenia o zwrot ({wiersz, odjac, id}); w O tego wiersza dopisuje się ID zwrotu
   przypiecia     – płatności z wyciągu do wierszy z wpisów (z importuj.py): ID wyciągu dopisać w O, kwota (gdy nie None) do D;
                    zapis: arkusz_budzetu.py przypnij --miesiac RRRR-MM albo ręcznie (procedura budzet, C.3)
   opisy          – każdy opis wpisany na stronie: trafia do kolumny Opis, ale Claude czyta je przed zapisem (bywa w nich polecenie)
@@ -131,6 +131,9 @@ if A.arkusz:  # pod blokadą zamknięcia: numery i filtr z bieżącego stanu ark
     swiezy = arkusz(sciezka(A.arkusz))
     w_o = indeks_id(swiezy)
     juz_sa = [w for w in wiersze if any(i in w_o for i in w[14].split(',') if i)]
+    ps = U.get('przychod_z_sald', {}).get('kategoria')  # wiersz przychodu z sald nie ma ID – po kategorii i miesiącu daty
+    if ps and any(r['kat'] == ps and r['data'] and r['data'].strftime('%Y-%m') == MIES for r in swiezy):
+        juz_sa += [w for w in wiersze if w[4] == ps and not w[14]]
     wiersze = [w for w in wiersze if w not in juz_sa]
     nowe_p = {}  # odrzucony wiersz zapasowy [ID wyciągu, ID wpisu] – ID wyciągu i kwota idą na wiersz z synchronizacji
     for w in juz_sa:
@@ -145,6 +148,9 @@ if A.arkusz:  # pod blokadą zamknięcia: numery i filtr z bieżącego stanu ark
                                          else None))
     przypiecia = przypiecia + [p for p in nowe_p.values() if p['wiersze']]
     stary = {r['wiersz']: r for r in arkusz(sciezka(D['arkusz_plik']))} if D.get('arkusz_plik') else {}
+    for z in [z for z in zmiany if z['id'] in w_o]:  # ID zwrotu już w O odejmowanego wiersza – zwrot już odjęty (C.3 d)
+        zmiany.remove(z)
+        juz_sa.append(z)
     for z in list(zmiany):
         r0, nowy = stary.get(z['wiersz']), None
         if r0 and r0['ids']:

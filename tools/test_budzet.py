@@ -357,6 +357,28 @@ class PrzeplywArkusz(unittest.TestCase):
         self.uruchom('przenies.py', '--miesiac', '2026-12', '--arkusz', 'swiezy.json')
         self.assertEqual((zapis()['zmiany'], [x['id'] for x in zapis()['do_wyjasnienia']]), ([], ['bzw0000001']))
 
+    def test_a8_ponowne_przenies_po_zapisie_bez_dubla(self):
+        """A-8: C.3 od nowa po wygasłej blokadzie – wiersz przychodu z sald (bez ID) i zwrot już odjęty (ID zwrotu w O
+        odejmowanego wiersza) nie wracają do zapisu."""
+        self.ustaw(przychod_z_sald=dict(kategoria='Przychód z sald', etykieta_roku='do dodania', wiersz_konta=9))
+        reczny = wiersz_ark('2026-12-03', 80.0, 'K-bank', '')
+        self.ark(reczny)
+        zwrot = dict(id='bzw0000001', data='2026-12-09', konto='K-bank', osoba='Osoba A', kwota=10.0, opis='ZWROT', zrodlo='zwrot',
+                     pewnosc='Zwykle', regula='', propozycja=None, opcje=[], uwaga='')
+        (self.dane / 'miesiace').mkdir(exist_ok=True)
+        (self.dane / 'miesiace' / '2026-12.json').write_text(json.dumps(dict(
+            miesiac='2026-12', arkusz_plik='ark.json', auto=[], decyzje=[zwrot], przypiecia=[], wpisy_rozstrzygniete=[],
+            wiersze=[dict(data='2026-12-31', kat='Przychód z sald', formula='=1')])))
+        self.decyduj('2026-12', bzw0000001={'akcja': 'odejmij', 'wiersz': 2})
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        self.assertEqual((len(self.zapis('2026-12')['wiersze']), len(self.zapis('2026-12')['zmiany'])), (1, 1))
+        po = [*reczny[:14], 'bzw0000001']  # po C.3 c–d: zwrot odjęty, ID zwrotu w O; przychód z sald dopisany
+        ps = wiersz_ark('2026-12-31', 0.0, '', '', typ='Przychód', kat='Przychód z sald', pod='')
+        (self.dane / 'swiezy.json').write_text(json.dumps({'values': [['Data'], po, ps]}))
+        self.uruchom('przenies.py', '--miesiac', '2026-12', '--arkusz', 'swiezy.json')
+        z = self.zapis('2026-12')
+        self.assertEqual((z['wiersze'], z['zmiany'], z['do_wyjasnienia']), ([], [], []))
+
     def test_regula_do_dnia_x_bez_wierszy_z_wpisow(self):
         self.zen_wiele(('5 Dec 2026', 'SKLEP STALY', '-10.00'), ('30 Dec 2026', 'INNE', '-1.00'))
         self.ark(wiersz_ark('2026-12-20', 99.0, 'K-bank', 'wk3'))  # wiersz z wpisu po dacie płatności
