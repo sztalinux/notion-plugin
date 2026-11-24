@@ -48,7 +48,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    - strona „💍 Wesele”: nowe punkty i zadania „Wesele:” z terminem w 30 dni;
    - Suple: Buy = tak (licznik, nazwy);
    - Zakupy: 🛒 Zakupy „Do kupienia” (licznik, najstarsze) i z Terminem w 7 dni (wymień).
-3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i bloki 🔔 starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
+3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i bloki 🔔 starsze niż 7 dni bez odpowiedzi (poza blokami `ZP-n`; wymień wpis i pytanie – sprawy budowy
    tylko licznikiem, są w przeglądzie budowy); widok „📥 Zasady do wdrożenia” (Rodzaj Zasada) – wpisy do wdrożenia starsze niż 7 dni
    (przypomnienie: napisz „wdróż” w Claude Code). **Kontrola spójności pomysłów (grupa P)** – widok „🤖 Pomysły – kontrola
    wersji” (kilka wierszy) wg `przeglad-dnia/references/kontrola-spojnosci-pomysly.md`: wersję uzupełniasz tylko z nagłówka
@@ -87,9 +87,9 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    przeglądów dziennych starsze niż 14 dni do archiwum – zrób to **przed zapisem wpisu z kroku 4**, żeby wpis od razu miał liczbę i zakres dni w linii
    „Porządki” (jedna edycja strony – `ja`, zasada 2; brak takich dni → „archiwum: nic”, także w pustym tygodniu).
    Pozostałe porządki tylko proponujesz: jeden blok 🔔 pod „🔔 Komunikaty asystenta” we „Wpisach” (`wpisy/references/pytania.md`, C.7; klucz `porzadki-<RRRR-Www>`, jedno to-do
-   na porządek – max 3, więcej → jedno to-do „Zastosować wszystkie porządki (lista w Szczegółach)”; „zastosuję w nocnym przeglądzie”). Tygodniowy dodaje i aktualizuje bloki **tylko pod nagłówkiem 🔔**, jedną
+   na porządek – max 3, więcej → jedno to-do zbiorcze; lista, warianty i blok z poprzedniego tygodnia – C.7, „Porządki tygodnia”; „zastosuję w nocnym przeglądzie”). Tygodniowy dodaje i aktualizuje bloki **tylko pod nagłówkiem 🔔**, jedną
    punktową edycją „Wpisów” (szybki nie startuje, gdy trwa tygodniowy); listy „Komunikaty z automatów” nie dostaje. Wpis tygodniowy: tylko liczba
-   (linia „Porządki”). Ta sama propozycja już czeka w 🔔 → nie dubluj.
+   (linia „Porządki”).
 6. **Odpowiedź** (log): link do wpisu + liczby, w tym „archiwum: n dni”; bez treści emocji.
 
 ## D. Porządki w Dzienniku
@@ -103,10 +103,11 @@ Bez pytania (także w zaplanowanym przebiegu – to tylko ślad, linki są w doc
   (najpierw wklej na górę archiwum, sprawdź, potem zdejmij; podstronę archiwum na dole strony zostaw – przy zamianie treści
   przepisz jej znacznik `<page>` bez zmian). Stronę budowy archiwizuje tak samo `przeglad-tygodnia` (porządki).
 Do zatwierdzenia (propozycja w przeglądzie):
-- wpisy z okienkiem ❓ i bloki 🔔 bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
+- wpisy z okienkiem ❓ i bloki 🔔 bez odpowiedzi od 14 dni (poza blokami `ZP-n`) → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
-- TASKS prywatne z Deadline ☑ po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze); zadań z terminem
+- TASKS prywatne z Deadline ☑ po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (propozycja domyślna na pozycję –
+  `wpisy/references/pytania.md`, C.7); zadań z terminem
   orientacyjnym nie proponuj przesuwać ani zamykać (`zadania`, „Termin twardy czy orientacyjny”);
 Odpowiedź (☑ albo dopisek pod to-do) czyta nocny przebieg (`przeglad-dnia`, B.2; klucz `porzadki-<RRRR-Www>`) – wykonaj wtedy
-zatwierdzone porządki wsadowo (`ja`, zasada 2), punkt do „Przetworzone”. Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.
+zatwierdzone porządki wsadowo (`ja`, zasada 2; które – `wpisy/references/pytania.md`, C.7), punkt do „Przetworzone” (wątpliwe zostają w bloku). Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.

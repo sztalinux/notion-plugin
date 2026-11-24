@@ -22,7 +22,7 @@ Robota spoza tabeli (np. wnętrza po zamknięciu bryły) – bez ostrzeżeń pog
 ## Ostrzeżenie pogodowe (wieczorny przegląd budowy)
 
 Inwestor sam codziennie sprawdza pogodę – przegląd **nie podaje codziennej prognozy**. Ostrzega tylko przy robocie wrażliwej
-na pogodę, którą inwestor wpisał z datą w Uwagach kroku Harmonogramu (np. „betonowanie 20.11”), gdy jutro jest:
+na pogodę wpisanej z datą w Uwagach kroku Harmonogramu (np. „betonowanie 20.11”), gdy jutro jest:
 - **dzień tej roboty** (próg z wiersza roboty w tabeli wyżej), albo
 - **jeden z 7 dni pielęgnacji** po betonowaniu (wiersz „Beton po wylaniu”: mróz w nocy, upał).
 
@@ -32,9 +32,11 @@ wrażliwych”. Krok „Zrobione” nie wyłącza dni pielęgnacji. Przebieg ma 
 **Odczyt** (jedyne miejsce tej reguły – `budowa/references/wieczorem.md`, krok 2, odsyła tutaj; ID widoków
 w `budowa/references/notion-mapa.md`): jeden odczyt widoku „📅 Oś czasu” (bez filtra, pokazuje Uwagi;
 „🤖 Najbliższe 7 dni” pomija kroki „Zrobione”) – kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra,
-w każdym Statusie, z ich Uwagami; stron kroków nie otwieraj. W nocnym przebiegu kontrola spójności (`przeglad-dnia`, 5a)
-czyta ten widok wcześniej – użyj jej wyniku, bez drugiego odczytu.
-W ich Uwagach szukaj roboty z tabeli z datą. Nic nie pasuje → koniec, bez szukania prognozy.
+w każdym Statusie, z ich Uwagami; stron kroków nie otwieraj. Nocny przebieg: kontrola spójności (`przeglad-dnia`, 5a)
+czytała ten widok w tym przebiegu → użyj jej wyniku (z Uwagami); nie czytała (czyta go tylko, gdy ma co sprawdzać) →
+przeczytaj sam. Ostrzeżenie nigdy nie zależy od tego, czy kontrola czytała.
+W ich Uwagach szukaj roboty z tabeli z datą – przy kilku datach tej samej roboty liczy się najnowszy dopisek (na początku
+pola: Uwagi dopisuje się na górze – `harmonogram` C, `dziennik` A.2); dat z „Było…” nie bierz. Nic nie pasuje → koniec, bez szukania prognozy.
 
 1. **Miejscowość** weź ze ściągi (Notion → DOM → „📐 Dane projektu”). Do wyszukiwania w sieci podaj **tylko miejscowość** –
    bez adresu, numeru działki i innych danych. Miejscowości w ściądze brak → pomiń prognozę, dopisz linię

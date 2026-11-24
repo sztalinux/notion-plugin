@@ -43,7 +43,7 @@ Podział wpisów na obszary **nie jest w harnessie** – jest w bazie Notion „
 | „kończy się X”, „kupiłem X”, „zaczynam / przerwa od” (suplement) | `suple` |
 | „przegląd dnia”, „podsumuj dzień”, nocny przebieg na Macu | `przeglad-dnia` |
 | budżet domowy: wydatek w skrócie „kwota, konto, osoba, kategoria, opis” albo zwykłym zdaniem „wydałem N zł na…”, zdjęcie paragonu z dopiskiem „kto i czym” (przebieg albo Claude Code na Macu; wydatek na budowę – reguła `dom-budowa/skills/koszty/references/wydatek-przeplyw.md`); „zamknijmy miesiąc”, wyciągi z banku, lista Allegro, „przenieś decyzje budżetu” (tylko Claude Code na Macu) | `budzet` |
-| „przegląd tygodnia”, „podsumuj tydzień”, tygodniowe zaplanowane zadanie, „posprzątaj dziennik”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – `harmonogram`) | `przeglad-tygodnia-osobisty` (uruchamia też przegląd budowy) |
+| „przegląd tygodnia”, „podsumuj tydzień”, tygodniowy przebieg na Macu, „posprzątaj dziennik”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – `harmonogram`) | `przeglad-tygodnia-osobisty` (uruchamia też przegląd budowy) |
 | „stan kopii”, „zrobiłem kopię na dysk / eksport Notion”, kopie zapasowe | Claude Code na Macu: `docs/kopie-zapasowe.md` w repo harnessu (`tools/kopie.py stan` / `potwierdz`); poza nim poproś, żeby inwestor powtórzył to w Claude Code na Macu (inaczej potwierdzenie nie trafi do rejestru) |
 | poprawia sposób pracy asystenta, „zapamiętaj na przyszłość”, „mam pomysł na…”, „zrób POM-n”, „zrób ZP-n”, nowa procedura | `rozwoj-harnessu` |
 | budowa domu: ekipa, projekt, kosztorys, działka, wiedza budowlana, dokumenty budowy | `budowa` (plugin `dom-budowa`) |

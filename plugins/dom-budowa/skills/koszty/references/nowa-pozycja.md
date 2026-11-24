@@ -97,7 +97,8 @@ z pierwszej wiadomości. Polecenia w katalogu repo harnessu.
 5. Meldunek jedną linią (bez kwot): „Kosztorys: dodałem etap NN Nazwa (stan) z pozycją NN.1 – wydatek w arkuszu, wiersz N.”
    Nie wyszło → „Kosztorys: etapu NN nie dodałem – <przyczyna>; wydatek czeka w kolejce.” i blokada zdjęta; ta sama przyczyna
    drugi raz → wiersz Usterka (`rozwoj-harnessu`, D). Z pierwszym sprawdzeniem na liście meldunek pada dopiero po `sync`
-   z D.5; sesja kończy na D.1 albo D.6 → „…z pozycją NN.1 – wydatek wyśle najbliższy automat (pozycja już jest).”
+   z D.5; sesja kończy na D.6 → „…z pozycją NN.1 – wydatek wyśle najbliższy automat (pozycja już jest).”, na D.1 (kod
+   arkusza < 5) → „…z pozycją NN.1 – wydatek pójdzie po wklejeniu kodu arkusza w wersji 5.”
 
 ## D. Pierwsze sprawdzenie nowej pozycji (linia stanu „nowa pozycja kosztorysu: pierwsze sprawdzenie”)
 

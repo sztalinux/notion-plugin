@@ -66,7 +66,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 | Inwestor pisze | Status |
 |---|---|
 | „zrobiłem X”, „X zrobione”, „załatwione” | DONE |
-| „zamówiłem X”, „kupiłem X” przy otwartym zadaniu „Zamówić X” / „Kupić X” o tej jednej rzeczy | DONE (pozycja w 🛒 – pkt 2); zadanie zbiorcze („Zamówić suple: a, b, c”) – pkt 2, wyjątek; pasują dwa zadania → nic nie zamykaj, ślad jak w „Zakupy”, pkt 4 |
+| „zamówiłem X”, „kupiłem X” przy otwartym zadaniu „Zamówić X” / „Kupić X” o tej jednej rzeczy (każdy obszar, także rzecz na budowę – `zakupy` 0.3 odsyła tutaj; umówiona dostawa = „zamówiłem”) | DONE (pozycja w 🛒 albo 🧱 – pkt 2); zadanie zbiorcze („Zamówić suple: a, b, c”) – pkt 2, wyjątek; pasuje kilka zadań → nic nie zamykaj, pytanie pod wpisem (pkt 4) |
 | „zacząłem”, „w toku”, „robię” | IN PROGRESS |
 | „czekam na … (od kogo)” | WAITING (+ kto w Desc albo Kto) |
 | „przesuwam na …”, „w przyszłym tygodniu” | zostaje, When = nowy termin |
@@ -87,8 +87,8 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
    ARCHIVED → Buy zostaje (`przeglad-dnia`, B.6). Zadanie zbiorcze (kilka rzeczy w nazwie) zamyka tylko wpis o całości
    („zamówiłem suple”) albo wymieniający wszystkie; wpis o części → zadanie zostaje otwarte, Buy pozostałych bez zmian,
    w treści zadania dopisek, co zamówione.
-   Zadanie zakupu budowy „na już” (pozycja w 🧱 Zakupach budowy ma w Uwagach wzmiankę o zadaniu; znajdź ją wyszukiwarką
-   z parametrem bazy 🧱 po rzeczy z nazwy) – przy DONE w tej samej pracy zmień też Status pozycji wg `zakupy` (plugin
+   Zadanie zakupu na budowę („na już” – wzmianka w Uwagach pozycji 🧱 – albo własne inwestora; pozycję znajdź wyszukiwarką
+   z parametrem bazy 🧱 Zakupów budowy po rzeczy z nazwy) – przy DONE w tej samej pracy zmień też Status pozycji wg `zakupy` (plugin
    `dom-budowa`, 0.3): kupione → Dostarczone + Dostawa = data, tylko zamówione → Zamówione; w śladzie obie wzmianki.
 3. Brak trafienia także wśród świeżo zamkniętych: „kupiłem / zamówiłem X” → sekcja „Zakupy”, pkt 4, bez pytania; inaczej pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4): „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
 4. Kilka trafień → pytanie pod wpisem z nazwami do wyboru (max 3, z terminem).

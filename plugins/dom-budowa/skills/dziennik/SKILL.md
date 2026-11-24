@@ -34,6 +34,7 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    | problem jednorazowy, rozwiązany na miejscu (awaria pompy, przestój) | tylko pole „Problemy / usterki” z dopiskiem „zamknięte na miejscu” – bez zadania i wpisu w Notatniku (przegląd tygodnia go nie flaguje) |
    | „ekipa chce dopłatę za…” (roboty dodatkowe) | sekcja B |
    | pierwszy dzień prac przy kroku („ekipa zaczęła zbrojenie płyty”) | Harmonogram – Status kroku „W trakcie” (`harmonogram`, „Status kroku”) |
+   | wykonana robota wrażliwa na pogodę (betonowanie, izolacja – tabela w `etap/references/pogoda.md`) | Harmonogram – w Uwagach kroku **na początku** „<robota> <data> (wykonane)”: od tej daty ostrzeżenie pogodowe liczy 7 dni pielęgnacji |
    | koniec kroku / etapu, „jutro betonujemy” | `etap` – odbiór albo bramka; Status kroku wg `harmonogram` („Status kroku”: „Zrobione” dopiero z odbiorem) |
    | przesunięcie, opóźnienie ekipy, nowy termin, „nie skończyliśmy – jutro kontynuujemy”, „nie robili (deszcz)” | `harmonogram`, sekcja C (pkt 4 – terminy kroków przesuwasz od razu) |
    | wiedza od wykonawcy („mówi, że…”) | `wiedza` (Rozmowy i źródła), jeśli to coś więcej niż ustalenie na dziś |

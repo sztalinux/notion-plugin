@@ -40,7 +40,7 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
 
 ## B. Wydatek (Dziennik, rozmowa, faktura, paragon, przelew)
 
-Źródło bywa różne – wpis w 📓 Dzienniku (przebieg bez inwestora, `wpisy` → `budowa`), wiadomość do asystenta („dopisz
+Źródło bywa różne – wpis w 📝 Wpisach (przebieg bez inwestora, `wpisy` → `budowa`), wiadomość do asystenta („dopisz
 wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to samo; kilka płatności w jednej wiadomości = kilka wierszy.
 Zdjęcie paragonu z dopiskiem „kto i czym”, także mieszanego (budowa + prywatne), prowadzi `ja/skills/budzet/references/paragony.md`
 – stamtąd wraca tu tylko po stronę 💸 dla części budowlanej (paragon w całości na budowę – zwykły wydatek z tej sekcji).

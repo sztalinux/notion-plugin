@@ -61,7 +61,7 @@ zmień Termin od razu z Pewnością „Uzgodnione ustnie” – także krok „B
 inwestora. Kroki zależne przelicz wg 2 (bez inwestora – wg 4). **Wyjątki** (tylko bez daty od inwestora – nie zmieniaj sam):
 zależny krok „Bez odwrotu”, zależny krok z terminem potwierdzonym przez innych, terminy u innych (dostawa, pompa,
 kierownik, geotechnik). W rozmowie – propozycja w zestawieniu (3); bez inwestora – jedno pytanie na krok w okienku ❓ pod
-wpisem (`wpisy/references/pytania.md`, A, plugin `ja`): „Przesunąć <krok> na <termin> (było <stary>)?”; pytanie o ten krok
+wpisem (`wpisy/references/pytania.md`, A, plugin `ja`; najwyżej dwa w okienku – A.2, reszta po odpowiedzi): „Przesunąć <krok> na <termin> (było <stary>)?”; pytanie o ten krok
 już czeka pod wpisem albo w 🔔 → zaktualizuj je, nie dokładaj drugiego.
 Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym, co w niej padło.
 

@@ -42,6 +42,7 @@ zdejmuje z listy tylko je; reszta wraca w następnym poleceniu – blok `rozkmin
 ## 4. Nocny przegląd
 
 - Zrób jak dawniej w B.2a (wynik w przeglądzie dnia) każdy ślad `→ 🧠 rozkminka wieczorem` oraz każdy `→ 🧠 rozkminka w toku <token>`
-  z bloku dziś i wczoraj, który nie został zamieniony na `→ 🧠 rozkminka: <wzmianka>` (lista „Rozkminki w toku z kolejki dnia”
+  z bloku dziś i wczoraj, który nie został zamieniony na `→ 🧠 rozkminka: <wzmianka>` (token z listy „Gotowe rozkminki” tego polecenia ma już wynik –
+  pomiń; lista „Rozkminki w toku z kolejki dnia”
   w poleceniu to tylko podpowiedź). Po udanym nocnym przebiegu `przeglad.py` czyści kolejkę dnia.
 - Odpowiedzi na bloki 🔔 `rozkminka-…` obsługuje nocny przebieg (świadoma decyzja: szybki zostaje tani).
