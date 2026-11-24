@@ -88,7 +88,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
    Zadanie zakupu budowy „na już” (pozycja w 🧱 Zakupach budowy ma w Uwagach wzmiankę o zadaniu; znajdź ją wyszukiwarką
    z parametrem bazy 🧱 po rzeczy z nazwy) – przy DONE w tej samej pracy zmień też Status pozycji wg `zakupy` (plugin
    `dom-budowa`, 0.3): kupione → Dostarczone + Dostawa = data, tylko zamówione → Zamówione; w śladzie obie wzmianki.
-3. Brak trafienia także wśród świeżo zamkniętych → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4): „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
+3. Brak trafienia także wśród świeżo zamkniętych: „kupiłem / zamówiłem X” → sekcja „Zakupy”, pkt 4, bez pytania; inaczej pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4): „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
 4. Kilka trafień → pytanie pod wpisem z nazwami do wyboru (max 3, z terminem).
 
 ## C. Odczyt
