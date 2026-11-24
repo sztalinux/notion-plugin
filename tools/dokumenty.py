@@ -38,8 +38,10 @@ import logging
 import warnings
 from pathlib import Path
 
+import hub
+
 REPO = Path(__file__).resolve().parent.parent
-HUB = Path(os.environ.get("DOM_HUB", REPO.parent.parent)).expanduser().resolve()
+HUB = hub.folder_budowy(REPO)
 CONF = HUB / ".dom"
 INDEKS = CONF / "indeks.json"
 WGRANE = CONF / "stan-wgrania.json"
@@ -536,6 +538,8 @@ def main(argv=None) -> int:
     sub.add_parser("wgrane")
     sub.add_parser("notion-ok")
     a = ap.parse_args(argv)
+    if a.cmd != "lista" and not (a.cmd is None and a.dry_run) and hub.zapis_zablokowany(REPO, CONF):
+        return 1
     _blok = blokada() if a.cmd == "ustaw" or (a.cmd is None and not a.dry_run) else None  # noqa: F841
     return {"ustaw": cmd_ustaw, "lista": cmd_lista, "wgrane": cmd_wgrane, "notion-ok": cmd_notion_ok}.get(a.cmd, cmd_sprawdz)(a)
 

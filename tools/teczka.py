@@ -28,10 +28,11 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import hub  # noqa: E402
 from kopia import POMIJANE  # noqa: E402  (te same pliki ukryte, tymczasowe i blokady programów biurowych)
 
 REPO = Path(__file__).resolve().parent.parent
-HUB = Path(os.environ.get("DOM_HUB") or REPO.parent.parent).expanduser().resolve()
+HUB = hub.folder_budowy(REPO)
 KORZEN_TECZEK = "Teczki"
 DATA_W_NAZWIE = re.compile(r"^(\d{4}-\d{2}-\d{2})")
 ZAPAS_PROTOKOLU = 14
@@ -283,6 +284,8 @@ def main(argv=None) -> int:
     a.add_argument("--zdjecia", action="append", default=[], metavar="ETYKIETA=ADRES", help="link folderu zdjęć do spisu")
     a.add_argument("--wykonaj", action="store_true")
     arg = ap.parse_args(argv)
+    if arg.wykonaj and hub.zapis_zablokowany(REPO, HUB):
+        return 1
     bledy = []
     try:
         w = zbierz(HUB, arg.etap, arg.od, arg.do, arg.zapas, arg.dodaj, arg.zdjecia, arg.zapas_faktur)

@@ -461,6 +461,10 @@ def main(argv=None):
     ap.add_argument('--mimo-zamkniecia', action='store_true',
                     help='sync: dopisz też zapisy z miesięcy zamkniętych starszą wersją (bez listy wpisów rozstrzygniętych)')
     a = ap.parse_args(argv)
+    zapis = a.polecenie in ('ponow', 'zamknij-wpisy', 'blokada') or a.polecenie in ('sync', 'przypnij') and not a.proba
+    arkusz_z_huba = os.environ.get('BUDZET_ARKUSZ_URL') is None  # adres i sekret arkusza z <hub>/.dom/sekrety.env
+    if zapis and wspolne.zapis_zablokowany(wspolne.DANE, *([HUB] if arkusz_z_huba else [])):
+        return 1
     if a.polecenie == 'kod':
         m = re.search(r'```javascript\n(.*?)```', DOKUMENTACJA.read_text(encoding='utf-8'), re.S)
         if not m:

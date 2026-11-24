@@ -485,7 +485,7 @@ def polecenie_modelu(m: Miejsca) -> str:
     """`claude` z PATH albo atrapa z WIEDZA_KARTY_POLECENIE (testy: --db i --katalog poza prawdziwym hubem)."""
     wlasne = os.environ.get("WIEDZA_KARTY_POLECENIE")
     if wlasne:
-        prawdziwy = (W.REPO.parent.parent / ".dom").resolve()
+        prawdziwy = W.hub.domyslny_hub(W.REPO) / ".dom"
         for opcja, sciezka in (("--db", m.db), ("--katalog", m.katalog)):
             s = sciezka.resolve()
             if s == prawdziwy or prawdziwy in s.parents:
@@ -1755,9 +1755,12 @@ POLECENIA = {"definicje": cmd_definicje, "importuj-tagi": cmd_importuj_tagi, "ta
 
 def main(argv=None) -> int:
     a = zbuduj_parser().parse_args(argv)
+    m = Miejsca(a)
+    if a.polecenie != "definicje" and W.hub.zapis_zablokowany(W.REPO, m.katalog, m.db):
+        return 1
     try:
         with W.prywatne_pliki():
-            return POLECENIA[a.polecenie](a, Miejsca(a))
+            return POLECENIA[a.polecenie](a, m)
     except (BladKart, W.BladIndeksu) as e:
         if a.json:
             W.wypisz_json({"blad": str(e)})

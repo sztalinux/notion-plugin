@@ -130,6 +130,8 @@ def main(argv=None) -> int:
     ap.add_argument("--bez-publikacji", action="store_true", help="tylko plik lokalny")
     ap.add_argument("--json", action="store_true", help="liczniki jako JSON")
     a = ap.parse_args(argv)
+    if W.hub.zapis_zablokowany(W.REPO, W.KATALOG):
+        return 1
     start = time.monotonic()
     sekrety = W.wczytaj_sekrety(W.SEKRETY)
     token = sekrety.get("NOTION_TOKEN")

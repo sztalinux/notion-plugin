@@ -1407,6 +1407,8 @@ def main(argv=None) -> int:
             return 0
         print("  ✗ brak modułu wiedza.py obok wiedza_jakosc.py")
         return 1
+    if a.polecenie != "przypomnij" and W.hub.zapis_zablokowany(W.REPO, Miejsca(a).dane):
+        return 1
     try:
         with W.prywatne_pliki():
             return POLECENIA[a.polecenie](a)

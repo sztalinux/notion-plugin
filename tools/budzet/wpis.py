@@ -25,6 +25,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import wspolne  # noqa: E402
 from wspolne import (U, blokada_wpisow, czytaj_wpisy, data_iso, kw, miesiace_wpisow, opcja, wczytaj,  # noqa: E402
                      zapisz_wpisy)
 
@@ -111,6 +112,8 @@ def main():
     ap.add_argument('--budowa', default='')
     ap.add_argument('--gotowka', action='store_true', help='wymuś gotówkę (Sposób = Gotówka na stronie 💸)')
     A = ap.parse_args()
+    if A.akcja != 'lista' and wspolne.zapis_zablokowany():
+        sys.exit(1)
     if A.akcja == 'lista':
         ws = czytaj_wpisy(A.arg, z_usunietymi=True)
         for w in ws:
