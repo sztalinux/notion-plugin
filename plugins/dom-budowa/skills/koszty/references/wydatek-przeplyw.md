@@ -43,6 +43,6 @@ Konto jest tylko w budżecie domowym. W kosztorysie wystarczy Sposób (Gotówka 
   „Zrobić: wydatek …” (`wpisy/references/skrzynka.md`); Mac stosuje pkt 1–2 przy przeniesieniu.
 - **„Do zapłaty” → „Zrealizowane”:** nocny przebieg (`przeglad-dnia`, B) czyta widok 💸 „🤖 Zrealizowane – 2 miesiące (budżet)”
   (ID w `budowa/references/notion-mapa.md`; Płatność = Zrealizowane, bez wycen i planów, od najnowszej Daty – baza nie ma daty edycji)
-  od góry do pierwszej strony z Datą starszą niż 2 miesiące; pomija „bez budżetu” i „budżet – z wyciągu” w Notatkach; brak wpisu o ich ID w `wpis.py lista RRRR-MM` (lista pokazuje ID z prefiksem `w`) (miesiąc
+  od góry do pierwszego wiersza z Datą starszą niż 2 miesiące; pomija „bez budżetu” i „budżet – z wyciągu” w Notatkach; wiersze z Datą sprzed 16.11.2026 (start tego przepływu) pomija – rozlicza je zamknięcie miesiąca z wyciągów; brak wpisu o ich ID w `wpis.py lista RRRR-MM` (lista pokazuje ID z prefiksem `w`) (miesiąc
   daty zapłaty) → zapis wg pkt 1–2. Ten sam `--id` nie dubluje, więc powtórka jest bezpieczna. (Decyzja: logika po stronie
   przebiegu, nie w `wydatki.py sync` – sync to narzędzie arkusza kosztorysu i nie zna wyjątków z pkt 1, np. innej kategorii.)
