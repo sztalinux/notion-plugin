@@ -107,7 +107,7 @@ Krok „W trakcie” po zmianie końca Terminu (C.4) zostaje „W trakcie”. St
 ## E. „Co mnie czeka” (domyślnie 14 dni)
 
 Jedno zestawienie, chronologicznie: kroki harmonogramu (start/koniec), moje zadania, czekam na (z terminem i po terminie),
-zamówienia z „Zamówić do” (bez Dostarczone i Nieaktualne – jak przegląd dnia budowy) i dostawy, bramki. Na górze: po terminie (moje zadania – tylko z Deadline ☑) i dzisiaj/jutro. Na dole: licznik spraw dalej niż 14 dni.
+zamówienia z „Zamówić do” (Status przed zamówieniem – jak przegląd tygodnia, pkt 5b) i dostawy, bramki. Na górze: po terminie (moje zadania – tylko z Deadline ☑) i dzisiaj/jutro. Na dole: licznik spraw dalej niż 14 dni.
 
 ## Zasady
 
