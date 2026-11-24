@@ -67,6 +67,14 @@ class Lista(unittest.TestCase):
                   "Żwir i kowadło", "żwirek", "kowo", "Jan Zmyślony", "N zł"):
             self.assertFalse(self.lapie(t), t)
 
+    def test_odmiana_z_ogonkami(self):
+        """U-6: wpis bez ogonków, tekst z ogonkami w odmianie – słowo zaczynające się od wpisu (wpisy od 4 znaków)."""
+        for t in ("z panem Plumb§ątekiem", "Plumb§ątekowi", "plumb§ątekowa sprawa", "**Plumb§ątekowie**"):
+            self.assertTrue(self.lapie(t), z(t))
+        krotki = self.zak + ["zab"]
+        self.assertFalse(build.sprawdz_tekst("x", "żabka i żaba", krotki))  # krótki wpis: tylko całe słowo
+        self.assertTrue(build.sprawdz_tekst("x", "pan Żab", krotki))
+
     def test_prefiks_tokenu_tylko_doslownie(self):
         """Wpis z „_” (prefiks tokenu) nie jest rozbijany na słowa – nazwa usługi w zwykłym zdaniu przechodzi."""
         zak = self.zak + [z("abc§d_efg§h_")]

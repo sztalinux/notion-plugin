@@ -296,6 +296,7 @@ def zignorowane(sciezki: list) -> set:
     return set(r.stdout.decode().split("\0")) - {""} if r.returncode == 0 else set()
 
 
+PRZEDROSTEK_MIN = 4  # krótsze wpisy tylko jako całe słowo – inaczej trafiałyby w początki zwykłych słów
 NIEWIDOCZNE = re.compile(r"[\u00ad\u200b-\u200f\u2060\ufeff]")  # miękki łącznik, spacje zerowej szerokości
 
 
@@ -312,32 +313,45 @@ def warianty_listy(zakazane: tuple) -> tuple:
     zapisany bez polskich znaków łapie tekst z ogonkami, wpis wielowyrazowy także w odwrotnej kolejności, sklejony,
     z łącznikiem, gwiazdkami i rozbity na dwie linie. Całe słowa, bo krótkie wpisy trafiałyby w środek zwykłych słów.
     Wpisy z „_” (prefiksy tokenów) tylko dosłownie – po rozbiciu stałyby się zwykłymi słowami.
-    Wynik: (zbiór słów, {pierwsze słowo: [dalsze słowa, …]})."""
-    pojedyncze, wielo = set(), {}
+    Wpis jednowyrazowy od PRZEDROSTEK_MIN znaków łapie też słowo, które się od niego zaczyna (U-6): wpis zapisany
+    bez ogonków, tekst z ogonkami w odmianie („…ski” → „…ską”, „…skiego”).
+    Wynik: (zbiór słów, {pierwsze słowo: [dalsze słowa, …]}, zbiór przedrostków)."""
+    pojedyncze, wielo, przedrostki = set(), {}, set()
     for w in zakazane:
         t = zloz(w).split()
         if not t or "_" in w:
             continue
         pojedyncze.add("".join(t))
+        if len(t) == 1 and len(t[0]) >= PRZEDROSTEK_MIN:
+            przedrostki.add(t[0])
         if len(t) > 1:
             for kolejnosc in (t, t[::-1]):
                 wielo.setdefault(kolejnosc[0], []).append(tuple(kolejnosc[1:]))
-    return frozenset(pojedyncze), wielo
+    return frozenset(pojedyncze), wielo, frozenset(przedrostki)
+
+
+@functools.lru_cache(maxsize=4)
+def dlugosci(przedrostki: frozenset) -> tuple:
+    return tuple(sorted({len(p) for p in przedrostki}))
+
+
+def z_przedrostkiem(slowo: str, przedrostki: frozenset) -> bool:
+    return any(slowo[:k] in przedrostki for k in dlugosci(przedrostki) if len(slowo) > k)
 
 
 def linie_z_lista(linie: list, zakazane: list) -> set:
     """Numery linii (od 1) z wpisem listy w postaci złożonej; wpis rozbity na dwie linie → numer pierwszej."""
-    pojedyncze, wielo = warianty_listy(tuple(zakazane))
+    pojedyncze, wielo, przedrostki = warianty_listy(tuple(zakazane))
     z = zloz("\n".join(linie))
     slowa = set(z.split())
-    if not (slowa & pojedyncze or slowa & wielo.keys()):
+    if not (slowa & pojedyncze or slowa & wielo.keys() or any(z_przedrostkiem(s, przedrostki) for s in slowa)):
         return set()  # zwykły przypadek: jedno przejście po tekście, bez liczenia linii
     pozycje = []
     for numer, linia in enumerate(z.split("\n"), 1):
         pozycje += [(s, numer) for s in linia.split()]
     wynik = set()
     for i, (slowo, nr) in enumerate(pozycje):
-        if slowo in pojedyncze or any(tuple(s for s, _ in pozycje[i + 1:i + 1 + len(dalej)]) == dalej
+        if slowo in pojedyncze or z_przedrostkiem(slowo, przedrostki) or any(tuple(s for s, _ in pozycje[i + 1:i + 1 + len(dalej)]) == dalej
                                       for dalej in wielo.get(slowo, ())):
             wynik.add(nr)
     return wynik
@@ -354,6 +368,8 @@ def sprawdz_tekst(etykieta: str, tekst: str, zakazane: list) -> list:
     z_cyfra = "\n".join(LINIA_Z_CYFRA.findall(tekst))
     wzorce = [(rx, opis) for rx, opis in WZORCE if rx.search(z_cyfra if opis in Z_CYFRA else tekst)]
     calosc = tekst.lower()
+    # dosłowny podciąg (kandydaci → niskie) NIE do usunięcia jako „zdublowany” z postacią złożoną: jako jedyny łapie
+    # wpis w środku dłuższego słowa i odmianę pisaną tak samo jak wpis (408/408 form na prawdziwej liście, recenzja F1)
     kandydaci = [w for w in zakazane if all(c in calosc for c in w.split())]
     for nr, linia in enumerate(linie, 1):
         for rx, opis in wzorce:
