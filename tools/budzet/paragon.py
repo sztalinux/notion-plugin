@@ -19,9 +19,11 @@ miesiace/RRRR-MM-zapis.json) -> kod 1, poprawka ręcznie w arkuszu. Inna grupa z
 (możliwy dubel), chyba że --mimo-to. Zdjęcie wklejone w rozmowę (bez bloku Notion): --id c<RRRRMMDD>-<suma w groszach>.
 --budowa: ID strony 💸 dla części Inwestycja › Dom (kosztorys budowy; dom-budowa/skills/koszty/references/wydatek-przeplyw.md).
 Usunięcie całego paragonu: wpis.py usun RRRR-MM <id wpisu albo części>.
+ID części zajęte przez zwykły wydatek (kilka wydatków z bloku: wpis.py dodaj --id <id>-n) -> kod 1 (także z --mimo-to);
+wpis.py dodaj z ID części paragonu -> kod 1.
 """
 import argparse, http.client, json, re, shutil, subprocess, sys, urllib.error, urllib.parse, urllib.request
-from datetime import date, datetime
+from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -244,7 +246,7 @@ def rozpoznaj(tresc):
 
 def pobierz(url, data, id_, katalog=None, otworz=None):
     """-> ścieżka pliku w <dane>/paragony/; plik już jest -> ta sama ścieżka bez pobierania."""
-    date.fromisoformat(data)
+    wspolne.data_iso(data)
     if not ID.match(id_):
         raise BladParagonu('ID wpisu tylko z liter, cyfr i myślników')
     url = sprawdz_adres(url)
@@ -311,12 +313,18 @@ def main(argv=None):
             return 0
         if not ID.match(a.id):
             raise BladParagonu('ID wpisu tylko z liter, cyfr i myślników')
-        date.fromisoformat(a.data)
+        wspolne.data_iso(a.data)
         if not a.suma or not a.sklep:
             raise BladParagonu('podaj --suma i --sklep (z paragonu)')
         platnosc(a.platnosc)
         czesci = rozpisz(pozycje, grosze(a.suma), wczytaj('reguly.json', {}).get('skroty', {}))
         nowe = zapisy(a, czesci)
+        ids_nowe = {w['id'] for w in nowe}
+        zwykle = sorted(w['id'] for m in miesiace_wpisow() for w in czytaj_wpisy(m) if w['id'] in ids_nowe and not w.get('grupa'))
+        if zwykle:  # „kilka wydatków z jednego wpisu” (--id <id>-1, -2) – paragon nadpisałby je po cichu
+            raise BladParagonu(f"ID {', '.join(zwykle)} to zwykłe wydatki z tego wpisu (wpis.py dodaj --id <id>-n) – paragon by je "
+                               'nadpisał; ten sam zakup: usuń je (wpis.py usun) i rozpisz ponownie; inny zakup: ❓ pod wpisem; '
+                               'nic nie zapisano')
         powod = rozliczenie(nowe[0]['grupa'], a.data[:7], a.mimo_to, a.sklep, nowe[0]['paragon']['suma'], a.data)
         if powod and not a.proba:
             raise BladParagonu(f"paragon {nowe[0]['grupa']} {powod} – nie zastępuję go (kwoty w arkuszu są już z wyciągu); "

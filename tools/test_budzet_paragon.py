@@ -4,7 +4,7 @@ import email.message, io, json, os, subprocess, sys, tempfile, unittest
 from contextlib import redirect_stdout
 from pathlib import Path
 
-os.environ.setdefault('BUDZET_DANE', tempfile.mkdtemp())
+os.environ['BUDZET_DANE'] = tempfile.mkdtemp()  # nigdy folder z powłoki (prawdziwe dane)
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'budzet'))
 import arkusz_budzetu as AB  # noqa: E402
@@ -183,6 +183,16 @@ class Przeplyw30(unittest.TestCase):
         self.assertEqual(ws[0]['paragon'], dict(sklep='Sklep A', suma=33.5, czesci=2, zdjecie=''))
         self.assertEqual(ws[0]['opis'], 'Sklep A: chleb, ser?')
 
+    def test_a16_data_bez_myslnikow_odrzucona(self):
+        """A-16: Python ≥ 3.11 przyjmuje „20261205” – plik miesiąca dostałby nazwę, której nie widzi żadne narzędzie."""
+        self.assertIn('RRRR-MM-DD', self.paragon(*self.POZ, data='20261205', kod=1))
+        r = subprocess.run([sys.executable, str(NARZ / 'wpis.py'), 'dodaj', '10, zak', '--data', '20261205', '--id', 'd1'],
+                           env=dict(os.environ, BUDZET_DANE=str(self.dane)), capture_output=True, text=True)
+        self.assertEqual((r.returncode, 'RRRR-MM-DD' in r.stdout), (1, True))
+        with self.assertRaises(ValueError):
+            wspolne.data_iso('20261205')
+        self.assertEqual(list((self.dane / 'listy').glob('*')) if (self.dane / 'listy').exists() else [], [])
+
     def test_proba_niezgodnosc_i_brak_platnosci_nic_nie_zapisuja(self):
         self.assertIn('próba', self.paragon(*self.POZ, dod=('--proba',)))
         self.assertIn('różnica', self.paragon('10, zak', '20, chem', kod=1))
@@ -232,6 +242,20 @@ class Przeplyw30(unittest.TestCase):
                      encoding='utf-8')
         self.assertIn('usunięto (3)', self.uruchom('wpis.py', 'usun', '2026-12', 'p1'))
         self.assertEqual(self.wpisy(), [])
+
+    def test_a9_id_czesci_i_wydatkow_z_bloku_bez_nadpisania(self):
+        """A-9: wydatki z bloku (--id <id>-1, -2) i paragon z tego bloku (części w<id>-1…n) – odmowa w obu kierunkach."""
+        for t, i in (('30, g, zak', 'b7-1'), ('12, g, zak', 'b7-2')):
+            self.uruchom('wpis.py', 'dodaj', t, '--data', '2026-12-05', '--id', i)
+        przed = self.wpisy()
+        self.assertIn('zwykłe wydatki', self.paragon(*self.POZ, id_='b7', kod=1))
+        self.assertIn('zwykłe wydatki', self.paragon(*self.POZ, id_='b7', kod=1, dod=('--mimo-to',)))
+        self.assertEqual(self.wpisy(), przed)
+        self.paragon(*self.POZ, id_='b8')
+        przed = self.wpisy()
+        r = subprocess.run([sys.executable, str(NARZ / 'wpis.py'), 'dodaj', '99, zak', '--data', '2026-12-05', '--id', 'b8-1'],
+                           env=dict(os.environ, BUDZET_DANE=str(self.dane)), capture_output=True, text=True)
+        self.assertEqual((r.returncode, 'część paragonu' in r.stdout, self.wpisy()), (1, True, przed))
 
     def test_ten_sam_paragon_drugi_raz_ostrzega(self):
         """Recenzja 8: inna grupa z tą samą datą, sumą i sklepem – kod 1, chyba że --mimo-to."""

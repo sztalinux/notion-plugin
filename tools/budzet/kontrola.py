@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """Kontrola zakładki Transakcje przed podsumowaniem miesiąca (procedura budzet, etap 2). Nic nie zmienia w arkuszu.
 
-    python3 tools/budzet/kontrola.py --arkusz miesiace/transakcje-<data>.json [--rok RRRR]
+    python3 tools/budzet/kontrola.py --arkusz miesiace/transakcje-<data>.json [--rok RRRR] [--miesiac RRRR-MM]
 
 Wejście: get_values Transakcje!A1:O (zapisany jak przy imporcie). Wypisuje problemy z numerem wiersza – każdy z nich psuje
 sumy zakładki roku albo przychód drugiej osoby liczony z sald:
   kwota jako tekst albo pusta · ten sam wiersz dwa razy · wydatek z konta drugiej osoby bez jej Osoby (i odwrotnie) ·
   przychód bez Osoby · przelew z Osobą · zła para kategoria–podkategoria · wiersz przychodu z sald brak / dwa razy w miesiącu.
+--miesiac: zamykany miesiąc – wiersz przychodu z sald sprawdzany w każdym miesiącu do niego włącznie (bez niego ostatni
+miesiąc w danych uchodzi za otwarty – przy zamknięciu grudnia z --rok grudzień byłby pominięty); bez --rok – rok tego miesiąca.
 Kod wyjścia 0 także przy problemach (to lista do przejrzenia, nie błąd skryptu).
 """
-import argparse, json, sys
+import argparse, json, re, sys
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -20,7 +22,12 @@ from wspolne import DANE, DRZEWO, U, kw  # noqa: E402
 ap = argparse.ArgumentParser()
 ap.add_argument('--arkusz', required=True)
 ap.add_argument('--rok', type=int)
+ap.add_argument('--miesiac', help='zamykany miesiąc RRRR-MM')
 A = ap.parse_args()
+if A.miesiac:
+    if not re.fullmatch(r'\d{4}-\d{2}', A.miesiac):
+        raise SystemExit(f'✗ --miesiac {A.miesiac}: podaj RRRR-MM')
+    A.rok = A.rok or int(A.miesiac[:4])
 p = Path(A.arkusz if Path(A.arkusz).is_absolute() else DANE / A.arkusz)
 wiersze = json.loads(p.read_text(encoding='utf-8'))['values'][1:]
 
@@ -81,7 +88,9 @@ for k, n in klucze.items():
 if PS:
     mies = sorted({(datetime.strptime(r[0], '%d-%b-%Y').date().year, datetime.strptime(r[0], '%d-%b-%Y').date().month)
                    for _, r in rows})
-    for ym in mies[:-1]:  # bieżący (ostatni) miesiąc jeszcze otwarty
+    zamykany = tuple(map(int, A.miesiac.split('-'))) if A.miesiac else None
+    for ym in (sorted({ym for ym in mies if ym <= zamykany} | {zamykany}) if zamykany
+               else mies[:-1]):  # bez --miesiac bieżący (ostatni) miesiąc uchodzi za otwarty
         if ps_mies[ym] != 1:
             problemy[f'wiersz {PS}: powinien być dokładnie jeden w miesiącu'].append(f'{ym[0]}-{ym[1]:02d}: {ps_mies[ym]}')
 
