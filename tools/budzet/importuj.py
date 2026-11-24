@@ -87,6 +87,11 @@ else:
 dzien_wpisu = lambda w: date.fromisoformat(w['data'])
 SASIEDNIE = ([w for w in czytaj_wpisy(POPRZ) if dzien_wpisu(w) >= POCZ - timedelta(days=PRZELOM)]
              + [w for w in czytaj_wpisy(NAST) if dzien_wpisu(w) <= KONIEC + timedelta(days=PRZELOM)])
+def kierunek_wpisu(w):
+    """Kwota wpisu ze znakiem przepływu: przychód to wpływ także zapisany bez „+” (w arkuszu i tak wartość bezwzględna)."""
+    return abs(w['kwota']) if w['typ'] == 'Przychód' else w['kwota']
+
+
 czesci = defaultdict(list)
 for w in WPISY + SASIEDNIE:
     if w['konto'] in KONTA_A:
@@ -96,7 +101,7 @@ for (konto, _), cz in czesci.items():
     wr = [po_id.get(w['id']) for w in cz]
     if all(r and any(not i.startswith('w') for i in r['ids']) for r in wr):
         continue  # wszystkie części już przypięte do płatności przy wcześniejszym zamknięciu
-    jednostki.append(dict(konto=konto, czesci=cz, wiersze=wr, kwota=round(sum(w['kwota'] for w in cz), 2),
+    jednostki.append(dict(konto=konto, czesci=cz, wiersze=wr, kwota=round(sum(kierunek_wpisu(w) for w in cz), 2),
                           data=min(dzien_wpisu(w) for w in cz)))
 
 

@@ -514,6 +514,16 @@ class PrzeplywArkusz(unittest.TestCase):
         d = [d for d in m['decyzje'] if d['regula'] == 'SKLEP STALY'][0]
         self.assertEqual((m['auto'], d['kandydaci'], 'przypiecie_wpisu' in d, 'wR1' in d['uwaga']), ([], [], False, True))
 
+    def test_a3_przychod_bez_plusa_paruje_sie_z_wplywem(self):
+        """A-3: „100, z, pen” (przychód bez „+”) – w arkuszu +100, więc przy zamknięciu paruje się z wpływem jak „+100”."""
+        for kwota in (-100.0, 100.0):
+            self.wpisz('2026-12', self.karta('wP1', '2026-12-05', -kwota, typ='Przychód', kat='Inne przychody', pod='', kod='pen'))
+            self.ark(wiersz_ark('2026-12-05', 100.0, 'K-bank', 'wP1', typ='Przychód', kat='Inne przychody', pod=''))
+            self.zen_wiele(('5 Dec 2026', 'PRACODAWCA', '100.00'), ('30 Dec 2026', 'INNE', '-1.00'))
+            m = self.importuj('--zen', 'zen.csv', mies='2026-12')
+            self.assertEqual((len(m['przypiecia']), [d['id'] for d in m['decyzje'] if d['kwota'] > 0 or d['id'] == 'wP1'], m['auto']),
+                             (1, [], []), kwota)
+
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')
         p = self.dane / 'listy' / '2026-12-wpisy.jsonl'

@@ -28,7 +28,7 @@ w repo harnessu.
 Wpis w Dzienniku albo wiadomość w skrócie `kwota, konto, osoba, kategoria, opis` (zmyślone: „200, pra, o, zam”,
 „150, z, a, dom, geolog”, „45, zak reg, bułki”). Konto i osoba są opcjonalne: bez konta = gotówka; gotówka i konta drugiej
 osoby zawsze na drugą osobę. Skróty kont i osób – `ustawienia.json` (`skroty_kont`, `skroty_osob`); kategorii – `reguly.json`
-(`skroty`, te same co w listach). Kwota z „+” = wpływ.
+(`skroty`, te same co w listach). Kwota z „+” = wpływ (przychód jest wpływem także bez „+”).
 
 **Wydatek zwykłym zdaniem** („wydałem N zł na regularne i M na jedzenie na mieście” – bez skrótu, konta i osoby) to też
 wydatek: sam przepisz go na skrót (kategorię dobierz ze skrótów w `reguly.json`, np. „N, zak reg” i „M, jedz, na mieście”)
