@@ -134,7 +134,7 @@ Błąd pojedynczej strony nie zmienia kodu: `sync` zapisuje go w Notion (Arkusz 
 
 Zabezpieczenia w `sync`: walidacja przed wysyłką (data, kwota, pozycja, ilość i jednostka materiału 02–08; wycena – jednostka, nazwa,
 VAT przy netto) → strona dostaje „Błąd” z powodem; wyceny czekają, gdy kod Apps Script < 2 albo Cennik w starym układzie
-(`cennik_ok`), zwroty – gdy kod < 4, strony z polem „Nowa pozycja” – gdy kod < 5; kolumny z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) nigdy nie są
+(`cennik_ok`), zwroty – gdy kod < 4, strony z polem „Nowa pozycja” – gdy kod < 5; kolumny z formułami (Wydatki I, N i Q, Cennik G, K i O–Q, Kosztorys N–P) nigdy nie są
 nadpisywane; zapis pod
 blokadą (LockService) – dwa przebiegi naraz nie wejdą sobie w drogę.
 
@@ -184,7 +184,7 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
    (`get_spreadsheet` z `userEnteredValue`) zapisana w `<hub>/.dom/wydatki/` → zapis (`update_formulas`, `update_values`,
    `update_spreadsheet`) → odczyt kontrolny. Te same zasady co skrypt: formuły ze „;” i przecinkiem dziesiętnym
    (sprawdzone 10.11.2026 – „,” daje liczbę dziesiętną), bez nadpisywania kolumn wpisywanych (Wydatki A–H, J–M, O, P;
-   Kosztorys F, U; Cennik A–F, H–J, L–N), bez IMPORT…/IMAGE/HYPERLINK, nie w trakcie `sync`. Reguły formatowania
+   Kosztorys B–F, K, L, U, V; Cennik A–F, H–J, L–N), bez IMPORT…/IMAGE/HYPERLINK, nie w trakcie `sync`. Reguły formatowania
    warunkowego przez `update_spreadsheet` przetestuj najpierw na jednej regule. Konektora brak albo błąd → kroki 1–5 (wolniej,
    ten sam wynik). Potem i tak krok 5 (kontrola).
 1. `wydatki.py pobierz` albo odczyt konektorem – aktualne wartości i nagłówki. Odwołania do innych zakładek buduj po
@@ -223,7 +223,7 @@ Inwestor zmienia arkusz ręcznie równolegle (przenosi kolumny, poprawia PLAN) �
  * w etapie = istniejący Lp, jeśli jego wiersz jest kompletny. Wiersz etapu bez Lp = odmowa. Etapu nie dodaje (brak_etapu).
  * dopisz: rodzaj „Wycena” → arkusz Cennik (ponowne wysłanie aktualizuje ten sam wiersz), reszta → arkusz Wydatki
  * („Zwrot” z kwotą ujemną). Wydatki P (VAT %) wpisuje i czyści tools/wydatki.py akcją zmien, nie dopisz/usun.
- * Kolumn z formułami (Wydatki I, N i Q, Cennik G i K, Kosztorys N–P) dopisz/usun nigdy nie nadpisują.
+ * Kolumn z formułami (Wydatki I, N i Q, Cennik G, K i O–Q, Kosztorys N–P) dopisz/usun nigdy nie nadpisują.
  * zmien: tylko znane zakładki, bez usuwania zakładek, bez formuł IMPORT…/IMAGE/HYPERLINK; czyścić wolno tylko pusty Cennik
  * i archiwum szacunku AI.
  */

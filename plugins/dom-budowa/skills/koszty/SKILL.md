@@ -134,8 +134,8 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 3. Zmiana układu lub wyglądu (kolumny, formuły, kolory, listy) – w Claude Code, na żywym arkuszu, według
    `docs/wydatki-arkusz.md`, sekcja 8:
    - **konektor Google Sheets** (szybciej): migawka zakresu przed zmianą (z formułami), zapis, odczyt kontrolny; formuły ze
-     „;” i przecinkiem dziesiętnym (polskie ustawienia); nie nadpisuj kolumn wpisywanych (Wydatki A–H, J–M, O, P; Kosztorys F,
-     U; Cennik A–F, H–J, L–N) i nie wstawiaj formuł IMPORT…/IMAGE/HYPERLINK;
+     „;” i przecinkiem dziesiętnym (polskie ustawienia); nie nadpisuj kolumn wpisywanych (Wydatki A–H, J–M, O, P; Kosztorys B–F,
+     K, L, U, V; Cennik A–F, H–J, L–N) i nie wstawiaj formuł IMPORT…/IMAGE/HYPERLINK;
    - **bez konektora albo przy jego błędzie** → plik zmian i `wydatki.py migruj` (wolniej, ten sam wynik);
    - potem kontrola: zero błędów formuł, sumy jak przed, „Kontrola powiązań” = 0; cofanie – historia wersji arkusza.
    Formuły zgodne z Arkuszami Google (SUMIFS, INDEX/MATCH, IF, MINIFS; bez formuł tablicowych). Poza Claude Code – opisz
