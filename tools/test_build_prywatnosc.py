@@ -221,6 +221,16 @@ class Hooki(unittest.TestCase):
         self.przeszedl(self.git("commit", "-q", "--no-verify", "--no-edit", sprawdz=False))
         self.zablokowany(self.push("HEAD:refs/heads/scalenie"), "docs/s.md:1: " + BLAD_LISTY, "Push zablokowany")
 
+    def test_pre_push_zmiana_typu(self):
+        """U-3: dowiązanie zamienione na plik z danymi (commit --no-verify) – pre-push sprawdza zmianę typu."""
+        (self.repo / "docs").mkdir(exist_ok=True)
+        os.symlink("czysty.md", self.repo / "docs" / "dowiazanie.md")
+        self.przeszedl(self.commit("docs/dowiazanie.md"))
+        (self.repo / "docs" / "dowiazanie.md").unlink()
+        self.plik("docs/dowiazanie.md", f"notatka {OGONEK}\n")
+        self.przeszedl(self.commit("docs/dowiazanie.md", bez_hookow=True))
+        self.zablokowany(self.push("HEAD:refs/heads/zmiana-typu"), "docs/dowiazanie.md:1: " + BLAD_LISTY, "Push zablokowany")
+
     # --- F-1: treść nieczytelna jako tekst -------------------------------------------------------------
     def test_binarne_i_nieznane(self):
         zip_bez_rozszerzenia = b"PK\x03\x04\x14\x00\x00\x00\x08\x00" + ASCII.encode() + b"\x00\x01\x02"

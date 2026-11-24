@@ -448,7 +448,7 @@ def kontrola_commitow(zakres: list) -> list:
         # -z: ścieżki z polskimi znakami bez cudzysłowów i ósemkowych kodów (inaczej plik byłby pominięty);
         # -c: w scaleniu pliki różne od wszystkich rodziców – treść wniesiona przy rozwiązaniu konfliktu
         for sciezka in filter(None, git("diff-tree", "-z", "-c", "--no-commit-id", "-r", "--root", "--name-only",
-                                        "--diff-filter=AMR", sha).split("\0")):
+                                        "--diff-filter=ACMRT", sha).split("\0")):  # T: dowiązanie ↔ plik
             bledy += sprawdz_plik_gita(f"{k} {sciezka}", sciezka, f"{sha}:{sciezka}", zakazane)
     return bledy
 
