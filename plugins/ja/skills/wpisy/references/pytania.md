@@ -122,7 +122,7 @@ Zapis w Notion (przykład zmyślony; nagłówek to zwijany nagłówek h3, komuni
 🔔 Komunikaty asystenta
 
 <p>
-🔔 10.11 21:30 · przegląd wieczorny – przerwany limitem czasu (od 09.11, 2 razy) `przebieg-wieczorny`
+🔔 10.11 21:30 · przegląd nocny – przerwany limitem czasu (od 09.11, 2 razy) `przebieg-wieczorny`
 
 <callout icon="❓" color="yellow_bg">
 <b>Co możesz zrobić:</b> nic – ponowię jutro (propozycja: napisz „log”, sprawdzę przyczynę)
