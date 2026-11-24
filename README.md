@@ -68,7 +68,7 @@ Mac (launchd, `AI/automaty/przeglad.py`, poza repo) ── co godzinę 8–22, w
    ├─ po przebiegu `tools/wydatki.py`: kolejka „💸 Wydatki → arkusz” → arkusz Google „Kosztorys budowy”
    ├─ po przebiegu `tools/budzet/arkusz_budzetu.py`: wydatki z wpisów → arkusz Google „Budżet domowy” (w nocy kontrola wpis ↔ wiersz)
    └─ problem, który trwa (przebieg nieudany lub nieuruchomiony, logowanie MCP, błąd skryptu) → `stan.json` →
-      następny udany przebieg → „🔔 Komunikaty asystenta” we „📝 Wpisach”; większe sprawy → baza „🤖 Zmiany asystenta” (Rodzaj Usterka)
+      następny udany przebieg → „🔔 Komunikaty asystenta” we „📝 Wpisach”; większe sprawy → baza „🤖 Zmiany asystenta” (Rodzaj Usterka; naprawa na polecenie „zrób ZP-n” w Claude Code)
 ```
 
 ## Konektory i drogi zapasowe
@@ -217,7 +217,7 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
 - Wszystko, co przyjdzie Ci do głowy (emocja, zadanie, dziecko, suplement, budowa), wpisuj na stronę „📝 Wpisy” (pod „📓 Dziennik”) w Notion –
   punkt pod punktem albo jako podstronę (telefon wystarczy albo Claude na telefonie → „📥 Skrzynka”; bloki 1. poziomu Dziennika i strony z widgetu
   nie są już czytane – przejście robi jednorazowo przegląd, `przeglad-dnia/references/przejscia.md`). Szybki przebieg co godzinę (8–22) i nocny przegląd dnia rozłożą to według bazy „🧭 Obszary
-  Dziennika”, a pod niejasnymi wpisami w „📝 Wpisy” doda krótkie okienko z pytaniem – odpowiedź wpisujesz w nim, przerobi ją następny przebieg. Gdy coś zepsuje się „w tle” (automat na Macu, skrypt, wydatek, który nie wszedł do arkusza), na górze „Wpisów” pojawi się blok pod „🔔 Komunikaty asystenta” – odpisz pod nim albo zostaw, jeśli ustąpi samo; sprawy za duże na przebieg trafiają do bazy „🤖 Zmiany asystenta” (Rodzaj Usterka) na stronie 🤖 Asystent AI. Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
+  Dziennika”, a pod niejasnymi wpisami w „📝 Wpisy” doda krótkie okienko z pytaniem – odpowiedź wpisujesz w nim, przerobi ją następny przebieg. Gdy coś zepsuje się „w tle” (automat na Macu, skrypt, wydatek, który nie wszedł do arkusza), na górze „Wpisów” pojawi się blok pod „🔔 Komunikaty asystenta” – odpisz pod nim albo zostaw, jeśli ustąpi samo; sprawy za duże na przebieg trafiają do bazy „🤖 Zmiany asystenta” (Rodzaj Usterka) na stronie 🤖 Asystent AI – naprawia je Claude Code na polecenie „zrób ZP-n” (nie same); gdy usterka potrzebuje Ciebie, zobaczysz blok 🔔. Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
   Ręcznie: „przerób dziennik”. Chcesz, żeby asystent coś przemyślał („przygotuj mi pytania na jutrzejsze spotkanie”, „porównaj…”)
   – napisz to we wpisie; wynik będzie rano w przeglądzie dnia, w sekcji „🧠 Rozkminka” (bez prośby asystent rozkminek nie robi).
 - Poprawki „na przyszłość” z telefonu trafiają do skrzynki w Notion; Claude Code wdroży je na polecenie „wdróż”.

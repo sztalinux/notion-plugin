@@ -24,7 +24,7 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
 - Nie ma kogo zapytać: niejasne → pytanie w Notion (okienko pod wpisem w „📝 Wpisy”; sprawy z tła – blok 🔔 w tym samym miejscu, `wpisy/references/pytania.md`, C.7),
   nie tylko w odpowiedzi. Jedno polecenie na wywołanie narzędzia: ścieżka względna od repo, bez `cd`, potoków i `;`.
 - **Nie zostawiaj sprawy z adnotacją „wymaga sesji Claude Code”** – wybierz (a) część + ❓/🔔 z propozycją, (b) ❓/🔔 z dokładną
-  czynnością dla inwestora, (c) tylko praca techniczna: wiersz ZP + 🔔 „naprawię w najbliższej sesji Claude Code; nic nie musisz robić”
+  czynnością dla inwestora, (c) tylko praca techniczna: wiersz ZP – naprawa na polecenie „zrób ZP-n”, 🔔 tylko według C.5
   (`wpisy/references/pytania.md`, C.8; wyjątek – nowy etap i pierwsze sprawdzenie nowej pozycji kosztorysu, które linia stanu
   sesji przekazuje sesji sama).
 - Nie wybieraj ani nie zgaduj decyzji za inwestora; nie zmieniaj układu ani kwot planu w arkuszu kosztów ani terminów kroków

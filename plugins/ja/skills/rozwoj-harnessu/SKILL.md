@@ -16,7 +16,7 @@ Konfiguracja projektu „Dom” na claude.ai (instrukcje, wiedza): `references/c
 | Czat, telefon, Cowork, inne AI (bez repo) | **Zgłoszenie** do bazy „🤖 Zmiany asystenta” (Rodzaj Zasada) – sekcja A |
 | Claude Code w folderze repo | **Wdrożenie** skrzynki do plików + push – sekcja B (na polecenie „wdróż”) |
 | Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, arkusz kosztorysu) | **Pomysł** (Rodzaj Pomysł w „🤖 Zmiany asystenta”) → analiza → wdrożenie na polecenie – sekcja C |
-| Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Usterka** (Rodzaj Usterka w „🤖 Zmiany asystenta”) → naprawa w Claude Code – sekcja D |
+| Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Usterka** (Rodzaj Usterka w „🤖 Zmiany asystenta”) → naprawa w Claude Code na polecenie „zrób ZP-n” – sekcja D |
 
 Skrzynka = konkretna reguła, wchodzi od razu. Pomysł = coś do przemyślenia; nic nie wchodzi samo, decyduje inwestor.
 
