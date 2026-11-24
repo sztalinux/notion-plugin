@@ -45,12 +45,13 @@ z polem `grupa`), część na budowę także do kolejki 💸. **Paragon bez „k
 
 1. Wydatek na budowę (ekipa, materiał, usługa) → reguła `dom-budowa/skills/koszty/references/wydatek-przeplyw.md` (kosztorys i budżet, konto, zwroty).
 2. Na Macu (przebieg albo Claude Code): `python3 tools/budzet/wpis.py dodaj "<treść wpisu>" --data <dzień wydatku albo wpisu>
-   --id <id bloku / strony wpisu>`. Ten sam `--id` nadpisuje zapis – ponowny przebieg nie dubluje. Zapis z datą od 1.12.2026
+   --id <id bloku / strony wpisu>`. Ten sam `--id` nadpisuje zapis – ponowny przebieg nie dubluje. Wydatek z wiadomości w rozmowie
+   (bez bloku) – `--id c<RRRRMMDDGGMM wiadomości>-<n>`; bez `--id` dwa takie same wydatki z jednego dnia zleją się w jeden. Zapis z datą od 1.12.2026
    trafia do Transakcji w ciągu godziny (automat po przebiegu: `arkusz_budzetu.py sync`; ID wpisu w kolumnie O, Notatki
    „z wpisu”); w sesji Claude Code z inwestorem (nie w przebiegu) uruchom zaraz po zapisie
    `python3 tools/budzet/arkusz_budzetu.py sync`. Starsze zapisy
    (listopad) i te, których skrypt arkusza nie przyjął, dopisze zamknięcie miesiąca po ID. Usunięcie wydatku:
-   `python3 tools/budzet/wpis.py usun RRRR-MM <id>` (w sesji potem `sync` – wiersz znika z arkusza).
+   `python3 tools/budzet/wpis.py usun RRRR-MM <id>` (w sesji potem `sync` – wiersz znika z arkusza; brak wpisu – kod 1).
    Wydatek budowy: dodatkowo `--budowa <id strony 💸>` i `--gotowka` (Sposób = Gotówka albo brak informacji – wtedy gotówka)
    (`dom-budowa/skills/koszty/references/wydatek-przeplyw.md`). Składnia jest tu – nie sprawdzaj `--help`; jedno polecenie na wywołanie, ścieżka względna od repo, bez `cd`, potoków i `;`.
 3. „✗ pierwsze pole to nie kwota” → wpis nie jest wydatkiem w skrócie; obsłuż go inną procedurą albo pytaniem ❓.

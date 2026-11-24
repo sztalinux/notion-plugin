@@ -583,6 +583,14 @@ class PrzeplywArkusz(unittest.TestCase):
         self.assertEqual((d['-40 zak']['konto'], d['-40 zak']['kwota'], '„+”' in d['-40 zak']['uwaga']), ('K-praca', -40.0, True))
         self.assertIn('nie rozumiem', d['zak 7x']['uwaga'])
 
+    def test_a12_usun_bez_trafienia_kod_1_i_po_zmianie_miesiaca(self):
+        kod, out = Przeplyw.proces(self, 'wpis.py', 'usun', '2026-12', 'q9')
+        self.assertEqual((kod, '✗ brak wpisu' in out), (1, True))
+        self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q9')
+        self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2027-01-02', '--id', 'q9')  # zmiana daty na inny miesiąc
+        self.assertIn('usunięto (1)', self.uruchom('wpis.py', 'usun', '2026-12', 'q9'))
+        self.assertIn('2027-01: 0 wpisów', self.uruchom('wpis.py', 'lista', '2027-01'))
+
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')
         p = self.dane / 'listy' / '2026-12-wpisy.jsonl'

@@ -15,7 +15,8 @@ gotówka i konta drugiej osoby zawsze na drugą osobę. Kwota z „+” = wpływ
 miesiąc daty); znacznik wysyłki zostaje, więc synchronizacja poprawi wiersz w arkuszu zamiast dopisać drugi.
 --budowa: ID strony w kolejce 💸 – wydatek na budowę, już w kosztorysie. Bez konta w treści – gotówka (brak informacji = gotówka).
 --gotowka: wymusza gotówkę (strona 💸 ze Sposobem = Gotówka), także przy --budowa.
-usun: zapis już wysłany do arkusza dostaje znak `usuniety` – synchronizacja usuwa jego wiersz i dopiero wtedy zapis z pliku.
+usun: brak wpisu -> kod 1; wpis z innego miesiąca (zmiana daty) też się znajdzie. Zapis już wysłany do arkusza dostaje
+znak `usuniety` – synchronizacja usuwa jego wiersz i dopiero wtedy zapis z pliku.
 Pole `grupa` – części jednego paragonu (zapisuje je paragon.py); zamknięcie miesiąca paruje płatność z wyciągu z sumą grupy.
 usun z ID części albo ID wpisu paragonu usuwa cały paragon.
 """
@@ -119,12 +120,16 @@ def main():
         return
     if A.akcja == 'usun':
         with blokada_wpisow():
-            ws = czytaj_wpisy(A.arg, z_usunietymi=True)
             ids = (A.id_usun, 'w' + str(A.id_usun))
-            trafione = [w for w in ws if (w['id'] in ids or w.get('grupa') in ids) and not w.get('usuniety')]
+            trafia = lambda ws: [w for w in ws if (w['id'] in ids or w.get('grupa') in ids) and not w.get('usuniety')]
+            mies = A.arg  # wpis po zmianie daty jest w pliku innego miesiąca – szukaj też tam
+            if not trafia(czytaj_wpisy(mies, z_usunietymi=True)):
+                mies = next((m for m in miesiace_wpisow() if trafia(czytaj_wpisy(m, z_usunietymi=True))), mies)
+            ws = czytaj_wpisy(mies, z_usunietymi=True)
+            trafione = trafia(ws)
             if not trafione:
                 print(f'✗ brak wpisu {A.id_usun}')
-                return
+                sys.exit(1)
             # wszystko, co pasuje (zwykły wpis i paragon z tym ID); część paragonu – znika cały paragon, nie jedna kategoria
             grupy = {w['grupa'] for w in trafione if w.get('grupa')}
             cele = [w for w in ws if not w.get('usuniety') and (w in trafione or w.get('grupa') in grupy)]
@@ -132,7 +137,7 @@ def main():
             for w in cele:
                 if w.get('arkusz'):
                     w['usuniety'] = teraz
-            zapisz_wpisy(A.arg, [w for w in ws if not (w in cele and not w.get('arkusz'))])
+            zapisz_wpisy(mies, [w for w in ws if not (w in cele and not w.get('arkusz'))])
             print(f'usunięto ({len(cele)})' + (' – wiersze w arkuszu znikną przy synchronizacji (arkusz_budzetu.py sync)'
                                               if any(w.get('arkusz') for w in cele) else ''))
         return
