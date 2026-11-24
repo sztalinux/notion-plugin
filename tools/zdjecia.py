@@ -698,7 +698,7 @@ def main(argv=None):
     sub.add_parser("odblokuj")
     a = ap.parse_args(argv)
     # cele zapisu poleceń; rozloz i cofnij zapisują blokadę albo plan cofnięcia także na sucho
-    cele = {"rozloz": [HUB, DANE], "cofnij": [HUB, DANE], "zapisz-ruchy": [DANE], "odblokuj": [DANE]}
+    cele = {"rozloz": [HUB, DANE], "cofnij": [HUB, DANE], "zapisz-ruchy": [DANE], "odblokuj": [DANE], "wg-dni": [HUB]}
     if a.cmd == "plan":
         cele["plan"] = [DANE if a.zablokuj or not a.wyjscie else Path(a.wyjscie)]
     if a.cmd in cele and hub.zapis_zablokowany(REPO, *cele[a.cmd]):

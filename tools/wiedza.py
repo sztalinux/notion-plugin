@@ -922,7 +922,7 @@ def synchronizuj(conn: sqlite3.Connection, a, token: str, start: float, termin):
 def w_worktree() -> bool:
     """Kopia repo w .claude/worktrees/… (sesja równoległa): sync i publikuj nic nie robią także wtedy, gdy DOM_HUB
     wskazuje prawdziwy hub – niedokończony kod nie może przebudować indeksu ani trafić do czatu."""
-    return REPO.parent.name == "worktrees" and REPO.parent.parent.name == ".claude"
+    return (REPO.parent.name == "worktrees" and REPO.parent.parent.name == ".claude") or hub.kopia_robocza(REPO)
 
 
 def sciezka_bazy(a) -> Path:
