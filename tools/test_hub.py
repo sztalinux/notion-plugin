@@ -92,5 +92,109 @@ class FolderBudowy(unittest.TestCase):
         self.assertEqual(out.getvalue(), hub.ODMOWA + "\n")
 
 
+def srodowisko(**dodatki) -> dict:
+    """Środowisko procesu bez zmiennych, które kierują dane gdzie indziej (DOM_HUB, *_DANE, adres arkusza, atrapy)."""
+    env = {k: v for k, v in os.environ.items()
+           if k not in OBCE and not k.startswith(("WIEDZA_", "BUDZET_ARKUSZ_", "WYDATKI_"))}
+    env.update(dodatki)
+    return env
+
+
+class Narzedzia(unittest.TestCase):
+    """Prawdziwe narzędzia skopiowane do atrapy głównej kopii i kopii roboczej; procesy bez DOM_HUB."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = Path(tempfile.mkdtemp(prefix="hub-narz-")).resolve()
+        cls.budowa, cls.glowna, cls.robocza = atrapa(cls.tmp)
+        bez = shutil.ignore_patterns("__pycache__", "test_*")
+        for kopia in (cls.glowna, cls.robocza):
+            shutil.copytree(TU, kopia / "tools", ignore=bez)
+        (cls.tmp / "wejscie.txt").write_text("", encoding="utf-8")
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def uruchom(self, kopia: Path, *argv, **env) -> subprocess.CompletedProcess:
+        return subprocess.run([sys.executable, str(kopia / "tools" / argv[0]), *argv[1:]], cwd=str(self.tmp),
+                              env=srodowisko(**env), capture_output=True, text=True, timeout=60)
+
+    def bez_sladu(self):
+        self.assertFalse((self.budowa / ".dom").exists(), "zapis w folderze budowy z kopii roboczej")
+        self.assertFalse((self.glowna / ".claude" / ".dom").exists(), "śmieciowe .dom w AI/dom/.claude (F-8)")
+
+    def test_folder_budowy_wszystkich_narzedzi(self):
+        kod = ("import sys; sys.path[:0] = [sys.argv[1], sys.argv[1] + '/budzet']\n"
+               "import dokumenty, kopia, kopie, teczka, wiedza, zdjecia, wspolne\n"
+               "print({str(m.HUB) for m in (dokumenty, kopia, kopie, teczka, wiedza, zdjecia, wspolne)})")
+        r = subprocess.run([sys.executable, "-c", kod, str(self.robocza / "tools")], cwd=str(self.tmp),
+                           env=srodowisko(), capture_output=True, text=True, timeout=60)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(r.stdout.strip(), repr({str(self.budowa)}))
+        self.bez_sladu()
+
+    def test_odmowa_zapisu_z_kopii_roboczej(self):
+        polecenia = [
+            ("zdjecia.py", "rozloz", "--wykonaj"), ("zdjecia.py", "cofnij"), ("zdjecia.py", "odblokuj"),
+            ("kopia.py", "paczka", "--wykonaj"), ("kopia.py", "wgrane"), ("kopia.py", "aplikacja", "--wykonaj"),
+            ("kopie.py", "potwierdz", "notion"),
+            ("teczka.py", "zbierz", "--etap", "x", "--od", "2026-01-01", "--do", "2026-01-02", "--wykonaj"),
+            ("dokumenty.py",), ("dokumenty.py", "wgrane"), ("dokumenty.py", "ustaw", "a.pdf", "--opis", "x"),
+            ("wydatki.py", "sync"), ("wydatki.py", "sesja", "--zablokuj"), ("wydatki.py", "pobierz"),
+            ("wiedza_karty.py", "zapisz"), ("wiedza_jakosc.py", "raport"), ("migawka.py",),
+            ("budzet/wpis.py", "dodaj", "10, zak", "--data", "2026-12-05", "--id", "t1"),
+            ("budzet/importuj.py", "--miesiac", "2026-11", "--arkusz", "a.json"),
+            ("budzet/przenies.py", "--miesiac", "2026-11"), ("budzet/strona.py",),
+            ("budzet/allegro.py", str(self.tmp / "wejscie.txt"), "a.json"),
+            ("budzet/arkusz_budzetu.py", "sync"),
+            ("budzet/paragon.py", "pobierz", "--url", "x", "--data", "2026-12-05", "--id", "p1"),
+        ]
+        for argv in polecenia:
+            with self.subTest(polecenie=" ".join(argv)):
+                r = self.uruchom(self.robocza, *argv)
+                self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+                self.assertEqual(r.stdout.strip(), hub.ODMOWA)
+                self.bez_sladu()
+
+    def test_tryby_tylko_czytajace_dzialaja(self):
+        r = self.uruchom(self.robocza, "kopia.py", "stan")  # F-8: dawniej zapisywał .claude/.dom/kopia/stan.json
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertNotIn(hub.ODMOWA, r.stdout)
+        r = self.uruchom(self.robocza, "wiedza.py", "sync")  # sync z kopii roboczej nadal nic nie robi
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("worktree", r.stdout)
+        for argv in (("zdjecia.py", "stan"), ("budzet/wpis.py", "lista", "2026-12"),
+                     ("wydatki.py", "sesja"), ("budzet/arkusz_budzetu.py", "kod")):
+            with self.subTest(polecenie=" ".join(argv)):
+                r = self.uruchom(self.robocza, *argv)
+                self.assertNotIn(hub.ODMOWA, r.stdout)
+        self.bez_sladu()
+
+    def test_jawne_dane_poza_folderem_budowy(self):
+        dane = self.tmp / "dane-budzetu"
+        r = self.uruchom(self.robocza, "budzet/wpis.py", "dodaj", "10, zak", "--data", "2026-12-05", "--id", "t1",
+                         BUDZET_DANE=str(dane))
+        self.assertNotIn(hub.ODMOWA, r.stdout)
+        inny = self.tmp / "inny-hub"
+        r = self.uruchom(self.robocza, "kopie.py", "potwierdz", "notion", DOM_HUB=str(inny))
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertTrue((inny / ".dom" / "kopie-zapasowe.json").is_file())
+        self.bez_sladu()
+
+
+class GlownaKopia(unittest.TestCase):
+    def test_glowna_kopia_zapisuje_w_folderze_budowy(self):
+        tmp = Path(tempfile.mkdtemp(prefix="hub-glowna-")).resolve()
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        budowa, glowna, _ = atrapa(tmp)
+        shutil.copytree(TU, glowna / "tools", ignore=shutil.ignore_patterns("__pycache__", "test_*"))
+        r = subprocess.run([sys.executable, str(glowna / "tools" / "kopie.py"), "potwierdz", "notion"], cwd=str(tmp),
+                           env=srodowisko(), capture_output=True, text=True, timeout=60)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertTrue((budowa / ".dom" / "kopie-zapasowe.json").is_file())
+        self.assertFalse((glowna / ".claude" / ".dom").exists())
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)

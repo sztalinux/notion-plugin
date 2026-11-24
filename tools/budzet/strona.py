@@ -10,11 +10,13 @@ import argparse, json, re, shutil, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import DANE  # noqa: E402
+from wspolne import DANE, zapis_zablokowany  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--dist', default=str(DANE / 'strona'))
 DIST = Path(ap.parse_args().dist)
+if zapis_zablokowany(DIST):
+    raise SystemExit(1)
 DIST.mkdir(parents=True, exist_ok=True)
 
 

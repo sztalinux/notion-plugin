@@ -11,7 +11,7 @@ import argparse, json, re, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import DANE, wczytaj  # noqa: E402
+from wspolne import DANE, wczytaj, zapis_zablokowany  # noqa: E402
 
 MIES = {'sty': 1, 'lut': 2, 'mar': 3, 'kwi': 4, 'maj': 5, 'cze': 6, 'lip': 7, 'sie': 8, 'wrz': 9, 'paź': 10, 'paz': 10, 'lis': 11, 'gru': 12}
 
@@ -62,6 +62,8 @@ if __name__ == '__main__':
     we, wy = (Path(p) if Path(p).is_absolute() else DANE / p for p in (a.wejscie, a.wyjscie))
     if not we.exists():
         raise SystemExit(f'✗ brak pliku {we}')
+    if zapis_zablokowany(wy):
+        raise SystemExit(1)
     tekst = we.read_text(encoding='utf-8')
     zam = parsuj(tekst)
     bloki = sum(1 for l in tekst.splitlines() if l.strip().startswith('Zaznacz zakup:'))

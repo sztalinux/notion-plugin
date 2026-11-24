@@ -301,6 +301,8 @@ def main(argv=None):
     a, pozycje = ap.parse_known_args(argv)  # pozycje to reszta argumentów – także „-3,00, rabat” z minusem na początku
     if any(p.startswith('--') for p in pozycje):
         ap.error('nieznana opcja: ' + ', '.join(p for p in pozycje if p.startswith('--')))
+    if not (a.akcja == 'rozpisz' and a.proba) and wspolne.zapis_zablokowany():
+        return 1
     try:
         if a.akcja == 'pobierz':
             if not a.url:

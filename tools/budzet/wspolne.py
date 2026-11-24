@@ -1,16 +1,25 @@
 """Wspólne funkcje importu budżetu domowego (procedura `budzet` w pluginie ja).
 
 Kod jest ogólny; wszystko, co osobiste (konta, osoby, kategorie, reguły, wyciągi, decyzje), leży POZA repo w folderze
-danych: `<hub>/.dom/budzet/` (hub = folder budowy, dwa poziomy nad repo; nadpisuje go zmienna BUDZET_DANE albo DOM_HUB).
+danych: `<hub>/.dom/budzet/` (hub = folder budowy, dwa poziomy nad główną kopią repo – tools/hub.py; nadpisuje go
+zmienna BUDZET_DANE albo DOM_HUB).
 Pliki danych: ustawienia.json, kategorie.json, reguly.json, oczekujace.json, wyciagi/, listy/, miesiace/.
 """
-import csv, hashlib, json, os, re, unicodedata
+import csv, hashlib, json, os, re, sys, unicodedata
 from datetime import date, datetime
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import hub  # noqa: E402  – folder budowy także z kopii roboczej git (tools/hub.py)
+
 REPO = Path(__file__).resolve().parents[2]
-HUB = Path(os.environ.get('DOM_HUB', REPO.parent.parent)).expanduser()
+HUB = hub.folder_budowy(REPO)
 DANE = Path(os.environ.get('BUDZET_DANE', HUB / '.dom' / 'budzet')).expanduser()
+
+
+def zapis_zablokowany(*cele):
+    """Kopia robocza bez DOM_HUB, a cel zapisu (domyślnie folder danych) w prawdziwym folderze budowy – odmowa."""
+    return hub.zapis_zablokowany(REPO, *(cele or (DANE,)))
 
 
 def wczytaj(nazwa, domyslnie=None):

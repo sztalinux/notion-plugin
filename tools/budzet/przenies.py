@@ -26,6 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from wspolne import DANE, U, arkusz, formula_sumy, indeks_id, nazwa, norm, skladniki_arkusza, wczytaj, zapisz  # noqa: E402
+from wspolne import zapis_zablokowany  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--miesiac', required=True)
@@ -33,6 +34,8 @@ ap.add_argument('--zapisz-reguly', action='store_true')
 ap.add_argument('--mimo-brakow', action='store_true')
 ap.add_argument('--arkusz', help='świeży odczyt Transakcji (get_values) – pod blokadą zamknięcia')
 A = ap.parse_args()
+if zapis_zablokowany():
+    raise SystemExit(1)
 sciezka = lambda p: p and str(p if Path(p).is_absolute() else DANE / p)
 MIES = A.miesiac
 D = wczytaj(f'miesiace/{MIES}.json')
