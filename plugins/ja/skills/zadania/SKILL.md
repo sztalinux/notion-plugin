@@ -54,7 +54,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
    Name „Kupić X”, Kategoria Zakup, Obszar jak w zakupie, relacja Zadanie w Zakupach.
 4. „Kupiłem X” → Zakupy: Status Kupione + Kupione dnia (rzecz na budowę lub działkę → `zakupy` z `dom-budowa`, sekcja 0); powiązane zadanie DONE (sekcja B). „Zamówiłem X” → Zamówione.
    Pozycji X nie ma w 🛒 (szukanie jak w pkt 1) → nie zakładaj jej; w śladzie „→ zakup bez pozycji na liście” – lista zakupów
-   to plan, nie historia wydatków.
+   to plan, nie historia wydatków. Otwarte zadanie „Kupić X” / „Zamówić X” zamyka sekcja B (tabela) – także bez pozycji w 🛒.
    „Odpuszczam X” → Odpuszczone (powiązane zadanie ARCHIVED). Ręczne zmiany inwestora w Notion (status zakupu, zamknięcie zadania)
    wyrównuje wieczorem `przeglad-dnia`, krok 5b – blokiem 🔔 (`KS-Z…`), nie samowolnie.
 5. Odczyt „co kupić”: widok „🛒 Do kupienia” (grupy wg Gdzie), „📦 Zamówione – czekam”, „✅ Kupione” (ID w `ja/references/notion-mapa.md`);
@@ -66,6 +66,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 | Inwestor pisze | Status |
 |---|---|
 | „zrobiłem X”, „X zrobione”, „załatwione” | DONE |
+| „zamówiłem X”, „kupiłem X” przy otwartym zadaniu „Zamówić X” / „Kupić X” | DONE (pozycja w 🛒 – sekcja „Zakupy”, pkt 4) |
 | „zacząłem”, „w toku”, „robię” | IN PROGRESS |
 | „czekam na … (od kogo)” | WAITING (+ kto w Desc albo Kto) |
 | „przesuwam na …”, „w przyszłym tygodniu” | zostaje, When = nowy termin |
