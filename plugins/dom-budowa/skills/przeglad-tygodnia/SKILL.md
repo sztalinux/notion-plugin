@@ -121,7 +121,7 @@ W rozmowie z inwestorem zapytaj wprost i po „tak” wykonaj od razu, wsadowo. 
 - duplikaty w Notatniku i TASKS (to samo zagadnienie dwa razy) → scal w starszy wpis; kandydatów na duplikaty
   Informacji bierz z listy `duplikaty --od` (punkt „Spójność”);
 - wpisy bez Etapu lub Priorytetu → uzupełnij;
-- sprawy po terminie albo bez zmian od 30 dni → zamknąć, przesunąć termin czy zostawić (pytanie zbiorcze); zadań TASKS z terminem
+- sprawy po terminie albo bez zmian od 30 dni → zamknąć, przesunąć termin czy zostawić (propozycja domyślna na pozycję – C.7); zadań TASKS z terminem
   orientacyjnym (Deadline puste) nie zgłaszaj jako „po terminie” i nie proponuj przesuwania ich dat, także w części
   „bez zmian od 30 dni” (tam najwyżej „zamknąć czy zostawić?”) – inwestor tego nie chce (22.11.2026);
 - Informacje „Nowe” starsze niż 30 dni → „Przejrzane” albo „Nieaktualne”;

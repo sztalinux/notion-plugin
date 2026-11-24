@@ -106,7 +106,8 @@ Do zatwierdzenia (propozycja w przeglądzie):
 - wpisy z okienkiem ❓ i bloki 🔔 bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
-- TASKS prywatne z Deadline ☑ po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze); zadań z terminem
+- TASKS prywatne z Deadline ☑ po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (propozycja domyślna na pozycję –
+  `wpisy/references/pytania.md`, C.7); zadań z terminem
   orientacyjnym nie proponuj przesuwać ani zamykać (`zadania`, „Termin twardy czy orientacyjny”);
 Odpowiedź (☑ albo dopisek pod to-do) czyta nocny przebieg (`przeglad-dnia`, B.2; klucz `porzadki-<RRRR-Www>`) – wykonaj wtedy
-zatwierdzone porządki wsadowo (`ja`, zasada 2; które – `wpisy/references/pytania.md`, C.7), punkt do „Przetworzone”. Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.
+zatwierdzone porządki wsadowo (`ja`, zasada 2; które – `wpisy/references/pytania.md`, C.7), punkt do „Przetworzone” (wątpliwe zostają w bloku). Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.
