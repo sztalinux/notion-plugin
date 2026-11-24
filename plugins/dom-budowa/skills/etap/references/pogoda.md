@@ -22,7 +22,7 @@ Robota spoza tabeli (np. wnętrza po zamknięciu bryły) – bez ostrzeżeń pog
 ## Ostrzeżenie pogodowe (wieczorny przegląd budowy)
 
 Inwestor sam codziennie sprawdza pogodę – przegląd **nie podaje codziennej prognozy**. Ostrzega tylko przy robocie wrażliwej
-na pogodę, którą inwestor wpisał z datą w Uwagach kroku Harmonogramu (np. „betonowanie 20.11”), gdy jutro jest:
+na pogodę wpisanej z datą w Uwagach kroku Harmonogramu (np. „betonowanie 20.11”), gdy jutro jest:
 - **dzień tej roboty** (próg z wiersza roboty w tabeli wyżej), albo
 - **jeden z 7 dni pielęgnacji** po betonowaniu (wiersz „Beton po wylaniu”: mróz w nocy, upał).
 
@@ -35,7 +35,8 @@ w `budowa/references/notion-mapa.md`): jeden odczyt widoku „📅 Oś czasu” 
 w każdym Statusie, z ich Uwagami; stron kroków nie otwieraj. Nocny przebieg: kontrola spójności (`przeglad-dnia`, 5a)
 czytała ten widok w tym przebiegu → użyj jej wyniku (z Uwagami); nie czytała (czyta go tylko, gdy ma co sprawdzać) →
 przeczytaj sam. Ostrzeżenie nigdy nie zależy od tego, czy kontrola czytała.
-W ich Uwagach szukaj roboty z tabeli z datą. Nic nie pasuje → koniec, bez szukania prognozy.
+W ich Uwagach szukaj roboty z tabeli z datą – przy kilku datach tej samej roboty liczy się najnowszy dopisek (na początku
+pola: Uwagi dopisuje się na górze – `harmonogram` C, `dziennik` A.2); dat z „Było…” nie bierz. Nic nie pasuje → koniec, bez szukania prognozy.
 
 1. **Miejscowość** weź ze ściągi (Notion → DOM → „📐 Dane projektu”). Do wyszukiwania w sieci podaj **tylko miejscowość** –
    bez adresu, numeru działki i innych danych. Miejscowości w ściądze brak → pomiń prognozę, dopisz linię
