@@ -85,6 +85,13 @@ class Testy(unittest.TestCase):
         self.assertEqual((w['kwota'], w['skladniki']), (-25.0, [30.0, -5.0]))
         with self.assertRaises(ValueError):
             wpis.parsuj('abc, zam', sk)
+        # A-5: separator tysięcy i waluta przy kwocie; kropka tysięcy – odmowa zamiast kwoty tysiąc razy mniejszej
+        self.assertEqual(wpis.parsuj('1 200,50, zam', sk)['kwota'], -1200.5)
+        self.assertEqual((wpis.parsuj(f'12,50 {WAL}, zam', sk)['kwota'], wpis.parsuj(f'12,50 {WAL}, zam', sk)['kod']), (-12.5, 'zam'))
+        self.assertEqual(wpis.parsuj(f'1 200 {WAL}, zam', sk)['kwota'], -1200.0)
+        for zle in ('1.200,50, zam', '1.200, zam', '1,200.50, zam', '12 5, zam'):
+            with self.assertRaises(ValueError, msg=zle):
+                wpis.parsuj(zle, sk)
 
 
 NARZ = Path(__file__).resolve().parent / 'budzet'

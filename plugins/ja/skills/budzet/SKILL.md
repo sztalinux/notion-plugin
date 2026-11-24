@@ -53,6 +53,7 @@ z polem `grupa`), część na budowę także do kolejki 💸. **Paragon bez „k
    Wydatek budowy: dodatkowo `--budowa <id strony 💸>` i `--gotowka` (Sposób = Gotówka albo brak informacji – wtedy gotówka)
    (`dom-budowa/skills/koszty/references/wydatek-przeplyw.md`). Składnia jest tu – nie sprawdzaj `--help`; jedno polecenie na wywołanie, ścieżka względna od repo, bez `cd`, potoków i `;`.
 3. „✗ pierwsze pole to nie kwota” → wpis nie jest wydatkiem w skrócie; obsłuż go inną procedurą albo pytaniem ❓.
+   „✗ niejednoznaczna kwota” (np. kropka tysięcy) → ❓ z pytaniem o kwotę; nic się nie zapisało.
    „nieznany skrót kategorii” → zapis zostaje; pytanie pojawi się na stronie decyzji, a odpowiedź doda skrót.
 4. Bez Maca (claude.ai, telefon): wydatek do Skrzynki z polem „Zrobić: wydatek …” (`wpisy/references/skrzynka.md`); Mac zapisze go krokiem 2.
 5. Komunikat 🔔 `skrypt-arkusz_budzetu-kontrola` (nocna kontrola: wpis bez wiersza w arkuszu): odpowiedź „dopisz ponownie”

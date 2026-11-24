@@ -28,10 +28,24 @@ from wspolne import (U, blokada_wpisow, czytaj_wpisy, kw, miesiace_wpisow, opcja
                      zapisz_wpisy)
 
 KWOTA = re.compile(r'^(\+?)\s*(\d[\d.]*(?:\s*[+-]\s*\d[\d.]*)*)$')
+WALUTA = re.compile(r'^(.*\d)\s*(?:zł|zl|pln)$', re.I)
 
 
 def konta_drugiej():
     return set(U.get('konta_list', {}).values()) | {U.get('gotowka_konto', 'Gotówka')}
+
+
+def bez_waluty(pole):
+    m = WALUTA.match(pole)
+    return m.group(1) if m else pole
+
+
+def pole_kwoty(pole):
+    """Pierwsze pole: bez „zł”, separator tysięcy („1 200”) zdjęty; inna spacja między cyframi -> ValueError."""
+    s = re.sub(r'(?<=\d)[   ](?=\d{3}(?!\d))', '', bez_waluty(pole))
+    if re.search(r'\d[\s  ]+\d', s):
+        raise ValueError(f'niejednoznaczna kwota „{pole}”')
+    return s
 
 
 def parsuj(tekst, skroty=None, wymus_konto=None):
@@ -41,8 +55,11 @@ def parsuj(tekst, skroty=None, wymus_konto=None):
     sk_konta = {k.lower(): v for k, v in U.get('skroty_kont', {}).items()}
     sk_osoby = {k.lower(): v for k, v in U.get('skroty_osob', {}).items()}
     pola = [p.strip() for p in tekst.split(',')]
-    if len(pola) > 1 and re.fullmatch(r'\d{1,2}', pola[1]) and re.fullmatch(r'\+?\d+', pola[0]):
-        pola[:2] = [pola[0] + '.' + pola[1]]  # „212,54, zam” – przecinek dziesiętny
+    pola[0] = pole_kwoty(pola[0])
+    if len(pola) > 1 and re.fullmatch(r'\d{1,2}', bez_waluty(pola[1])) and re.fullmatch(r'\+?\d+', pola[0]):
+        pola[:2] = [pola[0] + '.' + bez_waluty(pola[1])]  # „212,54, zam” – przecinek dziesiętny
+    if re.search(r'[.,]\d{3}', pola[0]):  # „1.200,50” – kropka tysięcy albo trzy cyfry po przecinku
+        raise ValueError(f'niejednoznaczna kwota „{pola[0]}” – zapisz bez kropki tysięcy')
     m = KWOTA.match(pola[0].replace(' ', ''))
     if not m:
         raise ValueError(f'pierwsze pole to nie kwota: „{pola[0]}”')
@@ -54,6 +71,8 @@ def parsuj(tekst, skroty=None, wymus_konto=None):
     if i < len(pola) and pola[i].lower() in sk_osoby:
         osoba, i = sk_osoby[pola[i].lower()], i + 1
     kod = pola[i].lower() if i < len(pola) else ''
+    if re.fullmatch(r'[\d\s.,]+(?:zł|zl|pln)?', kod):  # „1,200.50, zak” – reszta kwoty wzięta za skrót kategorii
+        raise ValueError(f'niejednoznaczna kwota – „{kod}” wygląda na część kwoty')
     opis = ', '.join(p for p in pola[i + 1:] if p)
     konto = wymus_konto or konto or U.get('gotowka_konto', 'Gotówka')
     if konto in konta_drugiej():
