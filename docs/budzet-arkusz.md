@@ -100,6 +100,7 @@ po ID (`importuj.py` – zapis bez ID w kolumnie O = nowy wiersz), a przypięcia
 | „nagłówki Transakcji inne niż oczekiwane” | ktoś zmienił kolumny A–O – popraw arkusz albo kod (`NAGLOWEK` w sekcji 8 i `references/arkusz.md`) |
 | „wiersz ma też inne wpisy” | wiersz scalony ręcznie z kilku wpisów – popraw go ręcznie albo rozdziel (jeden ID = jeden wiersz) |
 | `kontrola`: brak wiersza | wiersz z ID wpisu skasowany w arkuszu – inwestor decyduje: `ponow <id>` (dopisz ponownie) albo `wpis.py usun` |
+| `✗ RRRR-MM-wpisy.jsonl: linia N to nie JSON` | uszkodzona linia w pliku wpisów (ręczna edycja) – popraw albo usuń tę linię; do tego czasu `wpis.py`, `sync`, `kontrola` i import stoją (kod 1) |
 | data przesunięta o dzień | daty idą w strefie arkusza (Plik → Ustawienia); nie zmieniaj strefy bez sprawdzenia wierszy |
 
 ## 6. Wdrożenie skryptu (raz, inwestor)

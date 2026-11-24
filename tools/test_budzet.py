@@ -181,6 +181,27 @@ class Przeplyw(unittest.TestCase):
                          [('Gotówka', -50.0, ('wp6',)), ('Gotówka', 300.0, ('wp5',))])
         self.assertNotIn('lista wydatków gotówkowych', ' '.join(m['braki']))
 
+    def proces(self, skrypt, *arg):
+        env = dict(os.environ, BUDZET_DANE=str(self.dane))
+        r = subprocess.run([sys.executable, str(NARZ / skrypt), *arg], env=env, capture_output=True, text=True)
+        return r.returncode, r.stdout + r.stderr
+
+    def test_a17_zle_wejscie_linia_zamiast_sladu(self):
+        """A-17: brak --arkusz, wyciąg bez nagłówka, brak pliku listy, uszkodzona linia wpisów – linia ✗, bez Traceback."""
+        for arg, oczek in ((['--miesiac', '2026-10'], '--arkusz'),
+                           (['--miesiac', '2026-10', '--arkusz', 'ark.json', '--lista', 'brak.txt'], '✗ --lista: brak pliku'),
+                           (['--miesiac', '2026-10', '--arkusz', 'ark.json', '--zen', 'zen.csv'], '✗ zen.csv: brak linii')):
+            (self.dane / 'zen.csv').write_text('to nie wyciąg\n')
+            kod, out = self.proces('importuj.py', *arg)
+            self.assertEqual((kod != 0, oczek in out, 'Traceback' in out), (True, True, False), out)
+        self.uruchom('wpis.py', 'dodaj', '10, dom', '--data', '2026-10-05', '--id', 'j1')
+        p = self.dane / 'listy' / '2026-10-wpisy.jsonl'
+        p.write_text(p.read_text(encoding='utf-8') + '{"kwota": 12, zepsute\n', encoding='utf-8')
+        for skrypt, arg in (('wpis.py', ['lista', '2026-10']), ('importuj.py', ['--miesiac', '2026-10', '--arkusz', 'ark.json'])):
+            kod, out = self.proces(skrypt, *arg)
+            self.assertEqual((kod, '2026-10-wpisy.jsonl: linia 2' in out, 'zepsute' in out, 'Traceback' in out),
+                             (1, True, False, False), out)
+
     def test_sam_zwrot_ujemny(self):
         self.uruchom('wpis.py', 'dodaj', '+40, dom, zwrot', '--data', '2026-10-10', '--id', 'p7', '--gotowka')
         m = self.importuj()

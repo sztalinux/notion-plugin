@@ -78,7 +78,10 @@ def wyciagi(zen=None, mbank=None):
     bank = []
     if zen and Path(zen).exists():
         lines = Path(zen).read_text(encoding='utf-8-sig').splitlines()
-        st = next(i for i, l in enumerate(lines) if l.startswith('Transactions:')) + 2
+        st = next((i for i, l in enumerate(lines) if l.startswith('Transactions:')), None)
+        if st is None:
+            raise SystemExit(f'✗ {Path(zen).name}: brak linii „Transactions:” – to nie wyciąg ZEN (CSV)?')
+        st += 2
         for l in lines[st:]:
             if not l.strip():
                 continue
@@ -90,7 +93,10 @@ def wyciagi(zen=None, mbank=None):
                              opis=re.sub(r'\s+', ' ', f[2]).strip(), kwota=kw(f[3]), saldo=kw(f[11]) if len(f) > 11 and f[11] else None))
     if mbank and Path(mbank).exists():
         lines = Path(mbank).read_text(encoding='utf-8-sig').splitlines()
-        st = next(i for i, l in enumerate(lines) if l.startswith('#Data operacji')) + 1
+        st = next((i for i, l in enumerate(lines) if l.startswith('#Data operacji')), None)
+        if st is None:
+            raise SystemExit(f'✗ {Path(mbank).name}: brak linii „#Data operacji” – to nie wyciąg mBanku (CSV)?')
+        st += 1
         for l in lines[st:]:
             f = next(csv.reader([l], delimiter=';'))
             if len(f) < 5 or not re.match(r'\d{4}-\d{2}-\d{2}', f[0]):
@@ -122,8 +128,20 @@ def plik_wpisow(mies):
 def czytaj_wpisy(mies, z_usunietymi=False):
     """Zapisy z pliku miesiąca; usunięte (czekają na wyczyszczenie wiersza w arkuszu) tylko z z_usunietymi."""
     p = plik_wpisow(mies)
-    ws = [json.loads(l) for l in p.read_text(encoding='utf-8').splitlines() if l.strip()] if p.exists() else []
+    ws = czytaj_jsonl(p) if p.exists() else []
     return ws if z_usunietymi else [w for w in ws if not w.get('usuniety')]
+
+
+def czytaj_jsonl(p):
+    """Linie JSON; uszkodzona linia -> SystemExit z plikiem i numerem linii (bez treści – trafia do 🔔)."""
+    out = []
+    for n, l in enumerate(Path(p).read_text(encoding='utf-8').splitlines(), 1):
+        if l.strip():
+            try:
+                out.append(json.loads(l))
+            except ValueError as e:
+                raise SystemExit(f'✗ {Path(p).name}: linia {n} to nie JSON ({e.msg}) – popraw albo usuń ją w {p}') from None
+    return out
 
 
 def zapisz_wpisy(mies, wpisy):

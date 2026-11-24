@@ -27,15 +27,20 @@ from itertools import combinations
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import (DANE, DRZEWO, U, arkusz, czytaj_wpisy, indeks_id, kw, kwota_pozycji, nazwa, norm, notatka_wpisu,  # noqa: E402
+from wspolne import (DANE, DRZEWO, U, arkusz, czytaj_jsonl, czytaj_wpisy, indeks_id, kw, kwota_pozycji, nazwa, norm, notatka_wpisu,  # noqa: E402
                      opcja, rozbij, skladniki_arkusza, wczytaj, wyciagi, z_wpisu, zapisz)
 
 ap = argparse.ArgumentParser()
-for a in ('miesiac', 'arkusz', 'zen', 'mbank', 'allegro', 'lista', 'wpisy'):
+for a in ('miesiac', 'arkusz'):
+    ap.add_argument('--' + a, required=True)
+for a in ('zen', 'mbank', 'allegro', 'lista', 'wpisy'):
     ap.add_argument('--' + a)
 ap.add_argument('--salda-wpisane', action='store_true', help='salda drugiej osoby są już w zakładce Konta')
 A = ap.parse_args()
 sciezka = lambda p: p and str(p if Path(p).is_absolute() else DANE / p)
+for a in ('arkusz', 'allegro', 'lista'):  # podana ścieżka bez pliku (literówka) – stop, nie cichy brak danych
+    if getattr(A, a) and not Path(sciezka(getattr(A, a))).exists():
+        raise SystemExit(f'✗ --{a}: brak pliku {sciezka(getattr(A, a))}')
 MIES = A.miesiac
 R, M = map(int, MIES.split('-'))
 KONIEC = date(R, M, monthrange(R, M)[1])
@@ -76,8 +81,7 @@ POPRZ = f'{R - (M == 1)}-{(M - 2) % 12 + 1:02d}'
 NAST = f'{R + (M == 12)}-{M % 12 + 1:02d}'
 if A.wpisy:
     pw = Path(sciezka(A.wpisy))
-    WPISY = [w for w in (json.loads(l) for l in pw.read_text(encoding='utf-8').splitlines() if l.strip())
-             if not w.get('usuniety')] if pw.exists() else []
+    WPISY = [w for w in czytaj_jsonl(pw) if not w.get('usuniety')] if pw.exists() else []
 else:
     WPISY = czytaj_wpisy(MIES)
 dzien_wpisu = lambda w: date.fromisoformat(w['data'])
