@@ -4,7 +4,7 @@
 Folder-centrum (hub) to katalog, do którego wrzucasz wszystko od projektantów i wykonawców.
 Domyślnie: dwa poziomy nad repozytorium (…/Dom/AI/dom → …/Dom), albo zmienna DOM_HUB.
 
-    python3 tools/dokumenty.py                 # skan + przebudowa paczki + raport (lista startowa „Dokumenty budowy”)
+    python3 tools/dokumenty.py                 # skan + przebudowa paczki + raport (polecenie sesji „posortuj dokumenty”)
     python3 tools/dokumenty.py --dry-run       # to samo bez zapisu
     python3 tools/dokumenty.py ustaw "<ścieżka>" --eksport --nazwa "…" --opis "…" --kategoria "…"
     python3 tools/dokumenty.py ustaw "<ścieżka>" --bez-eksportu --opis "…" --zawartosc "…"
@@ -38,8 +38,10 @@ import logging
 import warnings
 from pathlib import Path
 
+import hub
+
 REPO = Path(__file__).resolve().parent.parent
-HUB = Path(os.environ.get("DOM_HUB", REPO.parent.parent)).expanduser().resolve()
+HUB = hub.folder_budowy(REPO)
 CONF = HUB / ".dom"
 INDEKS = CONF / "indeks.json"
 WGRANE = CONF / "stan-wgrania.json"
@@ -392,6 +394,26 @@ def lista(nazwy, maks=MAKS_LISTA):
     return out
 
 
+def linie_zdarzen(ind: dict, zd: dict) -> list:
+    """Zdarzenia synchronizacji indeksu, które przepadają po jej zapisie: zmieniona treść, przeniesienia, usunięcia."""
+    r = []
+    # dokumenty z przewodnika też (eksport domyślnie pusty); bez .json – kopie maszynowe nadpisywane codziennie (kosztorys)
+    zm = [s for s in zd["zmienione"] if ind["pliki"].get(s, {}).get("eksport")
+          or (w_przewodniku(ind["pliki"].get(s, {})) and not s.lower().endswith(".json"))]
+    if zm:
+        r.append("  Zmieniona treść dokumentów z paczki lub przewodnika (nowa wersja? zaktualizuj --opis i --zawartosc "
+                 "– procedura `dokumenty`, A.5; ściąga, Notion):")
+        r += lista(zm)
+    for klucz, opis in (("przeniesione", "Przeniesione"), ("usuniete", "Usunięte z dysku"),
+                        ("duplikaty", "Duplikaty (pominięte)")):
+        if zd[klucz]:
+            r.append(f"  {opis}: {len(zd[klucz])}")
+    if zd["usuniete_przewodnik"]:
+        r.append("  Zniknęły dokumenty z przewodnika – opis przepadł (przeniesiony ze zmienioną treścią → sklasyfikuj nowy plik):")
+        r += lista(zd["usuniete_przewodnik"])
+    return r
+
+
 def cmd_sprawdz(a):
     if not HUB.is_dir():
         print(f"[dokumenty] Brak folderu budowy {HUB} – ustaw DOM_HUB.")
@@ -421,20 +443,7 @@ def cmd_sprawdz(a):
         oczek = [s for s, w in ind["pliki"].items() if w["status"] == "nowy"]
         if oczek:
             r.append(f"  Czeka na klasyfikację: {len(oczek)} (procedura `dokumenty`).")
-    # dokumenty z przewodnika też (eksport domyślnie pusty); bez .json – kopie maszynowe nadpisywane codziennie (kosztorys)
-    zm = [s for s in zd["zmienione"] if ind["pliki"].get(s, {}).get("eksport")
-          or (w_przewodniku(ind["pliki"].get(s, {})) and not s.lower().endswith(".json"))]
-    if zm:
-        r.append("  Zmieniona treść dokumentów z paczki lub przewodnika (nowa wersja? zaktualizuj --opis i --zawartosc "
-                 "– procedura `dokumenty`, A.5; ściąga, Notion):")
-        r += lista(zm)
-    for klucz, opis in (("przeniesione", "Przeniesione"), ("usuniete", "Usunięte z dysku"),
-                        ("duplikaty", "Duplikaty (pominięte)")):
-        if zd[klucz]:
-            r.append(f"  {opis}: {len(zd[klucz])}")
-    if zd["usuniete_przewodnik"]:
-        r.append("  Zniknęły dokumenty z przewodnika – opis przepadł (przeniesiony ze zmienioną treścią → sklasyfikuj nowy plik):")
-        r += lista(zd["usuniete_przewodnik"])
+    r += linie_zdarzen(ind, zd)
     for o in ostrz:
         r.append(f"  ! {o}")
     if PRZEWODNIK_NOTION.exists() and wczytaj(STAN_NOTION, {}).get("sha1") != sha1(PRZEWODNIK_NOTION):
@@ -462,8 +471,9 @@ def cmd_ustaw(a):
             print(f"Poza folderem budowy ({HUB}): {a.sciezka}")
             return 1
     klucz = nfc(sciezka.as_posix())
-    if klucz not in ind["pliki"]:
-        aktualizuj_indeks(ind)
+    zdarzenia = []
+    if klucz not in ind["pliki"]:  # pełna synchronizacja – jej zdarzenia wypisujemy, bo zapis indeksu je zamyka
+        zdarzenia = linie_zdarzen(ind, aktualizuj_indeks(ind))
     w = ind["pliki"].get(klucz)
     if not w:
         print(f"Nie ma w indeksie: {klucz}")
@@ -480,6 +490,9 @@ def cmd_ustaw(a):
     zapisz(INDEKS, ind)
     print(f"{klucz}: eksport={'tak' if w.get('eksport') else 'nie'}"
           + (f", w paczce jako „{nazwa_w_paczce(klucz, w)}”" if w.get("eksport") else ""))
+    if zdarzenia:
+        print("[dokumenty] Indeks zsynchronizowany przy `ustaw` – te zdarzenia nie wrócą w następnym raporcie:")
+        print("\n".join(zdarzenia))
     return 0
 
 
@@ -507,7 +520,7 @@ def cmd_notion_ok(_a):
     return 0
 
 
-def main() -> int:
+def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--dry-run", action="store_true")
     sub = ap.add_subparsers(dest="cmd")
@@ -524,7 +537,9 @@ def main() -> int:
     lp.add_argument("--nowe", action="store_true")
     sub.add_parser("wgrane")
     sub.add_parser("notion-ok")
-    a = ap.parse_args()
+    a = ap.parse_args(argv)
+    if a.cmd != "lista" and not (a.cmd is None and a.dry_run) and hub.zapis_zablokowany(REPO, CONF):
+        return 1
     _blok = blokada() if a.cmd == "ustaw" or (a.cmd is None and not a.dry_run) else None  # noqa: F841
     return {"ustaw": cmd_ustaw, "lista": cmd_lista, "wgrane": cmd_wgrane, "notion-ok": cmd_notion_ok}.get(a.cmd, cmd_sprawdz)(a)
 

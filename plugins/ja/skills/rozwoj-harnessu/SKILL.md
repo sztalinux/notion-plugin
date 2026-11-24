@@ -1,6 +1,6 @@
 ---
 name: rozwoj-harnessu
-description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez bazę „🤖 Zmiany asystenta” w Notion (zasady, pomysły, usterki) oraz analiza pomysłów na rozwój setupu (Rodzaj Pomysł w bazie „🤖 Zmiany asystenta”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/arkusza, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, „zrób ZP-2”, „znane problemy”, albo pyta o przeniesienie harnessu do innego AI.
+description: "Zmiany w harnessie (pluginy ja i dom-budowa) przez bazę „🤖 Zmiany asystenta” w Notion: zasady, pomysły, usterki. Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „zapamiętaj na przyszłość”), chce nową procedurę, mówi „wdróż”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-n”, „zrób ZP-n”, albo pyta o przeniesienie harnessu do innego AI."
 ---
 
 # Rozwój harnessu
@@ -16,12 +16,12 @@ Konfiguracja projektu „Dom” na claude.ai (instrukcje, wiedza): `references/c
 | Czat, telefon, Cowork, inne AI (bez repo) | **Zgłoszenie** do bazy „🤖 Zmiany asystenta” (Rodzaj Zasada) – sekcja A |
 | Claude Code w folderze repo | **Wdrożenie** skrzynki do plików + push – sekcja B (na polecenie „wdróż”) |
 | Większy pomysł na rozwój (nowa funkcja, automatyzacja, zdjęcia, arkusz kosztorysu) | **Pomysł** (Rodzaj Pomysł w „🤖 Zmiany asystenta”) → analiza → wdrożenie na polecenie – sekcja C |
-| Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Usterka** (Rodzaj Usterka w „🤖 Zmiany asystenta”) → naprawa w Claude Code – sekcja D |
+| Coś działa źle w tle, a przebieg tego nie naprawi (automat, skrypt, konektor) | **Usterka** (Rodzaj Usterka w „🤖 Zmiany asystenta”) → naprawa w Claude Code na polecenie „zrób ZP-n” – sekcja D |
 
-Skrzynka = konkretna reguła, wchodzi od razu. Pomysł = coś do przemyślenia; nic nie wchodzi samo, decyduje inwestor.
+Zasada (skrzynka zmian) = konkretna reguła, wchodzi od razu. Pomysł = coś do przemyślenia; nic nie wchodzi samo, decyduje inwestor.
 
 Jedna baza dla zasad, pomysłów i usterek: „🤖 Zmiany asystenta” – pola, statusy, ID (`HZ-n` / `POM-n` / `ZP-n`, pole tekstowe)
-i widoki: `references/zmiany-asystenta.md`. Skrzynka = wiersze Rodzaj Zasada ze Statusem pustym albo „Do zrobienia”
+i widoki: `references/zmiany-asystenta.md`. Skrzynka zmian = wiersze Rodzaj Zasada ze Statusem pustym albo „Do zrobienia”
 (**pusty = do wdrożenia** – inwestor dodaje wpisy ręcznie, bez pól); widok „📥 Zasady do wdrożenia".
 
 ## Kiedy proponować zmianę (pętla uczenia)

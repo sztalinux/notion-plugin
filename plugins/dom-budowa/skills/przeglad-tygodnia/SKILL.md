@@ -1,6 +1,6 @@
 ---
 name: przeglad-tygodnia
-description: "Cotygodniowy przegląd budowy (osobno od spraw osobistych – te ma przeglad-tygodnia-osobisty z pluginu ja) i porządki w Notion budowy – co nowego doszło do wiedzy, otwarte sprzeczności czekające na decyzję, pytania do projektantów, zadania i terminy na najbliższe dni, informacje do ponownej weryfikacji. Używaj, gdy uruchamia go przegląd osobisty (automat na Macu) lub użytkownik pyta „co nowego”, „podsumuj tydzień”, „przegląd”. „Co mnie czeka w tym / przyszłym tygodniu” – nie tutaj: budowa → harmonogram, sprawy prywatne → przeglad-tygodnia-osobisty."
+description: "Cotygodniowy przegląd budowy (sprawy osobiste ma przeglad-tygodnia-osobisty, plugin ja): nowa wiedza, sprzeczności do decyzji, pytania do projektantów, zadania i terminy, porządki w Notion budowy. Używaj, gdy uruchamia go przegląd osobisty albo użytkownik pyta „co nowego”, „podsumuj tydzień” (budowa). „Co mnie czeka” – nie tutaj (`harmonogram`)."
 ---
 
 # Przegląd tygodnia
@@ -9,6 +9,8 @@ Cel: w 2 minuty inwestor wie, co doszło, co czeka na jego decyzję i co trzeba 
 Przegląd czyta i podsumowuje – niczego nie rozstrzyga. Statusy zmienia tylko w ramach porządków zatwierdzonych
 przez inwestora (sekcja „Porządki”). Kolejność i pierwszy plan wg zasady 12 w procedurze `budowa`:
 najpierw bieżący etap i pilne terminy, sprawy zamknięte i odległe tylko licznikiem.
+„Co mnie czeka w tym / przyszłym tygodniu” – nie tutaj: budowa → `harmonogram` (E), sprawy prywatne →
+`przeglad-tygodnia-osobisty` (plugin `ja`).
 
 ## Dane (ID: `budowa/references/zrodla.md`, `wiedza/references/notion-wiedza.md`)
 
@@ -37,7 +39,7 @@ Pobierz w jak najmniejszej liczbie zapytań:
 5a. **Harmonogram** (`collection://d7a479ab-1e23-453f-8f59-55f4097f7d04`): kroki startujące / kończące się w 14 dni, kroki po terminie
     bez statusu „Zrobione”, kroki „Bez odwrotu” w 14 dni (bramka wg `etap` – przypomnienie, bez zadania), terminy „Szacunek” na najbliższe 14 dni
     (do potwierdzenia u wykonawcy).
-5b. **🧱 Zakupy budowy**: „Zamówić do” w 14 dni lub po terminie, Status przed zamówieniem (nie Zamówione / Potwierdzone / Dostarczone / Nieaktualne); dostawy w 7 dni.
+5b. **🧱 Zakupy budowy**: „Zamówić do” w 14 dni lub po terminie, Status przed zamówieniem (nie Zamówione / Potwierdzone / Dostarczone / Problem / Nieaktualne); pozycje „Problem” – osobna wzmianka „z problemem: n”, nie jako do zamówienia; dostawy w 7 dni.
 5c. **Umowy i gwarancje**: Gwarancja do / Rękojmia do w ciągu 60 dni (przegląd przed upływem, zgłoszenie usterek).
 6. **Informacje**: „Wrażliwe na czas” z Datą informacji starszą niż 12 miesięcy, jeśli dotyczą bieżącego etapu.
 7. **Harness** – nie tutaj: skrzynkę zmian raportuje przegląd osobisty
@@ -54,7 +56,7 @@ Pobierz w jak najmniejszej liczbie zapytań:
       lub decyzjom; Informacje „Sporne” bez wpisu w Rejestrze;
     - sprawy blokujące bieżący etap bez Priorytetu „Krytyczne” (np. termin przed startem etapu, a Priorytet „Ważne”) –
       nie widać ich w „🔴 Do zamknięcia” na DOM;
-    - Dziennik: problemy bez wpisu w Notatniku/TASKS; TASKS „DONE”, a powiązany wpis Notatnika otwarty;
+    - Dziennik: problemy bez wpisu w Notatniku/TASKS (pomiń te z dopiskiem „zamknięte na miejscu” – `dziennik` A.2); TASKS „DONE”, a powiązany wpis Notatnika otwarty;
     - zadania budowy ↔ kroki Harmonogramu (grupy H1–H4): pełny przebieg wg `ja/skills/przeglad-dnia/references/kontrola-spojnosci.md`
       (bez warunku „zmienione dziś” z przeglądu dnia); flagi tylko jako bloki 🔔 z kluczem `KS-…` (`wpisy/references/pytania.md`, C.7; liczą się do limitu 5), bez zmian bez ☑ inwestora;
       zadanie lub krok w koszu Notion (strona oznaczona jako usunięta) – pomiń bez flagi; H2 z wyborem DONE albo ARCHIVED;
@@ -104,17 +106,22 @@ Przegląd budowy – tydzień <RRRR-Www> (<data>)
 **Dziennik – budowa:** m wpisów o budowie czeka na Twoją odpowiedź: <wpis> – <pytanie>
 **Sugestia na ten tydzień:** 1–3 konkretne kroki.
 **Na później (n):** licznik spraw z dalszych etapów – bez listy.
-**Porządki (n):** propozycje z sekcji „Porządki” – do zatwierdzenia jednym „tak” · naprawione nagłówki: n
+**Porządki (n):** propozycje z sekcji „Porządki” – pytanie w 🔔 we „Wpisach” (w rozmowie – wprost) · naprawione nagłówki: n
 </toggle>
 ```
 
 ## Porządki (raz w tygodniu, max 10 pozycji)
 
-Znajdź i zaproponuj – nie wykonuj bez zgody; po „tak” wykonaj wsadowo (zasada 6):
+Znajdź i zaproponuj – nie wykonuj bez zgody. Propozycje daj jednym blokiem 🔔 pod „🔔 Komunikaty asystenta” we „Wpisach”
+(`ja/skills/wpisy/references/pytania.md`, C.7; klucz `porzadki-budowa-<RRRR-Www>`): jedno to-do „Zastosować wszystkie
+porządki (lista w Szczegółach)”, wyjątki – dopisek pod to-do („bez 3, 5”), „zastosuję w nocnym przeglądzie”; wykonuje
+nocny przebieg (`przeglad-dnia`, B.2) wsadowo (zasada 6). Ponumerowana lista, pozycje z wyborem wariantu, co wykonać
+po odpowiedzi i blok z poprzedniego tygodnia bez odpowiedzi – C.7, „Porządki tygodnia”.
+W rozmowie z inwestorem zapytaj wprost i po „tak” wykonaj od razu, wsadowo. Szukaj:
 - duplikaty w Notatniku i TASKS (to samo zagadnienie dwa razy) → scal w starszy wpis; kandydatów na duplikaty
   Informacji bierz z listy `duplikaty --od` (punkt „Spójność”);
 - wpisy bez Etapu lub Priorytetu → uzupełnij;
-- sprawy po terminie albo bez zmian od 30 dni → zamknąć, przesunąć termin czy zostawić (pytanie zbiorcze); zadań TASKS z terminem
+- sprawy po terminie albo bez zmian od 30 dni → zamknąć, przesunąć termin czy zostawić (propozycja domyślna na pozycję – C.7); zadań TASKS z terminem
   orientacyjnym (Deadline puste) nie zgłaszaj jako „po terminie” i nie proponuj przesuwania ich dat, także w części
   „bez zmian od 30 dni” (tam najwyżej „zamknąć czy zostawić?”) – inwestor tego nie chce (22.11.2026);
 - Informacje „Nowe” starsze niż 30 dni → „Przejrzane” albo „Nieaktualne”;
@@ -127,5 +134,6 @@ budowy – archiwum” (ID w mapie; przeniesienie jak w `przeglad-tygodnia-osobi
 
 Zapis: dopisz przegląd na górze strony Notion „Przeglądy tygodniowe” (pod DOM, `3f4f5982-09e7-8144-af5e-f9521a52ea9d`)
 jako zwijany nagłówek z tytułem tygodnia – **jedno wywołanie**. W rozmowie podaj ten sam tekst. Gdy wywołał cię przegląd
-osobisty (`przeglad-tygodnia-osobisty`), zwróć mu wzmiankę do wpisu i jedną linię skrótu (do decyzji n, terminy 7 dni n).
+osobisty (`przeglad-tygodnia-osobisty`), zwróć mu wzmiankę do wpisu, jedną linię skrótu (do decyzji n, terminy 7 dni n) i blok porządków
+(sekcja „Porządki”) – zapisze go on, w swojej jednej edycji „Wpisów”; sam go nie zapisuj.
 Pusty tydzień (brak nowych rzeczy i terminów) → krótka informacja „bez zmian”, bez zapisu do Notion.

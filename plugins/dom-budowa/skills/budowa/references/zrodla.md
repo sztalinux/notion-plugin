@@ -43,7 +43,7 @@ Pełna mapa z perspektywy „czego szukasz” (widoki, pola, słowniki): `notion
 | Baza wiedzy (strona) | `3f4f5982-09e7-8193-a68e-fd35c9265012` |
 | Tematy / Informacje / Rozmowy i źródła / Rejestr sprzeczności | `wiedza/references/notion-wiedza.md` |
 | Przeglądy tygodniowe (strona) | `3f4f5982-09e7-8144-af5e-f9521a52ea9d` |
-| 🤖 Asystent AI (wersje obu pluginów, skrzynka, pomysły) | `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` |
+| 🤖 Asystent AI (wersje obu pluginów, skrzynka zmian, pomysły) | `3f4f5982-09e7-81f5-b7f9-d6cf5d79bb34` |
 | 🔑 Asystent – dostęp (strona pod 🤖 Asystent AI: dostęp do indeksu wiedzy dla czatu) | `3fcf5982-09e7-810e-aaca-f2b582438924` |
 | 📓 Dziennik (strona wpisów) / 📆 Przeglądy dzienne – budowa (na DOM) | `3f8f5982-09e7-80c8-a154-c59aeb844e8f` / `3f8f5982-09e7-815e-8b03-eacaa74db190` |
 | 🤖 Zmiany asystenta (data source; dawne bazy HZ/POM/ZP w 🗄 Archiwum) | `collection://41cf5982-09e7-812c-a004-000b7cb2af9f` |

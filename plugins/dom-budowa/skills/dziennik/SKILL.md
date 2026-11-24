@@ -1,6 +1,6 @@
 ---
 name: dziennik
-description: "Dziennik inwestora – wpis z budowy po każdym dniu pracy lub wizycie (co zrobiono, kto był, pogoda, dostawy, godziny własne, problemy, ustalenia z ekipą, roboty dodatkowe, zdjęcia) do Notion „Dziennik budowy”. Używaj, gdy użytkownik relacjonuje dzień na budowie („dziś na budowie…”, „ekipa zrobiła…”, „byłem na działce”, „przyjechał beton”), wysyła zdjęcia z budowy, podaje swoje godziny pracy, mówi o problemie lub usterce, o robotach dodatkowych („ekipa chce dopłatę za…”), albo pyta „co się działo w zeszłym tygodniu”. Także zdjęcia na Dysku Google: „rozłóż zdjęcia”, „wgrałem zdjęcia”, „gdzie są zdjęcia …”, „cofnij ostatnie rozłożenie”."
+description: Dziennik inwestora – wpis z dnia na budowie do Notion „Dziennik budowy” (co zrobiono, kto był, pogoda, dostawy, godziny własne, problemy, usterki, roboty dodatkowe) i zdjęcia na Dysku. Używaj, gdy użytkownik relacjonuje dzień („dziś na budowie…”, „przyjechał beton”), podaje swoje godziny, mówi „ekipa chce dopłatę za…”, „rozłóż zdjęcia”, „gdzie są zdjęcia…”, „co się działo w zeszłym tygodniu”.
 ---
 
 # Dziennik budowy (inwestora)
@@ -29,9 +29,13 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
    | dostawa, zakup, zaliczka, gotówka dla ekipy | `koszty`, sekcja B – wiersze w „💸 Wydatki → arkusz” (Zrealizowane / Do zapłaty) |
    | dostawa albo zakup materiału na budowę | `zakupy`, sekcja C albo 0.3 – tylko wiersz w 🧱 Zakupach budowy (Status, Dostawa = data, Dokumenty); wydatek raz – wiersz wyżej |
    | ustalenie, pytanie, ryzyko, decyzja | `notatka` – Notatnik budowy z Etapem i Do kogo |
-   | usterka do poprawy, rzecz do zrobienia z terminem | `notatka` – TASKS (When), Kto = Ekipa |
+   | usterka do poprawy (także z odbioru – `etap` C.5; jedyne miejsce tej reguły) | TASKS: Kto = Ekipa, Status „WAITING” (widok „⏳ Czekam na”), Obszar = Dom, When = termin usunięcia, relacja Harmonogram; we wpisie – relacja Zadania. Notatnik tylko, gdy trzeba coś ustalić (Typ „Pytanie”, Do kogo = Ekipa, bez Kiedy – link do zadania) |
+   | inna rzecz do zrobienia z terminem | `notatka` – TASKS (When; Kto i Status wg jej tabeli) |
+   | problem jednorazowy, rozwiązany na miejscu (awaria pompy, przestój) | tylko pole „Problemy / usterki” z dopiskiem „zamknięte na miejscu” – bez zadania i wpisu w Notatniku (przegląd tygodnia go nie flaguje) |
    | „ekipa chce dopłatę za…” (roboty dodatkowe) | sekcja B |
-   | koniec kroku / etapu, „jutro betonujemy” | `etap` – odbiór albo bramka; Harmonogram – Status kroku „W trakcie”, „Zrobione” dopiero z odbiorem (`etap` C.7) |
+   | pierwszy dzień prac przy kroku („ekipa zaczęła zbrojenie płyty”) | Harmonogram – Status kroku „W trakcie” (`harmonogram`, „Status kroku”) |
+   | wykonana robota wrażliwa na pogodę (betonowanie, izolacja – tabela w `etap/references/pogoda.md`) | Harmonogram – w Uwagach kroku **na początku** „<robota> <data> (wykonane)”: od tej daty ostrzeżenie pogodowe liczy 7 dni pielęgnacji |
+   | koniec kroku / etapu, „jutro betonujemy” | `etap` – odbiór albo bramka; Status kroku wg `harmonogram` („Status kroku”: „Zrobione” dopiero z odbiorem) |
    | przesunięcie, opóźnienie ekipy, nowy termin, „nie skończyliśmy – jutro kontynuujemy”, „nie robili (deszcz)” | `harmonogram`, sekcja C (pkt 4 – terminy kroków przesuwasz od razu) |
    | wiedza od wykonawcy („mówi, że…”) | `wiedza` (Rozmowy i źródła), jeśli to coś więcej niż ustalenie na dziś |
 3. **Zdjęcia:** inwestor wysyła je w rozmowie albo pisze, że wgrał → wskaż folder kroku na Dysku (link z pola „Zdjęcia”
@@ -52,7 +56,10 @@ Baza i pola: `references/notion-dziennik.md`. Zdjęcia: Dysk Google `Dom/Zdjęci
 3. Zasada: **cena uzgodniona na piśmie przed wykonaniem** (SMS/mail wystarczy). Zaproponuj treść wiadomości
    do wykonawcy (co, cena, termin, że wchodzi do protokołu odbioru).
 4. Zapis: uzgodniona kwota → plan pozycji „Roboty dodatkowe – poza umową” w etapie (kolejka, Rodzaj = Plan – `koszty`, sekcja B3;
-   Kwota = plan całej pozycji brutto: dotychczasowy plan tej pozycji + ta dopłata),
+   Kwota = plan całej pozycji brutto z kwot uzgodnionych z ekipą, podanych przez inwestora). Kolejna dopłata w tym etapie
+   (pozycja ma już plan): Kwota = dotychczasowy plan z arkusza (`koszty`, „Gdzie są liczby”) + ta dopłata, zaznacz
+   „Nadpisz plan”, w Notatkach składniki – bez tego `sync` zwróci Błąd. Nie masz arkusza ani jego kopii (np. czat bez
+   konektora i eksportu) → sumy nie licz: pytanie (❓ pod wpisem albo w rozmowie) z propozycją kwoty planu;
    zapłata → wydatek na tę pozycję (`koszty`, sekcja B); wpis w dzienniku; decyzja → Notatnik (Typ „Decyzja”).
 
 ## C. Godziny własne i narzędzia

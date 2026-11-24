@@ -1,6 +1,6 @@
 ---
 name: przeglad-dnia
-description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę w ciągu dnia) rozkłada nowe wpisy ze „📝 Wpisów” i Skrzynki na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY (dla inwestora – nocny) robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), budowa dodatkowo w „📆 Przeglądy dzienne – budowa” na DOM – i linię „🤖” w Dzienniku, plus rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
+description: "Przebiegi bez inwestora na Macu (launchd, claude -p): szybki co godzinę rozkłada nowe wpisy ze „📝 Wpisów” i „📥 Skrzynki”, nocny robi podsumowanie dnia, zmiany i luki w zadaniach oraz plan dnia na stronie „☀️ Dziś”. Używaj, gdy uruchamia go automat („Dziennik – szybki przebieg”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „plan dnia”, „ogarnij dzisiejsze”."
 ---
 
 # Przegląd dnia – tryb szybki i wieczorny
@@ -15,7 +15,8 @@ w rozmowie, te same zasady:
 | Przegląd dnia | raz w nocy, 2:00 (przegląd poprzedniego dnia) | „Przegląd dnia (skill przeglad-dnia z pluginu ja, tryb wieczorny)” | ostatni szybki przebieg + zmiany w zadaniach + kontrola spójności + plan dnia na stronie ☀️ Dziś |
 
 Ręcznie w rozmowie: „przerób dziennik” = tryb szybki, „przegląd dnia” / „podsumuj dzień” = tryb wieczorny, „plan dnia” = tylko
-krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś).
+krok 8 na dziś (odczyty kroków 3–7, bez zapisów poza stroną ☀️ Dziś), „przegląd dnia za DD.MM” (zaległy dzień po nieudanym
+nocnym) – `references/uklad-wpisu.md`, E.
 
 ## Zasady trybu bez inwestora (oba tryby)
 
@@ -24,8 +25,8 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
 - Nie ma kogo zapytać: niejasne → pytanie w Notion (okienko pod wpisem w „📝 Wpisy”; sprawy z tła – blok 🔔 w tym samym miejscu, `wpisy/references/pytania.md`, C.7),
   nie tylko w odpowiedzi. Jedno polecenie na wywołanie narzędzia: ścieżka względna od repo, bez `cd`, potoków i `;`.
 - **Nie zostawiaj sprawy z adnotacją „wymaga sesji Claude Code”** – wybierz (a) część + ❓/🔔 z propozycją, (b) ❓/🔔 z dokładną
-  czynnością dla inwestora, (c) tylko praca techniczna: wiersz ZP + 🔔 „naprawię w najbliższej sesji Claude Code; nic nie musisz robić”
-  (`wpisy/references/pytania.md`, C.8; wyjątek – nowy etap i pierwsze sprawdzenie nowej pozycji kosztorysu, które linia stanu
+  czynnością dla inwestora, (c) tylko praca techniczna: wiersz ZP + 🔔 „naprawa: napisz »zrób ZP-n« w Claude Code”
+  (`wpisy/references/pytania.md`, C.5 i C.8; wyjątek – nowy etap i pierwsze sprawdzenie nowej pozycji kosztorysu, które linia stanu
   sesji przekazuje sesji sama).
 - Nie wybieraj ani nie zgaduj decyzji za inwestora; nie zmieniaj układu ani kwot planu w arkuszu kosztów ani terminów kroków
   Harmonogramu budowy (wyjątki: termin kroku podany przez inwestora we wpisie i przesunięcie z relacji o tempie prac – `harmonogram` C, wstęp i C.4) (wydatki, wyceny i plan kwoty, który inwestor sam podał we wpisie, zapisuj w kolejce „💸 Wydatki → arkusz” wg `koszty`
@@ -52,13 +53,10 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
    (dokleja je `przeglad.py`) to kolejne źródła – bez odczytu.
    Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Strony Dziennika (bloki 1. poziomu) i stron z widgetu **nie czytasz** –
    nie są źródłem wpisów (`wpisy`, „Źródła wpisów”); przejścia 1.1 i 1.2 robi tylko nocny przebieg (`references/przejscia.md`).
-2. **Nic nowego → koniec.** Brak bloków w treści „Wpisów” (wpis z okienkiem ❓ bez
-   odpowiedzi się nie liczy) i podstron w „Wpisach”, brak pozycji w „Nowe”
-   Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; szybki obsługuje tylko ❓ pod wpisami oraz 🔔 z automatów, kolejki 💸 i `SP-n`; **wszystkie inne bloki 🔔** (`KS-…`, `RES-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…`, `ZP-n`) obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
+2. **Nic nowego → koniec.** Brak bloków w treści „Wpisów” (wpis z okienkiem ❓ bez odpowiedzi się nie liczy) i podstron
+   w „Wpisach”, brak pozycji w „Nowe” Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; szybki obsługuje tylko ❓ pod wpisami oraz 🔔 z automatów, kolejki 💸 i `SP-n`; **wszystkie inne bloki 🔔** (`KS-…`, `RES-n`, `luki-zadan-…`, `praca-…`, `porzadki-…`, `rozkminka-…`, `ZP-n`) obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
    „Błąd”, brak list od automatu w poleceniu (komunikaty, gotowe rozkminki) i brak odpowiedzi pod blokami 🔔 (blok 🔔 bez odpowiedzi się nie liczy – inaczej
-   każdy przebieg przestałby być tani) → odpowiedz jedną linią „Wpisy: nic nowego (<godzina>;
-   Skrzynka: 0)”
-   i zakończ. **Zero zapisów** – nie dopisuj linii „🤖”, nie zmieniaj strony.
+   każdy przebieg przestałby być tani) → odpowiedz jedną linią „Wpisy: nic nowego (<godzina>; Skrzynka: 0)” i zakończ. **Zero zapisów** – nie dopisuj linii „🤖”, nie zmieniaj strony.
 3. **Inwestor może jeszcze pisać – oceniaj każde źródło osobno** (treść „Wpisów”, każda podstrona, Skrzynka). Źródło edytowane mniej niż 15 minut temu (czas ostatniej edycji strony), którego najnowszy wpis
    jest pusty albo urwany w pół zdania, pomiń w tym przebiegu – następny je weźmie; **pozostałe źródła przetwórz**. Sam
    brak kropki to nie urwanie (z telefonu inwestor pisze bez kropek). Tylko gdy pominąłeś wszystko, co nowe →
@@ -68,9 +66,8 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
    krótka, z godziną, bez wyliczania zapisów (te są w podpunktach wpisów, `wpisy` krok 6): `🤖 11:00: przetworzono 2
    (zadania 1, emocje 1), czeka na Ciebie 1, świeże pominięte 1`; liczby per źródło – tylko w odpowiedzi (log). Kolejne
    przebiegi tego dnia dopisują swoje linie (każdą z jej śladem) na górze tego samego bloku, nad wcześniejszymi
-   (`wpisy` krok 7); tytuł bloku pokazuje sumę dnia. W odpowiedzi
-   podaj nowe wpisy per źródło – „Wpisy n · Skrzynka n” – żeby było
-   widać, że przebieg sprawdził oba.
+   (`wpisy` krok 7); tytuł bloku pokazuje sumę dnia. W odpowiedzi podaj nowe wpisy per źródło – „Wpisy n · Skrzynka n” –
+   żeby było widać, że przebieg sprawdził oba.
 5. Bez „jutra”, bez wpisów w przeglądach – to robi noc. Rozkminki w ciągu dnia (tryb godzinowy, „Gotowe rozkminki”) i tryb `rozkminka`: `references/rozkminka.md`.
 
 ## B. Tryb wieczorny – podsumowanie i plan
@@ -86,13 +83,15 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
    Komunikaty 🔔 z linią `→ ZP-n`: sprawdź Status tych wierszy Rodzaj Usterka w „🤖 Zmiany asystenta” (wyszukiwarka z parametrem bazy) –
-   „Zrobione” albo „Odrzucone” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze ZP „Czeka na mnie”
-   (widok „🧯 Otwarte usterki”) bez bloku 🔔 → dodaj blok (tamże, C.5).
-2. **Pomysły i rozmowy** – bez analizy pomysłów (tylko na prośbę inwestora, `rozwoj-harnessu`, C) i bez odczytu tablicy
+   „Zrobione” albo „Odrzucone” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze widoku „🧯 Otwarte usterki”
+   ze Statusem „Czeka na mnie” bez pytania w bloku 🔔 → dodaj / popraw blok (tamże, C.5).
+2. **Pomysły, rozmowy i porządki** – bez analizy pomysłów (tylko na prośbę inwestora, `rozwoj-harnessu`, C) i bez odczytu tablicy
    pomysłów ani stron osób: kontrole spójności P (pomysł ↔ wdrożenie) i R (zadanie rozmowy ↔ „💬 Do przegadania”) robi przegląd
    tygodnia. Nocą tylko odpowiedzi: blok 🔔 `KS-P…` albo `KS-R…` z ☑ lub dopiskiem → zastosuj wg
    `references/kontrola-spojnosci-pomysly.md` („Przebieg”, 1) albo `-rozmowy.md` („Odczyt”, 3 – z odczytem tej jednej strony,
-   której dotyczy odpowiedź); bez odpowiedzi nie czytaj tych plików.
+   której dotyczy odpowiedź); bez odpowiedzi nie czytaj tych plików. Tak samo porządki tygodnia: blok 🔔 `porzadki-<RRRR-Www>`
+   albo `porzadki-budowa-<RRRR-Www>` z ☑ lub dopiskiem → wykonaj zatwierdzone wsadowo wg `przeglad-tygodnia-osobisty`, D
+   (osobiste) albo `przeglad-tygodnia`, „Porządki” (plugin dom-budowa; budowa), blok → „Przetworzone” (z liczbą wykonanych; wątpliwe zostają – `wpisy/references/pytania.md`, C.7).
 2a. **Rozkminki – tylko na prośbę z wpisu** (ślad `→ 🧠 rozkminka wieczorem` albo `→ 🧠 rozkminka w toku` z listy w poleceniu – `references/rozkminka.md`, 4 – w dzisiejszym lub wczorajszym bloku
    „Przetworzone”, `wpisy` krok 5, **także ślady z kroku 1 tego przebiegu** – na stronie ich jeszcze nie ma, zapisz je od razu
    jako `→ 🧠 rozkminka: <wzmianka>`; z własnej inicjatywy nie rób – to koszt). Max 2, najstarsze pierwsze; reszta jutro
@@ -125,7 +124,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **Uzupełnij luki** w tych wierszach według `zadania`, sekcja D (tylko wskazane pola; Status i When nie zmieniaj; wątpliwości
    → jeden zbiorczy blok 🔔 (`wpisy/references/pytania.md`, C.7)). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie
    (krok 8) i do linii „🤖” weź liczby per kategoria, nazwy zamkniętych i zmienionych (max 5 na obszar, reszta „+k”) i listę
-   uzupełnionych pól. **Odpowiedzi na dawne bloki `luki-zadan-<dd.mm>`:** to-do = uzupełnij pole wg propozycji (dopisek ma pierwszeństwo), blok → „Przetworzone”; nowy blok ma ten klucz.
+   uzupełnionych pól. **Odpowiedzi na dawne bloki `luki-zadan-<dd.mm>` i `praca-…`:** to-do = uzupełnij pole wg propozycji albo przenieś zadanie do WORK (`zadania`, D; dopisek ma pierwszeństwo), blok → „Przetworzone”; nowy zbiorczy blok luk ma klucz `luki-zadan-<dd.mm>`.
 
    **5a. Kontrola spójności** – `references/kontrola-spojnosci.md`: zastosuj odpowiedzi inwestora na dawne flagi `KS-…`, potem
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.
@@ -180,7 +179,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    edycję (`wpisy`, krok 7) zrób na końcu przebiegu, po kroku 8, gdy znasz już wszystkie liczby (kroki 3–5 doliczają
    ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma; krok 3 dostaje listę wpisów budowy z kroku 1). Bloki 🔔 z kroków 2, 5, 5a–5b, 6, 7 (nowe i zmieniane) zapisz **jedną punktową edycją „Wpisów”** pod nagłówkiem 🔔 w tym samym momencie:
    ```
-   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
+   🤖 15.10 noc: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy
    ```
 10. **Odpowiedź** (log zadania): linia „🤖” + lista zapisów (gdzie, link) i błędów.

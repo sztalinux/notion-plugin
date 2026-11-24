@@ -3,6 +3,8 @@
 
     python3 tools/test_pomysly_wersje.py
 """
+import contextlib
+import io
 import subprocess
 import sys
 import tempfile
@@ -90,6 +92,13 @@ class OdczytChangelog(unittest.TestCase):
                 tekst, ostrzezenie = P.czytaj_changelog()
         self.assertIsNone(tekst)
         self.assertIn("brak też", ostrzezenie)
+
+    def test_help(self):
+        out = io.StringIO()
+        with mock.patch.object(P, "czytaj_changelog") as czytaj, contextlib.redirect_stdout(out):
+            self.assertEqual(P.main(["--help"]), 0)
+        czytaj.assert_not_called()
+        self.assertIn("pomysly_wersje.py --json", out.getvalue())
 
     def test_prawdziwy_parsuje_sie(self):
         tekst, _ = P.czytaj_changelog()

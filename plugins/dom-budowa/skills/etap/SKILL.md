@@ -1,6 +1,6 @@
 ---
 name: etap
-description: Plan, bramki „bez odwrotu” i odbiór etapu budowy (stan zero, SSO, instalacje, wykończenie) – także przy pracach własnych. Używaj, gdy użytkownik mówi „zaczynamy etap”, „ekipa wchodzi w poniedziałek”, „jutro betonowanie / zasypka / tynki”, „co muszę mieć gotowe przed…”, „co sprawdzić zanim…”, „ekipa skończyła, co sprawdzić”, „odbiór”, „usterki”, „zmieniamy etap na SSO”, „teczka stanu zero”, „teczka do banku”, „rozliczenie transzy”, „co do banku”, albo gdy inna procedura (dziennik, oferta, zakupy) sygnalizuje początek lub koniec etapu.
+description: Plan, bramki „bez odwrotu” i odbiór etapu budowy (także przy pracach własnych) oraz teczka etapu do banku. Używaj, gdy użytkownik mówi „zaczynamy etap”, „jutro betonowanie / zasypka”, „co muszę mieć gotowe przed…”, „co sprawdzić zanim…”, „ekipa skończyła, co sprawdzić”, „odbiór”, „usterki”, „zmieniamy etap na SSO”, „teczka do banku”, „rozliczenie transzy”.
 ---
 
 # Etap budowy – plan, bramki, odbiór
@@ -78,12 +78,11 @@ zanim pójdzie za niego płatność. Asystent przygotowuje listy i protokoły �
 3. Protokół (tabela): element | wymaganie i źródło (`[projekt]` / norma / `[opinia]`) | wynik | usterka | termin usunięcia | kto.
 4. Zaproponuj wynik: **odebrane / odebrane warunkowo (lista usterek) / nieodebrane** – decyduje inwestor
    z kierownikiem budowy; asystent nie odbiera.
-5. Zapis: usterki → TASKS (Kto = Ekipa, When = termin usunięcia) i Notatnik (Typ „Ryzyko” lub „Pytanie”, Do kogo = Ekipa,
-   bez Kiedy – link do zadania; `harmonogram`, Zasady); wpis z odbioru →
+5. Zapis: usterki → TASKS wg `dziennik` A.2 (wiersz „usterka do poprawy”); wpis z odbioru →
    procedura `dziennik`; dokumenty (WZ betonu, atesty stali, karty produktów, protokoły prób) → folder budowy (`dokumenty`);
    sprawdzone punkty „✅ Checklisty budowy” z kroku 2 → Zrobione, wynik w Uwagach (usterka – punkt zostaje, link do zadania).
 6. **Płatność za etap dopiero po odbiorze** – przekaż do `koszty` (transza wg umowy, zatrzymanie), z linkiem do protokołu.
-7. **Harmonogram i gwarancja:** krok w Harmonogramie → Status „Zrobione”; odbiór końcowy umowy → w Umowach i gwarancjach
+7. **Harmonogram i gwarancja:** krok w Harmonogramie → Status „Zrobione” (`harmonogram`, „Status kroku”); odbiór końcowy umowy → w Umowach i gwarancjach
    Odbiór = data protokołu, Gwarancja do / Rękojmia do (z umowy; rękojmia ustawowo 5 lat dla budynku, jeśli umowa jej
    nie wyłącza – `[opinia]`, sprawdź umowę), Status „Odebrana”.
 8. **Książka domu:** odbiór całego etapu (odebrane albo odebrane warunkowo) → szkic rozdziału etapu i punkty „gdzie co

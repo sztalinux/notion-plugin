@@ -1,6 +1,6 @@
 ---
 name: dokumenty
-description: "Porządek w dokumentach budowy (folder budowy na komputerze inwestora), przewodnik po nich na stronie Notion (czyta go claude.ai) i paczka dla claude.ai (kopia awaryjna). Używaj, gdy raport „[dokumenty]” (liczba w ☀️ Dziś albo „posortuj dokumenty”) pokazuje nowe lub zmienione pliki, gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co mam wgrać do claude.ai”, „wgrałem” (paczka), albo pyta, gdzie jest dany dokument lub która wersja jest aktualna. Także dokumenty z telefonu i kopia na Dysk Google: „wgrałem fakturę / WZ / wpis kierownika”, „zrób kopię dokumentów”, „wgrałem kopię”, „aplikacja Dysku nie działa”."
+description: Porządek w dokumentach budowy, przewodnik po nich w Notion, paczka dla claude.ai i kopia na Dysk Google. Używaj przy raporcie „[dokumenty]” i gdy inwestor mówi „wrzuciłem plik”, „dostałem nowy projekt / ofertę / umowę”, „posortuj dokumenty”, „co wgrać do claude.ai”, „wgrałem fakturę / WZ”, „zrób kopię dokumentów”, „aplikacja Dysku nie działa” albo pyta, gdzie jest dokument i która wersja aktualna.
 ---
 
 # Dokumenty budowy

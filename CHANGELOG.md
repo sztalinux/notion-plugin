@@ -4,6 +4,62 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.28.0] – 2026-11-24 (przegląd jakości)
+
+Przegląd jakości całego harnessu (sześć obszarów, każda poprawka po niezależnej recenzji). Bez nowych procedur.
+
+- **Budżet** (`tools/budzet`, `budzet`): zwrot zapisany działaniem ma właściwy znak; kwoty z separatorem tysięcy i „zł”
+  czytane, niejednoznaczne odrzucane; wpis rozstrzygnięty przy zamknięciu miesiąca dostaje trwały znacznik
+  (`arkusz_budzetu.py zamknij-wpisy`, krok C.3 f) i nie wraca do arkusza drugi raz; płatność obok wpisu z karty bez pary
+  idzie do decyzji bez propozycji domyślnej; dopasowanie 1:1 przez przełom miesiąca tylko, gdy wyciąg sięga za dzień
+  wiersza; brakujący albo ucięty wyciąg w „Brakuje”; powtórzone C.3 nie dubluje przychodu z sald ani zwrotu; ID zwykłego
+  wpisu i części paragonu nie nadpisują się; `kontrola.py --miesiac`; złe wejście kończy się linią ✗ zamiast wyjątku.
+  `sync` przed odczytem arkusza (B.4), co robić z „możliwy dubel” (C.3 b), lista kontrolna pierwszego zamknięcia (C.10).
+- **Wpisy, przegląd dnia, zadania**: usterka asystenta jest naprawiana na polecenie „zrób ZP-n” (bez obietnicy „w najbliższej
+  sesji”), blok 🔔 zostaje do naprawy; nocny wykonuje odpowiedzi na bloki porządków tygodnia (`porzadki-…`,
+  `porzadki-budowa-…`; lista ponumerowana, wątpliwe pozycje zostają); „zamówiłem / kupiłem X” zamyka zadanie o tej jednej
+  rzeczy (zbiorczego nie), jedna reguła Statusu pozycji 🛒; zadanie z pracy od razu z Obszarem „Praca”, pytanie o przeniesienie
+  raz na zadanie; tryb „przegląd dnia za DD.MM” po nieudanym nocnym (`uklad-wpisu.md`, E); kontrola spójności H3 nie flaguje
+  zadań „czekam na”; „Skrzynka” znaczy tylko „📥 Skrzynkę”, baza zmian to „skrzynka zmian”; opis strony Dziennika zgodny ze
+  stanem (sekcja „❓” zostaje ze znacznikiem, bez „fazy 6”).
+- **Kontrakt z automatem Maca**: przebieg kończy odpowiedź linią `KOMUNIKATY: <klucze>` (rozkminki – `GOTOWE:`), automat
+  uznaje za zgłoszone tylko potwierdzone klucze (`pytania.md` C.2, `rozkminka.md` 3); teksty o przebiegu nocnym (2:00).
+- **Opisy procedur** obu pluginów skrócone do 400 znaków – na liście skilli Claude Code połowa traciła opis; reguły z opisów
+  są w treści procedur.
+- **Prywatność repo** (`tools/build.py`, hooki): treść nieczytelna jako tekst i pliki binarne nieznanego typu blokują commit
+  i push; sprawdzane są też nazwy plików, gałęzi i tagów, treść z indeksu, zmiana typu pliku; lista słów łapie zapis bez
+  ogonków, odmianę, odwróconą kolejność i rozbicie na dwie linie; nowe wzorce (kwota, telefon, działka, ulica, e-mail);
+  odesłania do nieistniejącej procedury w `AGENTS.md` i routerach blokują commit. Testy: `tools/test_build_prywatnosc.py`.
+- **Folder budowy z kopii roboczej** (`tools/hub.py`): narzędzia uruchomione z `.claude/worktrees/…` czytają prawdziwy
+  folder budowy, a polecenia zapisujące odmawiają tam pracy bez `DOM_HUB` (dotąd zakładały śmieciowy `.dom` w repo).
+
+## dom-budowa [3.21.0] – 2026-11-24 (przegląd jakości)
+
+- **Kosztorys** (`tools/wydatki.py`, `koszty`): sesja dodająca nowy etap zdejmuje blokadę przed `sync`
+  (`nowa-pozycja.md` C.4, D.5) – wydatek nie zostaje w kolejce; przy świeżej blokadzie sesji `sync` nie wstawia pozycji
+  w żadnym etapie; strona Plan nie nadpisuje planu wpisanego ręcznie bez „Nadpisz plan” (własność planu w
+  `.dom/wydatki/plany.json`); `wycofaj` strony Plan usuwa też wiersz, który ta strona dopisała jako wydatek; VAT podany
+  ułamkiem trafia do Cennika w procentach; teczka etapu bierze faktury z zapasem 14 dni i oznacza te spoza okresu;
+  „Do zapłaty → Zrealizowane” do budżetu z widoku 💸 „🤖 Zrealizowane – 2 miesiące (budżet)” (baza nie ma daty edycji).
+  Testy: `tools/test_wydatki_sync.py`. Kod arkusza bez zmiany wersji.
+- **Harmonogram**: data podana wprost przez inwestora zmienia Termin od razu (także krok „Bez odwrotu”); propozycją w ❓
+  są tylko zależny krok „Bez odwrotu”, krok potwierdzony przez innych i terminy u innych; tabela „Status kroku – kto
+  i kiedy zmienia” (pierwszy dzień prac → „W trakcie”).
+- **Przegląd wieczorny i pogoda**: ostrzeżenie pogodowe w dniach pielęgnacji czyta też kroki „Zrobione” (`pogoda.md`,
+  „Odczyt”) i datę wykonanej roboty z Uwag kroku; dostawa po terminie i pozycje Zakupów z problemem są pokazywane;
+  przypomnienie o zakupach wg Rodzaju, tylko przed zamówieniem.
+- **Dziennik, zakupy, etap, notatka**: dostawa materiału w umówionym dniu → pole Dostawa w 🧱 Zakupach, bez zadania;
+  usterka = jedno zadanie „czekam na” dla ekipy; problem zamknięty na miejscu ma swoje miejsce; kolejna dopłata ekipy
+  w tym samym etapie nie kończy się Błędem kolejki; porządki tygodnia jako blok 🔔.
+- **Zdjęcia i kopie** (`tools/zdjecia.py`, `kopia.py`, `kopie.py`, `dokumenty.py`): cofnięcie rozłożenia przywraca też
+  foldery przy pracy przez konektor i nie oznacza przebiegu jako cofniętego, gdy część plików nie wróciła; dziennik ruchów
+  pisany po każdym przeniesieniu; data w nazwie folderu („8.11 …”) nie jest numerem kroku; data z `mdls` równa dacie
+  skopiowania nie jest datą zdjęcia; blokada rozkładania po udanym planie (`plan --zablokuj`, `odblokuj`); tryb aplikacji
+  kopii nie nadpisuje archiwum i odmawia przy pustym folderze Dysku; `dokumenty.py ustaw` nie połyka ostrzeżeń.
+  Testy: `tools/test_dokumenty.py`.
+- Mapa Notion budowy: ID „📝 Wpisów” jako miejsce ❓/🔔, pola 💸 (Zwrot, Nowa pozycja), nowy widok 💸; `model-3d` –
+  zasoby z internetu tylko po zgodzie na listę.
+
 ## ja [1.27.0] – 2026-11-24 (POM-32, POM-25)
 
 - POM-32 (`zadania`, `przeglad-dnia`, `przeglad-tygodnia-osobisty`, `uklad-wpisu.md`, mapa): nowe pole TASKS **Deadline**

@@ -5,7 +5,7 @@ w SQLite FTS5 – tylko do odczytu, Notion zostaje jedynym źródłem prawdy i j
 Plik indeksu: `.dom/wiedza/wiedza.sqlite` w folderze-centrum (hub) – domyślnie dwa poziomy nad repozytorium,
 albo zmienna DOM_HUB; w czacie podaje się --db <katalog>/wiedza.sqlite.
 
-    python3 tools/wiedza.py sync [--pelny] [--publikuj]   # pobierz zmiany z Notion (lista startowa „Indeks wiedzy”: --publikuj --cicho)
+    python3 tools/wiedza.py sync [--pelny] [--publikuj]   # pobierz zmiany z Notion (polecenie sesji „odśwież indeks”: --publikuj --cicho)
     python3 tools/wiedza.py szukaj "ZAPYTANIE" ["ZAPYTANIE 2" …] [--etap …] [--istotnosc …] [--status …] [--rodzaj …]
                                                [--temat …] [--ciekawostki] [--krotko] [--limit 12] [--sens]
     python3 tools/wiedza.py temat "NAZWA" [--lista] [--krotko] [--ciekawostki]   # stan wiedzy, Kluczowe, otwarte SP
@@ -39,7 +39,7 @@ Zasady:
   wartości nigdy nie są wypisywane ani zapisywane.
 - Dane leżą w `.dom/wiedza/` w hubie (katalog 700, pliki 600), nigdy w repozytorium; bez katalogu `.dom` sync
   kończy się komunikatem i niczego nie tworzy. Uszkodzony indeks domyślny sync odkłada na bok i buduje od nowa.
-- sync --cicho (lista startowa sesji, nocne skrypty) pisze tylko przy zmianach albo błędach, mieści się w limicie
+- sync --cicho (polecenie „odśwież indeks”, nocne skrypty) pisze tylko przy zmianach albo błędach, mieści się w limicie
   czasu startu (pobór i publikacja razem) i kończy się kodem 0.
 - publikuj wysyła wyłącznie do repo prywatnego (sprawdza to przed wysyłką).
 - Komunikaty zawierają tylko numery WI/ZRD/SP, ID stron, nazwy właściwości, liczby i statusy HTTP – nigdy
@@ -71,8 +71,11 @@ from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import hub  # noqa: E402
+
 REPO = Path(__file__).resolve().parent.parent
-HUB = Path(os.environ.get("DOM_HUB") or REPO.parent.parent).expanduser().resolve()
+HUB = hub.folder_budowy(REPO)
 CONF = HUB / ".dom"
 KATALOG = CONF / "wiedza"
 DB_DOMYSLNA = KATALOG / "wiedza.sqlite"
@@ -919,7 +922,7 @@ def synchronizuj(conn: sqlite3.Connection, a, token: str, start: float, termin):
 def w_worktree() -> bool:
     """Kopia repo w .claude/worktrees/… (sesja równoległa): sync i publikuj nic nie robią także wtedy, gdy DOM_HUB
     wskazuje prawdziwy hub – niedokończony kod nie może przebudować indeksu ani trafić do czatu."""
-    return REPO.parent.name == "worktrees" and REPO.parent.parent.name == ".claude"
+    return (REPO.parent.name == "worktrees" and REPO.parent.parent.name == ".claude") or hub.kopia_robocza(REPO)
 
 
 def sciezka_bazy(a) -> Path:
@@ -1716,7 +1719,7 @@ def zapisz_log_szukaj(a, start: float, widoczne: list, czesciowe: bool, pelnych:
     """Jeden wiersz logu zapytań (opis w nagłówku modułu); przy kilku zapytaniach – wiersz na każde, z polem
     `wiele` (ile zapytań w wywołaniu). Najlepsza próba: nic nie drukuje, nie tworzy katalogów i nie rzuca wyjątków."""
     try:
-        if os.environ.get("WIEDZA_LOG") == "0" or not KATALOG.is_dir():
+        if os.environ.get("WIEDZA_LOG") == "0" or not KATALOG.is_dir() or hub.tylko_odczyt(REPO, KATALOG):
             return
         if sciezka_bazy(a).resolve().parent != KATALOG.resolve():
             return

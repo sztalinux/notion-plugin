@@ -1,6 +1,6 @@
 ---
 name: harmonogram
-description: Planowanie w czasie – harmonogram budowy (kroki z datami, kto, zależności, oś czasu w Notion), terminy wynikające z harmonogramu (kiedy zamówić, kiedy bramka, kto musi być), „czekam na” (co inni mają zrobić i do kiedy), przesuwanie terminów i „co mnie czeka”. Używaj, gdy użytkownik mówi „ekipa wchodzi 3 listopada”, „przesuwamy płytę o tydzień”, „ułóż harmonogram”, „kiedy co zamówić”, „do piątku mam dać znać…”, „X ma mi przysłać do…”, „czekam na…”, „co mnie czeka w tym / przyszłym tygodniu”, „co jest po terminie”, „kiedy skończymy stan zero”.
+description: Harmonogram budowy w czasie – kroki z datami i Statusem, przesunięcia, terminy pochodne (zamówienia, bramki, kto musi być), „czekam na” i „co mnie czeka” (budowa). Używaj, gdy użytkownik mówi „ekipa wchodzi 3 listopada”, „przesuwamy płytę o tydzień”, „ułóż harmonogram”, „kiedy co zamówić”, „do piątku mam dać znać…”, „X ma mi przysłać do…”, „czekam na…”, „co mnie czeka”, „co jest po terminie”.
 ---
 
 # Harmonogram i terminy
@@ -55,30 +55,48 @@ Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kro
 **Aktualizuj od razu, bez osobnej prośby** (HZ-14): gdy z rozmowy, wpisu z Dziennika albo innej procedury (dziennik,
 notatka, zakupy, etap, oferta) wynika zmiana terminu, kolejności lub zakresu kroku (umówiona dostawa betonu, inny dzień
 wykopu, krok bez uziomu, bez XPS) – w tej samej pracy zmień w Harmonogramie Termin, nazwę kroku (zakres), Status
-(Przesunięte / Potwierdzone / W trakcie) i Pewność terminu, a w Uwagach **na początku** dopisz „<data>: <powód>. Było X–Y”
-(starej treści nie usuwaj). Datę podaną przez inwestora zapisz jako „Uzgodnione ustnie” – także w przebiegu bez inwestora
-(to fakt, nie decyzja). Kroki zależne przelicz wg 2 jako „Szacunek” (bez inwestora – tylko wg 4) i pokaż tabelę „było → jest”.
+(wg tabeli „Status kroku” niżej) i Pewność terminu, a w Uwagach **na początku** dopisz „<data>: <powód>. Było X–Y”
+(starej treści nie usuwaj). **Data podana wprost przez inwestora** (w rozmowie albo we wpisie) to fakt i zawsze wygrywa:
+zmień Termin od razu z Pewnością „Uzgodnione ustnie” – także krok „Bez odwrotu” albo potwierdzony przez innych, także bez
+inwestora. Kroki zależne przelicz wg 2 (bez inwestora – wg 4). **Wyjątki** (tylko bez daty od inwestora – nie zmieniaj sam):
+zależny krok „Bez odwrotu”, zależny krok z terminem potwierdzonym przez innych, terminy u innych (dostawa, pompa,
+kierownik, geotechnik). W rozmowie – propozycja w zestawieniu (3); bez inwestora – jedno pytanie na krok w okienku ❓ pod
+wpisem (`wpisy/references/pytania.md`, A, plugin `ja`; najwyżej dwa w okienku – A.2, reszta po odpowiedzi): „Przesunąć <krok> na <termin> (było <stary>)?”; pytanie o ten krok
+już czeka pod wpisem albo w 🔔 → zaktualizuj je, nie dokładaj drugiego.
 Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym, co w niej padło.
 
-1. Zmień Termin kroku (Status „Przesunięte”, w Uwagach powód i data zmiany). „Przesunięte” trzyma tylko krok, którego
-   termin zmieniłeś, do potwierdzenia nowego terminu z ekipą – wtedy „Potwierdzone”.
-2. Przelicz kroki, które od niego zależą (relacja Blokuje): nowy Termin z Pewnością „Szacunek” (krok z terminem
-   potwierdzonym przez innych lub „Bez odwrotu” – tylko propozycja w tabeli), i pokaż ich terminy pochodne (propozycja,
+1. Zmień Termin kroku (Status wg tabeli „Status kroku” niżej, w Uwagach powód i data zmiany).
+2. Przelicz kroki, które od niego zależą (relacja Blokuje): nowy Termin z Pewnością „Szacunek” (wyjątki z wstępu C
+   – tylko propozycja), i pokaż ich terminy pochodne (propozycja,
    sekcja B); ich Status zostaje bez zmian.
 3. Pokaż zestawienie „było → jest” i co trzeba **odwołać lub przesunąć u innych** (dostawa, kierownik, pompa) – to są
    istniejące zadania i zamówienia powiązane z krokiem – ich nowe terminy zapisz po „ok”; nowych zadań nie zakładaj.
 4. **Wpis z budowy o tempie prac** („nie skończyliśmy, jutro kontynuujemy”, „przez deszcz nie robili”, „skończyli dzień
    wcześniej”) to fakt od inwestora, nie decyzja – także w przebiegu bez inwestora: przedłuż albo skróć koniec Terminu
-   kroku (Status „W trakcie”), a kroki zależne (Blokuje) przesuń tylko tyle, żeby zaczynały się najwcześniej dzień po
-   nowym końcu poprzednika (krok z zapasem zostaje); w Uwagach „+N dni – wpis z <data>”. Terminów u innych (dostawa,
-   pompa, kierownik, geotechnik) i kroków „Bez odwrotu” nie zmieniaj sam: w rozmowie – pytanie z propozycją; bez
-   inwestora – okienko pod wpisem, gdy termin wypada w ciągu 3 dni, inaczej linia w przeglądzie dnia budowy. Nie wiadomo,
-   którego kroku dotyczy, albo o ile → pytanie.
+   tego kroku (Status „W trakcie”; także gdy sam jest „Bez odwrotu”), a kroki zależne (Blokuje) przesuń tylko tyle, żeby
+   zaczynały się najwcześniej dzień po nowym końcu poprzednika (Pewność „Szacunek”; krok z zapasem zostaje; wyjątki –
+   wstęp C); w Uwagach „+N dni – wpis z <data>”. Nie wiadomo, którego kroku dotyczy, albo o ile → pytanie.
+
+### Status kroku – kto i kiedy zmienia
+
+Jedyne miejsce tej reguły (`dziennik` A.2, `etap` C.7 i inne procedury odsyłają tutaj); zapis w tej samej pracy, także bez
+inwestora (to fakty, nie decyzje).
+
+| Zdarzenie | Status | Zapisuje |
+|---|---|---|
+| pierwszy wpis Dziennika z pracą przy kroku („ekipa zaczęła zbrojenie płyty”) | „W trakcie” | `dziennik` A.2 |
+| przesunięcie Terminu przed startem kroku (tylko ten krok; zależne zachowują Status – C.2) | „Przesunięte” | `harmonogram` C |
+| nowy termin potwierdzony z ekipą | „Potwierdzone” | `harmonogram` C |
+| odbiór kroku wg `etap` C | „Zrobione” | `etap` C.7 |
+
+Krok „W trakcie” po zmianie końca Terminu (C.4) zostaje „W trakcie”. Status ustawiony przez inwestora (ręcznie w Notion, na pulpicie –
+`pulpit`, albo ☑ w bloku kontroli spójności `KS-H1…`) zostaje – nie cofaj go.
 
 ## D. Czekam na („geodeta tyczy w czwartek”, „ekipa ma przysłać wycenę do 15.10”)
 
 - Cudzy termin → TASKS: Name „<kto> – <co>”, **Kto** = ta osoba/rola, Status „WAITING”, Obszar = Dom, When = termin, Desc = skąd wiadomo
   (rozmowa, data). Gdy dotyczy kroku – relacja Harmonogram.
+- Wyjątek: dostawa materiału / zamówienia w umówionym dniu → `zakupy` 0.3, bez TASKS.
 - Mój termin wobec kogoś („do piątku dam znać X”) → TASKS: Kto = Ja, Status „TO DO”, Obszar = Dom, When = termin, Deadline ☑ (rzecz obiecana komuś na dzień – `zadania`, plugin ja).
   Inne moje zadania budowy: Deadline ☑ tylko przy terminie twardym (ta sama reguła); orientacyjne po dacie nie są zaległością.
 - Po terminie: „czekam na” bez zmiany statusu → w przeglądzie (i w „co mnie czeka”) jako „przypomnij się <komu>”.
@@ -87,7 +105,7 @@ Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym,
 ## E. „Co mnie czeka” (domyślnie 14 dni)
 
 Jedno zestawienie, chronologicznie: kroki harmonogramu (start/koniec), moje zadania, czekam na (z terminem i po terminie),
-zamówienia z „Zamówić do” (bez Dostarczone i Nieaktualne – jak przegląd dnia budowy) i dostawy, bramki. Na górze: po terminie (moje zadania – tylko z Deadline ☑) i dzisiaj/jutro. Na dole: licznik spraw dalej niż 14 dni.
+zamówienia z „Zamówić do” (Status przed zamówieniem – jak przegląd tygodnia, pkt 5b) i dostawy, bramki. Na górze: po terminie (moje zadania – tylko z Deadline ☑) i dzisiaj/jutro. Na dole: licznik spraw dalej niż 14 dni.
 
 ## Zasady
 

@@ -1,6 +1,6 @@
 ---
 name: zakupy
-description: "Zakupy na budowę – wszystko, co idzie na działkę albo do budynku (materiał, drobnica, narzędzia, wynajem) w bazie 🧱 Zakupy budowy: pojedyncza rzecz „kupić X na budowę”, lista z kosztorysu z ilościami i zapasem, zapytania do hurtowni, porównanie ofert dostawców, terminy zamówień z wyprzedzeniem, dostawy i stan materiału na budowie. Używaj, gdy użytkownik pyta „co muszę kupić na…”, „ile zamówić”, „zrób listę zakupów”, „porównaj oferty hurtowni”, „kiedy zamawiać okna / stal / dachówkę”, „co zamówić już teraz”, wkleja ofertę składu budowlanego, mówi „kupić taśmę / geowłókninę na budowę”, „kupiłem X na działkę” albo „przyjechała dostawa”."
+description: Zakupy na budowę w bazie 🧱 Zakupy budowy (materiał, drobnica, narzędzia, wynajem) – listy z ilościami i zapasem, oferty hurtowni, terminy zamówień, dostawy. Używaj, gdy użytkownik mówi „kupić X na budowę”, „kupiłem X na działkę”, „co muszę kupić na…”, „ile zamówić”, „porównaj oferty hurtowni”, „kiedy zamawiać okna”, „przyjechała dostawa”, „w poniedziałek przyjedzie stal” albo wkleja ofertę składu.
 ---
 
 # Zakupy – materiały i sprzęt
@@ -36,6 +36,10 @@ Przypomnienie jest linią w przeglądzie dnia, nie powiadomieniem na telefon; pi
 3. „Kupiłem X na budowę” → Status **Dostarczone**, Dostawa = data; wydatek → `koszty`, sekcja B (wiersz w „💸 Wydatki → arkusz”);
    materiał z WZ / deklaracją właściwości → sekcja C.1. „Zamówiłem” → Zamówione, Dostawa = umówiony dzień dostawy, gdy
    znany (z niego biorą „dostawy jutro / w 7 dni” przegląd dnia i tygodnia budowy); po dostawie Dostawa = dzień faktyczny.
+   Dostawa umówiona na dzień („w poniedziałek przyjedzie stal”) – jak „Zamówiłem”; wiersza nie ma (np. dokupienie braków,
+   C.3) → nowy wiersz od razu „Zamówione” z Dostawą. Bez zadania w TASKS (to nie „czekam na”).
+   Otwarte zadanie „Kupić / Zamówić X” (to „na już” z 0.2 – wzmianka w Uwagach – i własne zadanie inwestora o tej rzeczy)
+   zamyka w tej samej pracy reguła `zadania` B (plugin `ja`; także przy umówionej dostawie); ślad w obu, odwrotny kierunek – B.2.
 
 ## A. Lista zakupów na etap („co kupić na ściany parteru”)
 

@@ -45,7 +45,8 @@ Mechanizm: `docs/wydatki-arkusz.md` (akcja Apps Script „dodaj_pozycje”, kod 
   Istniejąca pozycja przechodzi, a nowa czeka na pierwsze sprawdzenie w sesji (sekcja D). W polu Błąd jest wtedy dopisek, bez 🔔.
 - Kod Apps Script < 5 → strony czekają „Do arkusza”, `sync` kończy się kodem 1 z linią „… czeka: arkusz ma kod w wersji …”.
 - Etapu nie ma w Kosztorysie albo jego nagłówek nie ma pozycji → strona czeka „Do arkusza” (bez 🔔). W polu Błąd jest
-  dopisek „czeka na etap NN – doda go najbliższa sesja Claude Code”. Ta sama sytuacja przy świeżej blokadzie sesji dla tego etapu.
+  dopisek „czeka na etap NN – doda go najbliższa sesja Claude Code”. Przy świeżej blokadzie sesji
+  automat nie wstawia pozycji w żadnym etapie – strony czekają do przebiegu po `sesja --odblokuj`.
 - Sprawy dla sesji (nowe etapy, pierwsze sprawdzenie) trafiają do `<hub>/.dom/wydatki/kosztorys-do-sesji.json`, a z niego do
   linii stanu sesji: „nowy etap kosztorysu: NN”, „nowa pozycja kosztorysu: pierwsze sprawdzenie”. Podgląd:
   `python3 tools/wydatki.py sesja`.
@@ -89,31 +90,34 @@ z pierwszej wiadomości. Polecenia w katalogu repo harnessu.
    - Operacje `zakres` z tymi samymi formułami, wartościami i tłem (`tla`) co w kroku 2, w tej samej kolejności: kolumna A na
      końcu, w osobnym pliku zmian. Komórka B pozycji z `"formaty": [["@"]]`, żeby Lp był tekstem.
    - Potem `pobierz` i kontrola jak w 2.5.
-4. `python3 tools/wydatki.py sync` – akcja „dodaj_pozycje” znajdzie pozycję po nazwie, ustawi Pozycję i wyśle wydatek. Dalsze
-   pozycje tego etapu z listy doda sama, gdy jest znacznik pierwszego sprawdzenia (inaczej najpierw sekcja D).
-   Na koniec `python3 tools/wydatki.py sesja --odblokuj`.
+4. Najpierw `python3 tools/wydatki.py sesja --odblokuj`, potem `python3 tools/wydatki.py sync` – przy świeżej blokadzie `sync`
+   nie wstawia pozycji (strony czekają), a etap jest już kompletny. Akcja „dodaj_pozycje” znajdzie pozycję po nazwie, ustawi
+   Pozycję i wyśle wydatek. Dalsze pozycje tego etapu z listy doda sama, gdy jest znacznik pierwszego sprawdzenia. Na liście
+   z kroku 1 czeka też pierwsze sprawdzenie → bez odblokowania i bez `sync` od razu sekcja D (oba w D.5).
 5. Meldunek jedną linią (bez kwot): „Kosztorys: dodałem etap NN Nazwa (stan) z pozycją NN.1 – wydatek w arkuszu, wiersz N.”
    Nie wyszło → „Kosztorys: etapu NN nie dodałem – <przyczyna>; wydatek czeka w kolejce.” i blokada zdjęta; ta sama przyczyna
-   drugi raz → wiersz Usterka (`rozwoj-harnessu`, D).
+   drugi raz → wiersz Usterka (`rozwoj-harnessu`, D). Z pierwszym sprawdzeniem na liście meldunek pada dopiero po `sync`
+   z D.5; sesja kończy na D.6 → „…z pozycją NN.1 – wydatek wyśle najbliższy automat (pozycja już jest).”, na D.1 (kod
+   arkusza < 5) → „…z pozycją NN.1 – wydatek pójdzie po wklejeniu kodu arkusza w wersji 5.”
 
 ## D. Pierwsze sprawdzenie nowej pozycji (linia stanu „nowa pozycja kosztorysu: pierwsze sprawdzenie”)
 
 Jednorazowo po wdrożeniu kodu 5, tak samo bez pytania jak sekcja C (w tej samej blokadzie `sesja --zablokuj`). Kod akcji nie
 był nigdy uruchomiony na żywym arkuszu, więc pierwsze prawdziwe wstawienie robi sesja z kontrolą, a nie nocny automat.
 
-1. `python3 tools/wydatki.py sprawdz` – kod w wersji < 5 → nic nie rób, meldunek „Kosztorys: nowa pozycja czeka na wklejenie
-   kodu arkusza w wersji 5” (czynność inwestora jest w 🔔 z `sync`).
+1. `python3 tools/wydatki.py sprawdz` – kod w wersji < 5 → nic więcej nie rób: `sesja --odblokuj` i meldunek „Kosztorys: nowa
+   pozycja czeka na wklejenie kodu arkusza w wersji 5” (czynność inwestora jest w 🔔 z `sync`).
 2. `python3 tools/wydatki.py pobierz` i kopia `Koszty/Kosztorys_google.json` jako
    `<hub>/.dom/wydatki/migawka-RRRR-MM-DD-przed-pierwsza-pozycja.json`. Z konektorem odczytaj też sumy nagłówka etapu, RAZEM
    i „Kontrolę powiązań”.
-3. Pierwsza pozycja z listy `sesja` (dokładny tekst pola): `python3 tools/wydatki.py nowa-pozycja "<tekst>" --proba` – plan
-   (Lp, wiersz, suma etapu, wzór). Potem to samo bez `--proba`.
+3. Pierwsza pozycja z listy `sesja` (tekst dosłownie z listy – pełny, z typem i jednostką):
+   `python3 tools/wydatki.py nowa-pozycja "<tekst>" --proba` – plan (Lp, wiersz, suma etapu, wzór). Potem to samo bez `--proba`.
 4. Konektorem: nowy wiersz (formuły jak w sąsiedniej pozycji, Lp tekstem, Klucz „Lp Nazwa”, Kontrola pusta), sumy nagłówka
    etapu (zakres obejmuje nowy wiersz, wartości jak przed), RAZEM i „Kontrola powiązań” jak przed. Bez konektora – `pobierz`
    i porównanie z migawką z kroku 2 (te same wartości plus nowy wiersz).
-5. Zgodne → `python3 tools/wydatki.py nowa-pozycja --potwierdz` (znacznik), `python3 tools/wydatki.py sync` (strona dostanie
-   istniejący Lp, wydatek pójdzie), `sesja --odblokuj`. Meldunek: „Kosztorys: pierwsza nowa pozycja NN.n sprawdzona – od teraz
-   automat dodaje je sam.”
+5. Zgodne → `python3 tools/wydatki.py nowa-pozycja --potwierdz` (znacznik), `sesja --odblokuj`, potem
+   `python3 tools/wydatki.py sync` (strona dostanie istniejący Lp, wydatek pójdzie). Meldunek: „Kosztorys: pierwsza nowa
+   pozycja NN.n sprawdzona – od teraz automat dodaje je sam.”
 6. Niezgodne → konektorem usuń własny wiersz i przywróć formuły sum nagłówka z migawki. Bez konektora blok 🔔
    (`pytania.md`, C) z dokładną czynnością: „Plik → Historia wersji → przywróć wersję sprzed <gg:mm>”. Znacznika nie twórz.
    Wiersz Usterka (`rozwoj-harnessu`, D) z przyczyną, `sesja --odblokuj`.

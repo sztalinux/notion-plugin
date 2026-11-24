@@ -4,18 +4,20 @@
     python3 tools/budzet/allegro.py listy/allegro-<data>.txt listy/allegro-<data>.json
 
 Ścieżki względne – od folderu danych budżetu. `prop` (propozycja kategorii) wypełnia się z wcześniejszych wyborów
-dla tego sprzedawcy (reguly.json → allegro_sprzedawcy); resztę uzupełnia Claude na podstawie nazw produktów."""
-import json, re, sys
+dla tego sprzedawcy (reguly.json → allegro_sprzedawcy); resztę uzupełnia Claude na podstawie nazw produktów.
+Kwoty także z twardą spacją przed walutą (tekst kopiowany ze strony). Wynik podaje liczbę bloków „Zaznacz zakup” i ile
+pominięto (bez daty albo sumy) – pominięte > 0: sprawdź tekst."""
+import argparse, json, re, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import DANE, wczytaj  # noqa: E402
+from wspolne import DANE, wczytaj, zapis_zablokowany  # noqa: E402
 
 MIES = {'sty': 1, 'lut': 2, 'mar': 3, 'kwi': 4, 'maj': 5, 'cze': 6, 'lip': 7, 'sie': 8, 'wrz': 9, 'paź': 10, 'paz': 10, 'lis': 11, 'gru': 12}
 
 
 def kw(s):
-    return round(float(s.replace('\xa0', '').replace(' ', '').replace('zł', '').replace(',', '.')), 2)
+    return round(float(re.sub(r'\s', '', s).replace('zł', '').replace(',', '.')), 2)
 
 
 def parsuj(tekst):
@@ -36,12 +38,12 @@ def parsuj(tekst):
                 z['data'] = f"{m.group(3)}-{MIES[m.group(2).lower()]:02d}-{int(m.group(1)):02d}"
             if l in ('Od', 'z') and not z['sprzedawca']:
                 z['sprzedawca'] = next((x for x in b[i + 1:] if x), '')
-            m = re.match(r'^(\d+) × [\d\s,]+ zł$', l)
+            m = re.match(r'^(\d+)\s*×\s*[\d\s,]+\s*zł$', l)
             if m:
                 nazwa = next((x for x in reversed(b[:i]) if x and not x.startswith('Gwarancja')), '')
                 z['produkty'].append(nazwa + (f' ×{m.group(1)}' if m.group(1) != '1' else ''))
             if l.startswith('Razem'):
-                kw_ = next((x for x in b[i + 1:] if re.match(r'^[\d\s]+,\d{2} zł$', x)), None)
+                kw_ = next((x for x in b[i + 1:] if re.match(r'^[\d\s]+,\d{2}\s*zł$', x)), None)
                 z['suma'] = kw(kw_) if kw_ else None
             if l == 'Zakup zwrócony':
                 z['zwrocony'] = True
@@ -53,10 +55,21 @@ def parsuj(tekst):
 
 
 if __name__ == '__main__':
-    we, wy = (Path(p) if Path(p).is_absolute() else DANE / p for p in sys.argv[1:3])
-    zam = parsuj(we.read_text(encoding='utf-8'))
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('wejscie', help='tekst skopiowany z „Moje zakupy” (listy/allegro-<data>.txt)')
+    ap.add_argument('wyjscie', help='JSON zamówień (listy/allegro-<data>.json)')
+    a = ap.parse_args()
+    we, wy = (Path(p) if Path(p).is_absolute() else DANE / p for p in (a.wejscie, a.wyjscie))
+    if not we.exists():
+        raise SystemExit(f'✗ brak pliku {we}')
+    if zapis_zablokowany(wy):
+        raise SystemExit(1)
+    tekst = we.read_text(encoding='utf-8')
+    zam = parsuj(tekst)
+    bloki = sum(1 for l in tekst.splitlines() if l.strip().startswith('Zaznacz zakup:'))
     znani = wczytaj('reguly.json', {}).get('allegro_sprzedawcy', {})
     for z in zam:
         z['prop'] = znani.get(z['sprzedawca'], '')
     wy.write_text(json.dumps(dict(zrodlo=we.name, zamowienia=zam), ensure_ascii=False, indent=1), encoding='utf-8')
-    print(len(zam), 'zamówień,', sum(1 for z in zam if z['zwrocony']), 'zwróconych, suma', round(sum(z['suma'] for z in zam), 2))
+    print(f"{bloki} bloków, {len(zam)} zamówień, {sum(1 for z in zam if z['zwrocony'])} zwróconych, suma "
+          f"{round(sum(z['suma'] for z in zam), 2)}, pominięte (bez daty albo sumy): {bloki - len(zam)}")

@@ -66,7 +66,8 @@ z aplikacją albo AirDropem (kopia lokalna, gdy jest miejsce na dysku).
 **Data zrobienia** (dzień zawsze wg czasu polskiego, także po północy): EXIF (tylko lokalnie, `mdls`) → nazwa pliku
 z telefonu (`PXL_RRRRMMDD_GGMMSS` – czas UTC; `IMG_`/`VID_`/`RRRRMMDD_GGMMSS`, komunikatory „RRRR-MM-DD at …” – czas
 lokalny) → data wgrania (`createdTime` Dysku, UTC) z `~` w prefiksie: `RRRR-MM-DD~_nazwa` = „data wg wgrania”.
-Gdy później wyjdzie dokładna data (aplikacja, EXIF), skrypt poprawia `~` na nią. Zdjęcie z komunikatora albo zrzut
+Gdy plik z `~` wróci do `_nowe` i wyjdzie dokładna data (aplikacja, EXIF), skrypt poprawia `~` na nią; plików już
+rozłożonych nie rusza. Zdjęcie z komunikatora albo zrzut
 ekranu zwykle nie ma daty zrobienia – inwestor wgrywa oryginały z galerii.
 
 **Nazwa pliku**: `RRRR-MM-DD_<oryginalna nazwa>`; plik z prefiksem zostaje bez zmian. Ta sama nazwa i rozmiar w folderze
@@ -163,7 +164,11 @@ To jedna z pozycji planu kopii zapasowych – całość (dysk zewnętrzny, ekspo
   wymień w komunikacie 🔔 z kluczem `kopia` jako „do pobrania na Maca”.
 - **Tryb aplikacji**: `kopia.py aplikacja [--wykonaj]` – kopiuje do lokalnego folderu Dysku według tych samych reguł,
   pliki tylko na Dysku wypisuje do pobrania na Maca. Plik zmieniony po obu stronach → obie wersje (Dysk do `_Archiwum`)
-  i komunikat. Arkusze i dokumenty Google nie mają pliku na Macu – zostają tylko na Dysku.
+  i komunikat. Porównuje też z Dyskiem: plik usunięty tam ręcznie kopiuje ponownie (`stan`: „brak na Dysku”); nowy plik
+  z Maca, a na Dysku inny pod tą samą ścieżką (inny rozmiar) → wersja z Dysku do `_Archiwum` i komunikat. Brakuje
+  ponad 20% potwierdzonych plików i ponad 5 sztuk → folder Dysku pusty albo niezsynchronizowany: `aplikacja --wykonaj`
+  odmawia (kod 1); sprawdź Dysk w przeglądarce, uzupełnienie dopiero z `--mimo-to`. Arkusze
+  i dokumenty Google nie mają pliku na Macu – zostają tylko na Dysku.
 - Kontrola Dysku: lista z konektora (ścieżki) → `kopia.py sprawdz-dysk <lista.json>` – na Dysku nie może być `.dom`,
   `AI`, `.git` ani plików z sekretami.
 - Kopia `.dom/` (dane asystenta i sekrety) nie idzie na Dysk – osobny pomysł o kopiach zapasowych (Time Machine albo
@@ -179,21 +184,25 @@ Format: `{"foldery": {"Zdjęcia": "<id>", "Zdjęcia/_nowe": "<id>", "Zdjęcia/<E
 od razu. Brak `kroki.json` → zbuduj go (sekcja 3); bez kroków plan zostawia wszystko w `_nowe`.
 
 **„rozłóż zdjęcia”** (tryb 2):
-1. `python3 tools/zdjecia.py stan` (blokada? ostatni przebieg?). Odśwież `.dom/zdjecia/kroki.json` z Harmonogramu
-   i Dziennika budowy (sekcja 3).
+1. `python3 tools/zdjecia.py stan` (blokada? ostatni przebieg?). „blokada: skrypt od …” – rozkłada skrypt, wróć
+   później; „konektor od …” – rozkłada inna sesja (blokada trwa 30 min) albo poprzedni plan tej rozmowy; „porzucona” –
+   `zdjecia.py odblokuj`. Odśwież `.dom/zdjecia/kroki.json` z Harmonogramu i Dziennika budowy (sekcja 3).
 2. Konektor: `search_files` z `parentId` folderu `_nowe` (z `dysk.json`); narzędzie nie schodzi w głąb samo – wywołaj
    je osobno dla każdego podfolderu (`mimeType` folderu w wynikach). Do tego pliki folderów docelowych, do których coś
    może trafić (duplikaty). Pole rozmiaru w wynikach to `fileSize` (tekst – zamień na liczbę). Zapisz listę w
    `.dom/zdjecia/lista-<data>.json`: `nowe` – `id`, `nazwa` (title), `folder` (ścieżka od `_nowe`, "" luzem), `rozmiar`
    (fileSize), `utworzono` (createdTime), `zmieniono` (modifiedTime); `istniejace` – `folder` (ścieżka od `Dom`),
    `nazwa`, `rozmiar`.
-3. `python3 tools/zdjecia.py plan --lista <lista>` → plan i pytania. Pokaż inwestorowi listę ruchów (zasada 10);
-   po „ok” wykonaj.
+3. `python3 tools/zdjecia.py plan --lista <lista> --zablokuj` → plan i pytania. Plan z ruchami zakłada blokadę konektora
+   (30 min; ponowny plan ją odświeża), plan bez ruchów – nie. Kod 1 = rozkłada skrypt – przerwij i wróć później.
+   Pokaż inwestorowi listę ruchów (zasada 10); po „ok” wykonaj, bez „ok” – `zdjecia.py odblokuj`.
 4. Ruchy konektorem: `update_file` z `fileId`, `parentId` folderu docelowego (z `dysk.json`) i `title` = nowa nazwa –
    jedno wywołanie. Brak folderu docelowego → `create_file` z `title`, `parentId` i
    `contentMimeType = 'application/vnd.google-apps.folder'`; identyfikator dopisz do `dysk.json`. Pusty folder z `_nowe` → `_Archiwum/Puste
-   foldery`. Błąd → zatrzymaj się (zasada 7).
-5. `python3 tools/zdjecia.py zapisz-ruchy <plan> --kto konektor --tylko <id wykonanych, po przecinku>`.
+   foldery`. Błąd → zatrzymaj się (zasada 7); ruchy wykonane do błędu zapisz krokiem 5.
+5. `python3 tools/zdjecia.py zapisz-ruchy <plan> --kto konektor --tylko <id wykonanych, po przecinku>` – pusty folder
+   zapisuje się sam, gdy wykonano wszystkie pliki z niego; polecenie zdejmuje blokadę. Nic nie wykonano → nie
+   zapisuj (puste `--tylko` = błąd), tylko `zdjecia.py odblokuj`.
 6. `python3 tools/zdjecia.py slad <plan>` → ślad w Dzienniku budowy (sekcja 10, `dziennik` E).
 7. Pytania z planu → jeden komunikat 🔔 z kluczem `zdjecia` (aktualizowany, nie powielany).
 
@@ -211,10 +220,13 @@ nie obchodź zabezpieczeń, nie przeinstalowuj). Potwierdź jednym zdaniem, że 
 z telefonu i „rozłóż zdjęcia” konektorem (tryb 2), kopia – paczka; zapytaj, co zrobić teraz.
 **„cofnij ostatnie rozłożenie”** – `zdjecia.py cofnij` wypisuje odwrotny plan ostatniego niecofniętego przebiegu
 (`.dom/zdjecia/cofniecie.json`). Pokaż go i po „ok” wykonaj: najpierw foldery (z `_Archiwum/Puste foldery` z powrotem do
-`_nowe`; identyfikator folderu wyszukaj po nazwie w archiwum), potem pliki (`fileId` z planu, `parentId` z `dysk.json` –
-popraw w nim ścieżki przeniesionych folderów, `title` = dawna nazwa). Lokalnie: `cofnij --wykonaj`. Po konektorze:
-`cofnij --zrobione` (oznacza przebieg jako cofnięty – kolejne „cofnij” weźmie wcześniejszy). Ślad w Notion popraw ręcznie
-(liczby i linki).
+`_nowe`; identyfikator folderu wyszukaj po nazwie w archiwum, nazwę po powrocie bierz z planu), potem pliki (`fileId`
+z planu, `parentId` z `dysk.json` – popraw w nim ścieżki przeniesionych folderów, `title` = dawna nazwa). Lokalnie:
+`cofnij --wykonaj` – kod 1 i lista „✗” = część plików nie wróciła (cel zajęty, pliku nie ma); przebieg zostaje
+niecofnięty, ponowne `cofnij --wykonaj` dokończy resztę. Blokada skryptu albo konektora – po zakończeniu przebiegu,
+porzucona – `zdjecia.py odblokuj`. Po konektorze: `cofnij --zrobione` (oznacza przebieg jako cofnięty – kolejne „cofnij”
+weźmie wcześniejszy). Przebieg przerwany i dokończony to dwa przebiegi – pełny powrót wymaga dwóch „cofnij”. Ślad
+w Notion popraw ręcznie (liczby i linki).
 
 **Zdjęcia z dnia albo tygodnia**: każdy plik zaczyna się od daty, więc data w wyszukiwarce Dysku (albo Findera) pokazuje
 wszystkie zdjęcia dnia ze wszystkich folderów; wpis Dziennika budowy z dnia ma linki do folderów kroków; przegląd tygodnia
@@ -264,13 +276,15 @@ z dowiązaniami.
 | inwestor sam przeniósł zdjęcia | skrypt pomija brakujące źródło; konektor – plik nie jest już w `_nowe` | `test_rozloz_cofnij` |
 | wgrywanie trwa | folder czeka do następnego przebiegu | `test_wgrywanie_trwa` |
 | ponowny przebieg | bez zmian | `test_ponowny_przebieg_bez_zmian` |
-| skrypt i konektor naraz | blokada `.dom/zdjecia/blokada.json` (2 h) | `test_blokada` |
-| przebieg przerwany w połowie | `zapisz-ruchy --tylko` zapisuje wykonane; reszta planu przy następnym | – |
+| skrypt i konektor naraz | blokada `.dom/zdjecia/blokada.json`: `rozloz`, `cofnij --wykonaj` (skrypt, 2 h), `plan --zablokuj` z ruchami (konektor, 30 min) | `test_blokada`, `test_blokada_konektora_odswiezana_i_zdejmowana`, `test_nieudany_plan_i_plan_bez_ruchow_nie_blokuja` |
+| cofnięcie, gdy część plików przeniesiono albo zastąpiono ręcznie | konflikty „✗”, kod 1, przebieg zostaje do cofnięcia | `test_cofnij_z_konfliktami_nie_zamyka_przebiegu` |
+| przebieg przerwany w połowie | lokalnie każdy ruch trafia do dziennika zaraz po wykonaniu; konektor – `zapisz-ruchy --tylko` zapisuje wykonane; reszta planu przy następnym | `test_przerwanie_w_polowie_dziennik_ma_wykonane` |
+| drugi pusty folder o tej samej nazwie w archiwum | dopisek `_2` w dzienniku ruchów; cofnięcie bierze właściwy | `test_cofniecie_bierze_wlasny_folder_z_archiwum` |
 | Notion nie odpowiada | ruch zostaje, ślad przy następnym przebiegu (plan w `.dom/zdjecia/`) | – |
 | faktura na kilku zdjęciach, korekta, nieczytelna data, WZ bez dostawcy, PDF | sekcja 4 | – (agent) |
 | pliki tymczasowe, blokady biurowe | pomijane | `test_pliki_tymczasowe_pomijane`, `test_nigdy` |
-| plik zmieniony po obu stronach | obie wersje, Dysk do `_Archiwum`, komunikat | `test_aplikacja_archiwizuje_nie_kasuje` |
-| plik usunięty ręcznie na Dysku | wraca z Maca przy kopii | – |
+| plik zmieniony po obu stronach | obie wersje, Dysk do `_Archiwum` (druga tego dnia z `_2`), komunikat | `test_aplikacja_archiwizuje_nie_kasuje`, `test_aplikacja_archiwum_bez_nadpisania` |
+| plik usunięty ręcznie na Dysku | tryb aplikacji – wraca przy `kopia.py aplikacja`; tryb paczki – skrypt tego nie widzi (porównuje Maca z potwierdzoną kopią, nie z Dyskiem; `sprawdz-dysk` szuka tylko `.dom`, `AI`, sekretów) – zauważony brak: inwestor wgrywa plik z Maca ręcznie | `test_aplikacja_porownuje_z_dyskiem` |
 | arkusze i dokumenty Google | tylko na Dysku | – |
 | brak miejsca na Macu | kopia lokalna zdjęć wyłączona (dziś: dysk zajęty w 97%) | – |
 | paczka niewgrana; ta sama wgrana dwa razy | następna zawiera wcześniejsze zmiany; druga kopia do `_Archiwum` | `test_paczka_tylko_dozwolone_i_kolejna_zawiera_niewgrane` |

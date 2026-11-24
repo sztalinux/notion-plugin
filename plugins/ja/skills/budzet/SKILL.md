@@ -1,10 +1,11 @@
 ---
 name: budzet
-description: Budżet domowy w arkuszu Google „Budżet domowy” – wydatki z wpisów („200, pra, o, zam”, gotówka, wydatek na budowę także do budżetu) od razu w arkuszu (automat w ciągu godziny) i miesięczne zamknięcie – wyciągi (mBank, ZEN), lista zakupów Allegro, lista wydatków drugiej osoby, strona decyzji (artefakt), zapis do Transakcji, przypięcie płatności z wyciągu do wierszy z wpisów, kontrola arkusza, przychód drugiej osoby z sald i podsumowanie miesiąca. Wpis wydatku działa też w przebiegu na Macu; zamknięcie tylko w Claude Code na Macu (skrypty tools/budzet). Używaj, gdy użytkownik mówi „zamknijmy miesiąc”, „budżet za październik”, „wrzuciłem wyciągi”, „przenieś decyzje budżetu RRRR-MM”, „podsumuj miesiąc w budżecie”, „czy przychody są dobrze policzone”, wkleja listę Allegro albo listę wydatków ze skrótami, wpisuje wydatek w skrócie „kwota, konto, osoba, kategoria, opis” albo zwykłym zdaniem („wydałem N zł na regularne i M na jedzenie na mieście”), dodaje zdjęcie paragonu („rozpisz paragon”).
+description: "Budżet domowy w arkuszu Google „Budżet domowy”: wydatek z wpisu w skrócie albo zdaniem, zdjęcie paragonu, zamknięcie miesiąca z wyciągów, Allegro i list, strona decyzji. Używaj, gdy użytkownik wpisuje „200, pra, o, zam”, „wydałem N zł na…”, „rozpisz paragon”, mówi „zamknijmy miesiąc”, „wrzuciłem wyciągi”, „przenieś decyzje budżetu RRRR-MM”, „czy przychody są dobrze policzone”."
 ---
 
 # Budżet domowy – wydatki na bieżąco i zamknięcie miesiąca
 
+Wpis wydatku działa też w przebiegu na Macu; zamknięcie tylko w Claude Code na Macu (skrypty `tools/budzet`).
 Kod: `tools/budzet/` (wpis, paragon, arkusz_budzetu, importuj, przenies, kontrola, allegro, strona). **Dane są poza repo** w
 `<folder budowy>/.dom/budzet/` (`DANE` w `tools/budzet/wspolne.py`): `ustawienia.json` (ID arkusza, adres strony, folder
 Dysku, konta, osoby, skróty kont i osób, pary pomijane, reguły specjalne), `kategorie.json`, `reguly.json` (reguły sklepów,
@@ -28,13 +29,14 @@ w repo harnessu.
 Wpis w Dzienniku albo wiadomość w skrócie `kwota, konto, osoba, kategoria, opis` (zmyślone: „200, pra, o, zam”,
 „150, z, a, dom, geolog”, „45, zak reg, bułki”). Konto i osoba są opcjonalne: bez konta = gotówka; gotówka i konta drugiej
 osoby zawsze na drugą osobę. Skróty kont i osób – `ustawienia.json` (`skroty_kont`, `skroty_osob`); kategorii – `reguly.json`
-(`skroty`, te same co w listach). Kwota z „+” = wpływ.
+(`skroty`, te same co w listach). Kwota z „+” = wpływ (przychód jest wpływem także bez „+”).
 
 **Wydatek zwykłym zdaniem** („wydałem N zł na regularne i M na jedzenie na mieście” – bez skrótu, konta i osoby) to też
 wydatek: sam przepisz go na skrót (kategorię dobierz ze skrótów w `reguly.json`, np. „N, zak reg” i „M, jedz, na mieście”)
 i zapisz krokiem 2. Nie pytaj o konto ani osobę – brak szczegółów = gotówka drugiej osoby (wydatek na budowę – konto wg pkt 1;
 wyjątek: paragon – niżej). Kilka wydatków w jednym wpisie =
-osobne wywołania z `--id <id>-1`, `<id>-2` (ten sam ID nadpisałby poprzedni). Pytaj tylko o brakującą kwotę albo kategorię,
+osobne wywołania z `--id <id>-1`, `<id>-2` (ten sam ID nadpisałby poprzedni; to też ID części paragonu – skrypty odmówią
+kolizji, `references/paragony.md`). Pytaj tylko o brakującą kwotę albo kategorię,
 której nie da się dobrać.
 
 **Paragon ze zdjęcia** (obraz we wpisie z dopiskiem, kto płacił i czym) → `references/paragony.md`: pobranie zdjęcia
@@ -44,20 +46,24 @@ z polem `grupa`), część na budowę także do kolejki 💸. **Paragon bez „k
 
 1. Wydatek na budowę (ekipa, materiał, usługa) → reguła `dom-budowa/skills/koszty/references/wydatek-przeplyw.md` (kosztorys i budżet, konto, zwroty).
 2. Na Macu (przebieg albo Claude Code): `python3 tools/budzet/wpis.py dodaj "<treść wpisu>" --data <dzień wydatku albo wpisu>
-   --id <id bloku / strony wpisu>`. Ten sam `--id` nadpisuje zapis – ponowny przebieg nie dubluje. Zapis z datą od 1.12.2026
+   --id <id bloku / strony wpisu>`. Ten sam `--id` nadpisuje zapis – ponowny przebieg nie dubluje. Wydatek z wiadomości w rozmowie
+   (bez bloku) – `--id c<RRRRMMDDGGMM wiadomości>-<n>`; bez `--id` dwa takie same wydatki z jednego dnia zleją się w jeden. Zapis z datą od 1.12.2026
    trafia do Transakcji w ciągu godziny (automat po przebiegu: `arkusz_budzetu.py sync`; ID wpisu w kolumnie O, Notatki
    „z wpisu”); w sesji Claude Code z inwestorem (nie w przebiegu) uruchom zaraz po zapisie
    `python3 tools/budzet/arkusz_budzetu.py sync`. Starsze zapisy
    (listopad) i te, których skrypt arkusza nie przyjął, dopisze zamknięcie miesiąca po ID. Usunięcie wydatku:
-   `python3 tools/budzet/wpis.py usun RRRR-MM <id>` (w sesji potem `sync` – wiersz znika z arkusza).
+   `python3 tools/budzet/wpis.py usun RRRR-MM <id>` (w sesji potem `sync` – wiersz znika z arkusza; brak wpisu – kod 1).
    Wydatek budowy: dodatkowo `--budowa <id strony 💸>` i `--gotowka` (Sposób = Gotówka albo brak informacji – wtedy gotówka)
    (`dom-budowa/skills/koszty/references/wydatek-przeplyw.md`). Składnia jest tu – nie sprawdzaj `--help`; jedno polecenie na wywołanie, ścieżka względna od repo, bez `cd`, potoków i `;`.
 3. „✗ pierwsze pole to nie kwota” → wpis nie jest wydatkiem w skrócie; obsłuż go inną procedurą albo pytaniem ❓.
+   „✗ niejednoznaczna kwota” (np. kropka tysięcy) → ❓ z pytaniem o kwotę; nic się nie zapisało.
    „nieznany skrót kategorii” → zapis zostaje; pytanie pojawi się na stronie decyzji, a odpowiedź doda skrót.
 4. Bez Maca (claude.ai, telefon): wydatek do Skrzynki z polem „Zrobić: wydatek …” (`wpisy/references/skrzynka.md`); Mac zapisze go krokiem 2.
 5. Komunikat 🔔 `skrypt-arkusz_budzetu-kontrola` (nocna kontrola: wpis bez wiersza w arkuszu): odpowiedź „dopisz ponownie”
    → `python3 tools/budzet/arkusz_budzetu.py ponow <id>`; „usuń” → `python3 tools/budzet/wpis.py usun RRRR-MM <id>`
    (`wpisy/references/pytania.md`, C). Wiersz z ID wpisu bez zapisu w pliku – zaproponuj inwestorowi usunięcie wiersza w arkuszu.
+   „Usunięty we wpisach, wiersz wciąż w arkuszu” – nic nie rób: `sync` ponowi usunięcie (`ponow` takiego zapisu nie rusza).
+   „Zmieniony po zamknięciu” – za zgodą inwestora popraw ręczny wiersz w arkuszu, potem `arkusz_budzetu.py zamknij-wpisy <id>`.
    `skrypt-arkusz_budzetu-sync` – zapisy czekają w pliku; przyczyny: `docs/budzet-arkusz.md`, sekcja 5.
 
 Przy zamknięciu: gotówka i konta drugiej osoby z wpisów – ID w kolumnie O = już w arkuszu, inaczej wiersz z datą i opisem
@@ -66,7 +72,9 @@ bliska sumie → strona decyzji – `references/paragony.md`, 6). Konto z wycią
 także przez przełom miesiąca) przypina się do wiersza z wpisu (paragon: do wszystkich części, gdy płatność = suma) – ID
 wyciągu do O, kwota z wyciągu do D, bez nowego wiersza;
 wpisu nie ma w arkuszu – wiersz z płatności z kategorią wpisu; wpis z ostatnich dni miesiąca bez pary, gdy wyciąg ich nie
-obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzji. Budowa z `--budowa` nie pyta „nie ma w kosztorysie”.
+obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzji. Płatność ±1 dzień od wpisu bez pary z tego samego
+miesiąca (inna kwota) nie wchodzi sama, nawet z regułą „Zawsze” – decyzja bez propozycji (jawny wybór) z wierszem wpisu
+(„Już w arkuszu” przypina do niego płatność). Budowa z `--budowa` nie pyta „nie ma w kosztorysie”.
 
 ## B. Zamknięcie – zebranie danych („zamknijmy miesiąc RRRR-MM”)
 
@@ -74,14 +82,17 @@ obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzj
    „Co przygotowuje inwestor” → **jedna lista do inwestora**. Bez wyciągów nie ruszaj; reszta może dojść później – strona
    pokaże ramkę „Brakuje”.
 2. Pobierz pliki do `DANE/wyciagi/` i `DANE/listy/`.
-3. Allegro: `python3 tools/budzet/allegro.py listy/allegro-<data>.txt listy/allegro-<data>.json`; uzupełnij w JSON `prop`
+3. Allegro: `python3 tools/budzet/allegro.py listy/allegro-<data>.txt listy/allegro-<data>.json` („pominięte” > 0 →
+   sprawdź te bloki w tekście); uzupełnij w JSON `prop`
    i 0–2 `opcje` dla zamówień bez propozycji (format „Kategoria › Podkategoria”, kategorie z `kategorie.json`) na podstawie
    nazw produktów. Zakupy na budowę → „Dom”.
-4. Pobierz `Transakcje!A1:O` (bez sztywnego końca – wierszy przybywa co godzinę) i zapisz jako
+4. `python3 tools/budzet/arkusz_budzetu.py sync` (wpisy od 1.12 dostają wiersz z ID – import nie dopasuje ich do ręcznych
+   wierszy), potem pobierz `Transakcje!A1:O` (bez sztywnego końca – wierszy przybywa co godzinę) i zapisz jako
    `DANE/miesiace/transakcje-<data>.json`.
 5. `python3 tools/budzet/importuj.py --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>.json --zen wyciagi/zen.csv
    --mbank wyciagi/mbank.csv --allegro listy/allegro-<data>.json --lista listy/RRRR-MM-<lista>.txt`
-   (pomiń brakujące; ścieżki względem DANE; wpisy z sekcji A czyta sam – także końcówkę poprzedniego i początek następnego
+   (pomiń brakujące – podany, a nieistniejący plik to ✗; ścieżki względem DANE; „Brakuje” wymienia każdy wyciąg z ostatnią
+   operacją wcześniej niż 3 dni przed końcem miesiąca; wpisy z sekcji A czyta sam – także końcówkę poprzedniego i początek następnego
    miesiąca; `--salda-wpisane`, gdy salda są już w Konta).
    W listach kwota może być działaniem („5300-580 wyn”) – w arkuszu zostaje formuła.
 6. `python3 tools/budzet/strona.py --dist <folder w scratchpadzie>` i opublikuj na adres `strona_url`: strona
@@ -102,14 +113,20 @@ obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzj
       ponad 30 min; wygasła w trakcie → zacznij C.3 od nowa, od świeżego odczytu;
    b) świeży odczyt `Transakcje!A1:O` → `DANE/miesiace/transakcje-<data>-zapis.json` i `python3 tools/budzet/przenies.py
       --miesiac RRRR-MM --arkusz miesiace/transakcje-<data>-zapis.json` – odrzuca wiersze, których ID już jest w O, i daje
-      numery wierszy z tego odczytu (`zmiany` bez zgodnego wiersza → `do_wyjasnienia`, rozstrzygnij w czacie);
+      numery wierszy z tego odczytu (`zmiany` bez zgodnego wiersza → `do_wyjasnienia`, rozstrzygnij w czacie). „Możliwy
+      dubel” → usuń ręczny wiersz (bez ID), wiersz z ID wpisu zostaw – usunięty wróciłby przez 🔔 „dopisz ponownie”; ręczny
+      wiersz to suma kilku płatności → usuń wiersz z ID, potem (pod blokadą) `arkusz_budzetu.py ponow <id>` i `zamknij-wpisy <id>`;
    c) nowe wiersze **wyłącznie dopisaniem na końcu (append)**, nigdy zapisem pod numer: kolumny A:L i O (data ISO; D liczba
       albo formuła; K = `import RRRR-MM`; L = Notatki z pliku; O = ID źródeł – po nich kolejny import wie, co już jest);
       w wierszach, które zwrócił zapis, wklej formuły M:N i format z wiersza powyżej. Wiersz przychodu z sald ostatni;
-   d) `zmiany`: w wierszu o podanym numerze dopisz „-kwota” do formuły D (zwrot pomniejsza zakup);
+   d) `zmiany`: w wierszu o podanym numerze dopisz „-kwota” do formuły D (zwrot pomniejsza zakup) i „,<id>” zwrotu w O –
+      jednym wywołaniem (dwa zakresy), żeby powtórzone C.3 nie odjęło zwrotu drugi raz;
    e) `przypiecia`: `python3 tools/budzet/arkusz_budzetu.py przypnij --miesiac RRRR-MM`; bez skryptu – konektorem: w każdym
       wierszu dopisz „,<id wyciągu>” w O, a podaną kwotę wpisz w D;
-   f) `python3 tools/budzet/arkusz_budzetu.py blokada zdejmij`, potem `python3 tools/budzet/arkusz_budzetu.py sync`
+   f) jeszcze pod blokadą `python3 tools/budzet/arkusz_budzetu.py zamknij-wpisy --miesiac RRRR-MM` – wpisy rozstrzygnięte
+      bez ID w O (ręczny wiersz, Pomiń, Już w arkuszu; `wpisy_rozstrzygniete`) dostają znacznik zamknięcia, więc `sync`
+      ich nie dopisze; powtórzone nic nie zmienia;
+   g) `python3 tools/budzet/arkusz_budzetu.py blokada zdejmij`, potem `python3 tools/budzet/arkusz_budzetu.py sync`
       (wiersze zapasowe z wpisów dostaną znaczniki – `juz` + poprawka treści).
 4. Salda: `salda` z pliku zapisu → zakładka Konta, kolumna następnego miesiąca (ZEN = saldo PLN z wyciągu; mBank =
    poprzednia kolumna + zmiana). `korekty` dopisz do salda konta w tej samej formule (`=1000+250-80`, przykład
@@ -123,13 +140,17 @@ obejmuje, czeka na import kolejnego miesiąca; reszta bez pary → strona decyzj
    Import tamtego miesiąca pominie wpływ (bez dubla), a import tego miesiąca doda kwotę do `korekty` salda.
 7. Zakupy na budowę („Dom”) bez wpisu z `--budowa`: strona pokazuje „w kosztorysie / nie ma w kosztorysie”. Tylko brakujące
    zaproponuj dodać (procedura `koszty`), jedną listą.
-8. **Kontrola:** pobierz Transakcje jeszcze raz (plik jak w B.4) i `python3 tools/budzet/kontrola.py --arkusz <plik> --rok RRRR`.
+8. **Kontrola:** pobierz Transakcje jeszcze raz (plik jak w B.4) i `python3 tools/budzet/kontrola.py --arkusz <plik> --rok RRRR --miesiac RRRR-MM`
+   (zamykany miesiąc – bez niego ostatni miesiąc w danych, np. grudzień, nie ma sprawdzanego wiersza przychodu z sald).
    Pewne poprawki techniczne (kwota tekstem → liczba, brak Osoby w wierszu konta drugiej osoby, Osoba w przelewie) zrób sam;
    duplikat sprawdź z wyciągiem (w wyciągu raz, w arkuszu dwa razy) i usuń dopiero po zgodzie inwestora.
 9. Podsumowanie: policz miesiąc wg kategorii vs średnia 3 poprzednich, dopisz do `miesiace/RRRR-MM.json` pole
    `podsumowanie` {tekst, punkty[], kategorie[{kat, kwota, srednio}]}, przebuduj i opublikuj stronę. W czacie 3–6 linii:
    co wpisano, czego nie jesteś pewien, największe zmiany miesiąca, przychód drugiej osoby rozbity jak w sekcji D; wiersz
    z datą poprzedniego, już zamkniętego miesiąca (wpis z jego końca, płatność dopiero w tym wyciągu) – nazwij go.
+10. Pierwsze zamknięcie na nowym kodzie (listopad 2026): wyciągi z zapasem kilku dni następnego miesiąca; decyzje „może to
+    wpis …” i pozycje „1:1 (przez przełom miesiąca)” w „Już” obejrzyj każdą, nie zatwierdzaj zbiorczo; po C.3 g
+    `arkusz_budzetu.py sync --proba` i `arkusz_budzetu.py kontrola` – 0 do dopisania, 0 problemów; potem C.8 z `--miesiac`.
 
 ## D. Przychód drugiej osoby (liczony z sald)
 
@@ -161,11 +182,14 @@ Przychód z jej Osobą**. Wiersz w Transakcjach (kategoria `przychod_z_sald`) ma
   własny wiersz z kwotą ujemną.
 - Allegro: wydatki z listy zamówień (data zamówienia, zwrócone pomijane); płatności Allegro w banku, spłaty Allegro Pay
   i karta podarunkowa – pomijane, żeby się nie dublowały.
-- Lista skrótów: bez dat → 1. dzień miesiąca. Gotówka (tylko z wpisów) zawsze na drugą osobę (konto i osoba z `ustawienia.json`).
+- Lista skrótów: bez dat → 1. dzień miesiąca. Nagłówek konta = skrót z `konta_list` albo linia bez cyfr; „-N …” i linia
+  z cyfrą nie do odczytania → strona decyzji. Gotówka (tylko z wpisów) zawsze na drugą osobę (konto i osoba z `ustawienia.json`).
 - Pensja w arkuszu brutto (przelew + pakiety jako osobne wiersze) – przelew z banku nie jest wtedy nowym wierszem.
 - Pary pomijane razem (np. wydatek oddany tego samego dnia) – `ustawienia.json` → `pary_pomijane`.
 - Pytaj tylko o to, czego nie da się ustalić z danych; jedna lista braków zamiast serii pytań.
-- Już w arkuszu: ID w kolumnie O, potem wiersz z wpisu (przypięcie, wyżej), potem 1:1, potem ≈1:1 (ręczny wpis do złotówki
+- Już w arkuszu: ID w kolumnie O, potem wiersz z wpisu (przypięcie, wyżej), potem 1:1 (miesiąc wiersza z daty, nie z kolumny M;
+  przez przełom miesiąca ±3 dni dopiero na końcu, gdy wyciąg obejmuje dzień wiersza; wiersz po płatności – gdy sięga
+  3 dni dalej), potem ≈1:1 (ręczny wpis do złotówki
   różnicy, ±3 dni, jedyny kandydat), potem sumy; pozycje list i wpisów (gotówka, konta drugiej osoby) – ID albo ręczny wiersz
   z tą samą kwotą, kontem i kategorią. Wiersze z wpisów nie liczą się do „wpisane ręcznie do dnia X”.
 - Zakładka roku: kolory daje formatowanie warunkowe – nie koloruj ręcznie; nazwa podkategorii unikalna w całym arkuszu.

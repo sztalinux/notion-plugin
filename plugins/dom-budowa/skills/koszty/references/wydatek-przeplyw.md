@@ -8,7 +8,7 @@ chyba że inwestor powie inaczej.
 
 | Wydatek | Kosztorys (kolejka 💸, `koszty` B) | Budżet domowy (`budzet` A, `wpis.py`) |
 |---|---|---|
-| Na budowę, zapłacony (Płatność = Zrealizowane) | tak | tak: `"<kwota>[, konto], dom[, opis]" --budowa <id strony 💸> --id <id strony 💸>` |
+| Na budowę, zapłacony (Płatność = Zrealizowane) | tak | tak: `"<kwota>[, konto], dom[, opis]" --budowa <id strony 💸> --id <id strony 💸>` (Przelew / Karta / BLIK bez konta – nie teraz, z wyciągu, pkt 2) |
 | Na budowę, „Do zapłaty” | tak | **nie teraz** – zapis przy przejściu na Zrealizowane (pkt 3; ten sam `--id`, bez dubla) |
 | Na budowę + „tylko kosztorys” / „nie do budżetu” | tak | nie; w Notatkach strony 💸 „bez budżetu (prośba inwestora)” |
 | Na budowę + inna kategoria budżetu („to z wesela”) | tak | tak, wskazany skrót kategorii zamiast `dom` |
@@ -41,7 +41,8 @@ Konto jest tylko w budżecie domowym. W kosztorysie wystarczy Sposób (Gotówka 
   tylko `--budowa`, wiersz wyżej). Wiersz w budżecie od 1.12.2026 w ciągu godziny, starsze przy zamknięciu miesiąca.
 - **Telefon (claude.ai bez Notion):** każdy wydatek – budowa i prywatny – do Skrzynki słowami inwestora z polem
   „Zrobić: wydatek …” (`wpisy/references/skrzynka.md`); Mac stosuje pkt 1–2 przy przeniesieniu.
-- **„Do zapłaty” → „Zrealizowane”:** nocny przebieg (`przeglad-dnia`, B) przegląda strony 💸 zmienione od wczoraj z Płatność =
-  Zrealizowane, Rodzaj wydatek lub zwrot, bez „bez budżetu” w Notatkach; brak wpisu o ich ID w `wpis.py lista RRRR-MM` (lista pokazuje ID z prefiksem `w`) (miesiąc
+- **„Do zapłaty” → „Zrealizowane”:** nocny przebieg (`przeglad-dnia`, B) czyta widok 💸 „🤖 Zrealizowane – 2 miesiące (budżet)”
+  (ID w `budowa/references/notion-mapa.md`; Płatność = Zrealizowane, bez wycen i planów, od najnowszej Daty – baza nie ma daty edycji)
+  od góry do pierwszego wiersza z Datą starszą niż 2 miesiące; pomija „bez budżetu” i „budżet – z wyciągu” w Notatkach; wiersze z Datą sprzed 16.11.2026 (start tego przepływu) pomija – rozlicza je zamknięcie miesiąca z wyciągów; brak wpisu o ich ID w `wpis.py lista RRRR-MM` (lista pokazuje ID z prefiksem `w`) (miesiąc
   daty zapłaty) → zapis wg pkt 1–2. Ten sam `--id` nie dubluje, więc powtórka jest bezpieczna. (Decyzja: logika po stronie
   przebiegu, nie w `wydatki.py sync` – sync to narzędzie arkusza kosztorysu i nie zna wyjątków z pkt 1, np. innej kategorii.)

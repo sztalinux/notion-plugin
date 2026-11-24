@@ -1,6 +1,6 @@
 ---
 name: przeglad-tygodnia-osobisty
-description: Cotygodniowy przegląd spraw osobistych (zadania prywatne, dziecko, praca, emocje i produktywność w liczbach, wesele, suplementy) i porządki w Dzienniku, z odnośnikiem do osobnego przeglądu tygodnia budowy; uruchamia też przegląd budowy (skill przeglad-tygodnia z pluginu dom-budowa). Używaj, gdy uruchamia go tygodniowy automat na Macu albo użytkownik mówi „przegląd tygodnia”, „podsumuj tydzień”, „jak minął tydzień”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – harmonogram), „posprzątaj dziennik”.
+description: Cotygodniowy przegląd spraw osobistych (zadania, dziecko, praca, emocje, suplementy) i porządki w Dzienniku; uruchamia też przegląd budowy (przeglad-tygodnia, dom-budowa). Używaj, gdy uruchamia go tygodniowy automat na Macu albo użytkownik mówi „przegląd tygodnia”, „podsumuj tydzień”, „jak minął tydzień”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne), „posprzątaj dziennik”.
 ---
 
 # Przegląd tygodnia – sprawy osobiste
@@ -28,13 +28,16 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
 ## Kroki
 
 1. **Budowa** – wczytaj skill `przeglad-tygodnia` (plugin dom-budowa) i wykonaj go; zapisze przegląd budowy na DOM
-   („Przeglądy tygodniowe”). Weź link do wpisu i jedną linię skrótu (do decyzji n, terminy 7 dni n).
+   („Przeglądy tygodniowe”). Weź link do wpisu, jedną linię skrótu (do decyzji n, terminy 7 dni n) i blok 🔔 porządków budowy
+   (`porzadki-budowa-<RRRR-Www>`) – zapisz go w kroku 5 razem z własnym.
 2. **Tydzień – sprawy osobiste** (odczyt):
    - „📆 Przeglądy dzienne” – wpisy z 7 dni (co się działo, co zamknięto); przy okazji napraw zepsute nagłówki dni
      (`przeglad-dnia/references/uklad-wpisu.md`, A, „Naprawa raz w tygodniu”) – bez pytania, to tylko format;
    - TASKS widok „🤖 Tydzień – prywatne” (`view://3faf5982-09e7-81b5-ad0a-000c1cfabfa0`): zamknięte w tygodniu, po terminie
      (tylko Deadline ☑ i „czekam na” – WAITING, Kto ≠ Ja; orientacyjne po dacie – sam licznik, `zadania`, „Termin twardy czy orientacyjny”),
-     z terminem w 7 dni (osobno Prywatne / Dziecko / Praca); SOMEDAY tylko licznikiem;
+     z terminem w 7 dni (osobno Prywatne / Dziecko); SOMEDAY tylko licznikiem;
+   - praca – baza 🔨 TASKS na 💼 WORK, widok „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (ID w `ja/references/notion-mapa.md`):
+     zamknięte w tygodniu i z terminem w 7 dni (baza nie ma pola Deadline – praca nie bywa „po terminie”);
    - Wpisy emocji widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81ec-83af-000c8b518d37`): liczba wpisów, najczęstsze
      emocje, średnia intensywność, powtarzające się triggery i potrzeby (kilka słów, bez cytatów);
    - Dziennik produktywności widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81af-9ea1-000cbe3dd643`): dni zapisane,
@@ -45,7 +48,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    - strona „💍 Wesele”: nowe punkty i zadania „Wesele:” z terminem w 30 dni;
    - Suple: Buy = tak (licznik, nazwy);
    - Zakupy: 🛒 Zakupy „Do kupienia” (licznik, najstarsze) i z Terminem w 7 dni (wymień).
-3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i bloki 🔔 starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
+3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i bloki 🔔 starsze niż 7 dni bez odpowiedzi (poza blokami `ZP-n`; wymień wpis i pytanie – sprawy budowy
    tylko licznikiem, są w przeglądzie budowy); widok „📥 Zasady do wdrożenia” (Rodzaj Zasada) – wpisy do wdrożenia starsze niż 7 dni
    (przypomnienie: napisz „wdróż” w Claude Code). **Kontrola spójności pomysłów (grupa P)** – widok „🤖 Pomysły – kontrola
    wersji” (kilka wierszy) wg `przeglad-dnia/references/kontrola-spojnosci-pomysly.md`: wersję uzupełniasz tylko z nagłówka
@@ -69,7 +72,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    z punktami; najpierw po terminie i czekające; nieudane odczyty jedną linią na końcu):
    ```
    **Po terminie:** zadanie z Deadline – od kiedy → zamknąć, przesunąć czy odpuścić? · czekam na – przypomnij się <komu> · po dacie orientacyjnej: n (bez pytań)
-   **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia
+   **Czeka na Ciebie:** n pytań pod wpisami i w 🔔 (najstarsze: …), HZ-x do wdrożenia
    **Zrobione:** 3–6 punktów (prywatne / dziecko / praca)
    **Najbliższy tydzień:** zadania z terminem wg dni, wesele (30 dni), „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Emocje i praca (liczby):** n wpisów emocji, najczęściej: …, śr. intensywność x; praca: n dni, śr. ocena y; wzorzec: …
@@ -84,9 +87,9 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    przeglądów dziennych starsze niż 14 dni do archiwum – zrób to **przed zapisem wpisu z kroku 4**, żeby wpis od razu miał liczbę i zakres dni w linii
    „Porządki” (jedna edycja strony – `ja`, zasada 2; brak takich dni → „archiwum: nic”, także w pustym tygodniu).
    Pozostałe porządki tylko proponujesz: jeden blok 🔔 pod „🔔 Komunikaty asystenta” we „Wpisach” (`wpisy/references/pytania.md`, C.7; klucz `porzadki-<RRRR-Www>`, jedno to-do
-   na porządek, „zastosuję w nocnym przeglądzie”). Tygodniowy dodaje i aktualizuje bloki **tylko pod nagłówkiem 🔔**, jedną
+   na porządek – max 3, więcej → jedno to-do zbiorcze; lista, warianty i blok z poprzedniego tygodnia – C.7, „Porządki tygodnia”; „zastosuję w nocnym przeglądzie”). Tygodniowy dodaje i aktualizuje bloki **tylko pod nagłówkiem 🔔**, jedną
    punktową edycją „Wpisów” (szybki nie startuje, gdy trwa tygodniowy); listy „Komunikaty z automatów” nie dostaje. Wpis tygodniowy: tylko liczba
-   (linia „Porządki”). Ta sama propozycja już czeka w 🔔 → nie dubluj.
+   (linia „Porządki”).
 6. **Odpowiedź** (log): link do wpisu + liczby, w tym „archiwum: n dni”; bez treści emocji.
 
 ## D. Porządki w Dzienniku
@@ -100,10 +103,11 @@ Bez pytania (także w zaplanowanym przebiegu – to tylko ślad, linki są w doc
   (najpierw wklej na górę archiwum, sprawdź, potem zdejmij; podstronę archiwum na dole strony zostaw – przy zamianie treści
   przepisz jej znacznik `<page>` bez zmian). Stronę budowy archiwizuje tak samo `przeglad-tygodnia` (porządki).
 Do zatwierdzenia (propozycja w przeglądzie):
-- wpisy z okienkiem ❓ i bloki 🔔 bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
+- wpisy z okienkiem ❓ i bloki 🔔 bez odpowiedzi od 14 dni (poza blokami `ZP-n`) → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
-- TASKS prywatne z Deadline ☑ po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze); zadań z terminem
+- TASKS prywatne z Deadline ☑ po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (propozycja domyślna na pozycję –
+  `wpisy/references/pytania.md`, C.7); zadań z terminem
   orientacyjnym nie proponuj przesuwać ani zamykać (`zadania`, „Termin twardy czy orientacyjny”);
-Odpowiedź (☑ albo dopisek pod to-do) czyta nocny przebieg (`przeglad-dnia`, B; klucz `porzadki-…`) – wykonaj wtedy
-zatwierdzone porządki wsadowo (`ja`, zasada 2), punkt do „Przetworzone”. Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.
+Odpowiedź (☑ albo dopisek pod to-do) czyta nocny przebieg (`przeglad-dnia`, B.2; klucz `porzadki-<RRRR-Www>`) – wykonaj wtedy
+zatwierdzone porządki wsadowo (`ja`, zasada 2; które – `wpisy/references/pytania.md`, C.7), punkt do „Przetworzone” (wątpliwe zostają w bloku). Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.

@@ -4,7 +4,7 @@
     python3 tools/kopia.py stan [--cicho]        # tryb (aplikacja / paczka), zmiany od ostatniej potwierdzonej kopii
     python3 tools/kopia.py paczka [--wykonaj]    # tryb paczki: <hub>/_Na Dysk/RRRR-MM-DD/ + SPIS.txt (domyślnie na sucho)
     python3 tools/kopia.py wgrane [RRRR-MM-DD]   # inwestor wgrał paczkę → stan potwierdzony
-    python3 tools/kopia.py aplikacja [--wykonaj] # tryb aplikacji: kopiuje zmiany do lokalnego folderu Dysku
+    python3 tools/kopia.py aplikacja [--wykonaj] [--mimo-to]  # tryb aplikacji: kopiuje zmiany do lokalnego folderu Dysku
     python3 tools/kopia.py sprawdz-dysk <lista.json>   # lista z konektora (nazwy, ścieżki) → czy na Dysku nie ma .dom/AI/sekretów
 
 Foldery kopiowane (lista dozwolona): DOZWOLONE niżej. Nigdy: `.dom`, `AI`, `Wiedza*`, `_Przychodzące`, `_Do claude.ai`,
@@ -25,8 +25,10 @@ import unicodedata
 from datetime import datetime
 from pathlib import Path
 
+import hub
+
 REPO = Path(__file__).resolve().parent.parent
-HUB = Path(os.environ.get("DOM_HUB") or REPO.parent.parent).expanduser().resolve()
+HUB = hub.folder_budowy(REPO)
 STAN_DIR = Path(os.environ.get("KOPIA_DANE") or HUB / ".dom" / "kopia")
 DOZWOLONE = ("Projekty", "Dokumenty", "Umowy", "Faktury", "Wyceny", "Materiały", "Koszty", "Media", "Dostawy",
              "Dziennik budowy KB")
@@ -55,8 +57,9 @@ def sha(p: Path) -> str:
     return h.hexdigest()
 
 
-def skanuj(hub: Path, poprzedni: dict = None) -> dict:
-    """{ścieżka: {"rozmiar", "mtime", "sha256"}} dla dozwolonych folderów; sha liczony tylko dla zmienionych."""
+def skanuj(hub: Path, poprzedni: dict = None, bledy: list = None) -> dict:
+    """{ścieżka: {"rozmiar", "mtime", "sha256"}} dla dozwolonych folderów; sha liczony tylko dla zmienionych.
+    Plik nieczytelny (zepsute dowiązanie, brak uprawnień) – pominięty, ścieżka do `bledy`."""
     poprzedni, out = poprzedni or {}, {}
     for folder in DOZWOLONE:
         baza = hub / folder
@@ -69,13 +72,23 @@ def skanuj(hub: Path, poprzedni: dict = None) -> dict:
                 rel = nfc(p.relative_to(hub).as_posix())
                 if not dozwolony(rel):
                     continue
-                st = p.stat()
-                stary = poprzedni.get(rel)
-                if stary and stary.get("rozmiar") == st.st_size and stary.get("mtime") == int(st.st_mtime):
-                    out[rel] = stary
-                else:
-                    out[rel] = {"rozmiar": st.st_size, "mtime": int(st.st_mtime), "sha256": sha(p)}
+                try:
+                    st = p.stat()
+                    stary = poprzedni.get(rel)
+                    if stary and stary.get("rozmiar") == st.st_size and stary.get("mtime") == int(st.st_mtime):
+                        out[rel] = stary
+                    else:
+                        out[rel] = {"rozmiar": st.st_size, "mtime": int(st.st_mtime), "sha256": sha(p)}
+                except OSError:
+                    if bledy is not None:
+                        bledy.append(rel)
     return out
+
+
+def z_nieczytelnymi(teraz: dict, potwierdzone: dict, bledy: list) -> dict:
+    """Skan do porównania: plik potwierdzony, którego chwilowo nie da się odczytać, liczy się jako bez zmian
+    (nie „usunięty na Macu” – jego kopia na Dysku zostaje na miejscu)."""
+    return {**teraz, **{s: potwierdzone[s] for s in bledy if s in potwierdzone}}
 
 
 def roznice(potwierdzone: dict, teraz: dict) -> dict:
@@ -112,6 +125,8 @@ def wczytaj_stan(katalog: Path = None) -> dict:
 
 
 def zapisz_stan(stan: dict):
+    if hub.tylko_odczyt(REPO, STAN_DIR):  # kopia robocza: tryby na sucho czytają prawdziwy stan, nie zapisują go
+        return
     STAN_DIR.mkdir(parents=True, exist_ok=True)
     tmp = STAN_DIR / "stan.json.tmp"
     tmp.write_text(json.dumps(stan, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
@@ -151,17 +166,43 @@ def zbuduj_paczke(hub: Path, r: dict, teraz: dict, data: str, wykonaj: bool) -> 
     return {"folder": str(cel.relative_to(hub)), "pliki": pliki, "spis": spis}
 
 
-def kopiuj_do_aplikacji(hub: Path, dysk: Path, r: dict, wykonaj: bool, data: str) -> list:
-    """Tryb aplikacji: nowe/zmienione → Dysk; poprzednia wersja i usunięte → _Archiwum/RRRR-MM-DD; nic nie kasuje."""
+def wolna_sciezka(p: Path) -> Path:
+    """Ścieżka, której jeszcze nie ma: zajęta → dopisek _2, _3 (nic nie nadpisujemy)."""
+    while p.exists():
+        m = re.match(r"^(.*)_(\d+)$", p.stem)
+        p = p.with_name((f"{m.group(1)}_{int(m.group(2)) + 1}" if m else f"{p.stem}_2") + p.suffix)
+    return p
+
+
+def brak_na_dysku(dysk: Path, teraz: dict, r: dict) -> list:
+    """Pliki bez zmian od potwierdzonej kopii, których nie ma na Dysku (usunięte tam ręcznie)."""
+    zmiany = set(r["nowe"]) | set(r["zmienione"]) | {p["do"] for p in r["przeniesione"]}
+    return [s for s in sorted(teraz) if s not in zmiany and not (dysk / s).exists()]
+
+
+BRAK_PROG_PLIKI, BRAK_PROG_UDZIAL = 5, 0.2  # więcej braków na Dysku = folder pusty albo niezsynchronizowany
+
+
+def podejrzany_brak(brak: list, potwierdzonych: int) -> bool:
+    return len(brak) > BRAK_PROG_PLIKI and len(brak) > BRAK_PROG_UDZIAL * potwierdzonych
+
+
+def kopiuj_do_aplikacji(hub: Path, dysk: Path, r: dict, wykonaj: bool, data: str, teraz: dict = None) -> list:
+    """Tryb aplikacji: nowe/zmienione → Dysk; poprzednia wersja i usunięte → _Archiwum/RRRR-MM-DD; nic nie kasuje.
+    Z `teraz` (skan Maca) porównuje też z Dyskiem: brakujące tam pliki kopiuje ponownie."""
     log = []
     arch = dysk / "_Archiwum" / data
+
+    def archiwizuj(s: str, dopisek: str = ""):
+        cel = wolna_sciezka(arch / s)
+        log.append(f"archiwum: {s}{dopisek}" + (f" (jako {cel.name})" if cel.name != Path(s).name else ""))
+        if wykonaj:
+            cel.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(dysk / s), str(cel))
+
     for s in r["zmienione"] + r["usuniete"]:
-        stary = dysk / s
-        if stary.exists():
-            log.append(f"archiwum: {s}")
-            if wykonaj:
-                (arch / s).parent.mkdir(parents=True, exist_ok=True)
-                shutil.move(str(stary), str(arch / s))
+        if (dysk / s).exists():
+            archiwizuj(s)
     for p in r["przeniesione"]:
         z, do = dysk / p["z"], dysk / p["do"]
         log.append(f"przeniesiony: {p['z']} → {p['do']}")
@@ -171,11 +212,18 @@ def kopiuj_do_aplikacji(hub: Path, dysk: Path, r: dict, wykonaj: bool, data: str
     for s in r["nowe"] + r["zmienione"] + [p["do"] for p in r["przeniesione"]]:
         do = dysk / s
         if do.exists() and s not in r["zmienione"]:
-            continue
+            if do.stat().st_size == (hub / s).stat().st_size:
+                continue  # już jest (rozmiar jak na Macu; sumy nie liczymy – czytanie z Dysku pobiera plik)
+            archiwizuj(s, " – na Dysku była inna wersja pod tą samą ścieżką")
         log.append(f"kopia: {s}")
         if wykonaj:
             do.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(hub / s, do)
+    for s in brak_na_dysku(dysk, teraz, r) if teraz else []:
+        log.append(f"brak na Dysku (usunięty tam?) – kopia ponownie: {s}")
+        if wykonaj:
+            (dysk / s).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(hub / s, dysk / s)
     return log
 
 
@@ -209,9 +257,12 @@ def main(argv=None):
     a.add_argument("data", nargs="?")
     a = sub.add_parser("aplikacja")
     a.add_argument("--wykonaj", action="store_true")
+    a.add_argument("--mimo-to", action="store_true", help="uzupełnij braki mimo podejrzenia niezsynchronizowanego Dysku")
     a = sub.add_parser("sprawdz-dysk")
     a.add_argument("lista")
     a = ap.parse_args(argv)
+    if (a.cmd == "wgrane" or a.cmd in ("paczka", "aplikacja") and a.wykonaj) and hub.zapis_zablokowany(REPO, HUB, STAN_DIR):
+        return 1
     data = datetime.now().strftime("%Y-%m-%d")
     stan = wczytaj_stan()
 
@@ -220,20 +271,38 @@ def main(argv=None):
         print("[kopia] na Dysku: " + ("✗ " + ", ".join(map(str, zle)) if zle else "brak .dom, AI i sekretów ✓"))
         return 1 if zle else 0
 
-    teraz = skanuj(HUB, {**stan["potwierdzone"], **stan.get("ostatni_skan", {})})
+    bledy = []
+    teraz = skanuj(HUB, {**stan["potwierdzone"], **stan.get("ostatni_skan", {})}, bledy)
     stan["ostatni_skan"] = teraz
-    r = roznice({k: v for k, v in stan["potwierdzone"].items() if dozwolony(k)}, teraz)
+    pot = {k: v for k, v in stan["potwierdzone"].items() if dozwolony(k)}
+    porownanie = z_nieczytelnymi(teraz, pot, bledy)
+    r = roznice(pot, porownanie)
     n = len(r["nowe"]) + len(r["zmienione"]) + len(r["przeniesione"]) + len(r["usuniete"])
     dysk = folder_dysku()
+    brak = brak_na_dysku(dysk, teraz, r) if dysk else []
+    niezsync = podejrzany_brak(brak, len(pot))
+    ostrz_dysk = (f"[kopia] ⚠ folder Dysku wygląda na pusty albo niezsynchronizowany: brakuje {len(brak)} z {len(pot)} "
+                  "potwierdzonych plików – sprawdź Dysk w przeglądarce; `kopia.py aplikacja --wykonaj` uzupełni je "
+                  "dopiero z `--mimo-to`")
+    if bledy:
+        print(f"[kopia] ⚠ pominięte – nie da się odczytać (zepsute dowiązanie? brak uprawnień?): {len(bledy)}: "
+              + ", ".join(bledy[:5]) + (" …" if len(bledy) > 5 else ""))
 
     if a.cmd == "stan":
         czeka = [p["data"] for p in stan.get("paczki", []) if not p.get("wgrana")]
+        if niezsync and a.cicho:
+            print(ostrz_dysk)
+            zapisz_stan(stan)
+            return 0
         linia = (f"[kopia] tryb: {'aplikacja' if dysk else 'paczka'} · potwierdzona: {stan.get('potwierdzono') or 'nigdy'} · "
                  f"zmian od niej: {n} (nowe {len(r['nowe'])}, zmienione {len(r['zmienione'])}, "
                  f"przeniesione {len(r['przeniesione'])}, usunięte {len(r['usuniete'])})"
+                 + (f" · brak na Dysku: {len(brak)}" if brak else "")
                  + (f" · paczki do wgrania: {', '.join(czeka)}" if czeka else ""))
-        if not (a.cicho and n == 0 and not czeka):
+        if not (a.cicho and n == 0 and not czeka and not brak):
             print(linia)
+        if niezsync:
+            print(ostrz_dysk)
         zapisz_stan(stan)
         return 0
     if a.cmd == "paczka":
@@ -241,40 +310,56 @@ def main(argv=None):
             print("[kopia] aktualna – brak zmian od ostatniej potwierdzonej kopii")
             zapisz_stan(stan)
             return 0
-        p = zbuduj_paczke(HUB, r, teraz, data, a.wykonaj)
+        p = zbuduj_paczke(HUB, r, porownanie, data, a.wykonaj)
         print(("[kopia] paczka gotowa: " if a.wykonaj else "[kopia] PLAN paczki (na sucho): ") + p["folder"])
         print("\n".join("  " + x for x in p["spis"][1:]))
         if a.wykonaj:
             stan.setdefault("paczki", []).append({"data": data, "folder": p["folder"], "wgrana": False,
-                                                  "pliki": {s: teraz[s] for s in teraz}})
+                                                  "pliki": dict(porownanie)})
         zapisz_stan(stan)
         return 0
     if a.cmd == "wgrane":
-        czeka = [p for p in stan.get("paczki", []) if not p.get("wgrana") and (not a.data or p["data"] == a.data)]
-        if not czeka:
+        czeka = [p for p in stan.get("paczki", []) if not p.get("wgrana")]
+        wybrane = [p for p in czeka if not a.data or p["data"] == a.data]
+        if not wybrane:
             print("[kopia] brak paczki czekającej na wgranie")
             return 0
-        ost = czeka[-1]
-        for p in czeka:
+        ost = wybrane[-1]
+        starsze = [p for p in czeka if p["data"] <= ost["data"] and p is not ost]  # nowsza zawiera ich zmiany
+        for p in starsze + [ost]:
             p["wgrana"] = True
-        stan["potwierdzone"] = ost["pliki"]
-        stan["potwierdzono"] = ost["data"]
+        if ost["data"] >= (stan.get("potwierdzono") or "")[:10]:
+            stan["potwierdzone"] = ost["pliki"]
+            stan["potwierdzono"] = ost["data"]
+            print(f"[kopia] potwierdzona kopia z {ost['data']} (folder {ost['folder']} na Macu można usunąć po sprawdzeniu)")
+        else:
+            print(f"[kopia] paczka z {ost['data']} starsza niż potwierdzona kopia z {stan['potwierdzono']} – oznaczona "
+                  "jako wgrana, potwierdzony stan bez zmian")
+        if starsze:
+            print("[kopia] starsze paczki oznaczone jako wgrane (nowsza zawiera ich zmiany): "
+                  + ", ".join(p["folder"] for p in starsze))
         for p in stan["paczki"]:
             p.pop("pliki", None) if p.get("wgrana") else None
         zapisz_stan(stan)
-        print(f"[kopia] potwierdzona kopia z {ost['data']} (folder {ost['folder']} na Macu można usunąć po sprawdzeniu)")
         return 0
     if a.cmd == "aplikacja":
         if not dysk:
             print("[kopia] brak lokalnego folderu Dysku – użyj trybu paczki (`kopia.py paczka`)")
             return 1
-        log = kopiuj_do_aplikacji(HUB, dysk, r, a.wykonaj, data)
-        for x in tylko_na_dysku(dysk, teraz):
+        if niezsync:
+            print(ostrz_dysk)
+            if a.wykonaj and not a.mimo_to:
+                print("[kopia] nic nie skopiowano, stan bez zmian")
+                return 1
+        log = kopiuj_do_aplikacji(HUB, dysk, r, a.wykonaj, data, None if niezsync and not a.mimo_to else teraz)
+        if niezsync and not a.mimo_to:
+            log.append(f"brak na Dysku: {len(brak)} plików – lista pominięta (folder niezsynchronizowany?)")
+        for x in tylko_na_dysku(dysk, porownanie):
             log.append(f"tylko na Dysku (pobierz na Maca ręcznie): {x}")
         print(("[kopia] wykonano:" if a.wykonaj else "[kopia] PLAN (na sucho):") + f" {len(log)} pozycji")
         print("\n".join("  " + x for x in log))
         if a.wykonaj:
-            stan["potwierdzone"], stan["potwierdzono"] = teraz, data
+            stan["potwierdzone"], stan["potwierdzono"] = dict(porownanie), data
         zapisz_stan(stan)
         return 0
     return 1

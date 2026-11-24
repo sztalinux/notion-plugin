@@ -452,7 +452,7 @@ POWODY = {"przerwane": "przerwano (Ctrl-C)", "limit": "limit użycia modelu",
 def polecenie_modelu(m) -> str:
     wlasne = os.environ.get("WIEDZA_SEDZIA_POLECENIE")
     if wlasne:
-        prawdziwy = (W.REPO.parent.parent / ".dom").resolve()
+        prawdziwy = W.hub.domyslny_hub(W.REPO) / ".dom"
         if prawdziwy in m.baza.resolve().parents:
             raise BladSedziego("WIEDZA_SEDZIA_POLECENIE ustawione przy prawdziwym hubie – zmienna służy tylko testom; "
                                "usuń ją (unset WIEDZA_SEDZIA_POLECENIE), nic nie wysłano")

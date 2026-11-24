@@ -1,6 +1,6 @@
 ---
 name: budowa
-description: Kontekst i zasady pracy przy budowie domu jednorodzinnego (dom z piwnicą; bieżący etap wskazuje strona DOM w Notion), w tym zasady zapisu do Notion. Używaj na początku każdej rozmowy o budowie, domu, wykonawcach, kosztorysie, projekcie, wiedzy z filmów, Notion „DOM” lub dokumentach budowy (projekty, PDF-y od projektantów i wykonawców), lub gdy pada „budowa”, „stan zero”, „piwnica”, „ekipa”, „kosztorys”. Kieruje do właściwej procedury.
+description: Kontekst i zasady pracy przy budowie domu (dom z piwnicą; etap wskazuje strona DOM w Notion), w tym zasady zapisu do Notion; kieruje do procedur budowy. Używaj na początku każdej rozmowy o budowie, wykonawcach, kosztorysie, projekcie, dokumentach budowy lub Notion „DOM” i gdy pada „budowa”, „stan zero”, „piwnica”, „ekipa”, „kosztorys”.
 ---
 
 # Budowa domu – kontekst i zasady
@@ -18,10 +18,10 @@ Gdzie leżą dane i jak je zmieniać: `references/zrodla.md`; gdzie czego szuka�
 
 ## Na starcie
 
-Skrzynkę „🤖 Zmiany asystenta” (Zasady) obsługuje skill `ja` (plugin `ja`, sekcja „Na starcie rozmowy”) – wczytaj
+Skrzynkę zmian („📥 Zasady do wdrożenia” w „🤖 Zmiany asystenta”) obsługuje skill `ja` (plugin `ja`, sekcja „Na starcie rozmowy”) – wczytaj
 go, jeśli nie jest wczytany; zasady „Do zrobienia” albo z pustym Statusem obowiązują też w sprawach budowy.
 
-Poza Claude Code pobierz też (raz na rozmowę, razem ze skrzynką) stronę Notion **„📑 Przewodnik po dokumentach i Notion”**
+Poza Claude Code pobierz też (raz na rozmowę, razem ze skrzynką zmian) stronę Notion **„📑 Przewodnik po dokumentach i Notion”**
 (`3f6f5982-09e7-81f5-bade-ec877d8d936a`): co jest w którym dokumencie, gdzie leży i gdzie czego szukać w Notion.
 Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna, nic nie trzeba wgrywać.
 
@@ -37,7 +37,7 @@ Utrzymuje ją Claude Code (procedura `dokumenty`, sekcja C) – zawsze aktualna,
 | pyta o projekt, rysunek, umowę, normę, technologię, „czy to dobrze” | `analiza-techniczna` |
 | wkleja transkrypcję filmu/artykuł; relacjonuje rozmowę („dzwoniłem do konstruktora…”); odpowiada „SP-n: …” | `wiedza` |
 | pyta „co nowego”, „podsumuj tydzień” (budowa) | `przeglad-tygodnia` |
-| „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` (plugin `ja`); przegląd dnia budowy – sekcja „Wieczorem” niżej |
+| „przegląd dnia”, nocny przebieg na Macu | `przeglad-dnia` (plugin `ja`); przegląd dnia budowy – sekcja „Wieczorem” niżej |
 | „przegląd dnia budowy”, „co dziś na budowie i co jutro” | sekcja „Wieczorem” niżej |
 | dostał nowe pliki od projektanta/wykonawcy, pyta o dokument, „co wgrać do claude.ai”, „wgrałem” (paczka, kopia, faktura z telefonu), „aplikacja Dysku nie działa” | `dokumenty` |
 | „zaczynamy etap”, „jutro betonowanie – co sprawdzić”, „ekipa skończyła”, odbiór, usterki, „teczka do banku” | `etap` |
@@ -54,7 +54,7 @@ Jedna rozmowa może wymagać kilku procedur (np. oferta → koszty → notatka).
 
 ## Luźny wpis z Dziennika
 
-Inwestor wpisuje wszystko na stronę „📓 Dziennik”; skill `wpisy` (plugin `ja`) rozpoznaje obszar „Budowa” i przekazuje wpis
+Inwestor wpisuje wszystko na stronę „📝 Wpisy”; skill `wpisy` (plugin `ja`) rozpoznaje obszar „Budowa” i przekazuje wpis
 tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `wpisy`). Dla każdego wpisu o budowie:
 
 1. **Klasa:** ustalenie/decyzja, pytanie do kogoś, ryzyko, zadanie z terminem, relacja z dnia na budowie, wiedza ogólna
@@ -69,8 +69,8 @@ tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `
    |---|---|---|
    | ustalenie, decyzja, pytanie, ryzyko, pomysł, doczytać | `notatka` | ustalenie z wiedzą techniczną → także `wiedza`, sekcja F |
    | zadanie z terminem, „do piątku dam znać…” | `harmonogram` (D) → TASKS, Kto = Ja, Obszar = Dom | |
-   | ktoś ma coś zrobić / przyjść / dostarczyć w dniu X; nowy termin albo przesunięcie kroku („przesuwamy płytę o tydzień”) | `harmonogram` (D) → TASKS WAITING; krok budowy → Harmonogram (przesunięcie – C) | bez inwestora Termin kroku zmienia tylko wpis o tempie prac (C.4); inaczej pytanie pod wpisem z propozycją nowego terminu i skutków (C.2–C.3) |
-   | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia) | `zakupy` (0) | 🧱 Zakupy budowy; zadanie w TASKS tylko przy zakupie „na już” |
+   | ktoś ma coś zrobić / przyjść / dostarczyć w dniu X (dostawa materiału albo zamówienia – wiersz niżej, `zakupy`); nowy termin albo przesunięcie kroku („przesuwamy płytę o tydzień”) | `harmonogram` (D) → TASKS WAITING; krok budowy → Harmonogram (przesunięcie – C) | data podana wprost przez inwestora = fakt: Termin od razu, także bez inwestora; kroki zależne i wyjątki (pytanie ❓) – `harmonogram` C, wstęp |
+   | „kupić / zamówić / kupiłem X” na budowę lub działkę (materiał, drobnica, narzędzia); dostawa materiału / zamówienia w umówionym dniu („w poniedziałek przyjedzie stal”) | `zakupy` (0; dostawa – 0.3, C) | 🧱 Zakupy budowy; zadanie w TASKS tylko przy zakupie „na już”; dostawa – pole Dostawa w 🧱, bez TASKS |
    | relacja z budowy, dostawa, usterka, godziny własne, roboty dodatkowe („ekipa chce dopłatę za…”) | `dziennik` (dopłata – B) | dopłata to nie wydatek: do 💸 dopiero uzgodniona kwota jako plan (`koszty` B3), zapłata jako wydatek (`koszty` B); położenie z miarą („zapisz w książce…”, „zawór 1,2 m od narożnika”) → także `ksiazka-domu` B |
    | wiedza ogólna | `wiedza` | brak źródła = krok 2 |
    | wydatek, faktura do zapłaty / zapłacona, koszt, zwrot pieniędzy (różnica VAT, zwrot towaru) (samo zdjęcie faktury na Dysku – `dokumenty` D) | `koszty` (B; zwrot – B.7a) | wiersz w „💸 Wydatki → arkusz” (Do arkusza); niepewna pozycja → pytanie |

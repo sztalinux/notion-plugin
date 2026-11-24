@@ -11,7 +11,7 @@ Tryb godzinowy działa tylko wtedy, gdy polecenie przebiegu szybkiego zawiera ak
 
 - Jasne części wpisu zapisz normalnie. Ślad w bloku dnia „Przetworzone”: `~~wpis~~ → 🧠 rozkminka w toku RZ-<dd.mm>-<n>`
   (pełna treść prośby zostaje w śladzie, jak dawniej; numer `<n>` – od wartości podanej w poleceniu w górę).
-- Na końcu odpowiedzi osobna linia: `ROZKMINKI: RZ-<dd.mm>-<n>[, …]` – **same tokeny, bez treści wpisu** (log nie może zawierać
+- Na końcu odpowiedzi osobna linia (przed ostatnią `KOMUNIKATY:` – `wpisy/references/pytania.md`, C.2): `ROZKMINKI: RZ-<dd.mm>-<n>[, …]` – **same tokeny, bez treści wpisu** (log nie może zawierać
   treści). `przeglad.py` dopisuje tokeny do kolejki w `stan.json`.
 - Limit: najwyżej 3 rozkminki dziennie w ciągu dnia (pilnuje `przeglad.py`); nadmiar zrobi nocny.
 
@@ -36,11 +36,13 @@ Polecenie zawiera „Gotowe rozkminki: <token> <url>, …” – to nowa praca (
   `` `rozkminka-<token>` `` i punktami „Do decyzji” z podstrony jako checkboxy (`wpisy/references/pytania.md`, C.7; odpowiedzi
   obsługuje nocny przebieg – dopisek „zastosuję w nocnym przeglądzie”);
 - ślad w „Przetworzone” zmień z `→ 🧠 rozkminka w toku <token>` na `→ 🧠 rozkminka: <wzmianka podstrony>`.
-Po udanym przebiegu `przeglad.py` zdejmuje te adresy z listy.
+Na końcu odpowiedzi osobna linia `GOTOWE: <token>, …` (przed ostatnią `KOMUNIKATY:`) – same tokeny, których blok 🔔 jest zapisany, bez komentarza. Po udanym przebiegu `przeglad.py`
+zdejmuje z listy tylko je; reszta wraca w następnym poleceniu – blok `rozkminka-<token>` już jest → nie dodawaj drugiego.
 
 ## 4. Nocny przegląd
 
 - Zrób jak dawniej w B.2a (wynik w przeglądzie dnia) każdy ślad `→ 🧠 rozkminka wieczorem` oraz każdy `→ 🧠 rozkminka w toku <token>`
-  z bloku dziś i wczoraj, który nie został zamieniony na `→ 🧠 rozkminka: <wzmianka>` (lista „Rozkminki w toku z kolejki dnia”
+  z bloku dziś i wczoraj, który nie został zamieniony na `→ 🧠 rozkminka: <wzmianka>` (token z listy „Gotowe rozkminki” tego polecenia ma już wynik –
+  pomiń; lista „Rozkminki w toku z kolejki dnia”
   w poleceniu to tylko podpowiedź). Po udanym nocnym przebiegu `przeglad.py` czyści kolejkę dnia.
 - Odpowiedzi na bloki 🔔 `rozkminka-…` obsługuje nocny przebieg (świadoma decyzja: szybki zostaje tani).

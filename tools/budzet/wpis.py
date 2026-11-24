@@ -15,7 +15,8 @@ gotówka i konta drugiej osoby zawsze na drugą osobę. Kwota z „+” = wpływ
 miesiąc daty); znacznik wysyłki zostaje, więc synchronizacja poprawi wiersz w arkuszu zamiast dopisać drugi.
 --budowa: ID strony w kolejce 💸 – wydatek na budowę, już w kosztorysie. Bez konta w treści – gotówka (brak informacji = gotówka).
 --gotowka: wymusza gotówkę (strona 💸 ze Sposobem = Gotówka), także przy --budowa.
-usun: zapis już wysłany do arkusza dostaje znak `usuniety` – synchronizacja usuwa jego wiersz i dopiero wtedy zapis z pliku.
+usun: brak wpisu -> kod 1; wpis z innego miesiąca (zmiana daty) też się znajdzie. Zapis już wysłany do arkusza dostaje
+znak `usuniety` – synchronizacja usuwa jego wiersz i dopiero wtedy zapis z pliku.
 Pole `grupa` – części jednego paragonu (zapisuje je paragon.py); zamknięcie miesiąca paruje płatność z wyciągu z sumą grupy.
 usun z ID części albo ID wpisu paragonu usuwa cały paragon.
 """
@@ -24,14 +25,29 @@ from datetime import date, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import (U, blokada_wpisow, czytaj_wpisy, kw, miesiace_wpisow, opcja, wczytaj,  # noqa: E402
+import wspolne  # noqa: E402
+from wspolne import (U, blokada_wpisow, czytaj_wpisy, data_iso, kw, miesiace_wpisow, opcja, wczytaj,  # noqa: E402
                      zapisz_wpisy)
 
 KWOTA = re.compile(r'^(\+?)\s*(\d[\d.]*(?:\s*[+-]\s*\d[\d.]*)*)$')
+WALUTA = re.compile(r'^(.*\d)\s*(?:zł|zl|pln)$', re.I)
 
 
 def konta_drugiej():
     return set(U.get('konta_list', {}).values()) | {U.get('gotowka_konto', 'Gotówka')}
+
+
+def bez_waluty(pole):
+    m = WALUTA.match(pole)
+    return m.group(1) if m else pole
+
+
+def pole_kwoty(pole):
+    """Pierwsze pole: bez „zł”, separator tysięcy („1 200”) zdjęty; inna spacja między cyframi -> ValueError."""
+    s = re.sub(r'(?<=\d)[   ](?=\d{3}(?!\d))', '', bez_waluty(pole))
+    if re.search(r'\d[\s  ]+\d', s):
+        raise ValueError(f'niejednoznaczna kwota „{pole}”')
+    return s
 
 
 def parsuj(tekst, skroty=None, wymus_konto=None):
@@ -41,8 +57,11 @@ def parsuj(tekst, skroty=None, wymus_konto=None):
     sk_konta = {k.lower(): v for k, v in U.get('skroty_kont', {}).items()}
     sk_osoby = {k.lower(): v for k, v in U.get('skroty_osob', {}).items()}
     pola = [p.strip() for p in tekst.split(',')]
-    if len(pola) > 1 and re.fullmatch(r'\d{1,2}', pola[1]) and re.fullmatch(r'\+?\d+', pola[0]):
-        pola[:2] = [pola[0] + '.' + pola[1]]  # „212,54, zam” – przecinek dziesiętny
+    pola[0] = pole_kwoty(pola[0])
+    if len(pola) > 1 and re.fullmatch(r'\d{1,2}', bez_waluty(pola[1])) and re.fullmatch(r'\+?\d+', pola[0]):
+        pola[:2] = [pola[0] + '.' + bez_waluty(pola[1])]  # „212,54, zam” – przecinek dziesiętny
+    if re.search(r'[.,]\d{3}', pola[0]):  # „1.200,50” – kropka tysięcy albo trzy cyfry po przecinku
+        raise ValueError(f'niejednoznaczna kwota „{pola[0]}” – zapisz bez kropki tysięcy')
     m = KWOTA.match(pola[0].replace(' ', ''))
     if not m:
         raise ValueError(f'pierwsze pole to nie kwota: „{pola[0]}”')
@@ -54,6 +73,8 @@ def parsuj(tekst, skroty=None, wymus_konto=None):
     if i < len(pola) and pola[i].lower() in sk_osoby:
         osoba, i = sk_osoby[pola[i].lower()], i + 1
     kod = pola[i].lower() if i < len(pola) else ''
+    if re.fullmatch(r'[\d\s.,]+(?:zł|zl|pln)?', kod):  # „1,200.50, zak” – reszta kwoty wzięta za skrót kategorii
+        raise ValueError(f'niejednoznaczna kwota – „{kod}” wygląda na część kwoty')
     opis = ', '.join(p for p in pola[i + 1:] if p)
     konto = wymus_konto or konto or U.get('gotowka_konto', 'Gotówka')
     if konto in konta_drugiej():
@@ -91,21 +112,28 @@ def main():
     ap.add_argument('--budowa', default='')
     ap.add_argument('--gotowka', action='store_true', help='wymuś gotówkę (Sposób = Gotówka na stronie 💸)')
     A = ap.parse_args()
+    if A.akcja != 'lista' and wspolne.zapis_zablokowany():
+        sys.exit(1)
     if A.akcja == 'lista':
         ws = czytaj_wpisy(A.arg, z_usunietymi=True)
         for w in ws:
             print(w['id'], opis_wpisu(w) + (' [usunięty – czeka na usunięcie z arkusza]' if w.get('usuniety') else
+                                             ' [zamknięty – w ręcznym wierszu]' if (w.get('arkusz') or {}).get('zamkniecie') else
                                              ' [w arkuszu]' if w.get('arkusz') else ''))
         print(f"{A.arg}: {sum(1 for w in ws if not w.get('usuniety'))} wpisów")
         return
     if A.akcja == 'usun':
         with blokada_wpisow():
-            ws = czytaj_wpisy(A.arg, z_usunietymi=True)
             ids = (A.id_usun, 'w' + str(A.id_usun))
-            trafione = [w for w in ws if (w['id'] in ids or w.get('grupa') in ids) and not w.get('usuniety')]
+            trafia = lambda ws: [w for w in ws if (w['id'] in ids or w.get('grupa') in ids) and not w.get('usuniety')]
+            mies = A.arg  # wpis po zmianie daty jest w pliku innego miesiąca – szukaj też tam
+            if not trafia(czytaj_wpisy(mies, z_usunietymi=True)):
+                mies = next((m for m in miesiace_wpisow() if trafia(czytaj_wpisy(m, z_usunietymi=True))), mies)
+            ws = czytaj_wpisy(mies, z_usunietymi=True)
+            trafione = trafia(ws)
             if not trafione:
                 print(f'✗ brak wpisu {A.id_usun}')
-                return
+                sys.exit(1)
             # wszystko, co pasuje (zwykły wpis i paragon z tym ID); część paragonu – znika cały paragon, nie jedna kategoria
             grupy = {w['grupa'] for w in trafione if w.get('grupa')}
             cele = [w for w in ws if not w.get('usuniety') and (w in trafione or w.get('grupa') in grupy)]
@@ -113,13 +141,13 @@ def main():
             for w in cele:
                 if w.get('arkusz'):
                     w['usuniety'] = teraz
-            zapisz_wpisy(A.arg, [w for w in ws if not (w in cele and not w.get('arkusz'))])
+            zapisz_wpisy(mies, [w for w in ws if not (w in cele and not w.get('arkusz'))])
             print(f'usunięto ({len(cele)})' + (' – wiersze w arkuszu znikną przy synchronizacji (arkusz_budzetu.py sync)'
                                               if any(w.get('arkusz') for w in cele) else ''))
         return
     d = A.data or date.today().isoformat()
     try:
-        date.fromisoformat(d)
+        data_iso(d)
         gotowka = U.get('gotowka_konto', 'Gotówka')
         w = parsuj(A.arg, wymus_konto=gotowka if A.gotowka else None)
     except ValueError as e:
@@ -131,6 +159,10 @@ def main():
     with blokada_wpisow():
         if any(x.get('grupa') == w['id'] and not x.get('usuniety') for m in miesiace_wpisow() for x in czytaj_wpisy(m)):
             print(f"✗ ID {w['id']} należy do paragonu – zmień go przez paragon.py rozpisz (ten sam --id), nie wpis.py dodaj")
+            sys.exit(1)
+        if any(x.get('grupa') and x['id'] == w['id'] and not x.get('usuniety') for m in miesiace_wpisow() for x in czytaj_wpisy(m)):
+            print(f"✗ ID {w['id']} to część paragonu {w['id'].rsplit('-', 1)[0]} – nadpisanie zgubiłoby ją z grupy; kilka wydatków "
+                  'z bloku z paragonem: zmień paragon (paragon.py rozpisz) albo ❓ pod wpisem')
             sys.exit(1)
         m_stary, stary = znajdz(w['id'])
         if stary and stary.get('arkusz'):

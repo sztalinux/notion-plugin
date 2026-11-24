@@ -16,7 +16,7 @@ uniwersalna: zbiera wszystko, co zwykle potrzebne, i nie obiecuje kompletu.
 | Dział teczki | Składnik | Skąd | Uwaga |
 |---|---|---|---|
 | 1 Protokoły | protokół odbioru etapu / robót (z podpisami), protokoły prób i pomiarów | `Umowy/Protokoły/` | bez protokołu nie ma podstawy do płatności dla ekipy (`koszty` D.1) |
-| 2 Faktury | faktury i rachunki za etap (materiał, ekipa), potwierdzenia płatności | `Faktury/RRRR/` | nazwa pliku zaczyna się od daty wystawienia; skrypt wybiera po dacie |
+| 2 Faktury | faktury i rachunki za etap (materiał, ekipa), potwierdzenia płatności | `Faktury/RRRR/` | nazwa pliku zaczyna się od daty wystawienia; skrypt wybiera po dacie: okres etapu ± 14 dni (`--zapas-faktur`) – w spisie sprawdź, czy każda dotyczy etapu |
 | 3 Wpisy kierownika | wpisy kierownika budowy w dzienniku budowy – stan zaawansowania, odbiory przed zakryciem | `Dziennik budowy KB/` | banki często opierają transzę na wpisie o stopniu zaawansowania |
 | 4 Dostawy | WZ betonu, atesty stali, deklaracje i karty produktów | `Dostawy/<Etap>/` | folder o nazwie etapu z Harmonogramu |
 | 5 Dodatkowe | to, co bank wskaże poza standardem (np. oświadczenie, wniosek, kosztorys etapu) | `--dodaj <ścieżka>` | wniosek o transzę zwykle wypełnia inwestor na druku banku |

@@ -13,7 +13,6 @@ lub rejestru → pozycja z czytelnym opisem (co poprawić), nie wyjątek.
 """
 import argparse
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -22,9 +21,10 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import hub  # noqa: E402
 import kopia  # noqa: E402  – te same reguły folderów i porównanie co kopia dokumentów
 
-HUB = Path(os.environ.get("DOM_HUB") or REPO.parent.parent).expanduser().resolve()
+HUB = hub.folder_budowy(REPO)
 REJESTR = "kopie-zapasowe.json"
 
 # Kopie ręczne: klucz → (opis, gdzie leży kopia, termin w dniach; None = jednorazowo). Progi: docs/kopie-zapasowe.md, 3.
@@ -82,14 +82,19 @@ def dokumenty(hub: Path, dzis: date) -> dict:
     if not kiedy and not stan.get("potwierdzone"):
         return poz("dokumenty", "✗", opis, gdzie, None, "kopia.py nie był uruchamiany")
     potwierdzone = {k: v for k, v in (stan.get("potwierdzone") or {}).items() if kopia.dozwolony(k)}
-    teraz = kopia.skanuj(hub, {**(stan.get("potwierdzone") or {}), **(stan.get("ostatni_skan") or {})})
-    r = kopia.roznice(potwierdzone, teraz)
+    bledy = []
+    try:
+        teraz = kopia.skanuj(hub, {**(stan.get("potwierdzone") or {}), **(stan.get("ostatni_skan") or {})}, bledy)
+    except OSError as e:
+        return poz("dokumenty", "✗", opis, gdzie, kiedy, f"błąd odczytu folderu budowy ({e})")
+    r = kopia.roznice(potwierdzone, kopia.z_nieczytelnymi(teraz, potwierdzone, bledy))
     n = sum(len(r[k]) for k in ("nowe", "zmienione", "przeniesione", "usuniete"))
     czeka = [x["data"] for x in stan.get("paczki", []) if not x.get("wgrana")]
-    szczegol = f"zmian od kopii: {n}" + (f" · paczki do wgrania: {', '.join(czeka)}" if czeka else "")
+    szczegol = (f"zmian od kopii: {n}" + (f" · paczki do wgrania: {', '.join(czeka)}" if czeka else "")
+                + (f" · nieczytelne: {len(bledy)} (zepsute dowiązanie? {bledy[0]}) – bez kopii" if bledy else ""))
     if not kiedy:
         s = "✗"
-    elif (n or czeka) and dni_od(kiedy, dzis) > DOKUMENTY_DNI:
+    elif bledy or ((n or czeka) and dni_od(kiedy, dzis) > DOKUMENTY_DNI):
         s = "⚠"
     else:
         s = "✓"
@@ -217,6 +222,8 @@ def main(argv=None):
     dzis = date.today()
 
     if a.cmd == "potwierdz":
+        if hub.zapis_zablokowany(REPO, HUB):
+            return 1
         kiedy = a.data or dzis.isoformat()
         try:
             if date.fromisoformat(kiedy) > dzis:

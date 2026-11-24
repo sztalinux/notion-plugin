@@ -21,5 +21,5 @@ jest spełniony, przebieg wykonuje przejście, a na końcu wpisuje znacznik. Po 
 - **Wykonaj**, gdy sekcja ma inne pozycje: przenieś każdą otwartą pozycję do „🔔 Komunikaty asystenta” jako blok 🔔
   (`wpisy/references/pytania.md`, C.7) z zachowaniem zaznaczeń i dopisków oraz klucza (`KS-…`, `RES-n`); w bloku dopisz
   „zastosuję w nocnym przeglądzie”. Klucz brakujący: luki w zadaniach `luki-zadan-<dd.mm>`, porządki tygodnia `porzadki-<RRRR-Www>`, pozostałe `stare-<dd.mm>`.
-- **Znacznik:** po przeniesieniu wszystkiego zostaw w sekcji jedno zdanie „Pytania są teraz we 📝 Wpisach (🔔)” (sekcję usuwa
-  dopiero faza 6, po 7 dniach bez nowych pozycji). Szybki przebieg tego przejścia **nie robi**.
+- **Znacznik:** po przeniesieniu wszystkiego zostaw w sekcji jedno zdanie „Pytania są teraz we 📝 Wpisach (🔔)” – to stan docelowy,
+  sekcji nie usuwaj. Szybki przebieg tego przejścia **nie robi**.

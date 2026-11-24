@@ -82,6 +82,9 @@ def numer(arg: str) -> int:
 
 
 def main(argv: list) -> int:
+    if "-h" in argv or "--help" in argv:
+        print(__doc__)
+        return 0
     json_out = "--json" in argv
     argv = [a for a in argv if a != "--json"]
     tekst, ostrzezenie = czytaj_changelog()

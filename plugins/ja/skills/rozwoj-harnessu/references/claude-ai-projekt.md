@@ -6,10 +6,11 @@
 |---|---|
 | Pluginy `dom-budowa` i `ja` z marketplace `sztalinux/notion-plugin` | działają w **każdej** rozmowie – skille wczytują się z opisu (`description`), bez projektu i bez „/” |
 | Projekt „Dom” | tylko **kontener dokumentów budowy** (wiedza projektu) – rozmowy, które potrzebują projektu architektonicznego, opinii, umów |
-| Zaplanowane zadania | **nie używamy** – konektor Notion na claude.ai jest zablokowany. Przeglądy (szybki, wieczorny, tygodniowy) uruchamia wyłącznie launchd na Macu przez `claude -p` (README repo, Start, krok 5; skrypty poza repo); dawne zaplanowane zadania na claude.ai usuń |
+| Zaplanowane zadania | **nie używamy** – konektor Notion na claude.ai jest zablokowany. Przeglądy (szybki, nocny, tygodniowy) uruchamia wyłącznie launchd na Macu przez `claude -p` (README repo, Start, krok 5; skrypty poza repo); dawne zaplanowane zadania na claude.ai usuń |
 | Preferencje konta (opcjonalnie) | jedna linia: „Gdy rozmowa dotyczy mojego dnia, zadań, emocji, dziecka, suplementów albo budowy, wczytaj skill `ja`” – pas bezpieczeństwa, gdy opis skilla nie zadziała |
 
-Sprawy budowy poza projektem też działają (skille i Notion są wszędzie) – brakuje tylko plików z wiedzy projektu; procedura
+Sprawy budowy poza projektem też działają (skille są wszędzie; Notion czytają tylko Claude Code i Mac – czat na claude.ai
+korzysta ze Skrzynki, indeksu wiedzy i migawki, `budowa`, zasada 13) – brakuje tylko plików z wiedzy projektu; procedura
 poprosi wtedy o konkretny dokument (`dokumenty`, „Prośba o dokument”).
 
 Projekt „Dom” na claude.ai (czat, telefon) ma dwie części:
@@ -22,7 +23,7 @@ Projekt „Dom” na claude.ai (czat, telefon) ma dwie części:
 Przewodnik po dokumentach i mapę Notion asystent czyta ze strony Notion „📑 Przewodnik po dokumentach i Notion” –
 Claude Code aktualizuje ją sam (procedura `dokumenty`, sekcja C), więc po zmianach w dokumentach lub w strukturze Notion
 nic nie trzeba wgrywać. Claude Code nie może zapisywać plików w wiedzy projektu na claude.ai (brak takiej możliwości),
-ale może zapisywać w Notion, które claude.ai czyta na żywo.
+a konektor Notion na claude.ai jest zablokowany (wiersz „Zaplanowane zadania” wyżej).
 
 Instrukcje są celowo tylko odnośnikiem: zasady i zachowanie (np. prośba o dokument) są w skillach i przychodzą
 z pluginem, więc instrukcji nie trzeba wklejać na nowo przy każdej wersji – tylko gdy zmieni się tekst niżej
@@ -57,7 +58,7 @@ Jesteś asystentem budowy domu inwestora. Pracujesz według harnessu – plugin�
 
 1. Przy każdej wiadomości wczytaj skill `budowa` i według jego mapy procedur wczytaj właściwe skille
    (jedna wiadomość może wymagać kilku – po kolei). Nie czekaj, aż użytkownik wpisze „/”.
-2. Raz na rozmowę (przy pierwszej wiadomości) sprawdź w Notion skrzynkę „🤖 Zmiany asystenta” (Zasady) – opis w skillu `ja`.
+2. Raz na rozmowę (przy pierwszej wiadomości) sprawdź w Notion skrzynkę zmian („📥 Zasady do wdrożenia” w „🤖 Zmiany asystenta”) – opis w skillu `ja`.
    Sprawy pozabudowlane (Dziennik, zadania prywatne, emocje, dziecko) – skill `ja` i jego mapa.
 3. Dane naszej budowy są w Notion: strona DOM (ściąga „📐 Dane projektu”, „🔴 Do zamknięcia”) i strona
    „📑 Przewodnik po dokumentach i Notion” (3f6f5982-09e7-81f5-bade-ec877d8d936a) – pobierz ją przy pierwszej

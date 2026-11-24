@@ -10,8 +10,8 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
    Sprawy budowy: `plugins/dom-budowa/skills/budowa/SKILL.md` – kontekst budowy, zasady pracy, mapa procedur budowy.
 2. Dobierz procedurę do zadania (tabela niżej) i wczytaj jej `SKILL.md`.
 3. Pliki z `references/` czytaj dopiero wtedy, gdy procedura każe.
-4. Skrzynka „🤖 Zmiany asystenta” (Zasady) w Notion (opis: procedura `ja`, sekcja „Na starcie rozmowy”): poza Claude Code w repo sprawdź ją
-   na starcie rozmowy; w Claude Code w repo – na polecenie „wdróż” (`CLAUDE.md`).
+4. Skrzynka zmian – „📥 Zasady do wdrożenia” w „🤖 Zmiany asystenta” w Notion (opis: procedura `ja`, sekcja „Na starcie rozmowy”):
+   poza Claude Code sprawdź ją na starcie rozmowy; w Claude Code (w repo albo w folderze budowy) – na polecenie „wdróż” (`CLAUDE.md`).
 
 | Zadanie | Procedura |
 |---|---|
@@ -28,7 +28,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 | Pulpit budowy: „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło”, decyzje z pulpitu do Notion | `plugins/dom-budowa/skills/pulpit/SKILL.md` |
 | Model 3D domu i ogrodu w Blenderze: „przebuduj model 3D”, „zmień podłogę w salonie”, „dodaj okno dachowe”, „pokaż widok z…”, rendery elewacji, „wprowadź poprawki modelu” (lista w Notion) | `plugins/dom-budowa/skills/model-3d/SKILL.md` |
 | Lista zakupów na etap, oferty hurtowni, kiedy zamawiać, dostawa | `plugins/dom-budowa/skills/zakupy/SKILL.md` |
-| Luźne wpisy ze strony „📓 Dziennik”: „przerób dziennik”, kilka notatek naraz | `plugins/ja/skills/wpisy/SKILL.md` |
+| Luźne wpisy ze strony „📝 Wpisy” (pod „📓 Dziennikiem”): „przerób dziennik”, kilka notatek naraz | `plugins/ja/skills/wpisy/SKILL.md` |
 | Emocja, dzień w pracy, podsumowanie emocji | `plugins/ja/skills/emocje/SKILL.md` |
 | Zadania prywatne / dziecka / pracy, „zrobiłem X”, „co mam jutro” | `plugins/ja/skills/zadania/SKILL.md` |
 | Dziecko: obserwacje, do przegadania, prezenty, zalecenia | `plugins/ja/skills/dziecko/SKILL.md` |
@@ -51,7 +51,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
   (imiona domowników, nazwiska, firmy, adresy, działki, PESEL, konta, telefony, e-maile, kwoty, notatki, treść wpisów
   Dziennika) – te są w Notion, arkuszu kosztorysu i folderze budowy.
 - **Każde rozwiązanie oparte na konektorze ma drogę zapasową** (Notion MCP, Google, Claude Docs i każdy nowy): gdy
-  inwestor straci dostęp, działa dalej – wolniej albo inaczej (skrypt z tokenem, kopia, Skrzynka, ręczny krok). Zapasu
+  inwestor straci dostęp, działa dalej – wolniej albo inaczej (skrypt z tokenem, kopia, „📥 Skrzynka”, ręczny krok). Zapasu
   nie da się zrobić → powiedz to inwestorowi wprost przed wdrożeniem i dopisz do tabeli „Konektory i drogi zapasowe”
   w `README.md`.
 - Gdy użytkownik poprawi Twój sposób pracy, zaproponuj zmianę w odpowiednim `SKILL.md`

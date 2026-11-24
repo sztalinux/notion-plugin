@@ -4,7 +4,7 @@
     python3 tools/wydatki.py sync [--proba] [--cicho]   # wiersze „Do arkusza” (i z pustym Arkusz) → Wydatki / Cennik
     python3 tools/wydatki.py pozycje [--cicho]          # lista pozycji z arkusza Kosztorys → opcje pola Pozycja w Notion
     python3 tools/wydatki.py pobierz [--cicho] [--gdy-starsza H]   # wartości arkusza (JSON) do <hub>/Koszty/Kosztorys_google.json
-    python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (i Cennika), w Notion „Nie wysyłać”
+    python3 tools/wydatki.py wycofaj <id strony> [...]  # usuwa wydatek z arkusza (Cennika, plan ręczny), w Notion „Nie wysyłać”
     python3 tools/wydatki.py sprawdz                    # konfiguracja, dostęp do bazy i do arkusza
     python3 tools/wydatki.py kod | LANG=en_US.UTF-8 pbcopy             # kod Apps Script do schowka (z docs/wydatki-arkusz.md)
     python3 tools/wydatki.py migruj <zmiany.json>        # zmiana układu na arkuszu (cofanie: Plik → Historia wersji)
@@ -25,16 +25,17 @@ w arkuszu. Rodzaj „Zwrot” (pieniądze oddane – różnica VAT, zwrot towaru
 Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;
 ponowne wysłanie tej samej strony aktualizuje jej wiersz (np. Status wyceny = Wybrana). Rodzaj „Plan” (plan całej pozycji
 brutto) nie idzie do Apps Script jako wiersz – `sync` wpisuje go w Kosztorys „Plan ręczny” (kolumna i wiersz po nagłówkach),
-inny plan nadpisuje tylko strona, która go ustawiła, albo z „Nadpisz plan”. Każde wysłanie czyści pole Zgłoszono (pytanie
-o błąd we Wpisach zakłada przebieg Claude, nie ten skrypt). Wyceny wymagają kodu Apps Script
-w wersji ≥ 2 i Cennika w nowym układzie (ping: cennik_ok) – inaczej czekają w kolejce.
+inny plan nadpisuje tylko strona, która go ustawiła (<hub>/.dom/wydatki/plany.json: id strony → Lp), albo z „Nadpisz
+plan”. Każde wysłanie czyści pole Zgłoszono (pytanie o błąd we Wpisach zakłada przebieg Claude, nie ten skrypt).
+Wyceny wymagają kodu Apps Script w wersji ≥ 2 i Cennika w nowym układzie (ping: cennik_ok) – inaczej czekają w kolejce.
 Pole „Nowa pozycja” strony („<etap> | <nazwa> | <typ> | <jedn.>”, POM-31; tylko Wydatek i Wycena; prawidłowa Pozycja
 wygrywa, a pole jest czyszczone): `sync` woła akcję Apps Script „dodaj_pozycje” (kod ≥ 5; starszy – strona czeka), ustawia
 Pozycję na nowy Lp i wysyła wydatek w tym samym przebiegu. Bezpiecznik: dopóki nie ma znacznika
 <hub>/.dom/wydatki/nowa-pozycja-sprawdzona (`nowa-pozycja --potwierdz` po pierwszym sprawdzeniu w sesji), `sync` woła akcję
 tylko na sucho – istniejąca pozycja przechodzi, nowa czeka. Etapu, którego nie ma w Kosztorysie, skrypt nie dodaje. Strony
 czekające na sesję mają „Do arkusza” i dopisek w polu Błąd (bez 🔔), a sprawa trafia do <hub>/.dom/wydatki/kosztorys-do-sesji.json
-– stąd linia stanu sesji i polecenie `sesja`; czekanie dłużej niż 3 dni = kod 1 (🔔 z przebiegu).
+– stąd linia stanu sesji i polecenie `sesja`; czekanie dłużej niż 3 dni = kod 1 (🔔 z przebiegu). Przy świeżej blokadzie
+sesji (`sesja --zablokuj`) `sync` nie wstawia pozycji w żadnym etapie – strony z „Nową pozycją” czekają.
 Zmiany układu arkusza (kolumny, formuły, kolory) idą bez ponownego importu: plik zmian JSON z operacjami
 (akcja „zmien” w Apps Script). Skrypt ma dostęp tylko do tego arkusza (@OnlyCurrentDoc) – bez kopii na Dysku; zmianę
 cofa się z historii wersji arkusza.
@@ -71,6 +72,7 @@ TYPY = ("Materiał", "Robocizna", "Sprzęt", "Usługa", "Formalności")
 JEDNOSTKI = ("kpl", "m³", "m²", "mb", "kg", "t", "szt", "h", "dzień", "mies.", "l")   # lista Kosztorys kol. E
 STANY = ("Koszty ogólne", "Stan zero", "SSO", "Deweloperski", "Wykończenie", "Teren")
 PLIK_SESJI = "kosztorys-do-sesji.json"  # w <hub>/.dom/wydatki/: nowe etapy i pierwsze sprawdzenie – linia stanu sesji, `sesja`
+PLIK_PLANOW = "plany.json"              # w <hub>/.dom/wydatki/: {id strony Plan: Lp}, której pozycji plan ta strona wpisała
 BLOKADA_SESJI = "kosztorys-sesja.lock"  # katalog-blokada: jedna sesja Claude Code naraz (nowy etap, pierwsze sprawdzenie)
 BLOKADA_WAZNA_S = 2 * 3600
 ZNACZNIK_SPRAWDZENIA = "nowa-pozycja-sprawdzona"   # bez niego `sync` nie wstawia wierszy (bezpiecznik pierwszego użycia)
@@ -203,6 +205,9 @@ def na_wiersz(strona: dict) -> dict:
         "nowa": tekst(p.get("Nowa pozycja") or {}),
         "blad_tekst": tekst(p.get("Błąd") or {}),
     }
+    if liczba(w["vat"]) is not None and 0 < w["vat"] < 1:
+        # stawka wpisana ułamkiem (0,23) → procenty (23): Apps Script dzieli VAT % przez 100 (Cennik), op_vat tak samo
+        w["vat"] = round(w["vat"] * 100, 2)
     if w["rodzaj"] == ZWROT:
         if isinstance(w["kwota"], (int, float)):
             w["kwota"] = -abs(w["kwota"])
@@ -320,7 +325,7 @@ def sync(k: dict, proba: bool) -> tuple:
     do_wyslania = [w for w in do_wyslania if w["rodzaj"] != "Plan"]   # Apps Script wziąłby je za wydatki
     if plany:   # przed pingiem – jego timeout nie wstrzymuje planów (plan nie ma „Nowej pozycji”)
         try:
-            wyslij_plany(k, plany, licz, czysc)
+            wyslij_plany(k, plany, licz, czysc, bledy)
         except BladArkusza as e:
             bledy.append(f"plany: {e} – strony zostają w kolejce")
     potrzebna_wersja = any(w["rodzaj"] in ("Wycena", ZWROT) or w.get("poz") for w in do_wyslania)
@@ -427,11 +432,18 @@ def dodaj_nowe_pozycje(k: dict, nowe: list, wersja: int, licz: dict, bledy: list
         licz["czekaja_na_etap"] += 1
         czeka(w, f"czeka na etap {p['etap']} – doda go najbliższa sesja Claude Code (koszty C.7)")
 
+    if blokada_swieza():
+        # sesja Claude Code zmienia właśnie Kosztorys – automat nie wstawia pozycji w żadnym etapie: wstawienie przesunęłoby
+        # wiersze, a etap w budowie (kolumna A pusta do końca) wpadłby do bloku sąsiedniego. Plik spraw bez zmian.
+        for w in nowe:
+            if w["poz"]["etap"] in zajete:
+                na_etap(w, w["poz"])
+            else:
+                wyjete.add(w["id"])
+                licz["czekaja"] += 1
+        return wyjete
     for w in nowe:
         p = w["poz"]
-        if p["etap"] in zajete:   # sesja właśnie dodaje ten etap – nie wchodź jej w drogę
-            na_etap(w, p)
-            continue
         try:
             r = arkusz(k, "dodaj_pozycje", pozycja={x: p[x] for x in ("etap", "nazwa", "typ", "jedn")},
                        na_sucho=not sprawdzona)["wynik"]
@@ -450,7 +462,8 @@ def dodaj_nowe_pozycje(k: dict, nowe: list, wersja: int, licz: dict, bledy: list
             continue
         if r.get("na_sucho"):
             pierwsze = pierwsze or {"pozycje": [], "strony": []}
-            pierwsze["pozycje"].append(w["nowa"])
+            # pełny tekst z typem i jednostką (pole bywa skrótem „etap | nazwa”) – `nowa-pozycja` w sesji nie zna pól strony
+            pierwsze["pozycje"].append(" | ".join(p[x] for x in ("etap", "nazwa", "typ", "jedn")))
             pierwsze["strony"].append(w["id"])
             licz["czekaja_na_etap"] += 1
             czeka(w, "czeka na pierwsze sprawdzenie w sesji Claude Code (koszty C.8) – potem pójdzie sama")
@@ -657,10 +670,49 @@ def liczba(x):
     return x if isinstance(x, (int, float)) and not isinstance(x, bool) else None
 
 
-def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset()):
+def plik_planow() -> Path:
+    return W.CONF / "wydatki" / PLIK_PLANOW
+
+
+def klucz_strony(id_: str) -> str:
+    return id_.replace("-", "")
+
+
+def wczytaj_plany() -> dict:
+    """{id strony bez myślników: Lp} – plany ręczne wpisane przez strony Plan; '' = plan przejęła inna strona
+    (dane prywatne – folder budowy)."""
+    try:
+        d = json.loads(plik_planow().read_text(encoding="utf-8"))
+        return d if isinstance(d, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def zapisz_plany(d: dict, bledy: list):
+    """Zapis atomowy z plikiem tymczasowym tego procesu (automat i sesja mogą zapisywać naraz). Błąd zapisu nie przerywa
+    `sync` ani `wycofaj` – plan jest już w arkuszu, a brak wpisu oznacza przy następnym razie stary warunek wiersza
+    (najwyżej Błąd z pytaniem „Nadpisz plan”, nigdy cichy zapis)."""
+    plik = plik_planow()
+    tymczasowy = plik.with_name(f".{plik.name}.{os.getpid()}.tmp")
+    try:
+        plik.parent.mkdir(parents=True, exist_ok=True)
+        tymczasowy.write_text(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
+        os.replace(tymczasowy, plik)
+    except OSError as e:
+        bledy.append(f"{plik.name}: nie zapisano ({type(e).__name__}) – plany poszły do arkusza, własność planów "
+                     "sprawdzi następny przebieg po wierszu")
+        try:
+            tymczasowy.unlink()
+        except OSError:
+            pass
+
+
+def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset(), bledy=None):
     """Rodzaj „Plan” → komórka „Plan ręczny” pozycji w Kosztorysie. Pusta albo równa – zapis; inna wartość – tylko gdy ta
-    strona już tę komórkę ustawiła (Wiersz arkusza) albo ma zaznaczone „Nadpisz plan”; inaczej Błąd z pytaniem."""
+    strona już tę komórkę ustawiła (plany.json) albo ma zaznaczone „Nadpisz plan”; inaczej Błąd z pytaniem."""
+    bledy = [] if bledy is None else bledy
     m = mapa_planu(k)
+    zapisane = wczytaj_plany()
     for w in plany:
         p = m["pozycje"].get(w["lp"])
         if not p:
@@ -668,9 +720,11 @@ def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset()):
             oznacz(k, w["id"], BLAD, czysc_nowa=w["id"] in czysc, blad=f"pozycja {w['lp']} nie istnieje w Kosztorysie")
             continue
         obecny = liczba(p["plan"])
-        # własny plan = ta strona już raz wpisała plan swojej pozycji (Lp strony); numer wiersza się nie liczy, bo
-        # automatyczne wstawienia pozycji przesuwają wiersze
-        wlasny = w["wiersz_ark"] is not None
+        # własny plan = ta strona już raz wpisała plan tej pozycji (Lp z plany.json – wiersze przesuwają automatyczne
+        # wstawienia pozycji); strona sprzed pliku – stary warunek: ten sam wiersz. Sam Wiersz arkusza nie wystarcza
+        # (strona Wydatek przestawiona na Plan, zmieniona Pozycja).
+        klucz = klucz_strony(w["id"])
+        wlasny = zapisane[klucz] == w["lp"] if klucz in zapisane else w["wiersz_ark"] == p["wiersz"]
         if obecny not in (None, 0) and obecny != w["kwota"] and not (wlasny or w["nadpisz"]):
             licz["bledy"] += 1
             oznacz(k, w["id"], BLAD, czysc_nowa=w["id"] in czysc, blad=f"pozycja {w['lp']} ma już inny plan ręczny – zaznacz „Nadpisz plan”, "
@@ -679,6 +733,16 @@ def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset()):
         if obecny != w["kwota"]:
             a1 = f"{m['kolumna']}{p['wiersz']}"
             arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Kosztorys", "a1": a1, "wartosci": [[w["kwota"]]]}])
+        # przed zapisem Notion – jego błąd nie odbiera stronie planu. Własność przechodzi na tę stronę, gdy sama wpisała
+        # komórkę (pustą, własny plan albo z „Nadpisz plan”) albo pozycja nie ma właściciela; poprzednia dostaje '' (bez
+        # planu, także bez starego warunku wiersza). Ta sama kwota co w komórce bez zapisu – własność zostaje.
+        wlasciciele = {s for s, lp in zapisane.items() if lp == w["lp"]}
+        if obecny != w["kwota"] or not wlasciciele:
+            nowe_wpisy = {s: ("" if lp == w["lp"] else lp) for s, lp in zapisane.items()}
+            nowe_wpisy[klucz] = w["lp"]
+            if nowe_wpisy != zapisane:
+                zapisane = nowe_wpisy
+                zapisz_plany(zapisane, bledy)
         uwaga = ("uwaga: pozycja ma wybraną ofertę – PLAN liczy się z oferty × ilość, plan ręczny jest zapasowy"
                  if (liczba(p["oferta"]) or 0) > 0 else "")
         licz["plany"] += 1
@@ -689,8 +753,9 @@ def strona(k: dict, id_: str) -> dict:
     return W.zadanie_http("GET", f"{W.NOTION_API}/v1/pages/{id_}", naglowki(k))
 
 
-def wycofaj(k: dict, ids: list) -> dict:
-    """Czyści wiersze tych stron w arkuszu (Wydatki i Cennik) i ustawia w Notion Arkusz = „Nie wysyłać”."""
+def wycofaj(k: dict, ids: list, bledy=None) -> dict:
+    """Czyści wiersze tych stron w arkuszu (Wydatki i Cennik; strona Plan – też swój „Plan ręczny”) i ustawia w Notion
+    Arkusz = „Nie wysyłać”."""
     wymagaj(k, "token", "url", "sekret")
     # id z adresu strony (bez myślników) → kanoniczne id z Notion: Apps Script porównuje Źródło „notion:<id>” dosłownie
     strony = [strona(k, i.strip()) for i in ids if i.strip()]
@@ -706,11 +771,11 @@ def wycofaj(k: dict, ids: list) -> dict:
                 arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Kosztorys",
                                               "a1": f"{m['kolumna']}{p['wiersz']}", "wartosci": [[""]]}])
                 licz["plany"] += 1
-        id_planow = {w["id"].replace("-", "") for w in plany}
-        ids = [i for i in ids if i.replace("-", "") not in id_planow]
-        for w in plany:
-            W.zadanie_http("PATCH", f"{W.NOTION_API}/v1/pages/{w['id']}", naglowki(k),
-                           {"properties": {"Arkusz": {"select": {"name": "Nie wysyłać"}}, "Wiersz arkusza": {"number": None}}})
+        zapisane = wczytaj_plany()
+        if [zapisane.pop(klucz_strony(w["id"])) for w in plany if klucz_strony(w["id"]) in zapisane]:
+            zapisz_plany(zapisane, [] if bledy is None else bledy)
+    # „usun” także dla stron Plan: strona mogła być wcześniej Wydatkiem albo Wyceną i mieć swój wiersz (Apps Script czyści
+    # tylko wiersze ze Źródłem tej strony); jej wynik ustawia też „Nie wysyłać” w Notion
     wyniki = arkusz(k, "usun", ids=ids)["wyniki"] if ids else []
     wiersze_vat = [n for r in wyniki for n in r.get("wydatki") or []]
     if wiersze_vat:   # kol. P wpisuje sync, nie Apps Script – czyści ją też ten skrypt
@@ -1029,6 +1094,10 @@ def main(argv=None) -> int:
         return 0
     if a.polecenie in ("wycofaj", "migruj") and not a.ids or a.polecenie == "nowa-pozycja" and not (a.ids or a.potwierdz):
         ap.error(f"{a.polecenie}: brak argumentu (id stron / plik zmian / opis pozycji)")
+    tylko_odczyt = (a.polecenie in ("sprawdz", "gotowka") or a.polecenie == "sesja" and not (a.zablokuj or a.odblokuj)
+                    or a.polecenie in ("sync", "nowa-pozycja") and a.proba and not a.potwierdz)
+    if not tylko_odczyt and W.hub.zapis_zablokowany(W.REPO, W.CONF, W.HUB):
+        return 1
     if a.polecenie == "sesja":
         print(sesja(a.zablokuj, a.odblokuj))
         return 0
@@ -1044,7 +1113,7 @@ def main(argv=None) -> int:
             linia = ("sync" + (" (próba)" if a.proba else "") + ": " +
                      ", ".join(f"{n} {v}" for n, v in licz.items()))
         elif a.polecenie == "wycofaj":
-            w = wycofaj(k, a.ids)
+            w = wycofaj(k, a.ids, bledy)
             linia = "wycofaj: " + ", ".join(f"{n} {v}" for n, v in w.items())
         elif a.polecenie == "migruj":
             w = migruj(k, Path(a.ids[0]))

@@ -8,10 +8,10 @@ rozjazdy i **tylko o nich pyta** – bez inwestora niczego nie przestawia (`SKIL
 
 | Grupa | Rozjazd | Propozycja w pytaniu (☑ = wykonaj) |
 |---|---|---|
-| **H1** | zadanie zamknięte (DONE) z relacją Harmonogram, a krok nie jest „Zrobione” i jego koniec Terminu (przy jednodniowym – ta data) jest przed dniem przeglądu | krok Status → „Zrobione” |
+| **H1** | zadanie zamknięte (DONE) z relacją Harmonogram, a krok nie jest „Zrobione” i jego koniec Terminu (przy jednodniowym – ta data) jest przed dniem przeglądu | krok Status → „Zrobione” (Zrobione z ☑ inwestora – `harmonogram`, „Status kroku”) |
 | **H2** | krok „Zrobione”, a zadanie z relacją do niego jest otwarte (TO DO, IN PROGRESS, WAITING, BLOCKED) z When ≤ koniec Terminu kroku (zadanie z When po końcu kroku to zwykle czynność następcza – nie flaguj) | wybór jak w Z2: zadanie Status → DONE albo → ARCHIVED („nieaktualne”) |
-| **H3** | krok **nie** „Zrobione”, a otwarte zadanie z relacją ma When po końcu Terminu kroku | zadanie When → koniec Terminu kroku |
-| **H4** | krok „Przesunięte”, a zadanie WAITING z relacją ma When przed początkiem Terminu kroku (stary termin „czekam na” po przesunięciu; bywa zgodne z planem – np. dostawa przed startem) | zadanie When → początek Terminu kroku |
+| **H3** | krok **nie** „Zrobione”, a otwarte zadanie z relacją ma When po końcu Terminu kroku (zadanie WAITING z Kto ≠ Ja – usterka dla ekipy, „czekam na” – nie flaguj: termin wyznacza ktoś inny) | zadanie When → koniec Terminu kroku |
+| **H4** | krok „Przesunięte”, a zadanie WAITING z relacją ma When przed początkiem Terminu kroku (stary termin „czekam na” po przesunięciu; bywa zgodne z planem – np. pomiar geodety przed startem) | zadanie When → początek Terminu kroku |
 
 Zawsze tylko po ☑ inwestora i **nigdy** nie zmieniaj Terminu ani Pewności terminu kroku (to `harmonogram`, C). Zmiana Statusu
 kroku na „Zrobione” i zmiana pola zadania to wykonanie decyzji inwestora, nie decyzja asystenta. Inne grupy serii mają własne pliki i litery:

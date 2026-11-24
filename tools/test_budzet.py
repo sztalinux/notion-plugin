@@ -51,6 +51,17 @@ class Testy(unittest.TestCase):
         self.assertTrue(z[0]['zwrocony'] and z[0]['pay'])
         self.assertEqual(z[0]['produkty'], ['Testowy produkt A ×2'])
         self.assertEqual((z[1]['data'], z[1]['suma'], z[1]['pay']), ('2026-11-01', 1063.41, False))
+        for spacja in (' ', ' '):  # A-15: twarda spacja przed walutą (tekst ze strony) nie gubi zamówienia
+            self.assertEqual([(x['suma'], x['produkty']) for x in allegro.parsuj(LISTA.replace(' ' + WAL, spacja + WAL))],
+                             [(x['suma'], x['produkty']) for x in z])
+
+    def test_allegro_skrypt_liczy_bloki(self):
+        d = Path(tempfile.mkdtemp())
+        (d / 'a.txt').write_text(LISTA + 'Zaznacz zakup: bez daty i sumy\n', encoding='utf-8')
+        r = subprocess.run([sys.executable, str(NARZ / 'allegro.py'), str(d / 'a.txt'), str(d / 'a.json')],
+                           env=dict(os.environ, BUDZET_DANE=str(d)), capture_output=True, text=True)
+        self.assertEqual((r.returncode, '3 bloków, 2 zamówień' in r.stdout, 'pominięte (bez daty albo sumy): 1' in r.stdout),
+                         (0, True, True), r.stdout + r.stderr)
 
     def test_kwoty_i_normalizacja(self):
         self.assertEqual(wspolne.kw('3,896.00 ' + WAL), 3896.0)
@@ -85,6 +96,13 @@ class Testy(unittest.TestCase):
         self.assertEqual((w['kwota'], w['skladniki']), (-25.0, [30.0, -5.0]))
         with self.assertRaises(ValueError):
             wpis.parsuj('abc, zam', sk)
+        # A-5: separator tysięcy i waluta przy kwocie; kropka tysięcy – odmowa zamiast kwoty tysiąc razy mniejszej
+        self.assertEqual(wpis.parsuj('1 200,50, zam', sk)['kwota'], -1200.5)
+        self.assertEqual((wpis.parsuj(f'12,50 {WAL}, zam', sk)['kwota'], wpis.parsuj(f'12,50 {WAL}, zam', sk)['kod']), (-12.5, 'zam'))
+        self.assertEqual(wpis.parsuj(f'1 200 {WAL}, zam', sk)['kwota'], -1200.0)
+        for zle in ('1.200,50, zam', '1.200, zam', '1,200.50, zam', '12 5, zam'):
+            with self.assertRaises(ValueError, msg=zle):
+                wpis.parsuj(zle, sk)
 
 
 NARZ = Path(__file__).resolve().parent / 'budzet'
@@ -173,6 +191,27 @@ class Przeplyw(unittest.TestCase):
         self.assertEqual(sorted((w['konto'], w['kwota'], tuple(w['zrodla'])) for w in m['wiersze']),
                          [('Gotówka', -50.0, ('wp6',)), ('Gotówka', 300.0, ('wp5',))])
         self.assertNotIn('lista wydatków gotówkowych', ' '.join(m['braki']))
+
+    def proces(self, skrypt, *arg):
+        env = dict(os.environ, BUDZET_DANE=str(self.dane))
+        r = subprocess.run([sys.executable, str(NARZ / skrypt), *arg], env=env, capture_output=True, text=True)
+        return r.returncode, r.stdout + r.stderr
+
+    def test_a17_zle_wejscie_linia_zamiast_sladu(self):
+        """A-17: brak --arkusz, wyciąg bez nagłówka, brak pliku listy, uszkodzona linia wpisów – linia ✗, bez Traceback."""
+        for arg, oczek in ((['--miesiac', '2026-10'], '--arkusz'),
+                           (['--miesiac', '2026-10', '--arkusz', 'ark.json', '--lista', 'brak.txt'], '✗ --lista: brak pliku'),
+                           (['--miesiac', '2026-10', '--arkusz', 'ark.json', '--zen', 'zen.csv'], '✗ zen.csv: brak linii')):
+            (self.dane / 'zen.csv').write_text('to nie wyciąg\n')
+            kod, out = self.proces('importuj.py', *arg)
+            self.assertEqual((kod != 0, oczek in out, 'Traceback' in out), (True, True, False), out)
+        self.uruchom('wpis.py', 'dodaj', '10, dom', '--data', '2026-10-05', '--id', 'j1')
+        p = self.dane / 'listy' / '2026-10-wpisy.jsonl'
+        p.write_text(p.read_text(encoding='utf-8') + '{"kwota": 12, zepsute\n', encoding='utf-8')
+        for skrypt, arg in (('wpis.py', ['lista', '2026-10']), ('importuj.py', ['--miesiac', '2026-10', '--arkusz', 'ark.json'])):
+            kod, out = self.proces(skrypt, *arg)
+            self.assertEqual((kod, '2026-10-wpisy.jsonl: linia 2' in out, 'zepsute' in out, 'Traceback' in out),
+                             (1, True, False, False), out)
 
     def test_sam_zwrot_ujemny(self):
         self.uruchom('wpis.py', 'dodaj', '+40, dom, zwrot', '--data', '2026-10-10', '--id', 'p7', '--gotowka')
@@ -329,6 +368,59 @@ class PrzeplywArkusz(unittest.TestCase):
         self.uruchom('przenies.py', '--miesiac', '2026-12', '--arkusz', 'swiezy.json')
         self.assertEqual((zapis()['zmiany'], [x['id'] for x in zapis()['do_wyjasnienia']]), ([], ['bzw0000001']))
 
+    def test_a8_ponowne_przenies_po_zapisie_bez_dubla(self):
+        """A-8: C.3 od nowa po wygasłej blokadzie – wiersz przychodu z sald (bez ID) i zwrot już odjęty (ID zwrotu w O
+        odejmowanego wiersza) nie wracają do zapisu."""
+        self.ustaw(przychod_z_sald=dict(kategoria='Przychód z sald', etykieta_roku='do dodania', wiersz_konta=9))
+        reczny = wiersz_ark('2026-12-03', 80.0, 'K-bank', '')
+        self.ark(reczny)
+        zwrot = dict(id='bzw0000001', data='2026-12-09', konto='K-bank', osoba='Osoba A', kwota=10.0, opis='ZWROT', zrodlo='zwrot',
+                     pewnosc='Zwykle', regula='', propozycja=None, opcje=[], uwaga='')
+        (self.dane / 'miesiace').mkdir(exist_ok=True)
+        (self.dane / 'miesiace' / '2026-12.json').write_text(json.dumps(dict(
+            miesiac='2026-12', arkusz_plik='ark.json', auto=[], decyzje=[zwrot], przypiecia=[], wpisy_rozstrzygniete=[],
+            wiersze=[dict(data='2026-12-31', kat='Przychód z sald', formula='=1')])))
+        self.decyduj('2026-12', bzw0000001={'akcja': 'odejmij', 'wiersz': 2})
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        self.assertEqual((len(self.zapis('2026-12')['wiersze']), len(self.zapis('2026-12')['zmiany'])), (1, 1))
+        po = [*reczny[:14], 'bzw0000001']  # po C.3 c–d: zwrot odjęty, ID zwrotu w O; przychód z sald dopisany
+        ps = wiersz_ark('2026-12-31', 0.0, '', '', typ='Przychód', kat='Przychód z sald', pod='')
+        (self.dane / 'swiezy.json').write_text(json.dumps({'values': [['Data'], po, ps]}))
+        self.uruchom('przenies.py', '--miesiac', '2026-12', '--arkusz', 'swiezy.json')
+        z = self.zapis('2026-12')
+        self.assertEqual((z['wiersze'], z['zmiany'], z['do_wyjasnienia']), ([], [], []))
+
+    def test_a10_wiersz_po_platnosci_tylko_gdy_wyciag_siega_dalej(self):
+        """Recenzja A-10 (S6a): ręczny wiersz z 1.12, płatność 29.11 tej samej kwoty z regułą „Zawsze”. Wyciąg do 30.11
+        (własna płatność wiersza może być jeszcze poza plikiem) – płatność wchodzi jak na main; wyciąg do 4.12 bez innej
+        płatności wiersza – 1:1 przez przełom."""
+        self.ark(wiersz_ark('2026-12-01', 50.0, 'K-bank', ''))
+        for koniec, auto, sposob in (('30 Nov 2026', ['SKLEP STALY'], []), ('4 Dec 2026', [], ['1:1 (przez przełom miesiąca)'])):
+            self.zen_wiele(('20 Nov 2026', 'INNE', '-1.00'), ('29 Nov 2026', 'SKLEP STALY', '-50.00'), (koniec, 'INNE', '-1.00'))
+            m = self.importuj('--zen', 'zen.csv', mies='2026-11')
+            self.assertEqual(([a['regula'] for a in m['auto']], [j['sposob'] for j in m['juz'] if j['kwota'] == -50.0]),
+                             (auto, sposob), koniec)
+
+    def test_a10_reczny_wiersz_przez_przelom_i_bez_kolumny_m(self):
+        """A-10: ręczny wiersz z 30.11 i płatność 1.12 (reguła „Zawsze”) – 1:1, nie drugi wiersz; wiersz z pustą kolumną M –
+        miesiąc z daty. Wyciąg bez dnia wiersza albo płatność dalej niż ±3 dni – osobny zakup, bez przełomu."""
+        x = ('29 Nov 2026', 'INNE', '-1.00')  # wyciąg obejmuje dzień ręcznego wiersza
+        self.zen_wiele(x, ('1 Dec 2026', 'SKLEP STALY', '-50.00'), ('30 Dec 2026', 'INNE', '-1.00'))
+        bez_m = wiersz_ark('2026-12-01', 50.0, 'K-bank', '')
+        bez_m[12] = ''
+        for wiersz, sposob in ((wiersz_ark('2026-11-30', 50.0, 'K-bank', ''), '1:1 (przez przełom miesiąca)'), (bez_m, '1:1')):
+            self.ark(wiersz)
+            m = self.importuj('--zen', 'zen.csv', mies='2026-12')
+            self.assertEqual(([a['regula'] for a in m['auto']], [j['sposob'] for j in m['juz'] if j['kwota'] == -50.0]),
+                             ([], [sposob]))
+        for zen, wiersz in (((x, ('2 Dec 2026', 'SKLEP STALY', '-50.00')), '2026-11-28'),  # 4 dni – dalej niż próg (±3)
+                            ((('1 Dec 2026', 'SKLEP STALY', '-50.00'),), '2026-11-30'),  # wyciąg od 1.12 – nie wiadomo
+                            ((('29 Nov 2026', 'SKLEP STALY', '-50.40'), ('1 Dec 2026', 'SKLEP STALY', '-50.00')),
+                             '2026-11-30')):  # wiersz ma swoją płatność (≈1:1) – 1.12 to osobny zakup
+            self.ark(wiersz_ark(wiersz, 50.0, 'K-bank', ''))
+            self.zen_wiele(*zen, ('30 Dec 2026', 'INNE', '-1.00'))
+            self.assertEqual([a['regula'] for a in self.importuj('--zen', 'zen.csv', mies='2026-12')['auto']], ['SKLEP STALY'])
+
     def test_regula_do_dnia_x_bez_wierszy_z_wpisow(self):
         self.zen_wiele(('5 Dec 2026', 'SKLEP STALY', '-10.00'), ('30 Dec 2026', 'INNE', '-1.00'))
         self.ark(wiersz_ark('2026-12-20', 99.0, 'K-bank', 'wk3'))  # wiersz z wpisu po dacie płatności
@@ -366,6 +458,214 @@ class PrzeplywArkusz(unittest.TestCase):
         r = wspolne.wiersz_wpisu(zapis)
         self.assertEqual(w[:12] + [w[14]], [r['data'], r['status'], r['typ'], r['kwota'], r['kat'], r['pod'], r['konto'], r['osoba'],
                                             r['opis'], '', r['tag'], r['notatki'], r['id']])
+
+    def decyduj(self, mies, **dec):
+        db = self.dane / 'miesiace' / f'db-{mies}' / 'decyzje'
+        db.mkdir(parents=True, exist_ok=True)
+        for id_, d in dec.items():
+            (db / f'{id_}.json').write_text(json.dumps(d))
+
+    def zapis(self, mies):
+        return json.loads((self.dane / 'miesiace' / f'{mies}-zapis.json').read_text(encoding='utf-8'))
+
+    def test_a6_zwrot_dzialaniem_z_decyzji_ujemny(self):
+        """A-6: zwrot zapisany działaniem z kategorią rozstrzyganą na stronie – ten sam znak co przy znanym skrócie."""
+        self.uruchom('wpis.py', 'dodaj', '+30-5, xyz', '--data', '2026-12-03', '--id', 'zw1')
+        self.uruchom('wpis.py', 'dodaj', '+30-5, zak', '--data', '2026-12-03', '--id', 'zw2')
+        self.importuj(mies='2026-12')
+        self.decyduj('2026-12', wzw1={'akcja': 'kategoria', 'typ': 'Wydatek', 'kat': 'Zakupy', 'pod': 'Regularne'})
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        d = {w[14]: w[3] for w in self.zapis('2026-12')['wiersze']}
+        self.assertEqual((d['wzw1'], d['wzw2']), ('=-30.00+5.00', '=-30.00+5.00'))
+
+    def sync_atrapa(self, atrapa, **kw):
+        """arkusz_budzetu.sync w tym procesie na folderze testu, z atrapą skryptu arkusza zamiast sieci."""
+        import io
+        from contextlib import redirect_stdout
+        import arkusz_budzetu as AB
+        import test_budzet_arkusz as TA
+        stare, AB.wyslij, wspolne.DANE = wspolne.DANE, atrapa, self.dane
+        try:
+            with redirect_stdout(io.StringIO()):
+                return AB.sync(TA.K, False, **kw)
+        finally:
+            wspolne.DANE = stare
+
+    def kontrola_atrapa(self, atrapa):
+        import arkusz_budzetu as AB
+        import test_budzet_arkusz as TA
+        stare, AB.wyslij, wspolne.DANE = wspolne.DANE, atrapa, self.dane
+        try:
+            return AB.kontrola(TA.K)[1]
+        finally:
+            wspolne.DANE = stare
+
+    def test_a1_wpis_z_recznym_wierszem_nie_wraca_przez_sync(self):
+        """A-1: wpis rozstrzygnięty przy zamknięciu bez ID w O (ręczny wiersz, Pomiń) – sync po zamknięciu nic nie dopisuje,
+        także gdy krok zamknij-wpisy pominięto; zmiana wpisu po zamknięciu – kontrola, nie popraw."""
+        import test_budzet_arkusz as TA
+        self.uruchom('wpis.py', 'dodaj', '80, zak, bazar', '--data', '2026-12-05', '--id', 'blokA')  # sync nie działa
+        self.uruchom('wpis.py', 'dodaj', '15, xyz', '--data', '2026-12-06', '--id', 'blokB')  # nieznany skrót -> Pomiń
+        self.ark([*wiersz_ark('2026-12-05', 80.0, 'Gotówka', '')[:7], 'Osoba B', *wiersz_ark('2026-12-05', 80.0, 'Gotówka', '')[8:]])
+        m = self.importuj(mies='2026-12')
+        self.assertEqual(m['wpisy_rozstrzygniete'], ['wblokA'])
+        self.decyduj('2026-12', wblokB={'akcja': 'pomin'})
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        self.assertEqual((self.zapis('2026-12')['wpisy_rozstrzygniete'], self.zapis('2026-12')['wiersze']), (['wblokA', 'wblokB'], []))
+        reczny = dict(o=[], data='2026-12-05', kwota=80.0)
+        atrapa = TA.Atrapa([reczny])
+        licz, bledy = self.sync_atrapa(atrapa)  # bezpiecznik: bez zamknij-wpisy sync sam oznacza
+        self.assertEqual((licz['dopisane'], licz.get('zamkniete'), bledy, atrapa.w), (0, 2, [], [reczny]))
+        self.assertIn('0 zapisach', self.uruchom('arkusz_budzetu.py', 'zamknij-wpisy', '--miesiac', '2026-12'))  # idempotentne
+        p = self.dane / 'listy' / '2026-12-wpisy.jsonl'
+        ws = [json.loads(l) for l in p.read_text(encoding='utf-8').splitlines()]
+        self.assertEqual([w['arkusz']['zamkniecie'] for w in ws], ['2026-12', '2026-12'])
+        for w in ws:
+            w['dodano'] = '2026-01-01 08:00'  # dawno – kontrola zgłosiłaby niewysłany, gdyby znacznik nie działał
+        p.write_text(''.join(json.dumps(w, ensure_ascii=False) + '\n' for w in ws), encoding='utf-8')
+        self.assertEqual(self.kontrola_atrapa(atrapa), [])
+        self.uruchom('wpis.py', 'dodaj', '82, zak, bazar', '--data', '2026-12-05', '--id', 'blokA')  # poprawka po zamknięciu
+        licz, bledy = self.sync_atrapa(atrapa)
+        self.assertEqual((licz['dopisane'], licz['poprawione'], bledy, atrapa.w), (0, 0, [], [reczny]))
+        self.assertTrue(any('zmieniony po zamknięciu' in x and 'wblokA' in x for x in self.kontrola_atrapa(atrapa)))
+        self.assertIn('rozstrzygnięty przy zamknięciu', self.uruchom('arkusz_budzetu.py', 'ponow', 'blokA'))
+        self.uruchom('arkusz_budzetu.py', 'zamknij-wpisy', 'blokA')  # wiersz poprawiony ręcznie – odśwież znacznik
+        self.assertEqual(self.kontrola_atrapa(atrapa), [])
+
+    def test_a1_przenies_na_swiezym_odczycie_wykrywa_dubel(self):
+        """A-1: sync dopisał wpis po imporcie, a import dopasował go do ręcznego wiersza – do wyjaśnienia, bez znacznika."""
+        self.uruchom('wpis.py', 'dodaj', '80, zak', '--data', '2026-12-05', '--id', 'blokA')
+        reczny = [*wiersz_ark('2026-12-05', 80.0, 'Gotówka', '')[:7], 'Osoba B', *wiersz_ark('2026-12-05', 80.0, 'Gotówka', '')[8:]]
+        self.ark(reczny)
+        self.importuj(mies='2026-12')
+        (self.dane / 'swiezy.json').write_text(json.dumps({'values': [['Data'], reczny,
+                                                                      wiersz_ark('2026-12-05', 80.0, 'Gotówka', 'wblokA')]}))
+        self.uruchom('przenies.py', '--miesiac', '2026-12', '--arkusz', 'swiezy.json')
+        z = self.zapis('2026-12')
+        self.assertEqual((z['wpisy_rozstrzygniete'], [x['id'] for x in z['do_wyjasnienia']]), ([], ['wblokA']))
+
+    def test_a1_miesiac_zamkniety_starsza_wersja_odmowa(self):
+        """A-1, bezpiecznik: plik zapisu bez listy wpisów rozstrzygniętych (starsza wersja) – sync nie dopisuje bez flagi."""
+        import test_budzet_arkusz as TA
+        self.uruchom('wpis.py', 'dodaj', '80, zak', '--data', '2026-12-05', '--id', 'blokA')
+        (self.dane / 'miesiace').mkdir(exist_ok=True)
+        (self.dane / 'miesiace' / '2026-12-zapis.json').write_text(json.dumps({'wiersze': [], 'przypiecia': []}))
+        atrapa = TA.Atrapa()
+        licz, bledy = self.sync_atrapa(atrapa)
+        self.assertEqual((licz['dopisane'], len(bledy), atrapa.w), (0, 1, []))
+        self.assertIn('--mimo-zamkniecia', bledy[0])
+        licz, bledy = self.sync_atrapa(atrapa, mimo_zamkniecia=True)
+        self.assertEqual((licz['dopisane'], bledy), (1, []))
+
+    def test_a2_platnosc_inna_kwota_niz_wpis_do_decyzji_z_kandydatem(self):
+        """A-2: wpis z karty (wiersz z sync) i płatność tego dnia o innej kwocie (napiwek) z regułą „Zawsze” – nie nowy
+        wiersz obok wpisu, tylko decyzja z wierszem wpisu; „Już w arkuszu” przypina płatność do tego wiersza."""
+        self.wpisz('2026-12', self.karta('wR1', '2026-12-05', 100.0))
+        self.ark(wiersz_ark('2026-12-05', 100.0, 'K-bank', 'wR1'))
+        self.zen_wiele(('5 Dec 2026', 'SKLEP STALY', '-115.00'), ('30 Dec 2026', 'INNE', '-1.00'))
+        m = self.importuj('--zen', 'zen.csv', mies='2026-12')
+        self.assertEqual([a['regula'] for a in m['auto']], [])
+        d = [d for d in m['decyzje'] if d['regula'] == 'SKLEP STALY'][0]
+        self.assertEqual(([k['wiersz'] for k in d['kandydaci']], 'wR1' in d['uwaga']), ([2], True))
+        self.assertIn('115', [x for x in m['decyzje'] if x['id'] == 'wR1'][0]['uwaga'])
+        # recenzja: bez propozycji – „Zatwierdź propozycje” jej nie weźmie (strona: sekcja „Do wyboru”, opcje zostają);
+        # bez decyzji przenies.py jej nie przepuszcza (bez_decyzji)
+        self.assertEqual((d['propozycja'], [o['kat'] for o in d['opcje']][:1]), (None, ['Zakupy']))
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        self.assertEqual(([w for w in self.zapis('2026-12')['wiersze'] if d['id'] in w[14]], d['id'] in
+                          [x['id'] for x in self.zapis('2026-12')['bez_decyzji']]), ([], True))
+        self.decyduj('2026-12', **{d['id']: {'akcja': 'juz', 'wiersz': 2}, 'wR1': {'akcja': 'juz', 'wiersz': 2}})
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        z = self.zapis('2026-12')
+        self.assertEqual((z['wiersze'], [(p['id_wyciagu'], p['wiersze']) for p in z['przypiecia']]),
+                         ([], [(d['id'], [{'id': 'wR1', 'wiersz': 2, 'kwota': 115.0}])]))
+        self.ark()  # wpisu nie ma w arkuszu (sync nie działał) – też decyzja, nie wiersz z reguły obok wpisu
+        m = self.importuj('--zen', 'zen.csv', mies='2026-12')
+        d = [d for d in m['decyzje'] if d['regula'] == 'SKLEP STALY'][0]
+        self.assertEqual((m['auto'], d['kandydaci'], 'przypiecie_wpisu' in d, 'wR1' in d['uwaga']), ([], [], False, True))
+
+    def test_a2_okno_nie_siega_przez_przelom(self):
+        """Recenzja A-2: wpis bez pary z 1.12 nie ściąga płatności z 30.11 przy zamknięciu listopada, a wpis z 30.11
+        (sąsiedni miesiąc) – płatności z 1.12 przy zamknięciu grudnia; reguła „Zawsze” działa jak bez wpisu."""
+        for mies, wpisy, platnosc in (('2026-11', {'2026-12': [self.karta('wD1', '2026-12-01', 100.0)], '2026-11': []},
+                                       ('30 Nov 2026', 'SKLEP STALY', '-115.00')),
+                                      ('2026-12', {'2026-11': [self.karta('wN1', '2026-11-30', 70.0)], '2026-12': []},
+                                       ('1 Dec 2026', 'SKLEP STALY', '-85.00'))):
+            for m_, ws in wpisy.items():
+                self.wpisz(m_, *ws)
+            self.zen_wiele(('29 Nov 2026', 'INNE', '-1.00'), platnosc, ('5 Dec 2026', 'INNE', '-1.00'))
+            m = self.importuj('--zen', 'zen.csv', mies=mies)
+            self.assertEqual([a['regula'] for a in m['auto']], ['SKLEP STALY'], mies)
+            self.assertFalse(any('może to wpis' in d['uwaga'] for d in m['decyzje']), mies)
+
+    def test_a3_przychod_bez_plusa_paruje_sie_z_wplywem(self):
+        """A-3: „100, z, pen” (przychód bez „+”) – w arkuszu +100, więc przy zamknięciu paruje się z wpływem jak „+100”."""
+        for kwota in (-100.0, 100.0):
+            self.wpisz('2026-12', self.karta('wP1', '2026-12-05', -kwota, typ='Przychód', kat='Inne przychody', pod='', kod='pen'))
+            self.ark(wiersz_ark('2026-12-05', 100.0, 'K-bank', 'wP1', typ='Przychód', kat='Inne przychody', pod=''))
+            self.zen_wiele(('5 Dec 2026', 'PRACODAWCA', '100.00'), ('30 Dec 2026', 'INNE', '-1.00'))
+            m = self.importuj('--zen', 'zen.csv', mies='2026-12')
+            self.assertEqual((len(m['przypiecia']), [d['id'] for d in m['decyzje'] if d['kwota'] > 0 or d['id'] == 'wP1'], m['auto']),
+                             (1, [], []), kwota)
+
+    def test_a4_wyciag_niepelny_albo_brak_pliku(self):
+        """A-4: wyciąg kończący się w połowie miesiąca – linia w „Brakuje” także bez wpisów; podany, a brakujący plik – stop."""
+        self.zen_wiele(('3 Dec 2026', 'SKLEP STALY', '-10.00'))
+        m = self.importuj('--zen', 'zen.csv', mies='2026-12')
+        self.assertTrue(any('K-bank – ostatnia operacja 03.12' in b for b in m['braki']), m['braki'])
+        self.assertTrue(any('wyciąg K-mb brak' in b for b in m['braki']), m['braki'])
+        self.zen_wiele(('3 Dec 2026', 'SKLEP STALY', '-10.00'), ('28 Dec 2026', 'INNE', '-1.00'))  # cisza w ostatnie 3 dni
+        self.assertFalse(any('K-bank' in b for b in self.importuj('--zen', 'zen.csv', mies='2026-12')['braki']))
+        kod, out = Przeplyw.proces(self, 'importuj.py', '--miesiac', '2026-12', '--arkusz', 'ark.json', '--zen', 'zen.csv',
+                                   '--mbank', 'wyciagi/mbank-grudzien.csv')
+        self.assertEqual((kod, '✗ brak pliku wyciągu' in out, 'Traceback' in out), (1, True, False), out)
+
+    def test_a7_lista_minus_i_tysiace_nie_zmieniaja_konta(self):
+        """A-7: „-40 zak” nie jest nagłówkiem konta (następne pozycje zostają na swoim koncie), „1 234,56” to jedna kwota;
+        nagłówek: skrót z konta_list albo linia bez cyfr."""
+        self.ustaw(konta_list={'praca': 'K-praca'}, lista_domyslne_konto='Gotówka')
+        (self.dane / 'lista.txt').write_text('praca\n1 234,56 zak\n-40 zak\n100 zak\nKonto bez skrotu\n50 zak\nzak 7x\n',
+                                             encoding='utf-8')
+        m = self.importuj('--lista', 'lista.txt', mies='2026-12')
+        self.assertEqual(sorted((w['konto'], w['kwota'], w['formula']) for w in m['wiersze']),  # ten sam dzień i kategoria – scalone
+                         [('K-praca', 1334.56, '=1234.56+100.00'), ('Konto bez skrotu', 50.0, None)])
+        d = {x['opis']: x for x in m['decyzje']}
+        self.assertEqual((d['-40 zak']['konto'], d['-40 zak']['kwota'], '„+”' in d['-40 zak']['uwaga']), ('K-praca', -40.0, True))
+        self.assertIn('nie rozumiem', d['zak 7x']['uwaga'])
+
+    def test_a12_usun_bez_trafienia_kod_1_i_po_zmianie_miesiaca(self):
+        kod, out = Przeplyw.proces(self, 'wpis.py', 'usun', '2026-12', 'q9')
+        self.assertEqual((kod, '✗ brak wpisu' in out), (1, True))
+        self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q9')
+        self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2027-01-02', '--id', 'q9')  # zmiana daty na inny miesiąc
+        self.assertIn('usunięto (1)', self.uruchom('wpis.py', 'usun', '2026-12', 'q9'))
+        self.assertIn('2027-01: 0 wpisów', self.uruchom('wpis.py', 'lista', '2027-01'))
+
+    def test_a13_kontrola_zamykanego_grudnia(self):
+        """A-13: przy zamknięciu grudnia (--rok) grudzień jest ostatnim miesiącem – z --miesiac też ma mieć wiersz z sald."""
+        self.ustaw(przychod_z_sald=dict(kategoria='Przychód z sald', etykieta_roku='do dodania', wiersz_konta=9))
+        ps = lambda d: wiersz_ark(d, 10.0, '', '', typ='Przychód', kat='Przychód z sald', pod='')
+        self.ark(wiersz_ark('2026-11-05', 10.0, 'K-bank', ''), ps('2026-11-30'), wiersz_ark('2026-12-05', 10.0, 'K-bank', ''))
+        kontrola = lambda *a: self.uruchom('kontrola.py', '--arkusz', 'ark.json', *a)
+        self.assertNotIn('2026-12: 0', kontrola('--rok', '2026'))  # dotychczas: grudzień „otwarty”
+        self.assertIn('2026-12: 0', kontrola('--rok', '2026', '--miesiac', '2026-12'))
+        self.assertIn('2026-12: 0', kontrola('--miesiac', '2026-12'))
+        self.assertNotIn('2026-11', kontrola('--miesiac', '2026-11'))
+
+    def test_a18_allegro_platnosc_za_dwa_zamowienia_i_pay(self):
+        """A-18: płatność Allegro = suma dwóch zamówień – pominięta (wydatki z listy zamówień), zamówienia na stronie decyzji;
+        zakup Allegro Pay – korekta salda (spłata w kolejnym miesiącu)."""
+        self.ustaw(allegro={'platnosci': ['ALLEGRO'], 'pay': 'ALLEGRO PAY', 'karta_podarunkowa': 'KARTA PODARUNKOWA'})
+        zam = lambda s, kw, pay=False: dict(data='2026-12-03', sprzedawca=s, suma=kw, pay=pay, zwrocony=False, produkty=['P'],
+                                            prop='', opcje=[])
+        (self.dane / 'allegro.json').write_text(json.dumps({'zamowienia': [zam('sklep_a', 30.0), zam('sklep_b', 20.0),
+                                                                           zam('sklep_c', 15.0, pay=True)]}))
+        self.zen_wiele(('4 Dec 2026', 'ALLEGRO SP Z O O', '-50.00'), ('30 Dec 2026', 'INNE', '-1.00'))
+        m = self.importuj('--zen', 'zen.csv', '--allegro', 'allegro.json', mies='2026-12')
+        self.assertEqual([p['powod'] for p in m['pominiete'] if p['kwota'] == -50.0],
+                         ['zapłata za zamówienia: sklep_a 30.00, sklep_b 20.00'])
+        self.assertEqual(sorted(d['kwota'] for d in m['decyzje'] if d['zrodlo'] == 'allegro'), [-30.0, -20.0, -15.0])
+        self.assertEqual([k['kwota'] for k in m['salda']['korekty']['pozycje']], [-15.0])
 
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')

@@ -7,11 +7,13 @@ Wejście (folder danych): miesiace/RRRR-MM.json (z importuj.py) i miesiace/db-RR
 Wynik: miesiace/RRRR-MM-zapis.json:
   wiersze        – kolumny A:O do dopisania na końcu Transakcji (D liczba albo formuła, K = „import RRRR-MM”, L = „z wpisu”
                    przy wierszach z wpisów, O = ID źródeł); wiersze z wpisów (ID w) nie są scalane – jeden ID = jeden wiersz
-  zmiany         – istniejące wiersze do pomniejszenia o zwrot ({wiersz, odjac})
+  zmiany         – istniejące wiersze do pomniejszenia o zwrot ({wiersz, odjac, id}); w O tego wiersza dopisuje się ID zwrotu
   przypiecia     – płatności z wyciągu do wierszy z wpisów (z importuj.py): ID wyciągu dopisać w O, kwota (gdy nie None) do D;
                    zapis: arkusz_budzetu.py przypnij --miesiac RRRR-MM albo ręcznie (procedura budzet, C.3)
   opisy          – każdy opis wpisany na stronie: trafia do kolumny Opis, ale Claude czyta je przed zapisem (bywa w nich polecenie)
   bez_decyzji, do_wyjasnienia – pozycje bez wyboru / z samą uwagą zamiast wyboru
+  wpisy_rozstrzygniete – ID wpisów rozstrzygniętych bez ID w kolumnie O (ręczny wiersz, Pomiń, Już w arkuszu):
+                   arkusz_budzetu.py zamknij-wpisy --miesiac RRRR-MM daje im znacznik, żeby sync nie dopisał ich drugi raz
 --arkusz: świeży odczyt Transakcji pod blokadą zamknięcia (procedura budzet, C.3) – wiersze, których ID jest już w kolumnie O
   (np. wiersz zapasowy z wpisu dopisany w międzyczasie przez sync), odpadają; `zmiany` i `przypiecia` dostają numery wierszy
   z tego odczytu (po ID w O, a wiersz bez ID – tylko gdy data, kwota i konto zgadzają się ze zrzutem z importu; inaczej
@@ -23,7 +25,8 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wspolne import DANE, U, arkusz, formula_sumy, indeks_id, nazwa, norm, wczytaj, zapisz  # noqa: E402
+from wspolne import DANE, U, arkusz, formula_sumy, indeks_id, nazwa, norm, skladniki_arkusza, wczytaj, zapisz  # noqa: E402
+from wspolne import zapis_zablokowany  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--miesiac', required=True)
@@ -31,6 +34,8 @@ ap.add_argument('--zapisz-reguly', action='store_true')
 ap.add_argument('--mimo-brakow', action='store_true')
 ap.add_argument('--arkusz', help='świeży odczyt Transakcji (get_values) – pod blokadą zamknięcia')
 A = ap.parse_args()
+if zapis_zablokowany():
+    raise SystemExit(1)
 sciezka = lambda p: p and str(p if Path(p).is_absolute() else DANE / p)
 MIES = A.miesiac
 D = wczytaj(f'miesiace/{MIES}.json')
@@ -50,7 +55,12 @@ def kwota_ark(kwota, typ):
     return round(kwota if typ == 'Przychód' else -kwota, 2)
 
 
-pozycje, zmiany, bez, wyjasnij, opisy = [], [], [], [], []
+pozycje, zmiany, bez, wyjasnij, opisy, przyp_dec = [], [], [], [], [], []
+if 'wpisy_rozstrzygniete' not in D:
+    print(f'uwaga: miesiace/{MIES}.json ze starszej wersji importu (bez wpisy_rozstrzygniete) – uruchom importuj.py ponownie, '
+          'inaczej wpisy dopasowane do ręcznych wierszy nie dostaną znacznika zamknięcia')
+z_importu = set(D.get('wpisy_rozstrzygniete', []))  # ręczny wiersz / płatność już w arkuszu – wpis bez ID w O
+rozstrzygniete = set(z_importu)
 for a in D['auto']:
     pozycje.append(dict(id=a['id'], data=a['data'], konto=a['konto'], osoba=a['osoba'], typ=a['typ'], kat=a['kat'], pod=a['pod'],
                         skl=a['skladniki'] if a.get('skladniki') else [a['kwota_ark']], opis=a.get('opis_w') or a['regula'],
@@ -66,7 +76,11 @@ for it in D['decyzje']:
     if not ak:
         (wyjasnij if d.get('opis') else bez).append(dict(id=it['id'], data=it['data'], opis=it['opis'], kwota=it['kwota'], uwaga=d.get('opis', '')))
         continue
+    pw = it.get('przypiecie_wpisu')  # płatność o innej kwocie niż wpis bez pary: „Już w arkuszu” przy wierszu wpisu
+    if ak == 'juz' and pw and d.get('wiersz') in [x['wiersz'] for x in pw['wiersze']]:
+        przyp_dec.append(pw)
     if ak in ('pomin', 'juz'):
+        rozstrzygniete.update(([it['id']] if it['id'].startswith('w') else []) + it.get('ids_w', []))
         continue
     if it.get('w_arkuszu') and ak != 'odejmij':  # wiersz z wpisu już jest – kategoria dopisałaby drugi
         wyjasnij.append(dict(id=it['id'], data=it['data'], opis=it['opis'], kwota=it['kwota'],
@@ -79,9 +93,11 @@ for it in D['decyzje']:
         opis = d.get('opis') or ('Allegro: ' + ', '.join(it.get('produkty', [])))[:100]
     else:
         opis = d.get('opis') or it.get('opis_w') or it.get('regula') or it['opis'][:30]
+    ark_k = kwota_ark(it['kwota'], d['typ'])  # działanie („+30-5”) – składniki ze znakiem arkusza, jak przy pewnych
     pozycje.append(dict(id=it['id'], data=it['data'], konto=it['konto'], osoba=it['osoba'], typ=d['typ'], kat=d['kat'], pod=d['pod'],
-                        skl=it['skladniki'] if it.get('skladniki') else [kwota_ark(it['kwota'], d['typ'])], opis=opis, grupa=False,
-                        ids=[it['id']] if it['id'][0] in 'balw' else [], regula=it.get('regula', ''), zrodlo=it['zrodlo'],
+                        skl=skladniki_arkusza(ark_k, it.get('skladniki')) or [ark_k], opis=opis, grupa=False,
+                        ids=([it['id']] if it['id'][0] in 'balw' else []) + it.get('ids_w', []), regula=it.get('regula', ''),
+                        zrodlo=it['zrodlo'],
                         etykieta=d['etykieta'], kwota=it['kwota'], opis_banku=it['opis'], notatki=it.get('notatki', '')))
 byid = {p['id']: p for p in pozycje}
 for it, d in odejmij:
@@ -112,12 +128,15 @@ for w in D['wiersze']:
     if U.get('przychod_z_sald') and w['kat'] == U['przychod_z_sald']['kategoria']:
         wiersze.append([w['data'], 'Zrealizowane', 'Przychód', w['formula'], w['kat'], '', '', '', '', '', TAG, '', '', '', ''])
 
-przypiecia = D.get('przypiecia', [])
+przypiecia = D.get('przypiecia', []) + przyp_dec
 juz_sa = []
 if A.arkusz:  # pod blokadą zamknięcia: numery i filtr z bieżącego stanu arkusza, nie ze zrzutu z importu
     swiezy = arkusz(sciezka(A.arkusz))
     w_o = indeks_id(swiezy)
     juz_sa = [w for w in wiersze if any(i in w_o for i in w[14].split(',') if i)]
+    ps = U.get('przychod_z_sald', {}).get('kategoria')  # wiersz przychodu z sald nie ma ID – po kategorii i miesiącu daty
+    if ps and any(r['kat'] == ps and r['data'] and r['data'].strftime('%Y-%m') == MIES for r in swiezy):
+        juz_sa += [w for w in wiersze if w[4] == ps and not w[14]]
     wiersze = [w for w in wiersze if w not in juz_sa]
     nowe_p = {}  # odrzucony wiersz zapasowy [ID wyciągu, ID wpisu] – ID wyciągu i kwota idą na wiersz z synchronizacji
     for w in juz_sa:
@@ -132,6 +151,9 @@ if A.arkusz:  # pod blokadą zamknięcia: numery i filtr z bieżącego stanu ark
                                          else None))
     przypiecia = przypiecia + [p for p in nowe_p.values() if p['wiersze']]
     stary = {r['wiersz']: r for r in arkusz(sciezka(D['arkusz_plik']))} if D.get('arkusz_plik') else {}
+    for z in [z for z in zmiany if z['id'] in w_o]:  # ID zwrotu już w O odejmowanego wiersza – zwrot już odjęty (C.3 d)
+        zmiany.remove(z)
+        juz_sa.append(z)
     for z in list(zmiany):
         r0, nowy = stary.get(z['wiersz']), None
         if r0 and r0['ids']:
@@ -148,12 +170,19 @@ if A.arkusz:  # pod blokadą zamknięcia: numery i filtr z bieżącego stanu ark
     for p in przypiecia:
         for x in p['wiersze']:
             x['wiersz'] = w_o[x['id']]['wiersz'] if x['id'] in w_o else x['wiersz']
+    for i in sorted(rozstrzygniete & set(w_o)):  # ID już w O – znacznik zamknięcia niepotrzebny (sync zna wiersz)
+        rozstrzygniete.discard(i)
+        if i in z_importu:  # sync dopisał wiersz po imporcie, a import dopasował wpis do ręcznego wiersza – dwa wiersze
+            wyjasnij.append(dict(id=i, data=w_o[i]['data'].isoformat() if w_o[i]['data'] else '', opis='wpis', kwota=w_o[i]['kwota'],
+                                 uwaga=f"wiersz {w_o[i]['wiersz']} z ID wpisu dopisany po imporcie, a import uznał wpis za już "
+                                       'wpisany ręcznie – możliwy dubel; usuń jeden z wierszy'))
 zapisz(f'miesiace/{MIES}-zapis.json', dict(miesiac=MIES, wiersze=wiersze, zmiany=zmiany, przypiecia=przypiecia,
-                                         opisy=opisy, bez_decyzji=bez,
+                                         opisy=opisy, bez_decyzji=bez, wpisy_rozstrzygniete=sorted(rozstrzygniete),
                                          do_wyjasnienia=wyjasnij, gotowe=not bez or A.mimo_brakow, salda=D.get('salda', {})))
 print(f'{MIES}: {len(wiersze)} wierszy, {len(zmiany)} zmian istniejących, przypięć do wierszy z wpisów '
       f'{len(przypiecia)}, opisów {len(opisy)}, bez decyzji {len(bez)}, '
-      f'do wyjaśnienia {len(wyjasnij)}' + (f', już w arkuszu (pominięte) {len(juz_sa)}' if A.arkusz else ''))
+      f'do wyjaśnienia {len(wyjasnij)}, wpisów rozstrzygniętych bez wiersza {len(rozstrzygniete)}'
+      + (f', już w arkuszu (pominięte) {len(juz_sa)}' if A.arkusz else ''))
 
 if A.zapisz_reguly:
     reg = REG['reguly']

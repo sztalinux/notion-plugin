@@ -34,7 +34,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     plugins/dom-budowa/skills/        ← procedury budowy
     .claude/skills/, .agents/skills/  ← dowiązania na każdy skill obu pluginów (odtwarza tools/build.py)
     .claude/settings.json             ← zezwolenia (hooków startowych nie ma – na starcie sesji jedna linia stanu: CLAUDE.md)
-    .githooks/                        ← pre-commit (pliki, autor), commit-msg (wiadomość), pre-push (każdy wysyłany commit)
+    .githooks/                        ← pre-commit (pliki, indeks, autor), commit-msg (wiadomość), pre-push (każdy wysyłany commit, nazwy gałęzi i tagów)
     tools/build.py                    ← walidacja (w tym dane osobowe) + dowiązania skilli + paczki dist/ (po jednej na plugin)
     tools/dokumenty.py                ← indeks folderu budowy i paczka dla claude.ai
     tools/teczka.py                   ← teczka etapu / transzy do banku: składa dokumenty etapu w Teczki/<Etap>/ ze spisem braków (etap D; testy test_teczka.py)
@@ -68,7 +68,7 @@ Mac (launchd, `AI/automaty/przeglad.py`, poza repo) ── co godzinę 8–22, w
    ├─ po przebiegu `tools/wydatki.py`: kolejka „💸 Wydatki → arkusz” → arkusz Google „Kosztorys budowy”
    ├─ po przebiegu `tools/budzet/arkusz_budzetu.py`: wydatki z wpisów → arkusz Google „Budżet domowy” (w nocy kontrola wpis ↔ wiersz)
    └─ problem, który trwa (przebieg nieudany lub nieuruchomiony, logowanie MCP, błąd skryptu) → `stan.json` →
-      następny udany przebieg → „🔔 Komunikaty asystenta” we „📝 Wpisach”; większe sprawy → baza „🤖 Zmiany asystenta” (Rodzaj Usterka)
+      następny udany przebieg → „🔔 Komunikaty asystenta” we „📝 Wpisach”; większe sprawy → baza „🤖 Zmiany asystenta” (Rodzaj Usterka; naprawa na polecenie „zrób ZP-n” w Claude Code)
 ```
 
 ## Konektory i drogi zapasowe
@@ -78,9 +78,9 @@ z ⚠ i inwestor o tym wie.
 
 | Konektor | Do czego | Gdy go zabraknie |
 |---|---|---|
-| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają we „Wpisach” i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json`; po zalogowaniu pierwszy udany przebieg zostawia tylko ślad „ustąpiło” w „Przetworzone” Dziennika, bez bloku 🔔 – w trakcie widać go wyłącznie w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
+| Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają we „Wpisach” i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json`; po zalogowaniu pierwszy udany przebieg zostawia tylko ślad „ustąpiło” w „Przetworzone” Dziennika, bez bloku 🔔 – w trakcie widać go wyłącznie w logu; brak wykryty w samym przebiegu – blok 🔔 do następnego przebiegu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
 | Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
-| Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
+| Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w „📝 Wpisach” (pod 📓 Dziennikiem) w aplikacji Notion |
 | Google Sheets / Drive + strona decyzji (artefakt, procedura `budzet`) | budżet domowy: odczyt Transakcji, zapis wierszy, decyzje inwestora | wynik `przenies.py` (`miesiace/RRRR-MM-zapis.json`) wkleja się ręcznie; decyzje można podać w czacie zamiast na stronie |
 | Notion MCP – zdjęcie paragonu we „📝 Wpisach” (`tools/budzet/paragon.py pobierz`, procedura `budzet`) | pobranie zdjęcia paragonu do `.dom/budzet/paragony/` i rozpisanie w przebiegu | sesja Claude Code: inwestor wkleja zdjęcie w rozmowę, rozpisanie tym samym `paragon.py rozpisz`; przebieg zostawia 🔔 |
 | Apps Script arkusza „Budżet domowy” (`tools/budzet/arkusz_budzetu.py`) | wydatki z wpisów od razu w Transakcjach, przypięcie płatności z wyciągu | wpisy czekają w pliku miesiąca; zamknięcie miesiąca dopisuje brakujące wiersze po ID, przypięcia – konektorem albo ręcznie (`docs/budzet-arkusz.md`, 4) |
@@ -106,7 +106,7 @@ z ⚠ i inwestor o tym wie.
 | `suple` | „kończy się…”, „kupiłem…”, przerwa | baza Suple: Buy, Status, Last break |
 | `przeglad-dnia` | co godzinę (tryb szybki) i w nocy (2:00) – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; nocny (klucz techniczny `wieczorny`): podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), przegląd dnia budowy osobno na DOM, kontrola spójności (zadanie budowy ↔ krok Harmonogramu, zakup ↔ zadanie „Kupić X”, suplement wstrzymany z Buy – tylko pytania 🔔, zmiana dopiero po Twoim ☑; zadanie rozmowy ↔ temat do przegadania i status pomysłu ↔ wdrożenie sprawdza raz w tygodniu przegląd tygodnia); rozkminka („przygotuj mi…”, „jakie pytania…”) tylko na prośbę we wpisie |
 | `przeglad-tygodnia-osobisty` | raz w tygodniu – automat na Macu / „przegląd tygodnia” | sprawy osobiste w liczbach, zadania po terminie (tylko z Deadline), najbliższy tydzień, porządki w Dzienniku, kontrola spójności rozmów i pomysłów; uruchamia przegląd budowy i linkuje do niego |
-| `rozwoj-harnessu` | „zapamiętaj na przyszłość”, nowa procedura, „mam pomysł…”, „zrób POM-n”, „zrób ZP-n” | skrzynka w Notion → wdrożenie do repo; pomysły → analiza → wdrożenie na polecenie; „🤖 Zmiany asystenta” (Rodzaj Usterka) – sprawy, których przebieg nie załatwi |
+| `rozwoj-harnessu` | „zapamiętaj na przyszłość”, nowa procedura, „mam pomysł…”, „zrób POM-n”, „zrób ZP-n” | skrzynka zmian w Notion → wdrożenie do repo; pomysły → analiza → wdrożenie na polecenie; „🤖 Zmiany asystenta” (Rodzaj Usterka) – sprawy, których przebieg nie załatwi |
 
 **Plugin `dom-budowa`**
 
@@ -184,8 +184,9 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
 
 ## Start
 
-1. Repo sklonowane do `Dom/AI/dom` (folder budowy = dwa poziomy wyżej; inny – zmienna `DOM_HUB`),
-   `git config core.hooksPath .githooks`, `git config user.email <id>+<login>@users.noreply.github.com`
+1. Repo sklonowane do `Dom/AI/dom` (folder budowy = dwa poziomy wyżej; inny – zmienna `DOM_HUB`; z kopii roboczej git
+   `.claude/worktrees/<nazwa>` narzędzia liczą go od głównej kopii – `tools/hub.py` – a polecenia zapisujące bez jawnego
+   `DOM_HUB` odmawiają, gdy zapis trafiłby w prawdziwy folder budowy), `git config core.hooksPath .githooks`, `git config user.email <id>+<login>@users.noreply.github.com`
    (autor commitów jest publiczny; imię inwestora dozwolone, e-mail tylko noreply). Lista słów zakazanych: `Dom/.dom/zakazane-w-repo.txt`
    (nazwiska, firmy, miejscowość – po jednym w linii; plik poza repo; bez niej walidacja i hooki zatrzymują się kodem 1 –
    świadomie same wzorce: `DOM_BEZ_LISTY=1`).
@@ -217,10 +218,10 @@ poza repo. W Claude Code na Macu – lokalnie skrypt `pytania.py` z katalogu aut
 - Wszystko, co przyjdzie Ci do głowy (emocja, zadanie, dziecko, suplement, budowa), wpisuj na stronę „📝 Wpisy” (pod „📓 Dziennik”) w Notion –
   punkt pod punktem albo jako podstronę (telefon wystarczy albo Claude na telefonie → „📥 Skrzynka”; bloki 1. poziomu Dziennika i strony z widgetu
   nie są już czytane – przejście robi jednorazowo przegląd, `przeglad-dnia/references/przejscia.md`). Szybki przebieg co godzinę (8–22) i nocny przegląd dnia rozłożą to według bazy „🧭 Obszary
-  Dziennika”, a pod niejasnymi wpisami w „📝 Wpisy” doda krótkie okienko z pytaniem – odpowiedź wpisujesz w nim, przerobi ją następny przebieg. Gdy coś zepsuje się „w tle” (automat na Macu, skrypt, wydatek, który nie wszedł do arkusza), na górze „Wpisów” pojawi się blok pod „🔔 Komunikaty asystenta” – odpisz pod nim albo zostaw, jeśli ustąpi samo; sprawy za duże na przebieg trafiają do bazy „🤖 Zmiany asystenta” (Rodzaj Usterka) na stronie 🤖 Asystent AI. Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
+  Dziennika”, a pod niejasnymi wpisami w „📝 Wpisy” doda krótkie okienko z pytaniem – odpowiedź wpisujesz w nim, przerobi ją następny przebieg. Gdy coś zepsuje się „w tle” (automat na Macu, skrypt, wydatek, który nie wszedł do arkusza), na górze „Wpisów” pojawi się blok pod „🔔 Komunikaty asystenta” – odpisz pod nim albo zostaw, jeśli ustąpi samo; sprawy za duże na przebieg trafiają do bazy „🤖 Zmiany asystenta” (Rodzaj Usterka) na stronie 🤖 Asystent AI – zgłoszona przez przebieg ma blok 🔔 do czasu naprawy (założona w Claude Code albo ręcznie – tylko gdy czeka na Ciebie); naprawia je Claude Code na polecenie „zrób ZP-n” (nie same). Nowy rodzaj wpisu = nowy wiersz w Obszarach, bez zmian w harnessie.
   Ręcznie: „przerób dziennik”. Chcesz, żeby asystent coś przemyślał („przygotuj mi pytania na jutrzejsze spotkanie”, „porównaj…”)
   – napisz to we wpisie; wynik będzie rano w przeglądzie dnia, w sekcji „🧠 Rozkminka” (bez prośby asystent rozkminek nie robi).
-- Poprawki „na przyszłość” z telefonu trafiają do skrzynki w Notion; Claude Code wdroży je na polecenie „wdróż”.
+- Poprawki „na przyszłość” z telefonu trafiają do skrzynki zmian w Notion; Claude Code wdroży je na polecenie „wdróż”.
 - Dzień na budowie → powiedz asystentowi, co się działo (telefon wystarczy) – trafi do Dziennika budowy, a „nie skończyliśmy, jutro kontynuujemy” przesunie kroki Harmonogramu; zdjęcia wgraj z telefonu na Dysk do `Dom/Zdjęcia/<etap>/<krok>/` albo do `Zdjęcia/_nowe` w folderze z nazwą, co na nich jest, i powiedz w Claude Code „rozłóż zdjęcia” (`plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md`, 9).
 - Przed krokiem „bez odwrotu” (beton, zasypka, tynki) zapytaj „co sprawdzić przed …” – dostaniesz bramkę z listą zdjęć do zrobienia.
 - Każda zmiana w repo = podbita wersja zmienionego pluginu w `plugins/<plugin>/.claude-plugin/plugin.json` (inaczej claude.ai

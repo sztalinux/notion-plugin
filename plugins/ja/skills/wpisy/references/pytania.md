@@ -1,7 +1,7 @@
 # Format pytań do inwestora w Notion
 
 Inwestor odpowiada z telefonu i zagląda głównie do „📝 Wpisy”. Tabel nie używaj (na telefonie przewijanie w bok i niewygodna
-edycja komórek). Dwa miejsca na stronie „📝 Wpisy” (od ja 1.19.0 – sekcja „❓ Czeka na Twoją odpowiedź” w Dzienniku przestaje istnieć):
+edycja komórek). Dwa miejsca na stronie „📝 Wpisy” (od ja 1.19.0 – sekcja „❓ Czeka na Twoją odpowiedź” w Dzienniku przestaje być miejscem pytań – zostaje z odesłaniem):
 
 | Pytanie dotyczy | Gdzie | Format |
 |---|---|---|
@@ -75,19 +75,25 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    z wzmianką wiersza Rejestru i kluczem `` `SP-n` ``, w okienku pogrubione pytanie z propozycją opcji („czy to znaczy B?”),
    linia `✍️`; odpowiedź (pkt 4) = domknięcie wg `wiedza`, sekcja C (plugin dom-budowa), blok do „Przetworzone”.
 2. **Ten sam problem po raz kolejny** (ten sam klucz albo ta sama strona 💸) → zaktualizuj istniejący blok (data, „od”,
-   licznik), nie dodawaj drugiego.
+   licznik), nie dodawaj drugiego. Lista od automatu: osobna, ostatnia linia odpowiedzi przebiegu `KOMUNIKATY: <klucz>, …` –
+   same klucze bloków zapisanych, zaktualizowanych albo zamkniętych w tym przebiegu, bez komentarza (słowo spoza listy = nic
+   nie potwierdzone; nic → `KOMUNIKATY: –`); klucz spoza tej linii automat poda ponownie – blok albo ślad „ustąpiło” już
+   jest → tylko aktualizacja, bez drugiego.
 3. **Ustąpiło samo** (automat podał „ustąpiło”, strona 💸 nie jest już „Błąd”) → blok do „Przetworzone” jako
-   `~~🔔 <skrót>~~ → ustąpiło <dd.mm>`, bez pytania. Automat podał „bloku nie było” (problem minął, zanim dało się go
+   `~~🔔 <skrót>~~ → ustąpiło <dd.mm>`, bez pytania. Blok `przebieg-wieczorny` z „przegląd dnia za DD.MM” w treści jeszcze
+   stoi → zaległego dnia nikt nie przejrzał (przegląd zaległy sam przenosi blok – `przeglad-dnia/references/uklad-wpisu.md`, E):
+   w śladzie dopisz „dzień DD.MM nieprzejrzany – »przegląd dnia za DD.MM«”. Automat podał „bloku nie było” (problem minął, zanim dało się go
    zgłosić – np. brak logowania MCP) → sam ślad w bloku dnia „Przetworzone” w tym formacie, bez bloku 🔔.
 4. **Odpowiedź inwestora** (odczyt jak w A) = praca dla najbliższego przebiegu (szybkiego albo wieczornego): wykonaj, co się
    da w przebiegu, i przenieś blok do „Przetworzone” (`~~🔔 <skrót>~~ (❓ … → ✍️ …) → <co zrobiono>`).
 5. **Za duże na przebieg** (zmiana skryptu – patrz zakaz w C.8; decyzja techniczna – podejmij sam) → wiersz Rodzaj Usterka w bazie „🤖 Zmiany asystenta” (ID `ZP-n` wg `rozwoj-harnessu/references/zmiany-asystenta.md`)
    (`rozwoj-harnessu`, D; ten sam problem już jest → zaktualizuj Ostatnio i treść), w okienku zamiast `✍️` linia
-   `→ ZP-n (<status>)`. Blok zostaje, dopóki wiersz nie ma Statusu „Zrobione” albo „Odrzucone” – wtedy do „Przetworzone”
-   (`→ ZP-n zrobione` / `odrzucone`); statusy ZP sprawdza tylko przebieg nocny.
-   Wiersz ZP ze Statusem „Czeka na mnie” bez bloku 🔔 (założony albo zmieniony w Claude Code, nocą, ręcznie) → dodaj blok
-   `🔔 <dd.mm> · ZP-n – <Problem>` z okienkiem: pogrubione pytanie z „Co zrobić” (z propozycją domyślną) i linia `✍️`;
-   odpowiedź przepisz do treści strony ZP („ustalenia z odpowiedzi inwestora”) i ustaw Status „Nowy” – naprawi Claude Code.
+   `→ ZP-n (<status>) · naprawa: napisz »zrób ZP-n« w Claude Code` (bez pytań). Blok zostaje, dopóki wiersz nie ma Statusu
+   „Zrobione” albo „Odrzucone” – wtedy do „Przetworzone” (`→ ZP-n zrobione` / `odrzucone`); statusy ZP sprawdza tylko
+   przebieg nocny. Wiersza ZP założonego w Claude Code albo ręcznie (Status „Nowy” / „W toku”) nie zgłaszaj – bloku nie dodawaj.
+   Wiersz ZP ze Statusem „Czeka na mnie”: bez bloku 🔔 → dodaj `🔔 <dd.mm> · ZP-n – <Problem>`, blok z linią `→ ZP-n` → zamień tę linię; w okienku pogrubione pytanie z „Co zrobić” (z propozycją
+   domyślną) i linia `✍️`; odpowiedź przepisz do treści strony ZP („ustalenia z odpowiedzi inwestora”), ustaw Status „Nowy”
+   i przywróć w okienku linię `→ ZP-n (Nowy) · naprawa: …` – blok nie idzie do „Przetworzone” przed Zrobione / Odrzucone.
 6. **Blok bez odpowiedzi nie jest nowym wpisem** – tryb szybki go pomija (`przeglad-dnia`, A.2); zmienia go tylko nowa lista
    od automatu, odpowiedź albo zmiana stanu (pkt 2–5).
 
@@ -97,16 +103,25 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    otwarte = to-do z dopiskiem `→ wpisz pod spodem`; max 3 to-do na blok. Kontekst i to, co asystent zrobi po odpowiedzi –
    w zwiniętym toggle „Szczegóły” pod pytaniem. **Odczyt:** zaznaczony to-do = zgoda; tekst dopisany pod to-do ma pierwszeństwo;
    niezaznaczony i bez dopisku = brak odpowiedzi; częściowa odpowiedź – przetwórz odpowiedziane, reszta zostaje.
-   Blok z kluczem obsługiwanym przez nocny kończy się dopiskiem „zastosuję w nocnym przeglądzie”. Klucze `KS-…`, `RES-n`, `SP-n`, `ZP-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…` stoją w bloku jak klucze komunikatów (kod w tekście), żeby parser znalazł pytanie po
+   **Porządki tygodnia** (`porzadki-…`): to-do zbiorcze „Zastosować wszystkie porządki (lista w Szczegółach)” obejmuje tylko
+   pozycje bez wyboru – lista w „Szczegółach” ponumerowana, każda pozycja to jedna konkretna czynność (propozycja domyślna,
+   np. „3. Status → Nieaktualne”), wyjątki dopiskiem pod to-do („bez 3, 5”). Pozycja bez sensownej propozycji domyślnej
+   (prawdziwy wybór między wariantami) – osobne to-do z wariantem domyślnym w treści, pozostałe warianty w „Szczegółach”
+   (inny – dopiskiem pod to-do), w limicie 3 to-do na blok; co się nie zmieści, idzie do bloku następnego tygodnia. Nocny
+   wykonuje wyłącznie pozycje wskazane jednoznacznie (☑ zbiorczego minus wyjątki z dopisku, ☑ albo dopisek przy wariancie);
+   pozycja wątpliwa → nie wykonuj, zostaje w bloku. Blok `porzadki-…` z poprzedniego tygodnia bez odpowiedzi albo z samymi
+   pozostawionymi pozycjami → zastąp go nowym (lista i klucz tego tygodnia), nie dokładaj drugiego.
+   Blok z kluczem obsługiwanym przez nocny kończy się dopiskiem „zastosuję w nocnym przeglądzie”. Klucze `KS-…`, `RES-n`, `SP-n`, `ZP-n`, `luki-zadan-…`, `praca-…`, `porzadki-…` (`porzadki-<RRRR-Www>` osobiste, `porzadki-budowa-<RRRR-Www>` budowa), `rozkminka-…` stoją w bloku jak klucze komunikatów (kod w tekście), żeby parser znalazł pytanie po
    kluczu; ten sam klucz = aktualizacja istniejącego bloku (pkt 2). **Limit:** jeden blok = jedna flaga; najwyżej 5 nowych bloków 🔔 z kontroli spójności
-   (`KS-…`, wszystkie grupy razem) na przebieg; RES-n (max 2), rozkminki (w nocy max 2, w ciągu dnia max 3), luki w zadaniach (jeden zbiorczy blok), porządki tygodnia i przejście 1.2 są poza tym limitem. **Kto obsługuje odpowiedzi:** na bloki `KS-…`, `KS-Z…`, `KS-R…`, `KS-S1-…`, `KS-P…`, `RES-n`, `luki-zadan-…`, `porzadki-…`, `rozkminka-…`, `zdjecia-i-kopie` i `ZP-n` –
+   (`KS-…`, wszystkie grupy razem) na przebieg; RES-n (max 2), rozkminki (w nocy max 2, w ciągu dnia max 3), luki w zadaniach (jeden zbiorczy blok), bloki `praca-…` (jeden na zadanie), porządki tygodnia i przejście 1.2 są poza tym limitem. **Kto obsługuje odpowiedzi:** na bloki `KS-…`, `KS-Z…`, `KS-R…`, `KS-S1-…`, `KS-P…`, `RES-n`, `luki-zadan-…`, `praca-…`, `porzadki-…`, `rozkminka-…`, `zdjecia-i-kopie` i `ZP-n` –
    **tylko nocny przebieg** (szybki ma zostać tani i **nie liczy ich** w warunku „nic nowego”, `przeglad-dnia`, A.2); szybki obsługuje
    odpowiedzi w okienkach ❓ pod wpisami oraz pod 🔔 z automatów, kolejki 💸 i `SP-n` (pkt 4); każdy inny klucz zostaje nocnemu. Obsłużony blok idzie do „Przetworzone”.
 8. **Zakaz „czeka na sesję Claude Code”.** Nie zostawiaj sprawy z adnotacją „wymaga sesji Claude Code”. Dla każdej rzeczy, której
    przebieg nie zrobi, wybierz jedno: (a) zrób część, którą możesz, i zadaj ❓ albo 🔔 z propozycją, na którą wystarczy krótka
    odpowiedź; (b) podaj w ❓ albo 🔔 dokładną czynność dla inwestora (gdzie kliknąć, co wpisać), a po jego „zrobione” dokończ;
-   (c) tylko praca techniczna (skrypt, struktura arkusza): wiersz ZP + blok 🔔 „naprawię w najbliższej sesji Claude Code;
-   nic nie musisz robić”. Wzorzec (a) – wydatek budowy bez pasującej pozycji w kosztorysie: ❓ z gotową propozycją nowej
+   (c) tylko praca techniczna (skrypt, struktura arkusza): wiersz ZP i blok 🔔 z linią „naprawa: napisz »zrób ZP-n«
+   w Claude Code” (pkt 5); wymaga czynności inwestora (dostęp, kliknięcie, decyzja budowlana) → Status „Czeka na mnie”
+   (pkt 5). Wzorzec (a) – wydatek budowy bez pasującej pozycji w kosztorysie: ❓ z gotową propozycją nowej
    pozycji, „tak” wystarcza, resztę robi automat albo pierwsza sesja Claude Code (`koszty`, B.2; plugin dom-budowa).
    **Wyjątek:** nowy etap kosztorysu i pierwsze sprawdzenie nowej pozycji (`koszty` C.7–C.8) czekają na sesję Claude Code
    z dopiskiem w polu Błąd strony 💸 – to nie adnotacja do pilnowania przez inwestora: sprawa jest w linii stanu sesji
@@ -120,10 +135,10 @@ Zapis w Notion (przykład zmyślony; nagłówek to zwijany nagłówek h3, komuni
 🔔 Komunikaty asystenta
 
 <p>
-🔔 10.11 21:30 · przegląd wieczorny – przerwany limitem czasu (od 09.11, 2 razy) `przebieg-wieczorny`
+🔔 10.11 21:30 · przegląd nocny – przerwany limitem czasu (od 09.11, 2 razy) `przebieg-wieczorny`
 
 <callout icon="❓" color="yellow_bg">
-<b>Co możesz zrobić:</b> nic – ponowię jutro (propozycja: napisz „log”, sprawdzę przyczynę)
+<b>Co możesz zrobić:</b> napisz w Claude Code „przegląd dnia za 10.11” – zrobię zaległy przegląd; sam się nie ponowi
 
 ✍️
 </callout>

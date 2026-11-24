@@ -1,6 +1,6 @@
 ---
 name: ja
-description: Kontekst osobisty użytkownika i mapa obszarów jego Dziennika w Notion (emocje, praca, dziecko, zadania, suplementy, książki, budowa). Używaj na początku każdej rozmowy o jego dniu, emocjach, pracy, dziecku, zadaniach, suplementach, Dzienniku, przeglądzie dnia albo o samym asystencie – gdy pada „zapisz w dzienniku”, „przerób dziennik”, „zrobiłem…”, „muszę…”, „przypomnij mi”, „czuję…”, „kończy się…”, „co mam jutro”, „przegląd dnia”, „zapamiętaj na przyszłość”, „mam pomysł na asystenta”. Przy tematach budowy kieruje do skilla budowa (plugin dom-budowa).
+description: Kontekst osobisty użytkownika, zasady i mapa procedur jego Dziennika w Notion (emocje, praca, dziecko, zadania, suplementy, budżet). Używaj na początku każdej rozmowy o jego dniu, sprawach osobistych albo o samym asystencie – „zapisz w dzienniku”, „zrobiłem…”, „muszę…”, „przypomnij mi”, „czuję…”, „kończy się…”, „co mam jutro”, „mam pomysł na asystenta”. Budowa → skill budowa (dom-budowa).
 ---
 
 # Ja – kontekst i mapa procedur
@@ -19,13 +19,13 @@ na rozmowę, gdy potrzebujesz ID baz (Claude Code synchronizuje ją sam, więc j
 ## Na starcie rozmowy: zmiany do harnessu
 
 Inwestor zgłasza poprawki sposobu pracy z różnych miejsc do bazy Notion **„🤖 Zmiany asystenta”** jako wiersze Rodzaj Zasada
-(`collection://41cf5982-09e7-812c-a004-000b7cb2af9f`, oba pluginy; `rozwoj-harnessu/references/zmiany-asystenta.md`). Na początku rozmowy (w Claude Code w repo harnessu – na polecenie „wdróż”)
+(`collection://41cf5982-09e7-812c-a004-000b7cb2af9f`, oba pluginy; `rozwoj-harnessu/references/zmiany-asystenta.md`). Na początku rozmowy (w Claude Code – w repo harnessu albo w folderze budowy – na polecenie „wdróż”)
 pobierz (jedno zapytanie: widok „📥 Zasady do wdrożenia” `view://41cf5982-09e7-8121-a39c-000c8c82fccb`, czyli Rodzaj = Zasada **i**) wpisy ze
 Statusem „Do zrobienia” **albo pustym** – inwestor dodaje je też ręcznie bez wypełniania pól:
 
-- **W repozytorium harnessu (Claude Code):** wdroż je – `rozwoj-harnessu`, sekcja B (najpierw uzupełnij puste pola).
+- **W Claude Code (repo harnessu albo folder budowy):** wdroż je – `rozwoj-harnessu`, sekcja B (najpierw uzupełnij puste pola).
 - **Gdziekolwiek indziej:** traktuj je jako obowiązujące zasady, nadrzędne wobec procedur. Statusu nie zmieniaj.
-- Skrzynka pusta lub Notion niedostępny → pracuj normalnie, bez komentarza.
+- Brak zasad do wdrożenia lub Notion niedostępny → pracuj normalnie, bez komentarza.
 - **Pomysły** (Rodzaj Pomysł w tej samej bazie) nie są zasadami i **nie są nigdzie wspominane na starcie rozmowy**; analiza tylko na prośbę inwestora („przeanalizuj pomysły”, „zrób POM-n”) – `rozwoj-harnessu`, sekcja C; znane problemy (ZP-n) – sekcja D.
 
 ## Mapa procedur
@@ -41,9 +41,9 @@ Podział wpisów na obszary **nie jest w harnessie** – jest w bazie Notion „
 | „kupić X”, link do produktu, „kupiłem X”, „co kupić” (nie suplementy; nie rzeczy na budowę ani działkę – te `zakupy` z `dom-budowa`) | `zadania` (sekcja „Zakupy”) |
 | mówi o dziecku: obserwacja, „porozmawiać z nią o…”, prezent, zabawa, zalecenie specjalisty | `dziecko` |
 | „kończy się X”, „kupiłem X”, „zaczynam / przerwa od” (suplement) | `suple` |
-| „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` |
+| „przegląd dnia”, „podsumuj dzień”, nocny przebieg na Macu | `przeglad-dnia` |
 | budżet domowy: wydatek w skrócie „kwota, konto, osoba, kategoria, opis” albo zwykłym zdaniem „wydałem N zł na…”, zdjęcie paragonu z dopiskiem „kto i czym” (przebieg albo Claude Code na Macu; wydatek na budowę – reguła `dom-budowa/skills/koszty/references/wydatek-przeplyw.md`); „zamknijmy miesiąc”, wyciągi z banku, lista Allegro, „przenieś decyzje budżetu” (tylko Claude Code na Macu) | `budzet` |
-| „przegląd tygodnia”, „podsumuj tydzień”, tygodniowe zaplanowane zadanie, „posprzątaj dziennik”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – `harmonogram`) | `przeglad-tygodnia-osobisty` (uruchamia też przegląd budowy) |
+| „przegląd tygodnia”, „podsumuj tydzień”, tygodniowy przebieg na Macu, „posprzątaj dziennik”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – `harmonogram`) | `przeglad-tygodnia-osobisty` (uruchamia też przegląd budowy) |
 | „stan kopii”, „zrobiłem kopię na dysk / eksport Notion”, kopie zapasowe | Claude Code na Macu: `docs/kopie-zapasowe.md` w repo harnessu (`tools/kopie.py stan` / `potwierdz`); poza nim poproś, żeby inwestor powtórzył to w Claude Code na Macu (inaczej potwierdzenie nie trafi do rejestru) |
 | poprawia sposób pracy asystenta, „zapamiętaj na przyszłość”, „mam pomysł na…”, „zrób POM-n”, „zrób ZP-n”, nowa procedura | `rozwoj-harnessu` |
 | budowa domu: ekipa, projekt, kosztorys, działka, wiedza budowlana, dokumenty budowy | `budowa` (plugin `dom-budowa`) |
@@ -116,4 +116,4 @@ Na koniec pracy, która coś zmieniła, trzy bloki w tej kolejności: **🛑 Pot
 gdy coś stoi: czego dotyczy + jedno pytanie z propozycją domyślną; pytania zapisane w Notion – pod wpisami (❓) i w 🔔 – wymień jedną linią) ·
 **✅ Zrobione** (co i gdzie, link) · **⏳ Niezrobione** (co pominięto lub odłożono i dlaczego). Brak 🛑 oznacza, że nic nie
 wisi na inwestorze – nie dopisuj ostrzeżeń „na wszelki wypadek”. Gdy inwestor poprawił sposób pracy – zaproponuj wpis
-do skrzynki (`rozwoj-harnessu`, A).
+do skrzynki zmian (`rozwoj-harnessu`, A).

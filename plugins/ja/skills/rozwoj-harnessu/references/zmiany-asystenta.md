@@ -54,7 +54,7 @@ Zasada nie używa Statusu „Nowy”: pusty albo „Do zrobienia” = do wdroże
 - „🧯 Otwarte usterki” `view://41cf5982-09e7-8158-b665-000c46776845` – Rodzaj = Usterka, Status inny niż Zrobione i Odrzucone, sortuj Ostatnio malejąco.
 - „Wszystko” `view://41cf5982-09e7-81c9-874a-000cb8d7dcef` – tabela.
 
-Na stronach przeniesionych zostały wartości starych pól „Wdrożono w wersji” / „Rozwiązano w wersji” (poza schematem) – obowiązuje „Zrobiono w wersji”.
+Stare pola „Wdrożono w wersji” / „Rozwiązano w wersji” zostały w schemacie bazy (wartości z migracji) – nie zapisuj w nich; obowiązuje „Zrobiono w wersji”.
 
 ## Wpis inwestora „asystent: …”
 

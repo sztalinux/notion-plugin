@@ -1,6 +1,6 @@
 ---
 name: koszty
-description: Kosztorys, wydatki i wyceny materiałów – arkusz Google „Kosztorys budowy” (źródło prawdy dla liczb, prowadzi inwestor) i kolejka w Notion „💸 Wydatki → arkusz”, z której automat na Macu dopisuje wydatki i wyceny do arkusza. Używaj, gdy użytkownik podaje wydatek, fakturę, paragon, przelew dla ekipy („wydałem…”, „zapłaciłem…”, „kupiłem za…”), cenę materiału od dostawcy („beton po N zł/m³ w X”, „biorę stal z Y”), pyta „ile wydaliśmy”, „ile zostało”, „plan vs wydane”, „ile poszło na materiał / na ekipę”, „ile gotówki potrzebuję w grudniu”, „ile pieniędzy na ten / następny miesiąc”, prosi o analizę kosztorysu albo o zmianę w arkuszu (kolumna, formuła, pozycja).
+description: Kosztorys i wydatki budowy – arkusz Google „Kosztorys budowy” (źródło liczb) i kolejka Notion „💸 Wydatki → arkusz”. Używaj, gdy użytkownik podaje wydatek, fakturę, paragon, przelew dla ekipy („wydałem…”, „zapłaciłem…”), cenę materiału od dostawcy, pyta „ile wydaliśmy”, „ile zostało”, „plan vs wydane”, „ile gotówki potrzebuję w grudniu” albo prosi o zmianę w arkuszu.
 ---
 
 # Koszty i kosztorys
@@ -40,7 +40,7 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
 
 ## B. Wydatek (Dziennik, rozmowa, faktura, paragon, przelew)
 
-Źródło bywa różne – wpis w 📓 Dzienniku (przebieg bez inwestora, `wpisy` → `budowa`), wiadomość do asystenta („dopisz
+Źródło bywa różne – wpis w 📝 Wpisach (przebieg bez inwestora, `wpisy` → `budowa`), wiadomość do asystenta („dopisz
 wydatki: N zł gotówką na gwoździe”), zdjęcie faktury. Postępowanie to samo; kilka płatności w jednej wiadomości = kilka wierszy.
 Zdjęcie paragonu z dopiskiem „kto i czym”, także mieszanego (budowa + prywatne), prowadzi `ja/skills/budzet/references/paragony.md`
 – stamtąd wraca tu tylko po stronę 💸 dla części budowlanej (paragon w całości na budowę – zwykły wydatek z tej sekcji).
@@ -117,6 +117,7 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 1. Strona w tej samej kolejce, **Rodzaj = Plan**: Wydatek („Plan: …”), Pozycja, Kwota = plan **całej pozycji brutto**,
    Notatki (słowa inwestora), Arkusz = „Do arkusza”; data niepotrzebna. Plan i wydatek z jednego wpisu = dwie strony.
    „Ok. / ponad 5 000” → 5 000; widełki → górna granica, widełki w Notatkach. Plan na kilka pozycji → pytanie z podziałem.
+   Suma dopłat za roboty dodatkowe uzgodnionych przez inwestora (`dziennik` B.4) to też plan od inwestora, nie szacunek.
 2. `sync` wpisuje kwotę w Kosztorys „Plan ręczny” tej pozycji. Inny plan już tam stoi → Błąd i pytanie (sekcja E);
    „nadpisz” → zaznacz „Nadpisz plan” i znów „Do arkusza”. Pozycja z wybraną ofertą liczy PLAN z oferty – plan ręczny jest
    wtedy zapasowy (uwaga w polu Błąd przy „W arkuszu”).
@@ -134,8 +135,8 @@ Kwota planu **podana przez inwestora** (nie Twój szacunek – ten zostaje w odp
 3. Zmiana układu lub wyglądu (kolumny, formuły, kolory, listy) – w Claude Code, na żywym arkuszu, według
    `docs/wydatki-arkusz.md`, sekcja 8:
    - **konektor Google Sheets** (szybciej): migawka zakresu przed zmianą (z formułami), zapis, odczyt kontrolny; formuły ze
-     „;” i przecinkiem dziesiętnym (polskie ustawienia); nie nadpisuj kolumn wpisywanych (Wydatki A–H, J–M, O, P; Kosztorys F,
-     U; Cennik A–F, H–J, L–N) i nie wstawiaj formuł IMPORT…/IMAGE/HYPERLINK;
+     „;” i przecinkiem dziesiętnym (polskie ustawienia); nie nadpisuj kolumn wpisywanych (Wydatki A–H, J–M, O, P; Kosztorys B–F,
+     K, L, U, V; Cennik A–F, H–J, L–N) i nie wstawiaj formuł IMPORT…/IMAGE/HYPERLINK;
    - **bez konektora albo przy jego błędzie** → plik zmian i `wydatki.py migruj` (wolniej, ten sam wynik);
    - potem kontrola: zero błędów formuł, sumy jak przed, „Kontrola powiązań” = 0; cofanie – historia wersji arkusza.
    Formuły zgodne z Arkuszami Google (SUMIFS, INDEX/MATCH, IF, MINIFS; bez formuł tablicowych). Poza Claude Code – opisz
