@@ -32,6 +32,7 @@ Bez tej kontroli takie wpisy lądowały w TASKS zamiast na listach i stronach os
    | Name | krótko, bezokolicznik („Umówić stomatologa”) |
    | Obszar | Dziecko – gdy dotyczy dziecka; inaczej Prywatne. Budowa/działka/dom → nie tu, `budowa`. **Praca** (sprawy zawodowe, numer zgłoszenia `ABC-123`, PR, „w pracy muszę…”) → nie TASKS, tylko baza 🔨 TASKS na WORK: te same Name, When, Status, Priority, Desc + Project (opcja bazy, gdy wynika z wpisu, inaczej puste) i Ticket (link zgłoszenia, gdy podany); bez pól Obszar, Kategoria, Kto |
    | When | termin z wpisu; „do piątku” licz od daty wpisu; brak terminu → puste |
+   | Deadline | ☑ tylko przy terminie twardym – sekcja „Termin twardy czy orientacyjny”; inaczej puste |
    | Status | z terminem lub „na dniach” → TO DO; „kiedyś” → SOMEDAY (zakup i link do produktu → baza Zakupy, nie zadanie) |
    | Priority | domyślnie Medium; „pilne”, „koniecznie” → High; drobiazg → Low |
    | Kategoria | Zakup (tylko zadanie dołożone do pozycji Zakupów, sekcja niżej) / Zdrowie / Nauka / Inne |
@@ -94,8 +95,28 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 Strona ✅ Zadania ma zakładki: 📅 Dziś i tydzień (wszystkie obszary; widoki „📅 Dziś” – po terminie i na dziś, „🗓 Tydzień (7 dni)”),
 🛒 Zakupy, 🏠 Prywatne (z pracą), 🏗 Budowa, 👪 Dziecko. „Co mam dziś / w tym tygodniu” → widoki „📅 Dziś” i „🗓 Tydzień (7 dni)”;
 jutro → „📅 Jutro – wszystko”; sprawy jednego obszaru → widok jego zakładki (ID: `ja/references/notion-mapa.md`).
-Pokaż w tabeli: zadanie | obszar | termin | status; zadania po terminie osobno na górze. SOMEDAY pokazuj tylko licznikiem,
-chyba że pyta o nie wprost.
+Pokaż w tabeli: zadanie | obszar | termin | status; zadania po terminie (tylko z Deadline ☑ – sekcja niżej) osobno na górze,
+orientacyjne po dacie w zwykłej kolejności. SOMEDAY pokazuj tylko licznikiem, chyba że pyta o nie wprost.
+
+## Termin twardy czy orientacyjny (pole Deadline)
+
+When to zwykle dzień, w którym inwestor chce się czymś zająć – termin orientacyjny. Checkbox **Deadline** ☑ w TASKS znaczy
+termin twardy: po tej dacie jest realny problem. Puste = orientacyjny (także wszystkie stare wiersze). Baza 🔨 TASKS na WORK
+tego pola nie ma.
+
+- **Nowe zadanie:** ☑, gdy wpis mówi to wprost („najpóźniej”, „koniecznie do”, „na pewno przed”, „termin mija”) albo wynika
+  to z natury sprawy: urząd, umowa, płatność, wizyta lub spotkanie z godziną, dostawa albo montaż w dniu, robota przed
+  krokiem budowy („przed betonowaniem”), rzecz obiecana komuś na dzień. „W weekend”, „na dniach”, „w przyszłym tygodniu”
+  i termin wyliczony przez asystenta (np. „data wpisu + 3 dni”) → puste. Wątpliwość → puste, bez pytania – inwestor
+  zaznacza pole jednym kliknięciem w widokach „📅 Dziś” i „🗓 Tydzień (7 dni)”.
+- **„Po terminie”** w odczytach, planie dnia i przeglądach = Deadline ☑, When przed dniem odniesienia, zadanie niezakończone.
+  Zadanie orientacyjne po dacie nie jest zaległością: bez ⚠, bez miejsca w ramce planu dnia i bez pytań „przesunąć czy
+  zamknąć?” – w odczycie (sekcja C) zostaje na zwykłej liście z datą, w planie dnia i przeglądach tylko licznik
+  „po dacie orientacyjnej: n” z najstarszym zadaniem. Inwestor napisał wprost, że takie
+  terminy go nie obchodzą (22.11.2026) – eksponowanie ich zasłaniało prawdziwe terminy.
+- „Czekam na” (WAITING, Kto ≠ Ja) po dacie – jak dotąd „przypomnij się” (`harmonogram`, D, plugin dom-budowa), niezależnie od pola.
+- Pola Deadline w istniejącym zadaniu nie zmieniaj bez słów inwestora (także nocą – odznaczenie to jego decyzja, a checkbox
+  nie odróżnia „odznaczone” od „puste”); „przesuwam na…” zmienia tylko When.
 
 ## D. Luki w kolumnach (wieczorny przegląd dnia)
 
@@ -111,7 +132,7 @@ Puste Obszar znaczy w starych wierszach Dom, więc zadanie prywatne z pustym Obs
 | Kategoria | Obszar inny niż Dom: z nazwy (Zakup, Zdrowie, Nauka), niejasne → Inne. Obszar Dom zostaw (kategorię nadają `notatka` i `harmonogram`) |
 | Desc | jedno zdanie z treści strony, gdy ją ma; pusta strona → zostaw puste |
 
-Status, When i Name zostają – to decyzje inwestora. Termin wynikający z nazwy
+Status, When, Name i Deadline zostają – to decyzje inwestora. Termin wynikający z nazwy
 lub opisu („do piątku”, data) → 🔔 `luki-zadan-<dd.mm>` z proponowaną datą. Wpisanych wartości nie nadpisuj.
 
 ## Zasady

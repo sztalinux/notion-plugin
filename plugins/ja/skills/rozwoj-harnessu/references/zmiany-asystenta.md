@@ -49,6 +49,8 @@ Zasada nie używa Statusu „Nowy”: pusty albo „Do zrobienia” = do wdroże
 
 - „📥 Zasady do wdrożenia” `view://41cf5982-09e7-8121-a39c-000c8c82fccb` – Rodzaj = Zasada, Status pusty albo Do zrobienia (skrzynka; liczba idzie do ☀️ Dziś).
 - „💡 Tablica pomysłów” `view://41cf5982-09e7-81c2-8022-000c1ff69c98` – Rodzaj = Pomysł, tablica wg Statusu.
+- „🤖 Pomysły – kontrola wersji” `view://422f5982-09e7-81c6-87b4-000cdd9ad46f` – Rodzaj = Pomysł ze Statusem Do zrobienia / Przeanalizowany
+  albo Zrobione z polem „Zrobiono w wersji” pustym lub ze słowem „gałąź” (kandydaci kontroli spójności P – przegląd tygodnia; mały odczyt zamiast tablicy).
 - „🧯 Otwarte usterki” `view://41cf5982-09e7-8158-b665-000c46776845` – Rodzaj = Usterka, Status inny niż Zrobione i Odrzucone, sortuj Ostatnio malejąco.
 - „Wszystko” `view://41cf5982-09e7-81c9-874a-000cb8d7dcef` – tabela.
 

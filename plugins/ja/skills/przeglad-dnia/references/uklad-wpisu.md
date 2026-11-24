@@ -72,11 +72,14 @@ w ciągu dnia (prośba „plan dnia”) = plan na dziś, z dopiskiem „(ręczne
 - Na górze strony jedna linia: liczba otwartych ❓ pod wpisami i bloków 🔔 we „Wpisach” z wzmianką strony „📝 Wpisy”
   (np. „Czeka na Ciebie: ❓ 2 · 🔔 3 – <wzmianka Wpisów>”); zero = pomiń linię.
 - Dokumenty budowy: `python3 tools/dokumenty.py --dry-run` (tylko odczyt, bez zapisu; nie uruchamiaj `dokumenty.py` bez flagi) – z raportu liczba z „Nowe pliki do sklasyfikowania (n)”, „zmienione” i „`_Przychodzące`: n plików do rozłożenia”; linia „Dokumenty budowy: n nowych, m zmienionych – napisz »posortuj dokumenty« w Claude Code”, zero = pomiń; tylko nocny przebieg.
-- Dzień planu i 6 kolejnych = „najbliższe 7 dni”; „po terminie” = When / Termin przed dniem planu i niezakończone. Widoki
-  Notion liczą „dziś” po swojemu – zakres utnij sam.
+- Dzień planu i 6 kolejnych = „najbliższe 7 dni”; „po terminie” = Termin kroku albo zamówienia przed dniem planu, a przy
+  zadaniach When przed dniem planu **i Deadline ☑** (niezakończone). „Czekam na” (WAITING, Kto ≠ Ja) po dacie zostaje
+  w „⚠ Po terminie” jako „przypomnij się <komu>”, niezależnie od Deadline. Zadanie z terminem orientacyjnym po dacie to nie
+  zaległość (`zadania`, „Termin twardy czy orientacyjny”): nie trafia do „⚠ Po terminie” ani do ramki – w zakładce obszaru
+  (🏠 i 🏗) jedna linia na końcu „Po dacie orientacyjnej: n (najstarsze: <zadanie>)”. Widoki Notion liczą „dziś” po swojemu – zakres utnij sam.
 - Każda sprawa to wzmianka (link) – klikalna; obok tylko to, czego nie widać w nazwie (godzina, „od 8.11”, kto). Jedna sprawa
   w zakładce 🧭 raz: co jest w ramce, nie powtarzaj w „Najbliższe 7 dni”. W zakładkach obszarów może się powtórzyć.
-- Znaczniki obszaru po wzmiance w 🧭: 🏗 budowa · 🏠 prywatne · 👪 dziecko · 💼 praca. 🔒 = krok bez odwrotu, ⏰ = termin zamówienia.
+- Znaczniki obszaru po wzmiance w 🧭: 🏗 budowa · 🏠 prywatne · 👪 dziecko · 💼 praca. 🔒 = krok bez odwrotu, ⏰ = termin zamówienia, ❗ = zadanie z Deadline.
 - Limity: ramka max 3 punkty; każda lista max 5, reszta „+k” z odesłaniem do zakładki; „Najbliższe 7 dni” max 4 na dzień,
   dni bez spraw pomiń. Pusta sekcja → pomiń; pusta zakładka → jedna linia („Nic na najbliższe dni.”).
 - Emocje i notatki o dziecku – tylko liczby; zadania dziecka nazwą (to zadania, nie notatki).
@@ -85,7 +88,7 @@ w ciągu dnia (prośba „plan dnia”) = plan na dziś, z dopiskiem „(ręczne
 - Informacje techniczne (nieudany odczyt) – tylko kursywą na końcu zakładki 📊.
 
 **Ramka – co do niej trafia (max 3, w tej kolejności):** krok bez odwrotu albo bramka w dniu planu · sprawa z godziną w dniu
-planu · zamówienie z terminem ⏰ w dniu planu · zadanie Highest / High po terminie · zadanie z When = dzień planu. Nic → „Spokojny
+planu · zamówienie z terminem ⏰ w dniu planu · zadanie z Deadline ❗ po terminie albo na dzień planu · inne zadanie z When = dzień planu. Nic → „Spokojny
 dzień – nic pilnego.”
 
 **Szablon** (przykłady zmyślone; `<…>` – wzmianki). Każda sekcja = pogrubiony akapit i punkty pod nim (sekcja B) – w każdej zakładce, nigdy jedna linia z kilkoma sekcjami:
@@ -118,7 +121,7 @@ Przegląd
 
 **📅 Najbliższe 7 dni**
 
-- **pt 14.11** · <zadanie> 🏗 · <zadanie> 💼
+- **pt 14.11** · ❗ <zadanie> 🏗 · <zadanie> 💼
 - **pn 17.11** · ⏰ <zakup budowy> · <zadanie> 👪
 </tab>
 <tab icon="🏗">
@@ -140,6 +143,8 @@ Budowa
 
 - <SP-n> – czeka na Ciebie (do 18.11)
 
+Po dacie orientacyjnej: 2 (najstarsze: <zadanie>)
+
 Szczegóły dnia budowy: <wzmianka wpisu z „📆 Przeglądy dzienne – budowa”>
 </tab>
 <tab icon="🏠">
@@ -160,6 +165,8 @@ Prywatne
 **Gotowe do przeczytania**
 
 - <RES-n> – rekomendacja w jednym zdaniu
+
+Po dacie orientacyjnej: 4 (najstarsze: <zadanie>)
 </tab>
 <tab icon="💼">
 Praca
@@ -189,8 +196,9 @@ Wczoraj
 **Zakładka 💼 Praca** (POM-27; tylko gdy dzień planu to pon.–pt.) – trzy źródła, każde opcjonalne (brak → jedna linia kursywą w 📊 „Praca: Jira – brak odczytu”):
 - **Jira** – serwer MCP `atlassian` (tylko odczyt); strona i `cloudId` w `.dom/praca.json` w folderze budowy (poza repo – nazw
   projektu ani klienta nie wpisuj do repo). Dwa zapytania, pola tylko `summary, status, priority, issuetype, updated`, format
-  markdown: (1) `assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC, updated DESC`, max 15;
-  (2) `assignee = currentUser() AND updated >= "<od>" ORDER BY updated DESC`, max 10 (`od` z pliku niżej). Opisów zgłoszeń nie czytaj.
+  markdown: (1) `assignee = currentUser() AND statusCategory != Done ORDER BY priority DESC, updated DESC`, limit wyników **15**;
+  (2) `assignee = currentUser() AND updated >= "<od>" ORDER BY updated DESC`, limit **10** (`od` z pliku niżej). Limit podaj
+  w wywołaniu dokładnie taki – większy (np. 50) dał 43 tys. znaków na jedno zapytanie. Opisów zgłoszeń nie czytaj.
 - **Kod i PR-y** – plik `.dom/praca/dzien.json` (skrypt `AI/automaty/praca.py` przed przebiegiem): `commity` od początku
   ostatniego dnia roboczego (`od`), `pr_moje`, `pr_do_recenzji` (z `moj_glos`), `pr_zamkniete`, `bledy`.
 - **Lista WORK** – widok bazy 🔨 TASKS „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (ID w `ja/references/notion-mapa.md`;

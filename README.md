@@ -43,7 +43,7 @@ Dom/                              ← folder budowy (centrum dokumentów, poza g
     tools/wiedza.py                   ← indeks Bazy wiedzy (SQLite FTS5 z Notion, tylko do odczytu)
     tools/budzet/                     ← budżet domowy: wpisy (wpis.py) i paragony ze zdjęcia (paragon.py) od razu w arkuszu (arkusz_budzetu.py, docs/budzet-arkusz.md), import wyciągów, Allegro i listy → strona decyzji → Transakcje, kontrola arkusza (procedura budzet; dane poza repo w .dom/budzet)
     tools/wydatki.py                  ← kolejka wydatków / wycen / planów z Notion → arkusz Google, gotówka po miesiącach (docs/wydatki-arkusz.md)
-    tools/pomysly_wersje.py           ← wersje z CHANGELOG (gałąź main) dla POM-n (kontrola „status pomysłu ↔ wdrożenie” w przeglądzie dnia; test_pomysly_wersje.py)
+    tools/pomysly_wersje.py           ← wersje z CHANGELOG (gałąź main) dla POM-n (kontrola „status pomysłu ↔ wdrożenie” w przeglądzie tygodnia; test_pomysly_wersje.py)
     docs/                             ← opisy systemów dla człowieka: wiedza (mapa, runbook, rejestr decyzji), wydatki → arkusz, budżet → arkusz
 ```
 
@@ -101,11 +101,11 @@ z ⚠ i inwestor o tym wie.
 | `ja` | każda rozmowa o dniu, zadaniach, emocjach, dziecku, Dzienniku, harnessie | kontekst, zasady, mapa procedur, skrzynka zmian |
 | `wpisy` | „przerób dziennik”, luźne notatki naraz | rozpoznaje obszar wg bazy „🧭 Obszary Dziennika”, przekazuje do procedury, niejasne → pytanie w okienku pod wpisem w „📝 Wpisy”; problemy bez wpisu (automaty, 💸) → „🔔 Komunikaty asystenta” na górze „Wpisów” |
 | `emocje` | „czułem…”, „dziś w pracy…”, „podsumuj emocje” | Wpisy emocji, Dziennik produktywności, podsumowania na prośbę |
-| `zadania` | „muszę…”, „zrobiłem X”, „co mam jutro” | wspólna TASKS z polem Obszar; zmiana statusu z Dziennika |
+| `zadania` | „muszę…”, „zrobiłem X”, „co mam jutro” | wspólna TASKS z polem Obszar; zmiana statusu z Dziennika; pole Deadline: ☑ = termin twardy, puste = orientacyjny (po dacie nie jest zaległością) |
 | `dziecko` | obserwacja, „porozmawiać z nią o…”, prezent, zalecenie | strona dziecka w sekcjach |
 | `suple` | „kończy się…”, „kupiłem…”, przerwa | baza Suple: Buy, Status, Last break |
-| `przeglad-dnia` | co godzinę (tryb szybki) i w nocy (2:00) – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; nocny (klucz techniczny `wieczorny`): podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), przegląd dnia budowy osobno na DOM, kontrola spójności (zadanie budowy ↔ krok Harmonogramu, zakup ↔ zadanie „Kupić X”, zadanie rozmowy („Porozmawiać / Pogadać / Rozmowa” w nazwie) ↔ temat do przegadania, suplement wstrzymany z Buy, status pomysłu ↔ wdrożenie – tylko pytania ❓, zmiana dopiero po Twoim ☑); rozkminka („przygotuj mi…”, „jakie pytania…”) tylko na prośbę we wpisie |
-| `przeglad-tygodnia-osobisty` | raz w tygodniu – automat na Macu / „przegląd tygodnia” | sprawy osobiste w liczbach, zaległe, najbliższy tydzień, porządki w Dzienniku; uruchamia przegląd budowy i linkuje do niego |
+| `przeglad-dnia` | co godzinę (tryb szybki) i w nocy (2:00) – automat na Macu / „przegląd dnia” | szybki: nowe wpisy na bieżąco, pusto = koniec bez zapisów; nocny (klucz techniczny `wieczorny`): podsumowanie dnia, zmiany w zadaniach (także ręczne) z uzupełnieniem pustych kolumn i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), przegląd dnia budowy osobno na DOM, kontrola spójności (zadanie budowy ↔ krok Harmonogramu, zakup ↔ zadanie „Kupić X”, suplement wstrzymany z Buy – tylko pytania 🔔, zmiana dopiero po Twoim ☑; zadanie rozmowy ↔ temat do przegadania i status pomysłu ↔ wdrożenie sprawdza raz w tygodniu przegląd tygodnia); rozkminka („przygotuj mi…”, „jakie pytania…”) tylko na prośbę we wpisie |
+| `przeglad-tygodnia-osobisty` | raz w tygodniu – automat na Macu / „przegląd tygodnia” | sprawy osobiste w liczbach, zadania po terminie (tylko z Deadline), najbliższy tydzień, porządki w Dzienniku, kontrola spójności rozmów i pomysłów; uruchamia przegląd budowy i linkuje do niego |
 | `rozwoj-harnessu` | „zapamiętaj na przyszłość”, nowa procedura, „mam pomysł…”, „zrób POM-n”, „zrób ZP-n” | skrzynka w Notion → wdrożenie do repo; pomysły → analiza → wdrożenie na polecenie; „🤖 Zmiany asystenta” (Rodzaj Usterka) – sprawy, których przebieg nie załatwi |
 
 **Plugin `dom-budowa`**

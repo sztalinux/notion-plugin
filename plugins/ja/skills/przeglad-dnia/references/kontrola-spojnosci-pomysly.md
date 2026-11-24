@@ -1,6 +1,9 @@
-# Kontrola spójności: status pomysłu (POM-n) ↔ stan wdrożenia (krok 2 wieczornego przeglądu dnia)
+# Kontrola spójności: status pomysłu (POM-n) ↔ stan wdrożenia (przegląd tygodnia)
 
-Statusy pomysłów (Rodzaj Pomysł w „🤖 Zmiany asystenta”; odczyt widokiem „💡 Tablica pomysłów”) zmienia inwestor ręcznie, a wdrożenia zapisuje Claude Code (pole „Zrobiono w wersji”
+Robi ją raz w tygodniu `przeglad-tygodnia-osobisty` (krok 3); nocny przegląd dnia stosuje tylko odpowiedzi ☑ („Przebieg”, 1) –
+codzienny odczyt całej tablicy pomysłów kosztował ok. 38 tys. znaków na noc (pomiar 24.11.2026), a rozjazdy powstają rzadko.
+
+Statusy pomysłów (Rodzaj Pomysł w „🤖 Zmiany asystenta”; odczyt widokiem „🤖 Pomysły – kontrola wersji”) zmienia inwestor ręcznie, a wdrożenia zapisuje Claude Code (pole „Zrobiono w wersji”
 i `CHANGELOG.md`) – więc oba bywają rozjechane. Ta grupa serii „Kontrola spójności” (klucze `KS-…`) to **P**. Wspólny
 format flag, odpowiedzi ☑ i limit 5 nowych flag na przebieg – jak w pozostałych grupach serii (`kontrola-spojnosci*.md`);
 poniżej tylko to, co szczególne dla pomysłów. **Statusu pomysłu asystent sam nie zmienia** (decyzja inwestora jest
@@ -8,9 +11,9 @@ nadrzędna) – zmienia tylko pole „Zrobiono w wersji”, i to wyłącznie z n
 
 ## Reguły
 
-Czytaj wyłącznie Rodzaj = Pomysł (widok „💡 Tablica pomysłów”, `view://41cf5982-09e7-81c2-8022-000c1ff69c98`); Zasady i Usterki pomiń.
-Brane pod uwagę wiersze ze Statusem „Zrobione”, „Do zrobienia” albo „Przeanalizowany” (Nowy, Czeka na mnie, Odłożone,
-Odrzucone – pomiń). Wartość pola „Zrobiono w wersji” ze słowem „częściowo” oznacza wdrożenie w częściach – status
+Czytaj wyłącznie widok „🤖 Pomysły – kontrola wersji” (`view://422f5982-09e7-81c6-87b4-000cdd9ad46f`, tryb view): Rodzaj = Pomysł
+ze Statusem „Do zrobienia” albo „Przeanalizowany” oraz „Zrobione” z polem „Zrobiono w wersji” pustym albo ze słowem „gałąź” – czyli sami kandydaci
+(kilka wierszy zamiast całej tablicy; „💡 Tablica pomysłów” tu nie czytaj). Nowy, Czeka na mnie, Odłożone i Odrzucone są poza widokiem. Wartość pola „Zrobiono w wersji” ze słowem „częściowo” oznacza wdrożenie w częściach – status
 „Przeanalizowany” albo „Do zrobienia” jest wtedy celowy (P2 jej nie flaguje); wartość „gałąź … (czeka na scalenie)”
 to praca poza główną gałęzią – dopóki CHANGELOG nie ma wpisu z tym POM, nic nie rób.
 
@@ -26,9 +29,9 @@ Zasada pomysłu: „Zrobione” bez wersji uzupełniasz tylko, gdy wersja jest *
 starsze wpisy sprzed 11.11 nie mają numerów w nagłówkach) – wtedy P1 daje pytanie, a P3 nie flaguje wcale.
 Kilka nagłówków jednego POM (kolejne etapy) → wpisz wszystkie wersje po przecinku („ja 1.4.0, ja 1.5.0”).
 
-## Przebieg (w kroku 2; jeden odczyt bazy pomysłów – cała tablica, wszystkie statusy, nie tylko „Nowy”)
+## Przebieg (przegląd tygodnia; jeden odczyt widoku kandydatów)
 
-1. **Zastosuj odpowiedzi** na wcześniejsze punkty `KS-P…` (zanim dopiszesz nowe): ☑ przy P2 → Status „Zrobione”; ☑ przy P3 →
+1. **Zastosuj odpowiedzi** na wcześniejsze punkty `KS-P…` (robi to tylko nocny przegląd dnia, krok 2; tygodniowy zaczyna od punktu 2): ☑ przy P2 → Status „Zrobione”; ☑ przy P3 →
    Status „Zrobione” i pole „Zrobiono w wersji” z nagłówka CHANGELOG; dopisek „zostaje” / „częściowo” → nic nie zmieniaj;
    dopisek z wersją przy P1 → wpisz ją w pole. Rozpatrzony punkt idzie do „Przetworzone” z kluczem i dopiskiem „→ KS: <wykonano | zostaje>”.
 2. **Wersje z CHANGELOG** – tylko gdy jest kandydat P1, P3 albo P4: `python3 tools/pomysly_wersje.py <n> <n> …` (z folderu repo;
@@ -38,12 +41,13 @@ Kilka nagłówków jednego POM (kolejne etapy) → wpisz wszystkie wersje po prz
    wyłącznie na danych z Notion i zostaje.
 3. **Zapisz P1 i P4** (jedna edycja strony pomysłu, tylko pole „Zrobiono w wersji”, format „<plugin> <wersja>[, …]”) – bez pytania,
    bo wartość pochodzi z nagłówka CHANGELOG; są idempotentne (po zapisie wiersz nie jest już kandydatem), więc bez klucza.
-   W linii „🤖” i w „Czeka na Ciebie” – licznik „uzupełniono wersje: n”.
+   Licznik „uzupełniono wersje: n” – punkt 5.
 4. **Pytania P1/P2/P3** – jedno pytanie = jeden to-do z kluczem `KS-P<n>-<ostatnie 6 znaków ID strony pomysłu>` jako blok 🔔
    we „Wpisach” (`wpisy/references/pytania.md`, C.7; dopisek „zastosuję w nocnym przeglądzie”), np. `- [ ] POM-8: Status → Zrobione? (pole „Zrobiono w wersji” wypełnione) KS-P2-d1e2f3`;
    ID pomysłu (POM-n) podaj jako wzmiankę strony. Pomiń parę, której klucz jest już w 🔔 (czeka) albo w „Przetworzone”
    (rozpatrzona – wyciszenie trwa, dopóki wpis tam jest). Liczy się do wspólnego limitu 5 nowych flag `KS-…` na przebieg.
-5. **Licznik** do kroku 8 i linii „🤖”: `rozjazdy: n nowych, m wykonanych` (wspólny dla serii) + „uzupełniono wersje: k” (P1, P4).
+5. **Licznik** do wpisu tygodniowego (linia „Porządki”, fragment „spójność: …”) i odpowiedzi: `pomysły n pytań, wersje uzupełnione k` (P1, P4);
+   wykonane nocą odpowiedzi ☑ liczą się do nocnego `rozjazdy: … m wykonanych`.
 
 ## Czego nie robić
 

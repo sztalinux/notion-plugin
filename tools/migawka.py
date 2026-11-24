@@ -35,7 +35,7 @@ BAZY = {
         "filtr": {"and": [{"property": "Status", "status": {"does_not_equal": "DONE"}},
                           {"property": "Status", "status": {"does_not_equal": "ARCHIVED"}}]},
         "sort": [{"property": "When", "direction": "ascending"}],
-        "pola": ["Obszar", "Status", "Priority", "Kategoria", "When", "Kto", "Name", "Desc"],
+        "pola": ["Obszar", "Status", "Priority", "Kategoria", "When", "Deadline", "Kto", "Name", "Desc"],
     },
 }
 CZYTAJ = {"title": W.czytaj_tekst, "rich_text": W.czytaj_tekst, "select": W.czytaj_select, "status": W.czytaj_select,

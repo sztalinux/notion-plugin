@@ -4,6 +4,24 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.27.0] – 2026-11-24 (POM-32, POM-25)
+
+- POM-32 (`zadania`, `przeglad-dnia`, `przeglad-tygodnia-osobisty`, `uklad-wpisu.md`, mapa): nowe pole TASKS **Deadline**
+  (checkbox). ☑ = termin twardy, puste = orientacyjny. „Po terminie” w odczytach, planie dnia (ramka, „⚠ Po terminie”)
+  i przeglądach to odtąd tylko zadania z Deadline; orientacyjne po dacie – sam licznik, bez pytań „przesunąć czy zamknąć?”.
+  Nowe zadanie dostaje ☑ tylko przy terminie twardym z wpisu albo z natury sprawy; nocne uzupełnianie luk pola nie rusza.
+  Znacznik ❗ w planie dnia. „Czekam na” po dacie – bez zmian („przypomnij się”). `tools/migawka.py`: pole Deadline w migawce zadań.
+- POM-25 (reszta): kontrole spójności pomysłów (P) i rozmów (R) tylko w przeglądzie tygodnia – nocny stosuje same
+  odpowiedzi ☑; P czyta mały widok „🤖 Pomysły – kontrola wersji” zamiast całej tablicy (ok. 38 tys. znaków mniej co noc).
+  Nocny przebieg nie pobiera schematów baz (20–40 tys. znaków każdy), przewodnika konektora Skrzynki przy pustym „Nowe”,
+  a zapytania Jiry mają twardy limit 15 / 10 wyników. Pomiar i próg ostrzegawczy (tury, koszt) – w skrypcie automatu poza repo.
+
+## dom-budowa [3.20.0] – 2026-11-24 (POM-32)
+
+- `notatka`, `harmonogram`, `przeglad-tygodnia`, `budowa/references/wieczorem.md`, mapa i schemat TASKS: pole **Deadline**
+  – zadanie budowy jest „po terminie” tylko z Deadline ☑ (reguła w `zadania`, plugin ja); zadań z terminem orientacyjnym
+  przeglądy nie zgłaszają i nie proponują przesuwania dat. Mój termin wobec kogoś („do piątku dam znać”) → Deadline ☑.
+
 ## dom-budowa [3.19.3] – 2026-11-24
 
 - HZ-16 (`koszty`, `wydatek-przeplyw.md`): brak informacji o sposobie płatności = gotówka; w kosztorysie tylko Sposób

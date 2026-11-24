@@ -25,7 +25,7 @@ Strona dziecka (`241f5982-09e7-8023-9793-fa12d36bdb2e`; imię i szczegóły tylk
 4. Zadanie z terminem („kupić prezent do 20.11”, „umówić wizytę”) → `zadania` (Obszar Dziecko); na stronie nic nie dopisuj,
    chyba że wpis zawiera też pomysł lub obserwację. Nie dotyczy tematów do przegadania: te zawsze trafiają na stronę,
    a po świeżym zdarzeniu dodatkowo jako zadanie z terminem +3 dni (`ja`, zasada 9).
-   Zadanie zamknięte, a temat nadal na liście → pytanie z przeglądu dnia (krok 5c); po ☑ inwestora dopisz pod tematem
+   Zadanie zamknięte, a temat nadal na liście → pytanie z przeglądu tygodnia (blok 🔔 `KS-R…`); po ☑ inwestora dopisz pod tematem
    zagnieżdżony punkt „<data> – ✅ przegadane (zadanie zamknięte)”. Tematu nie przenoś do 🗄 Archiwum ani nie usuwaj.
 5. Emocja inwestora związana z dzieckiem → dodatkowo `emocje` (A).
 

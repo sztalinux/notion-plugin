@@ -33,7 +33,7 @@ Pobierz w jak najmniejszej liczbie zapytań:
    Wiersze z wpisaną już Decyzją (widok „🤖 Decyzja wpisana – do domknięcia”) wymień osobno jako „wpisana, niedomknięta”
    – domyka je przegląd dnia; ich obecność tutaj znaczy, że wieczorny przebieg ich nie zamknął.
 4. **Notatnik budowy**: Status „Otwarte” lub „Do omówienia” z Priorytetem Krytyczne/Ważne; wpisy z „Kiedy” w ciągu 14 dni lub po terminie.
-5. **TASKS** (Obszar Dom albo puste – sprawy prywatne nie wchodzą do przeglądu budowy): niezakończone z „When” w ciągu 7 dni lub po terminie; osobno **czekam na** (Status „WAITING”, Kto ≠ Ja) – po terminie = „przypomnij się”.
+5. **TASKS** (Obszar Dom albo puste – sprawy prywatne nie wchodzą do przeglądu budowy): niezakończone z „When” w ciągu 7 dni lub po terminie (po terminie tylko Deadline ☑; orientacyjne po dacie – sam licznik, `zadania` z pluginu ja); osobno **czekam na** (Status „WAITING”, Kto ≠ Ja) – po terminie = „przypomnij się”.
 5a. **Harmonogram** (`collection://d7a479ab-1e23-453f-8f59-55f4097f7d04`): kroki startujące / kończące się w 14 dni, kroki po terminie
     bez statusu „Zrobione”, kroki „Bez odwrotu” w 14 dni (bramka wg `etap` – przypomnienie, bez zadania), terminy „Szacunek” na najbliższe 14 dni
     (do potwierdzenia u wykonawcy).
@@ -92,7 +92,7 @@ Przegląd budowy – tydzień <RRRR-Www> (<data>)
 **Dotyczy naszej budowy:** • …
 **Pytania do projektantów (n):** Konstruktor: …; Architekt: …
 **Harmonogram 14 dni:** <krok – od–do – kto>; **Bez odwrotu:** <krok – data – bramka gotowa?>
-**Terminy 7 dni:** <zadanie – data>; **Po terminie:** …
+**Terminy 7 dni:** <zadanie – data>; **Po terminie:** zadania z Deadline, wpisy Notatnika (Kiedy) · po dacie orientacyjnej: n
 **Czekam na:** <kto – co – termin> (po terminie: przypomnij się)
 **Gwarancje (60 dni):** <umowa – do kiedy>
 **Budowa w tym tygodniu:** dni ekipy / własne, problemy otwarte, braki zdjęć przed zakryciem
@@ -114,7 +114,9 @@ Znajdź i zaproponuj – nie wykonuj bez zgody; po „tak” wykonaj wsadowo (za
 - duplikaty w Notatniku i TASKS (to samo zagadnienie dwa razy) → scal w starszy wpis; kandydatów na duplikaty
   Informacji bierz z listy `duplikaty --od` (punkt „Spójność”);
 - wpisy bez Etapu lub Priorytetu → uzupełnij;
-- sprawy po terminie albo bez zmian od 30 dni → zamknąć, przesunąć termin czy zostawić (pytanie zbiorcze);
+- sprawy po terminie albo bez zmian od 30 dni → zamknąć, przesunąć termin czy zostawić (pytanie zbiorcze); zadań TASKS z terminem
+  orientacyjnym (Deadline puste) nie zgłaszaj jako „po terminie” i nie proponuj przesuwania ich dat, także w części
+  „bez zmian od 30 dni” (tam najwyżej „zamknąć czy zostawić?”) – inwestor tego nie chce (22.11.2026);
 - Informacje „Nowe” starsze niż 30 dni → „Przejrzane” albo „Nieaktualne”;
 - otwarte sprawy zakończonego etapu → przenieść do bieżącego albo zamknąć;
 - rozjazdy z punktu „Spójność” → dopisać relację Wiedza / Informację (`wiedza`, F), uzgodnić statusy, poprawić „W skrócie”.

@@ -19,7 +19,7 @@ branżą i adresatem, tak żeby dało się ją filtrować i zamknąć.
    | decyzja | Notatnik budowy | Typ „Decyzja”, Status „Ustalone”; w Notatce jedno zdanie (co ustalono), w treści strony: *dlaczego, alternatywy, kto zdecydował* |
    | ryzyko | Notatnik budowy | Typ „Ryzyko”, Priorytet wg wpływu |
    | do doczytania / pomysł | Notatnik budowy | Typ „Doczytać” / „Pomysł” |
-   | konkretne działanie z terminem | TASKS | Status „TO DO”, When = termin, Kto = Ja, Obszar = Dom |
+   | konkretne działanie z terminem | TASKS | Status „TO DO”, When = termin, Kto = Ja, Obszar = Dom; Deadline ☑ tylko przy terminie twardym (`zadania`, plugin ja – „Termin twardy czy orientacyjny”) |
    | ktoś inny ma coś zrobić do daty („czekam na”) | TASKS | Status „WAITING”, Kto = ta osoba, Obszar = Dom, When – procedura `harmonogram`, D |
    | relacja z dnia na budowie, dostawa, usterka, roboty dodatkowe | → procedura `dziennik` | stąd ustalenia i zadania wracają tu |
    | koszt / płatność | → procedura `koszty` | nie zapisuj kwot tylko w Notion |

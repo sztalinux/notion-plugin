@@ -16,8 +16,8 @@ rozjazdy i **tylko o nich pyta** – bez inwestora niczego nie przestawia (`SKIL
 Zawsze tylko po ☑ inwestora i **nigdy** nie zmieniaj Terminu ani Pewności terminu kroku (to `harmonogram`, C). Zmiana Statusu
 kroku na „Zrobione” i zmiana pola zadania to wykonanie decyzji inwestora, nie decyzja asystenta. Inne grupy serii mają własne pliki i litery:
 zakupy ↔ zadania (Z, `kontrola-spojnosci-zakupy.md`, krok 5b), zadanie rozmowy („Porozmawiać / Pogadać / Rozmowa”) ↔ „💬 Do przegadania” (R,
-`kontrola-spojnosci-rozmowy.md`, krok 5c), suplement wstrzymany z Buy (S1, `kontrola-spojnosci-suple.md`, krok 6), status
-pomysłu ↔ wdrożenie (P, `kontrola-spojnosci-pomysly.md`, krok 2). Klucze `KS-<grupa>-…` i wyciszenie są wspólne.
+`kontrola-spojnosci-rozmowy.md` – przegląd tygodnia), suplement wstrzymany z Buy (S1, `kontrola-spojnosci-suple.md`, krok 6), status
+pomysłu ↔ wdrożenie (P, `kontrola-spojnosci-pomysly.md` – przegląd tygodnia; nocą P i R tylko odpowiedzi ☑, krok 2). Klucze `KS-<grupa>-…` i wyciszenie są wspólne.
 
 ## Odczyt (tylko widoki – bez SQL i rows, `ja` zasada 3)
 
@@ -45,7 +45,7 @@ wszystkich otwartych zadań.
    → nic nie zmieniaj. Każdy rozpatrzony punkt idzie do „Przetworzone” z dopiskiem „→ KS: <wykonano | zostaje>” i kluczem.
 2. **Znajdź nowe rozjazdy** wg tabeli. Klucz flagi: `KS-<grupa>-<ostatnie 6 znaków ID zadania>` (np. `KS-H2-a1b2c3`).
    Pomiń parę, której klucz jest już w 🔔 (czeka) albo w „Przetworzone” (rozpatrzona – wyciszenie trwa, dopóki wpis tam jest;
-   przegląd tygodnia archiwizuje po 14 dniach). Max 5 nowych flag na przebieg łącznie dla wszystkich grup (H, Z, R, S1, P), reszta „+k” w linii „🤖” – bez zalewu pytań.
+   przegląd tygodnia archiwizuje po 14 dniach). Max 5 nowych flag na przebieg łącznie dla wszystkich grup (nocny: H, Z, S1; tygodniowy: R, P), reszta „+k” w linii „🤖” (tygodniowy – w linii „Porządki”) – bez zalewu pytań.
 3. **Dopisz flagi** jako blok 🔔 pod „🔔 Komunikaty asystenta” we „📝 Wpisach” (format `wpisy/references/pytania.md`, C.7 – checkbox + klucz w kodzie + dopisek „zastosuję w nocnym przeglądzie”; to jedna edycja
    „Wpisów” razem z resztą zapisów przeglądu – `SKILL.md`, krok 9). Jedno pytanie = jeden to-do, do ok. 12 słów, z kluczem na końcu:
    `- [ ] Krok „<krok>” → Zrobione? (zadanie „<nazwa>” zamknięte) KS-H1-a1b2c3`. H2 = dwa to-do pod jednym punktem, „zaznacz

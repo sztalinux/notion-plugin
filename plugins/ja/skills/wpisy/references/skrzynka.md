@@ -31,7 +31,8 @@ może się zmienić, a bez Notion nie da się jej sprawdzić; telefon pisze, co 
 ## Opróżnianie (Mac: `przeglad-dnia` A.1 i B.1; w rozmowie „przerób skrzynkę”)
 
 1. Przeczytaj sekcję „Nowe” każdego dokumentu „📥 Skrzynka…” (lista artefaktów → tytuł; brak narzędzia Claude Docs → pomiń
-   źródło i napisz „Skrzynka – brak odczytu” w odpowiedzi i w linii „🤖”).
+   źródło i napisz „Skrzynka – brak odczytu” w odpowiedzi i w linii „🤖”). Sam odczyt nie wymaga przewodnika konektora:
+   przy pustym „Nowe” nie wczytuj go (to ok. 35 tys. znaków na resztę przebiegu) – dopiero przed edycją dokumentu (pkt 3).
 2. Każdą pozycję przetwórz jak wpis Dziennika (`wpisy`, kroki 3–7): obszar według bazy Obszarów, pola według skilla
    docelowego, „Zrobić” z linii to intencja inwestora (termin, adresat, etap) – nadrzędna wobec domysłów, nie wobec schematu bazy.
 3. Po zapisie przenieś linię do „## Przetworzone” jako `- [x] ~~…~~ → <gdzie>: <link>` (jedna edycja dokumentu na przebieg);

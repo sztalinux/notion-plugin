@@ -79,14 +79,15 @@ Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym,
 
 - Cudzy termin → TASKS: Name „<kto> – <co>”, **Kto** = ta osoba/rola, Status „WAITING”, Obszar = Dom, When = termin, Desc = skąd wiadomo
   (rozmowa, data). Gdy dotyczy kroku – relacja Harmonogram.
-- Mój termin wobec kogoś („do piątku dam znać X”) → TASKS: Kto = Ja, Status „TO DO”, Obszar = Dom, When = termin.
+- Mój termin wobec kogoś („do piątku dam znać X”) → TASKS: Kto = Ja, Status „TO DO”, Obszar = Dom, When = termin, Deadline ☑ (rzecz obiecana komuś na dzień – `zadania`, plugin ja).
+  Inne moje zadania budowy: Deadline ☑ tylko przy terminie twardym (ta sama reguła); orientacyjne po dacie nie są zaległością.
 - Po terminie: „czekam na” bez zmiany statusu → w przeglądzie (i w „co mnie czeka”) jako „przypomnij się <komu>”.
 - „Zrobione / przyszło” → DONE; jeśli wynikło z tego ustalenie – `notatka`, wiedza – `wiedza`.
 
 ## E. „Co mnie czeka” (domyślnie 14 dni)
 
 Jedno zestawienie, chronologicznie: kroki harmonogramu (start/koniec), moje zadania, czekam na (z terminem i po terminie),
-zamówienia z „Zamówić do” (bez Dostarczone i Nieaktualne – jak przegląd dnia budowy) i dostawy, bramki. Na górze: po terminie i dzisiaj/jutro. Na dole: licznik spraw dalej niż 14 dni.
+zamówienia z „Zamówić do” (bez Dostarczone i Nieaktualne – jak przegląd dnia budowy) i dostawy, bramki. Na górze: po terminie (moje zadania – tylko z Deadline ☑) i dzisiaj/jutro. Na dole: licznik spraw dalej niż 14 dni.
 
 ## Zasady
 

@@ -36,6 +36,9 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
   części dylematu też domykasz (z dopiskiem asystenta); pytanie tylko przy „?”, „nie wiem”, otwartym „A albo B” lub sprzeczności – blok pod 🔔 w „📝 Wpisy”.
   Pole Decyzja sprawdza wieczór (krok 3) – każdy przebieg od nowa, także wiersze z czekającym pytaniem.
 - Bez planu do akceptacji; zapisy wsadowo (`ja`, zasada 2); odczyt baz przez zapisane widoki i wyszukiwarkę (`ja`, zasada 3), nie SQL.
+  Schematu bazy (`collection://…`) nie pobieraj: pola i opcje są w mapach i schematach procedur, a jeden schemat to 20–40 tys.
+  znaków w każdej następnej turze. Wyjątki (raz na przebieg): zapis wydatku do 💸 – lista opcji pola Pozycja (`koszty`, B.2);
+  zapis odrzucony przez nieznane pole albo opcję.
 - Błąd zapisu (brak uprawnień, limit) → nie ponawiaj w kółko; odnotuj „nie zapisano: …” i zakończ.
 - W odpowiedzi (log zadania) bez treści emocji i notatek o dziecku – liczby i linki.
 
@@ -78,18 +81,18 @@ Budowa i sprawy osobiste mają **osobne przeglądy**, żeby intensywny dzień na
 budowa → „📆 Przeglądy dzienne – budowa” na stronie DOM (pisze skill `budowa`, sekcja „Wieczorem”); reszta → „📆 Przeglądy
 dzienne” pod Dziennikiem, z jedną linią odsyłającą do przeglądu budowy z tego dnia.
 
-**Kolejność wykonania:** kroki 1–2a, potem **5** i **5a–5c** (luki w zadaniach, kontrola spójności zadań, zakupów i rozmów), dopiero potem 3, 4 i 6–10. Krok 5 idzie przed budową, bo
+**Kolejność wykonania:** kroki 1–2a, potem **5** i **5a–5b** (luki w zadaniach, kontrola spójności zadań i zakupów), dopiero potem 3, 4 i 6–10. Krok 5 idzie przed budową, bo
 zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiłoby do przeglądu budowy.
 
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
    Komunikaty 🔔 z linią `→ ZP-n`: sprawdź Status tych wierszy Rodzaj Usterka w „🤖 Zmiany asystenta” (wyszukiwarka z parametrem bazy) –
    „Zrobione” albo „Odrzucone” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze ZP „Czeka na mnie”
    (widok „🧯 Otwarte usterki”) bez bloku 🔔 → dodaj blok (tamże, C.5).
-2. **Pomysły** – bez automatycznej analizy (analiza tylko na prośbę inwestora, `rozwoj-harnessu`, sekcja C).
-   **Kontrola spójności pomysłów (grupa P)** – z jednego odczytu całej tablicy pomysłów (wszystkie statusy, nie tylko „Nowy”): „Zrobione” bez „Zrobiono
-   w wersji”, „Do zrobienia” / „Przeanalizowany” przy wdrożeniu zapisanym w polu albo w nagłówku `CHANGELOG.md`, „gałąź …”
-   już scalona. Pole wersji uzupełniasz tylko z nagłówka CHANGELOG z numerem POM; **Status zmienia dopiero ☑ inwestora**
-   (blok 🔔, klucz `KS-P…`). Reguły i obsługa odpowiedzi: `references/kontrola-spojnosci-pomysly.md`.
+2. **Pomysły i rozmowy** – bez analizy pomysłów (tylko na prośbę inwestora, `rozwoj-harnessu`, C) i bez odczytu tablicy
+   pomysłów ani stron osób: kontrole spójności P (pomysł ↔ wdrożenie) i R (zadanie rozmowy ↔ „💬 Do przegadania”) robi przegląd
+   tygodnia. Nocą tylko odpowiedzi: blok 🔔 `KS-P…` albo `KS-R…` z ☑ lub dopiskiem → zastosuj wg
+   `references/kontrola-spojnosci-pomysly.md` („Przebieg”, 1) albo `-rozmowy.md` („Odczyt”, 3 – z odczytem tej jednej strony,
+   której dotyczy odpowiedź); bez odpowiedzi nie czytaj tych plików.
 2a. **Rozkminki – tylko na prośbę z wpisu** (ślad `→ 🧠 rozkminka wieczorem` albo `→ 🧠 rozkminka w toku` z listy w poleceniu – `references/rozkminka.md`, 4 – w dzisiejszym lub wczorajszym bloku
    „Przetworzone”, `wpisy` krok 5, **także ślady z kroku 1 tego przebiegu** – na stronie ich jeszcze nie ma, zapisz je od razu
    jako `→ 🧠 rozkminka: <wzmianka>`; z własnej inicjatywy nie rób – to koszt). Max 2, najstarsze pierwsze; reszta jutro
@@ -131,12 +134,9 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    (flagi 🔔 z kluczem `KS-Z…`, wspólny limit 5 z 5a, zmiana statusu dopiero po ☑ inwestora) oraz pytanie o „Kupione dnia”
    z proponowaną datą (tylko zakupy zmienione od wczoraj) i bezpieczne uzupełnienie researchu Zamknięty. Liczniki „rozjazdy”
    i „zakupy” idą do kroku 8 i linii „🤖”.
-   **5c. Kontrola spójności: rozmowy** – `references/kontrola-spojnosci-rozmowy.md`: zadanie rozmowy („Porozmawiać / Pogadać /
-   Rozmowa” w nazwie, Obszar Dziecko lub Prywatne) DONE (wiersze kroku 5)
-   ↔ temat w „💬 Do przegadania” na stronie osoby. Tylko pytanie 🔔 z kluczem `KS-R…` (wspólny limit 5 z 5a); po ☑ dopisek
-   „✅ przegadane” pod tematem, nic się nie przenosi. Treści tematów nie wypisuj; licznik „rozjazdy” jak w 5a.
 6. **Plan – najbliższe 7 dni** (odczyt; jedyne zapisy – suplementy, niżej): TASKS „🗓 Tydzień (7 dni)” (wszystkie obszary,
    z zaległymi; zastępuje „📅 Jutro – wszystko” i „📅 Dziś”) – zakres i „po terminie” licz od **dnia planu** (`references/uklad-wpisu.md`, D);
+   „po terminie” to tylko zadania z Deadline ☑ i „czekam na” (WAITING, Kto ≠ Ja); orientacyjne po dacie – sam licznik (`zadania`, „Termin twardy czy orientacyjny”);
    praca – Jira (MCP `atlassian`, tylko odczyt), plik `.dom/praca/dzien.json` (commity, PR-y) i widok bazy 🔨 TASKS ze strony 💼 WORK (`uklad-wpisu.md`, D); suplementy z Buy = tak (licznik – **bez** Statusu BREAK / SUSPENDED,
    te to „do sprawdzenia”, niżej), zakupy z 🛒 Zakupy: „Do kupienia” (licznik) i z Terminem
    do jutra (wymień; widok „🛒 Do kupienia”). Na stronie przewodnika (`3f6f5982-09e7-81f5-bade-ec877d8d936a`)
@@ -170,7 +170,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 8. **Plan dnia na stronie ☀️ Dziś + historia** – **codziennie**, także w spokojny dzień; układ, zasady i szablon:
    `references/uklad-wpisu.md`, D. Najpierw nadpisz treść strony ☀️ Dziś (`416f5982-09e7-81b3-b96d-ddd19086bc5b`) planem na dzień
    planu – ramka „najważniejsze” i zakładki 🧭 Przegląd · 🏗 Budowa (z kroku 3) · 🏠 Prywatne (kroki 6–7, 2a) · 💼 Praca · 📊 Wczoraj
-   (kroki 1, 4, 5, 2). Potem ta sama treść jako historia na górze „📆 Przeglądy dzienne” (`3faf5982-09e7-81df-a361-cc65fddb81f4`):
+   (kroki 1, 4, 5). Potem ta sama treść jako historia na górze „📆 Przeglądy dzienne” (`3faf5982-09e7-81df-a361-cc65fddb81f4`):
    zwijany nagłówek h2 „Plan dnia – <dzień tygodnia> <data planu>”, zakładki jako pogrubione etykiety (`uklad-wpisu.md`, C) –
    **wstawienie na początku strony bez jej odczytu** (strona jest długa; archiwum robi przegląd tygodnia).
    **Ręczny przebieg** (prośba w rozmowie) = osobny wpis z tą samą datą i dopiskiem „(ręczne)”, kolejne „(ręczne 2)”… –
@@ -178,9 +178,9 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    górze z odesłaniem.
 9. **Linia „🤖”** – na górze dzisiejszego bloku w „Przetworzone”, w tej samej edycji Dziennika co zapisy kroku 1 – tę jedną
    edycję (`wpisy`, krok 7) zrób na końcu przebiegu, po kroku 8, gdy znasz już wszystkie liczby (kroki 3–5 doliczają
-   ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma; krok 3 dostaje listę wpisów budowy z kroku 1). Bloki 🔔 z kroków 2, 5, 5a–5c, 6, 7 (nowe i zmieniane) zapisz **jedną punktową edycją „Wpisów”** pod nagłówkiem 🔔 w tym samym momencie:
+   ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma; krok 3 dostaje listę wpisów budowy z kroku 1). Bloki 🔔 z kroków 2, 5, 5a–5b, 6, 7 (nowe i zmieniane) zapisz **jedną punktową edycją „Wpisów”** pod nagłówkiem 🔔 w tym samym momencie:
    ```
-   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga, pomysły: 1 wersja uzupełniona · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
+   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy
    ```
 10. **Odpowiedź** (log zadania): linia „🤖” + lista zapisów (gdzie, link) i błędów.
