@@ -56,8 +56,11 @@ Zadanie, które inwestor dodał sam albo kazał dodać, podpinaj relacją do kro
 notatka, zakupy, etap, oferta) wynika zmiana terminu, kolejności lub zakresu kroku (umówiona dostawa betonu, inny dzień
 wykopu, krok bez uziomu, bez XPS) – w tej samej pracy zmień w Harmonogramie Termin, nazwę kroku (zakres), Status
 (Przesunięte / Potwierdzone / W trakcie) i Pewność terminu, a w Uwagach **na początku** dopisz „<data>: <powód>. Było X–Y”
-(starej treści nie usuwaj). Datę podaną przez inwestora zapisz jako „Uzgodnione ustnie” – także w przebiegu bez inwestora
-(to fakt, nie decyzja). Kroki zależne przelicz wg 2 jako „Szacunek” (bez inwestora – tylko wg 4) i pokaż tabelę „było → jest”.
+(starej treści nie usuwaj). **Data podana wprost przez inwestora** (w rozmowie albo we wpisie) to fakt, nie decyzja: zmień
+Termin od razu z Pewnością „Uzgodnione ustnie” – także dla kroku „Bez odwrotu” i także w przebiegu bez inwestora.
+**Przesunięcia wyliczone** (kroki zależne, krok „Bez odwrotu” bez daty od inwestora, terminy u innych) w przebiegu bez
+inwestora są tylko propozycją z tabelą „było → jest” w pytaniu ❓ pod wpisem (`wpisy/references/pytania.md`, A, plugin
+`ja`); w rozmowie – wg 2 i 3.
 Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym, co w niej padło.
 
 1. Zmień Termin kroku (Status „Przesunięte”, w Uwagach powód i data zmiany). „Przesunięte” trzyma tylko krok, którego
@@ -69,10 +72,10 @@ Na koniec każdej rozmowy o budowie sprawdź, czy Harmonogram zgadza się z tym,
    istniejące zadania i zamówienia powiązane z krokiem – ich nowe terminy zapisz po „ok”; nowych zadań nie zakładaj.
 4. **Wpis z budowy o tempie prac** („nie skończyliśmy, jutro kontynuujemy”, „przez deszcz nie robili”, „skończyli dzień
    wcześniej”) to fakt od inwestora, nie decyzja – także w przebiegu bez inwestora: przedłuż albo skróć koniec Terminu
-   kroku (Status „W trakcie”), a kroki zależne (Blokuje) przesuń tylko tyle, żeby zaczynały się najwcześniej dzień po
-   nowym końcu poprzednika (krok z zapasem zostaje); w Uwagach „+N dni – wpis z <data>”. Terminów u innych (dostawa,
-   pompa, kierownik, geotechnik) i kroków „Bez odwrotu” nie zmieniaj sam: w rozmowie – pytanie z propozycją; bez
-   inwestora – okienko pod wpisem, gdy termin wypada w ciągu 3 dni, inaczej linia w przeglądzie dnia budowy. Nie wiadomo,
+   kroku (Status „W trakcie”); w Uwagach „+N dni – wpis z <data>”. Kroki zależne (Blokuje) – najwcześniej dzień po nowym
+   końcu poprzednika (krok z zapasem zostaje) – oraz krok „Bez odwrotu” bez daty od inwestora i terminy u innych (dostawa,
+   pompa, kierownik, geotechnik) to przesunięcia wyliczone (wstęp C): w rozmowie – pytanie z propozycją; bez inwestora –
+   zawsze okienko ❓ pod wpisem (linia w przeglądzie dnia budowy najwyżej jako dodatkowe przypomnienie). Nie wiadomo,
    którego kroku dotyczy, albo o ile → pytanie.
 
 ## D. Czekam na („geodeta tyczy w czwartek”, „ekipa ma przysłać wycenę do 15.10”)
