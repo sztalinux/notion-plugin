@@ -115,7 +115,8 @@ Przegląd budowy – tydzień <RRRR-Www> (<data>)
 Znajdź i zaproponuj – nie wykonuj bez zgody. Propozycje daj jednym blokiem 🔔 pod „🔔 Komunikaty asystenta” we „Wpisach”
 (`ja/skills/wpisy/references/pytania.md`, C.7; klucz `porzadki-budowa-<RRRR-Www>`): jedno to-do „Zastosować wszystkie
 porządki (lista w Szczegółach)”, wyjątki – dopisek pod to-do („bez 3, 5”), „zastosuję w nocnym przeglądzie”; wykonuje
-nocny przebieg (`przeglad-dnia`, B.2) wsadowo (zasada 6). Ta sama propozycja już czeka w 🔔 → zaktualizuj blok.
+nocny przebieg (`przeglad-dnia`, B.2) wsadowo (zasada 6). Blok `porzadki-budowa-…` z poprzedniego
+tygodnia bez odpowiedzi → zastąp go nowym (lista i klucz tego tygodnia), nie dokładaj drugiego.
 W rozmowie z inwestorem zapytaj wprost i po „tak” wykonaj od razu, wsadowo. Szukaj:
 - duplikaty w Notatniku i TASKS (to samo zagadnienie dwa razy) → scal w starszy wpis; kandydatów na duplikaty
   Informacji bierz z listy `duplikaty --od` (punkt „Spójność”);
