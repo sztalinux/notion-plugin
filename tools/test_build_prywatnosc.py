@@ -37,13 +37,13 @@ class Lista(unittest.TestCase):
     def setUpClass(cls):
         cls.tmp = Path(tempfile.mkdtemp(prefix="prywatnosc-lista-"))
         (cls.tmp / "lista.txt").write_text(LISTA, encoding="utf-8")
-        cls.stara = build.ZAKAZANE
-        build.ZAKAZANE = cls.tmp / "lista.txt"
+        cls.stara = build.ZAKAZANE, build.ROOT
+        build.ZAKAZANE, build.ROOT = cls.tmp / "lista.txt", cls.tmp  # bez dane/prywatne.txt z prawdziwego repo
         cls.zak = build.zakazane_slowa()
 
     @classmethod
     def tearDownClass(cls):
-        build.ZAKAZANE = cls.stara
+        build.ZAKAZANE, build.ROOT = cls.stara
         shutil.rmtree(cls.tmp, ignore_errors=True)
 
     def lapie(self, tekst):
