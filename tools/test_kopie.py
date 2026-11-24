@@ -168,6 +168,13 @@ class Dokumenty(unittest.TestCase):
         w = K.dokumenty(hub, DZIS)
         self.assertEqual(w["stan"], "⚠")
         self.assertIn("nieczytelne: 1", w["szczegol"])
+        # potwierdzony wcześniej plik, dziś nieczytelny – bez zmian, nie „usunięty”
+        (hub / ".dom" / "kopia" / "stan.json").write_text(json.dumps(
+            {"potwierdzone": {"Projekty/skrot.pdf": {"rozmiar": 1, "mtime": 1, "sha256": "x"}},
+             "potwierdzono": "2026-11-19", "paczki": []}))
+        w = K.dokumenty(hub, DZIS)
+        self.assertEqual(w["stan"], "⚠")
+        self.assertIn("zmian od kopii: 0", w["szczegol"])
 
     def test_uszkodzony_stan_bez_wyjatku(self):
         hub = Path(tempfile.mkdtemp(prefix="kopie-stan-"))

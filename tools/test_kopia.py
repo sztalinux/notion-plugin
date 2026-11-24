@@ -194,6 +194,45 @@ class Polecenia(unittest.TestCase):
         self.kopia("wgrane", "2026-11-22")
         self.assertIn("zmian od niej: 0", self.kopia("stan"))
 
+    def kopia_kod(self, *argv):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            kod = K.main(list(argv))
+        return kod, out.getvalue()
+
+    def potwierdz(self, n: int):
+        """n potwierdzonych plików (paczka + wgrane bez folderu Dysku)."""
+        for i in range(n):
+            (self.hub / f"Projekty/p{i:02}.pdf").write_bytes(b"x" * (i + 1))
+        self.paczka("2026-11-20")
+        self.kopia("wgrane")
+        return sorted(json.loads((self.hub / ".dom/kopia/stan.json").read_text())["potwierdzone"])
+
+    def dysk_z(self, pliki) -> Path:
+        dysk = Path(tempfile.mkdtemp(prefix="dysk-", dir=TMP))
+        for s in pliki:
+            (dysk / s).parent.mkdir(parents=True, exist_ok=True)
+            (dysk / s).write_bytes((self.hub / s).read_bytes())
+        os.environ["DYSK_DOM"] = str(dysk)  # przywraca mock.patch.dict z setUp
+        return dysk
+
+    def test_nieczytelny_potwierdzony_to_nie_usuniety(self):
+        # plik potwierdzony, potem nieczytelny (zepsute dowiązanie) – nie „usunięty na Macu” i bez archiwizacji
+        # kopii z Dysku; pozycja ⚠ (recenzja F2, F-15)
+        pot = self.potwierdz(2)
+        (self.hub / "Projekty/a.pdf").unlink()
+        os.symlink(self.hub / "nie-ma.pdf", self.hub / "Projekty/a.pdf")
+        linia = self.kopia("stan")
+        self.assertIn("usunięte 0", linia)
+        self.assertIn("nie da się odczytać", linia)
+        self.assertIn("aktualna", self.kopia("paczka"))
+        dysk = self.dysk_z([s for s in pot if s != "Projekty/a.pdf"])
+        (dysk / "Projekty/a.pdf").write_bytes(b"a")
+        self.kopia("aplikacja", "--wykonaj")
+        self.assertEqual((dysk / "Projekty/a.pdf").read_bytes(), b"a")
+        self.assertFalse((dysk / "_Archiwum").exists())
+        self.assertIn("Projekty/a.pdf", json.loads((self.hub / ".dom/kopia/stan.json").read_text())["potwierdzone"])
+
     def test_zepsute_dowiazanie_nie_wywraca_polecen(self):
         os.symlink(self.hub / "nie-ma.pdf", self.hub / "Projekty/skrot.pdf")
         self.assertIn("nie da się odczytać", self.kopia("stan"))

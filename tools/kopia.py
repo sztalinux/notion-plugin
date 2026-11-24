@@ -83,6 +83,12 @@ def skanuj(hub: Path, poprzedni: dict = None, bledy: list = None) -> dict:
     return out
 
 
+def z_nieczytelnymi(teraz: dict, potwierdzone: dict, bledy: list) -> dict:
+    """Skan do porównania: plik potwierdzony, którego chwilowo nie da się odczytać, liczy się jako bez zmian
+    (nie „usunięty na Macu” – jego kopia na Dysku zostaje na miejscu)."""
+    return {**teraz, **{s: potwierdzone[s] for s in bledy if s in potwierdzone}}
+
+
 def roznice(potwierdzone: dict, teraz: dict) -> dict:
     """nowe / zmienione / przeniesione (po treści) / usunięte – względem potwierdzonego stanu."""
     po_tresci = {}
@@ -254,7 +260,9 @@ def main(argv=None):
     bledy = []
     teraz = skanuj(HUB, {**stan["potwierdzone"], **stan.get("ostatni_skan", {})}, bledy)
     stan["ostatni_skan"] = teraz
-    r = roznice({k: v for k, v in stan["potwierdzone"].items() if dozwolony(k)}, teraz)
+    pot = {k: v for k, v in stan["potwierdzone"].items() if dozwolony(k)}
+    porownanie = z_nieczytelnymi(teraz, pot, bledy)
+    r = roznice(pot, porownanie)
     n = len(r["nowe"]) + len(r["zmienione"]) + len(r["przeniesione"]) + len(r["usuniete"])
     dysk = folder_dysku()
     if bledy:
@@ -278,12 +286,12 @@ def main(argv=None):
             print("[kopia] aktualna – brak zmian od ostatniej potwierdzonej kopii")
             zapisz_stan(stan)
             return 0
-        p = zbuduj_paczke(HUB, r, teraz, data, a.wykonaj)
+        p = zbuduj_paczke(HUB, r, porownanie, data, a.wykonaj)
         print(("[kopia] paczka gotowa: " if a.wykonaj else "[kopia] PLAN paczki (na sucho): ") + p["folder"])
         print("\n".join("  " + x for x in p["spis"][1:]))
         if a.wykonaj:
             stan.setdefault("paczki", []).append({"data": data, "folder": p["folder"], "wgrana": False,
-                                                  "pliki": {s: teraz[s] for s in teraz}})
+                                                  "pliki": dict(porownanie)})
         zapisz_stan(stan)
         return 0
     if a.cmd == "wgrane":
@@ -315,12 +323,12 @@ def main(argv=None):
             print("[kopia] brak lokalnego folderu Dysku – użyj trybu paczki (`kopia.py paczka`)")
             return 1
         log = kopiuj_do_aplikacji(HUB, dysk, r, a.wykonaj, data, teraz)
-        for x in tylko_na_dysku(dysk, teraz):
+        for x in tylko_na_dysku(dysk, porownanie):
             log.append(f"tylko na Dysku (pobierz na Maca ręcznie): {x}")
         print(("[kopia] wykonano:" if a.wykonaj else "[kopia] PLAN (na sucho):") + f" {len(log)} pozycji")
         print("\n".join("  " + x for x in log))
         if a.wykonaj:
-            stan["potwierdzone"], stan["potwierdzono"] = teraz, data
+            stan["potwierdzone"], stan["potwierdzono"] = dict(porownanie), data
         zapisz_stan(stan)
         return 0
     return 1

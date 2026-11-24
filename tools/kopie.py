@@ -87,7 +87,7 @@ def dokumenty(hub: Path, dzis: date) -> dict:
         teraz = kopia.skanuj(hub, {**(stan.get("potwierdzone") or {}), **(stan.get("ostatni_skan") or {})}, bledy)
     except OSError as e:
         return poz("dokumenty", "✗", opis, gdzie, kiedy, f"błąd odczytu folderu budowy ({e})")
-    r = kopia.roznice(potwierdzone, teraz)
+    r = kopia.roznice(potwierdzone, kopia.z_nieczytelnymi(teraz, potwierdzone, bledy))
     n = sum(len(r[k]) for k in ("nowe", "zmienione", "przeniesione", "usuniete"))
     czeka = [x["data"] for x in stan.get("paczki", []) if not x.get("wgrana")]
     szczegol = (f"zmian od kopii: {n}" + (f" · paczki do wgrania: {', '.join(czeka)}" if czeka else "")
