@@ -66,7 +66,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 | Inwestor pisze | Status |
 |---|---|
 | „zrobiłem X”, „X zrobione”, „załatwione” | DONE |
-| „zamówiłem X”, „kupiłem X” przy otwartym zadaniu „Zamówić X” / „Kupić X” | DONE (pozycja w 🛒 – sekcja „Zakupy”, pkt 4) |
+| „zamówiłem X”, „kupiłem X” przy otwartym zadaniu „Zamówić X” / „Kupić X” o tej jednej rzeczy | DONE (pozycja w 🛒 – pkt 2); zadanie zbiorcze („Zamówić suple: a, b, c”) – pkt 2, wyjątek; pasują dwa zadania → nic nie zamykaj, ślad jak w „Zakupy”, pkt 4 |
 | „zacząłem”, „w toku”, „robię” | IN PROGRESS |
 | „czekam na … (od kogo)” | WAITING (+ kto w Desc albo Kto) |
 | „przesuwam na …”, „w przyszłym tygodniu” | zostaje, When = nowy termin |
@@ -75,16 +75,18 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 1. Szukaj we **wszystkich obszarach** wśród niezakończonych (wyszukiwarka z parametrem bazy TASKS – słowa z wpisu, potem porównanie treści i statusu;
    sprawa z pracy albo brak trafienia → także baza 🔨 TASKS na WORK; te same statusy).
    Brak trafienia → sprawdź jeszcze zadania zamknięte (DONE, ARCHIVED) z ostatnią edycją w ostatnich 7 dniach: inwestor zamyka
-   zadania także ręcznie w Notion, więc wpis „zrobiłem X” bywa spóźniony. Jest takie → nic nie zmieniaj, w śladzie
+   zadania także ręcznie w Notion, więc wpis „zrobiłem X” bywa spóźniony. Jest takie → nic nie zmieniaj w zadaniu (pozycja 🛒 – „Zakupy”, pkt 4), w śladzie
    „→ już zamknięte (ręcznie)” z odnośnikiem.
 2. Jedno trafienie → zmień status; w treści strony dopisz linię „<data>: <co się stało> (z Dziennika)”. Zadanie budowy
    (Obszar Dom/puste) z powiązanym krokiem Harmonogramu → status kroku zostaw bez zmian – zmienia go odbiór
    (`etap`, krok 7) albo relacja z końca kroku (`dziennik` A.2); w śladzie wzmianka kroku.
    Zadanie z pozycją w 🛒 Zakupach (relacja Zadanie – jest tylko po stronie Zakupów, w zadaniu jej nie widać: przy
-   Kategorii Zakup pozycję znajdź wyszukiwarką z parametrem bazy Zakupów po rzeczy z nazwy „Kupić X”) – w tej samej pracy pozycja: DONE → Kupione + Kupione dnia,
-   ARCHIVED → Odpuszczone (sekcja „Zakupy”, pkt 4, w drugą stronę); w śladzie obie wzmianki. Wyjątek: zadanie „Zamówić
+   Kategorii Zakup pozycję znajdź wyszukiwarką z parametrem bazy Zakupów po rzeczy z nazwy „Kupić X”) – w tej samej pracy Status pozycji wg „Zakupy”, pkt 4: „kupiłem” albo DONE → Kupione + Kupione dnia,
+   „zamówiłem” → Zamówione (bez daty), ARCHIVED → Odpuszczone; w śladzie obie wzmianki. Wyjątek: zadanie „Zamówić
    suple” – DONE → Buy = nie suplementom wymienionym w zadaniu (Name i treść strony), w śladzie „suple: Buy odznaczone n”;
-   ARCHIVED → Buy zostaje (`przeglad-dnia`, B.6).
+   ARCHIVED → Buy zostaje (`przeglad-dnia`, B.6). Zadanie zbiorcze (kilka rzeczy w nazwie) zamyka tylko wpis o całości
+   („zamówiłem suple”) albo wymieniający wszystkie; wpis o części → zadanie zostaje otwarte, Buy pozostałych bez zmian,
+   w treści zadania dopisek, co zamówione.
    Zadanie zakupu budowy „na już” (pozycja w 🧱 Zakupach budowy ma w Uwagach wzmiankę o zadaniu; znajdź ją wyszukiwarką
    z parametrem bazy 🧱 po rzeczy z nazwy) – przy DONE w tej samej pracy zmień też Status pozycji wg `zakupy` (plugin
    `dom-budowa`, 0.3): kupione → Dostarczone + Dostawa = data, tylko zamówione → Zamówione; w śladzie obie wzmianki.
