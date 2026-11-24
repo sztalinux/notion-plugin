@@ -185,6 +185,27 @@ class Hooki(unittest.TestCase):
         self.plik(".DS_Store", b"\x00\x00\x00\x01Bud1\x00\x00\x10\x00")
         self.zablokowany(self.commit(".DS_Store"), ".DS_Store", "Commit zablokowany")
 
+    # --- F-2: nazwy plików, gałęzi, tagów i treść tagów ------------------------------------------------
+    def test_nazwa_pliku(self):
+        sciezka = f"docs/oferta-{ASCII}.md"
+        self.plik(sciezka, "Czysta treść.\n")
+        self.zablokowany(self.commit(sciezka), "(nazwa)", BLAD_LISTY)
+        self.przeszedl(self.commit(sciezka, bez_hookow=True))
+        self.zablokowany(self.push("HEAD:refs/heads/nazwa-pliku"), "(nazwa)", "Push zablokowany")
+
+    def test_nazwa_galezi_na_wypchnietym_commicie(self):
+        self.git("branch", f"oferta-{ASCII}")
+        self.zablokowany(self.push(f"oferta-{ASCII}"), BLAD_LISTY, "Push zablokowany")
+        self.zablokowany(self.push(f"HEAD:refs/heads/oferta-{OGONEK}"), BLAD_LISTY, "Push zablokowany")
+
+    def test_tag_adnotowany(self):
+        self.git("tag", "-a", "v-test", "-m", f"wydanie po rozmowie z {DWA}")
+        self.zablokowany(self.push("v-test"), "tag", BLAD_LISTY, "Push zablokowany")
+        self.git("tag", "-a", "v-czysty", "-m", "wydanie testowe")
+        self.przeszedl(self.push("v-czysty"))
+        self.git("tag", f"v-{ASCII}")
+        self.zablokowany(self.push(f"v-{ASCII}"), BLAD_LISTY, "Push zablokowany")
+
     # --- kopia robocza git (worktree), folder budowy bez DOM_HUB --------------------------------------
     def test_worktree(self):
         wt = self.repo / ".claude" / "worktrees" / "wt"

@@ -1,6 +1,6 @@
 #!/bin/sh
-# Ostatnia kontrola przed GitHubem: każdy wysyłany commit (metadane, wiadomość, zmienione pliki),
-# także zrobiony z pominięciem hooków (git commit --no-verify).
+# Ostatnia kontrola przed GitHubem: każdy wysyłany commit (metadane, wiadomość, zmienione pliki i ich nazwy),
+# także zrobiony z pominięciem hooków (git commit --no-verify), oraz nazwy gałęzi i tagów i treść tagów adnotowanych.
 zero=0000000000000000000000000000000000000000
 while read lokalny_ref lokalny_sha zdalny_ref zdalny_sha; do
   [ "$lokalny_sha" = "$zero" ] && continue            # usuwanie gałęzi
@@ -9,7 +9,7 @@ while read lokalny_ref lokalny_sha zdalny_ref zdalny_sha; do
   else
     zakres="$zdalny_sha..$lokalny_sha"
   fi
-  python3 tools/build.py --commity "$zakres" || {
+  python3 tools/build.py --commity "$zakres" --ref "$lokalny_ref" --ref "$zdalny_ref" --obiekt "$lokalny_sha" || {
     echo ""
     echo "Push zablokowany ($lokalny_ref): powyższe dane trafiłyby do publicznego repo."
     echo "Popraw commity (git commit --amend / git rebase), zanim wyślesz."

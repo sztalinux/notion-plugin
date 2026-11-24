@@ -297,6 +297,7 @@ def kontrola_prywatnosci() -> list:
         if (not f.is_file() or set(rel.parts) & POMIJANE_KATALOGI
                 or rel.as_posix().startswith((".claude/skills", ".claude/worktrees"))):
             continue
+        bledy += sprawdz_tekst(f"{rel} (nazwa)", rel.as_posix(), zakazane)  # nazwa pliku też jest publiczna
         if f.suffix.lower() in BINARNE or DANE_OBSERWATORA.search(rel.as_posix()):
             bledy.append(f"{rel}: plik z danymi w repo – dokumenty trzymaj w folderze budowy")
             continue
@@ -356,6 +357,7 @@ def kontrola_commitow(zakres: list) -> list:
         # -c: w scaleniu pliki różne od wszystkich rodziców – treść wniesiona przy rozwiązaniu konfliktu
         for sciezka in filter(None, git("diff-tree", "-z", "-c", "--no-commit-id", "-r", "--root", "--name-only",
                                         "--diff-filter=AMR", sha).split("\0")):
+            bledy += sprawdz_tekst(f"{k} {sciezka} (nazwa)", sciezka, zakazane)
             if (Path(sciezka).suffix.lower() in BINARNE or DANE_OBSERWATORA.search(sciezka)
                     or sciezka.startswith("dane/")):
                 bledy.append(f"{k} {sciezka}: plik z danymi w commicie")
@@ -367,6 +369,25 @@ def kontrola_commitow(zakres: list) -> list:
                     bledy.append(nieczytelne(f"{k} {sciezka}"))
                 continue
             bledy += sprawdz_tekst(f"{k} {sciezka}", tresc, zakazane)
+    return bledy
+
+
+def kontrola_refow(nazwy: list, obiekt: str) -> list:
+    """Nazwy wysyłanych refów – lokalna i zdalna (pre-push) – i treść tagu adnotowanego: nazwa gałęzi i tagu,
+    autor tagu i jego opis są publiczne jak wiadomość commita."""
+    zakazane = zakazane_slowa()
+    bledy = [b for n in nazwy if n for b in sprawdz_tekst(f"nazwa refu {n}", n, zakazane)]
+    widziane = set()
+    while obiekt and obiekt not in widziane and git("cat-file", "-t", obiekt).strip() == "tag":
+        widziane.add(obiekt)
+        naglowek, _, opis = git("cat-file", "-p", obiekt).partition("\n\n")
+        pola = dict(l.split(" ", 1) for l in naglowek.splitlines() if " " in l)
+        m = re.match(r"(.*) <(.*)> \d+ [+-]\d+$", pola.get("tagger", ""))
+        if m:
+            bledy += sprawdz_osobe(f"tag {obiekt[:7]} autor", m.group(1), m.group(2), zakazane)
+        bledy += sprawdz_tekst(f"tag {obiekt[:7]} nazwa", pola.get("tag", ""), zakazane)
+        bledy += sprawdz_tekst(f"tag {obiekt[:7]} opis", opis, zakazane)
+        obiekt = pola.get("object", "")  # tag na tag
     return bledy
 
 
@@ -445,14 +466,19 @@ def main() -> int:
     ap.add_argument("--tozsamosc", action="store_true", help="pre-commit: autor i commiter")
     ap.add_argument("--wiadomosc", metavar="PLIK", help="commit-msg: treść wiadomości")
     ap.add_argument("--commity", metavar="ZAKRES", help="pre-push: zakres dla git rev-list, np. 'a..b' lub 'sha --not --remotes'")
+    ap.add_argument("--ref", action="append", default=[], metavar="NAZWA",
+                    help="pre-push: nazwa wysyłanego refu (lokalna i zdalna; można powtórzyć)")
+    ap.add_argument("--obiekt", metavar="SHA", default="", help="pre-push: wysyłany obiekt – tag adnotowany: autor i opis")
     a = ap.parse_args()
-    for flaga, kontrola in ((a.tozsamosc, kontrola_tozsamosci), (a.wiadomosc, lambda: kontrola_wiadomosci(a.wiadomosc)),
-                            (a.commity, lambda: kontrola_commitow(a.commity.split()))):
-        if flaga:
-            bledy = kontrola()
-            for b in bledy:
-                print("  ✗", b)
-            return 1 if bledy else 0
+    kontrole = [k for flaga, k in ((a.tozsamosc, kontrola_tozsamosci),
+                                   (a.wiadomosc, lambda: kontrola_wiadomosci(a.wiadomosc)),
+                                   (a.commity, lambda: kontrola_commitow(a.commity.split())),
+                                   (a.ref or a.obiekt, lambda: kontrola_refow(a.ref, a.obiekt))) if flaga]
+    if kontrole:
+        bledy = [b for k in kontrole for b in k()]
+        for b in bledy:
+            print("  ✗", b)
+        return 1 if bledy else 0
     bledy = waliduj()
     if bledy:
         print("WALIDACJA – BŁĘDY:")
