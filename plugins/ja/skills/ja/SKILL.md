@@ -41,7 +41,7 @@ Podział wpisów na obszary **nie jest w harnessie** – jest w bazie Notion „
 | „kupić X”, link do produktu, „kupiłem X”, „co kupić” (nie suplementy; nie rzeczy na budowę ani działkę – te `zakupy` z `dom-budowa`) | `zadania` (sekcja „Zakupy”) |
 | mówi o dziecku: obserwacja, „porozmawiać z nią o…”, prezent, zabawa, zalecenie specjalisty | `dziecko` |
 | „kończy się X”, „kupiłem X”, „zaczynam / przerwa od” (suplement) | `suple` |
-| „przegląd dnia”, wieczorne zaplanowane zadanie | `przeglad-dnia` |
+| „przegląd dnia”, „podsumuj dzień”, nocny przebieg na Macu | `przeglad-dnia` |
 | budżet domowy: wydatek w skrócie „kwota, konto, osoba, kategoria, opis” albo zwykłym zdaniem „wydałem N zł na…”, zdjęcie paragonu z dopiskiem „kto i czym” (przebieg albo Claude Code na Macu; wydatek na budowę – reguła `dom-budowa/skills/koszty/references/wydatek-przeplyw.md`); „zamknijmy miesiąc”, wyciągi z banku, lista Allegro, „przenieś decyzje budżetu” (tylko Claude Code na Macu) | `budzet` |
 | „przegląd tygodnia”, „podsumuj tydzień”, tygodniowe zaplanowane zadanie, „posprzątaj dziennik”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – `harmonogram`) | `przeglad-tygodnia-osobisty` (uruchamia też przegląd budowy) |
 | „stan kopii”, „zrobiłem kopię na dysk / eksport Notion”, kopie zapasowe | Claude Code na Macu: `docs/kopie-zapasowe.md` w repo harnessu (`tools/kopie.py stan` / `potwierdz`); poza nim poproś, żeby inwestor powtórzył to w Claude Code na Macu (inaczej potwierdzenie nie trafi do rejestru) |

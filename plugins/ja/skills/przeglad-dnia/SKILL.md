@@ -182,7 +182,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    edycję (`wpisy`, krok 7) zrób na końcu przebiegu, po kroku 8, gdy znasz już wszystkie liczby (kroki 3–5 doliczają
    ślad kroku 1 z tego przebiegu – na stronie jeszcze go nie ma; krok 3 dostaje listę wpisów budowy z kroku 1). Bloki 🔔 z kroków 2, 5, 5a–5b, 6, 7 (nowe i zmieniane) zapisz **jedną punktową edycją „Wpisów”** pod nagłówkiem 🔔 w tym samym momencie:
    ```
-   🤖 15.10 wieczór: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
+   🤖 15.10 noc: dziś przetworzono 6 (budowa 3) · SP: 1 domknięte · zadania: 3 zamknięte, uzupełniono 2 · spójność: 1 nowa flaga · zakupy: 1 flaga, 2 daty · czeka na Ciebie 1 · komunikaty: 1 · research: 1 gotowy · rozkminki: 1 · jutro: 2 prywatne, 3 budowa → przeglądy
    	- jutro: <sprawa – kto – kiedy>      ← max 3 punkty: najpierw prywatne, potem 1 najważniejszy budowy
    ```
 10. **Odpowiedź** (log zadania): linia „🤖” + lista zapisów (gdzie, link) i błędów.
