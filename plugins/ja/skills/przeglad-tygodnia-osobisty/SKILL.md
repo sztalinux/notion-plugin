@@ -34,7 +34,9 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
      (`przeglad-dnia/references/uklad-wpisu.md`, A, „Naprawa raz w tygodniu”) – bez pytania, to tylko format;
    - TASKS widok „🤖 Tydzień – prywatne” (`view://3faf5982-09e7-81b5-ad0a-000c1cfabfa0`): zamknięte w tygodniu, po terminie
      (tylko Deadline ☑ i „czekam na” – WAITING, Kto ≠ Ja; orientacyjne po dacie – sam licznik, `zadania`, „Termin twardy czy orientacyjny”),
-     z terminem w 7 dni (osobno Prywatne / Dziecko / Praca); SOMEDAY tylko licznikiem;
+     z terminem w 7 dni (osobno Prywatne / Dziecko); SOMEDAY tylko licznikiem;
+   - praca – baza 🔨 TASKS na 💼 WORK, widok „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (ID w `ja/references/notion-mapa.md`):
+     zamknięte w tygodniu i z terminem w 7 dni (baza nie ma pola Deadline – praca nie bywa „po terminie”);
    - Wpisy emocji widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81ec-83af-000c8b518d37`): liczba wpisów, najczęstsze
      emocje, średnia intensywność, powtarzające się triggery i potrzeby (kilka słów, bez cytatów);
    - Dziennik produktywności widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81af-9ea1-000cbe3dd643`): dni zapisane,

@@ -93,7 +93,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 ## C. Odczyt
 
 Strona ✅ Zadania ma zakładki: 📅 Dziś i tydzień (wszystkie obszary; widoki „📅 Dziś” – po terminie i na dziś, „🗓 Tydzień (7 dni)”),
-🛒 Zakupy, 🏠 Prywatne (z pracą), 🏗 Budowa, 👪 Dziecko. „Co mam dziś / w tym tygodniu” → widoki „📅 Dziś” i „🗓 Tydzień (7 dni)”;
+🛒 Zakupy, 🏠 Prywatne, 🏗 Budowa, 👪 Dziecko (praca – baza 🔨 TASKS na 💼 WORK). „Co mam dziś / w tym tygodniu” → widoki „📅 Dziś” i „🗓 Tydzień (7 dni)”;
 jutro → „📅 Jutro – wszystko”; sprawy jednego obszaru → widok jego zakładki (ID: `ja/references/notion-mapa.md`).
 Pokaż w tabeli: zadanie | obszar | termin | status; zadania po terminie (tylko z Deadline ☑ – sekcja niżej) osobno na górze,
 orientacyjne po dacie w zwykłej kolejności. SOMEDAY pokazuj tylko licznikiem, chyba że pyta o nie wprost.
@@ -126,7 +126,7 @@ Puste Obszar znaczy w starych wierszach Dom, więc zadanie prywatne z pustym Obs
 
 | Pole (puste) | Uzupełnij |
 |---|---|
-| Obszar | **Dom** – gdy Kategoria jest budowlana (Media, Kredyt, Czyszczenie działki, Stan zero, SSO, Ogrodzenie, Teren, Przygotowanie do budowy, Wiata kontener, Projektowanie, Zakup działki, Ogród). **Prywatne** – Kategoria Zdrowie lub Nauka. Inaczej z nazwy i opisu, tylko gdy jednoznaczne (dziecko, praca, zwykła sprawa prywatna); wątpliwość → „❓” |
+| Obszar | **Dom** – gdy Kategoria jest budowlana (Media, Kredyt, Czyszczenie działki, Stan zero, SSO, Ogrodzenie, Teren, Przygotowanie do budowy, Wiata kontener, Projektowanie, Zakup działki, Ogród). **Prywatne** – Kategoria Zdrowie lub Nauka. Inaczej z nazwy i opisu, tylko gdy jednoznaczne (dziecko, zwykła sprawa prywatna); wątpliwość → „❓”. **Sprawa z pracy** → Obszaru nie ustawiaj; to-do w 🔔 `luki-zadan-<dd.mm>` „Przenieść do 🔨 TASKS (WORK)?” – ☑ = nowy wiersz w 🔨 TASKS (Name, When, Status, Priority, Desc jak w sekcji A), a wiersz TASKS → ARCHIVED z dopiskiem w treści „przeniesione do WORK: <wzmianka>” |
 | Kto | Ja – chyba że Status WAITING albo nazwa lub opis wskazuje kogoś innego (wtedy 🔔 `luki-zadan-<dd.mm>`) |
 | Priority | Medium |
 | Kategoria | Obszar inny niż Dom: z nazwy (Zakup, Zdrowie, Nauka), niejasne → Inne. Obszar Dom zostaw (kategorię nadają `notatka` i `harmonogram`) |

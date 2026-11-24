@@ -127,7 +127,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **Uzupełnij luki** w tych wierszach według `zadania`, sekcja D (tylko wskazane pola; Status i When nie zmieniaj; wątpliwości
    → jeden zbiorczy blok 🔔 (`wpisy/references/pytania.md`, C.7)). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie
    (krok 8) i do linii „🤖” weź liczby per kategoria, nazwy zamkniętych i zmienionych (max 5 na obszar, reszta „+k”) i listę
-   uzupełnionych pól. **Odpowiedzi na dawne bloki `luki-zadan-<dd.mm>`:** to-do = uzupełnij pole wg propozycji (dopisek ma pierwszeństwo), blok → „Przetworzone”; nowy blok ma ten klucz.
+   uzupełnionych pól. **Odpowiedzi na dawne bloki `luki-zadan-<dd.mm>`:** to-do = uzupełnij pole wg propozycji albo przenieś zadanie do WORK (`zadania`, D; dopisek ma pierwszeństwo), blok → „Przetworzone”; nowy blok ma ten klucz.
 
    **5a. Kontrola spójności** – `references/kontrola-spojnosci.md`: zastosuj odpowiedzi inwestora na dawne flagi `KS-…`, potem
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.
