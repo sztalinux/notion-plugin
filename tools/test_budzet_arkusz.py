@@ -266,6 +266,22 @@ class Synchronizacja(unittest.TestCase):
         licz, _, _ = self.sync()
         self.assertEqual((licz['usuniete'], self.atrapa.w, self.plik('2026-12')), (1, [], {}))
 
+    def test_zamknij_wpisy_po_id_bez_znacznika_wyslany_i_brak(self):
+        """Recenzja A-1: zamknij-wpisy <id> na zapisie bez znacznika (ścieżka z ✗ sync i docs §5) oznacza go; zapis już
+        wysłany (zwykły znacznik) i nieistniejące ID – ✗ z powodem i kod 1, znacznik wysyłki bez zmian."""
+        self.zapisz('2026-12', wpis('w2', '2026-12-02'))
+        self.sync()
+        zn = self.plik('2026-12')['w2']['arkusz']
+        self.zapisz('2026-12', *self.plik('2026-12').values(), wpis('w1', '2026-12-03'))
+        with redirect_stdout(io.StringIO()) as out:
+            self.assertEqual(AB.main(['zamknij-wpisy', '1']), 0)  # ID bez prefiksu w
+        self.assertEqual((self.plik('2026-12')['w1']['arkusz']['zamkniecie'], '1 zapisach' in out.getvalue()), ('2026-12', True))
+        for ids, oczek in ((['w2'], 'ma już wiersz z ID'), (['wX'], 'brak zapisu')):
+            with redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(AB.main(['zamknij-wpisy', *ids]), 1, out.getvalue())
+            self.assertIn(oczek, out.getvalue())
+        self.assertEqual(self.plik('2026-12')['w2']['arkusz'], zn)
+
     def test_przypnij_z_pliku_zamkniecia(self):
         self.zapisz('2026-12', wpis('wp-1', '2026-12-02', kwota=-30.0), wpis('wp-2', '2026-12-02', kwota=-20.0))
         self.sync()

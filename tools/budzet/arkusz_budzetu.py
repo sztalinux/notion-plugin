@@ -157,10 +157,11 @@ def plan(mimo_zamkniecia=False):
     return dop, pop, usu, bez, odm
 
 
-def zamknij_wpisy(mies=None, ids=None):
+def zamknij_wpisy(mies=None, ids=None, odmowy=None):
     """Znacznik zamknięcia dla wpisów z list wpisy_rozstrzygniete (mies – jeden miesiąc, None – wszystkie zamknięte) albo
     dla podanych ids (odświeża też znacznik zamknięcia po ręcznej poprawce wiersza). Zwykłego znacznika wysyłki nie rusza.
-    Pod blokadą plików wpisów, idempotentne. -> liczba oznaczonych."""
+    Pod blokadą plików wpisów, idempotentne. -> liczba oznaczonych; podane ids, których nie oznaczono -> odmowy [(id, powód)]."""
+    odmowy = odmowy if odmowy is not None else []
     if ids is not None:
         cel = {i: None for i in set(ids) | {'w' + i for i in ids}}
     else:
@@ -168,7 +169,7 @@ def zamknij_wpisy(mies=None, ids=None):
         if mies and mies not in zamk:
             raise SystemExit(f'✗ brak miesiace/{mies}-zapis.json – najpierw przenies.py --miesiac {mies}')
         cel = {i: m for m, lista in zamk.items() if (mies is None or m == mies) for i in (lista or [])}
-    n = 0
+    n, znalezione = 0, set()
     if not cel:
         return n
     with blokada_wpisow():
@@ -177,11 +178,20 @@ def zamknij_wpisy(mies=None, ids=None):
             hit = [w for w in ws if w['id'] in cel and not w.get('usuniety')
                    and (not w.get('arkusz') or (ids is not None and w['arkusz'].get('zamkniecie')))]
             for w in hit:
-                w['arkusz'] = {'zamkniecie': cel[w['id']] or (w['arkusz'] or {}).get('zamkniecie') or m, 'skrot': skrot(w),
+                w['arkusz'] = {'zamkniecie': cel[w['id']] or (w.get('arkusz') or {}).get('zamkniecie') or m, 'skrot': skrot(w),
                                'czas': teraz()}
+            if ids is not None:
+                for w in ws:
+                    if w['id'] in cel and w not in hit:
+                        odmowy.append((w['id'], 'usunięty we wpisach' if w.get('usuniety') else
+                                       f"ma już wiersz z ID w arkuszu (wysłany, wiersz {w['arkusz'].get('wiersz')}) – znacznika "
+                                       'zamknięcia nie daję; dubel z ręcznym wierszem: usuń ręczny wiersz (bez ID)'))
+                znalezione.update(w['id'] for w in ws if w['id'] in cel)
             if hit:
                 zapisz_wpisy(m, ws)
                 n += len(hit)
+    if ids is not None:
+        odmowy += [(i, 'brak zapisu o tym ID w plikach wpisów') for i in ids if i not in znalezione and 'w' + i not in znalezione]
     return n
 
 
@@ -471,9 +481,17 @@ def main(argv=None):
     if a.polecenie == 'zamknij-wpisy':
         if not a.miesiac and not a.ids:
             ap.error('zamknij-wpisy: podaj --miesiac RRRR-MM albo ID zapisów')
-        n = zamknij_wpisy(a.miesiac, a.ids or None)
+        odmowy = []
+        try:
+            with trwa_sync(CZEKAJ_NA_SYNC_S):  # nie w środku wysyłki – sync nadpisałby znacznik zwykłym
+                n = zamknij_wpisy(a.miesiac, a.ids or None, odmowy)
+        except BladArkusza as e:
+            print(f'  ✗ zamknij-wpisy: {e}')
+            return 1
         print(f'{ETYKIETA} zamknij-wpisy: znacznik zamknięcia w {n} zapisach – sync ich nie dopisze')
-        return 0
+        for i, powod in odmowy:
+            print(f'  ✗ {i}: {powod}')
+        return 1 if odmowy else 0
     if a.polecenie == 'blokada':
         if a.ids not in (['zaloz'], ['zdejmij']):
             ap.error('blokada: podaj zaloz albo zdejmij')
