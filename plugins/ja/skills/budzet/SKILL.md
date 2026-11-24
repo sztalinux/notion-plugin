@@ -179,8 +179,8 @@ Przychód z jej Osobą**. Wiersz w Transakcjach (kategoria `przychod_z_sald`) ma
 - Pensja w arkuszu brutto (przelew + pakiety jako osobne wiersze) – przelew z banku nie jest wtedy nowym wierszem.
 - Pary pomijane razem (np. wydatek oddany tego samego dnia) – `ustawienia.json` → `pary_pomijane`.
 - Pytaj tylko o to, czego nie da się ustalić z danych; jedna lista braków zamiast serii pytań.
-- Już w arkuszu: ID w kolumnie O, potem wiersz z wpisu (przypięcie, wyżej), potem 1:1 (także przez przełom miesiąca, ±3 dni;
-  miesiąc wiersza z daty, nie z kolumny M), potem ≈1:1 (ręczny wpis do złotówki
+- Już w arkuszu: ID w kolumnie O, potem wiersz z wpisu (przypięcie, wyżej), potem 1:1 (miesiąc wiersza z daty, nie z kolumny M;
+  przez przełom miesiąca ±3 dni dopiero na końcu, gdy wyciąg obejmuje dzień wiersza), potem ≈1:1 (ręczny wpis do złotówki
   różnicy, ±3 dni, jedyny kandydat), potem sumy; pozycje list i wpisów (gotówka, konta drugiej osoby) – ID albo ręczny wiersz
   z tą samą kwotą, kontem i kategorią. Wiersze z wpisów nie liczą się do „wpisane ręcznie do dnia X”.
 - Zakładka roku: kolory daje formatowanie warunkowe – nie koloruj ręcznie; nazwa podkategorii unikalna w całym arkuszu.

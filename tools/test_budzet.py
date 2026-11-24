@@ -392,17 +392,23 @@ class PrzeplywArkusz(unittest.TestCase):
 
     def test_a10_reczny_wiersz_przez_przelom_i_bez_kolumny_m(self):
         """A-10: ręczny wiersz z 30.11 i płatność 1.12 (reguła „Zawsze”) – 1:1, nie drugi wiersz; wiersz z pustą kolumną M –
-        miesiąc z daty."""
-        self.zen_wiele(('1 Dec 2026', 'SKLEP STALY', '-50.00'), ('30 Dec 2026', 'INNE', '-1.00'))
+        miesiąc z daty. Wyciąg bez dnia wiersza albo płatność dalej niż ±3 dni – osobny zakup, bez przełomu."""
+        x = ('29 Nov 2026', 'INNE', '-1.00')  # wyciąg obejmuje dzień ręcznego wiersza
+        self.zen_wiele(x, ('1 Dec 2026', 'SKLEP STALY', '-50.00'), ('30 Dec 2026', 'INNE', '-1.00'))
         bez_m = wiersz_ark('2026-12-01', 50.0, 'K-bank', '')
         bez_m[12] = ''
-        for wiersz in (wiersz_ark('2026-11-30', 50.0, 'K-bank', ''), bez_m):
+        for wiersz, sposob in ((wiersz_ark('2026-11-30', 50.0, 'K-bank', ''), '1:1 (przez przełom miesiąca)'), (bez_m, '1:1')):
             self.ark(wiersz)
             m = self.importuj('--zen', 'zen.csv', mies='2026-12')
-            self.assertEqual(([a['regula'] for a in m['auto']], [j['sposob'] for j in m['juz'] if j['kwota'] == -50.0]), ([], ['1:1']))
-        self.ark(wiersz_ark('2026-11-28', 50.0, 'K-bank', ''))  # 4 dni – dalej niż próg (±3)
-        self.zen_wiele(('2 Dec 2026', 'SKLEP STALY', '-50.00'), ('30 Dec 2026', 'INNE', '-1.00'))
-        self.assertEqual([a['regula'] for a in self.importuj('--zen', 'zen.csv', mies='2026-12')['auto']], ['SKLEP STALY'])
+            self.assertEqual(([a['regula'] for a in m['auto']], [j['sposob'] for j in m['juz'] if j['kwota'] == -50.0]),
+                             ([], [sposob]))
+        for zen, wiersz in (((x, ('2 Dec 2026', 'SKLEP STALY', '-50.00')), '2026-11-28'),  # 4 dni – dalej niż próg (±3)
+                            ((('1 Dec 2026', 'SKLEP STALY', '-50.00'),), '2026-11-30'),  # wyciąg od 1.12 – nie wiadomo
+                            ((('29 Nov 2026', 'SKLEP STALY', '-50.40'), ('1 Dec 2026', 'SKLEP STALY', '-50.00')),
+                             '2026-11-30')):  # wiersz ma swoją płatność (≈1:1) – 1.12 to osobny zakup
+            self.ark(wiersz_ark(wiersz, 50.0, 'K-bank', ''))
+            self.zen_wiele(*zen, ('30 Dec 2026', 'INNE', '-1.00'))
+            self.assertEqual([a['regula'] for a in self.importuj('--zen', 'zen.csv', mies='2026-12')['auto']], ['SKLEP STALY'])
 
     def test_regula_do_dnia_x_bez_wierszy_z_wpisow(self):
         self.zen_wiele(('5 Dec 2026', 'SKLEP STALY', '-10.00'), ('30 Dec 2026', 'INNE', '-1.00'))

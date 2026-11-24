@@ -145,12 +145,10 @@ for t in bank:
     if t['id'] not in para and not t.get('jednostka'):
         pozbank[(t['konto'], t['mies'])].append(t)
         pozbank[t['konto']].append(t)
-PRZELOM_1_1 = 3  # ręczny wiersz z końca miesiąca, płatność zaksięgowana na początku następnego
 for r in nasze:
-    k = [t for t in pozbank[r['konto']] if t['id'] not in para and abs(t['kwota']) == r['kwota'] and pasuje(r, t)
-         and (t['mies'] == r['mies'] or (r['data'] and abs((t['data'] - r['data']).days) <= PRZELOM_1_1))]
+    k = [t for t in pozbank[(r['konto'], r['mies'])] if t['id'] not in para and abs(t['kwota']) == r['kwota'] and pasuje(r, t)]
     if k:
-        t = min(k, key=lambda t: (abs((t['data'] - r['data']).days) if r['data'] else 0, t['mies'] != r['mies']))
+        t = min(k, key=lambda t: abs((t['data'] - r['data']).days) if r['data'] else 0)
         para[t['id']] = (r, '1:1')
         r['uzyty'] = True
 for r in nasze:  # ręcznie wpisane z zaokrągleniem albo literówką: do złotówki różnicy, ±3 dni, jedyny kandydat
@@ -174,6 +172,22 @@ for r in nasze:
                 para[t['id']] = (r, f'w sumie {n} płatności')
             r['uzyty'] = True
             break
+# ręczny wiersz z końca miesiąca, płatność zaksięgowana 1.–3. dnia następnego (albo odwrotnie): 1:1 przez przełom – dopiero
+# po wszystkich dopasowaniach w miesiącu i tylko gdy wyciąg konta obejmuje dzień wiersza (inaczej własna płatność wiersza
+# mogła być poza plikiem, a płatność z sąsiedniego miesiąca to osobny zakup)
+PRZELOM_1_1 = 3
+POCZATEK_WYCIAGU = {}
+for t in bank:
+    POCZATEK_WYCIAGU[t['konto']] = min(POCZATEK_WYCIAGU.get(t['konto'], t['data']), t['data'])
+for r in nasze:
+    if r.get('uzyty') or not r['data'] or POCZATEK_WYCIAGU.get(r['konto'], r['data']) > r['data']:
+        continue
+    k = [t for t in pozbank[r['konto']] if t['id'] not in para and t['mies'] != r['mies'] and abs(t['kwota']) == r['kwota']
+         and pasuje(r, t) and abs((t['data'] - r['data']).days) <= PRZELOM_1_1]
+    if k:
+        t = min(k, key=lambda t: abs((t['data'] - r['data']).days))
+        para[t['id']] = (r, '1:1 (przez przełom miesiąca)')
+        r['uzyty'] = True
 
 paruj_wpisy(False)
 
