@@ -28,7 +28,7 @@ dziecko, suplementy, przegląd dnia, rozwój harnessu) i `plugins/dom-budowa/ski
 | Pulpit budowy: „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło”, decyzje z pulpitu do Notion | `plugins/dom-budowa/skills/pulpit/SKILL.md` |
 | Model 3D domu i ogrodu w Blenderze: „przebuduj model 3D”, „zmień podłogę w salonie”, „dodaj okno dachowe”, „pokaż widok z…”, rendery elewacji, „wprowadź poprawki modelu” (lista w Notion) | `plugins/dom-budowa/skills/model-3d/SKILL.md` |
 | Lista zakupów na etap, oferty hurtowni, kiedy zamawiać, dostawa | `plugins/dom-budowa/skills/zakupy/SKILL.md` |
-| Luźne wpisy ze strony „📓 Dziennik”: „przerób dziennik”, kilka notatek naraz | `plugins/ja/skills/wpisy/SKILL.md` |
+| Luźne wpisy ze strony „📝 Wpisy” (pod „📓 Dziennikiem”): „przerób dziennik”, kilka notatek naraz | `plugins/ja/skills/wpisy/SKILL.md` |
 | Emocja, dzień w pracy, podsumowanie emocji | `plugins/ja/skills/emocje/SKILL.md` |
 | Zadania prywatne / dziecka / pracy, „zrobiłem X”, „co mam jutro” | `plugins/ja/skills/zadania/SKILL.md` |
 | Dziecko: obserwacje, do przegadania, prezenty, zalecenia | `plugins/ja/skills/dziecko/SKILL.md` |

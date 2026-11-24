@@ -80,7 +80,7 @@ z ⚠ i inwestor o tym wie.
 |---|---|---|
 | Notion MCP (Claude Code, przebiegi `claude -p` na Macu) | przetwarzanie Dziennika, zapisy do Notion | ⚠ brak pełnego zapasu: wpisy czekają we „Wpisach” i Skrzynce (nic nie ginie), przebieg kończy się kodem 2 „NOTION: brak logowania” (problem czeka w `stan.json`; po zalogowaniu pierwszy udany przebieg zostawia tylko ślad „ustąpiło” w „Przetworzone” Dziennika, bez bloku 🔔 – w trakcie widać go wyłącznie w logu); skrypty z tokenem (indeks wiedzy, migawka, wydatki → arkusz) działają dalej |
 | Notion na claude.ai | zablokowany przez organizację | Skrzynka, migawka i indeks wiedzy (`budowa`, zasada 13) |
-| Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w 📓 Dzienniku w aplikacji Notion |
+| Claude Docs („📥 Skrzynka”) | zapisy z telefonu bez Notion | wpis wprost w „📝 Wpisach” (pod 📓 Dziennikiem) w aplikacji Notion |
 | Google Sheets / Drive + strona decyzji (artefakt, procedura `budzet`) | budżet domowy: odczyt Transakcji, zapis wierszy, decyzje inwestora | wynik `przenies.py` (`miesiace/RRRR-MM-zapis.json`) wkleja się ręcznie; decyzje można podać w czacie zamiast na stronie |
 | Notion MCP – zdjęcie paragonu we „📝 Wpisach” (`tools/budzet/paragon.py pobierz`, procedura `budzet`) | pobranie zdjęcia paragonu do `.dom/budzet/paragony/` i rozpisanie w przebiegu | sesja Claude Code: inwestor wkleja zdjęcie w rozmowę, rozpisanie tym samym `paragon.py rozpisz`; przebieg zostawia 🔔 |
 | Apps Script arkusza „Budżet domowy” (`tools/budzet/arkusz_budzetu.py`) | wydatki z wpisów od razu w Transakcjach, przypięcie płatności z wyciągu | wpisy czekają w pliku miesiąca; zamknięcie miesiąca dopisuje brakujące wiersze po ID, przypięcia – konektorem albo ręcznie (`docs/budzet-arkusz.md`, 4) |
