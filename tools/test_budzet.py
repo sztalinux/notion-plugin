@@ -557,6 +557,12 @@ class PrzeplywArkusz(unittest.TestCase):
         d = [d for d in m['decyzje'] if d['regula'] == 'SKLEP STALY'][0]
         self.assertEqual(([k['wiersz'] for k in d['kandydaci']], 'wR1' in d['uwaga']), ([2], True))
         self.assertIn('115', [x for x in m['decyzje'] if x['id'] == 'wR1'][0]['uwaga'])
+        # recenzja: bez propozycji – „Zatwierdź propozycje” jej nie weźmie (strona: sekcja „Do wyboru”, opcje zostają);
+        # bez decyzji przenies.py jej nie przepuszcza (bez_decyzji)
+        self.assertEqual((d['propozycja'], [o['kat'] for o in d['opcje']][:1]), (None, ['Zakupy']))
+        self.uruchom('przenies.py', '--miesiac', '2026-12')
+        self.assertEqual(([w for w in self.zapis('2026-12')['wiersze'] if d['id'] in w[14]], d['id'] in
+                          [x['id'] for x in self.zapis('2026-12')['bez_decyzji']]), ([], True))
         self.decyduj('2026-12', **{d['id']: {'akcja': 'juz', 'wiersz': 2}, 'wR1': {'akcja': 'juz', 'wiersz': 2}})
         self.uruchom('przenies.py', '--miesiac', '2026-12')
         z = self.zapis('2026-12')
@@ -566,6 +572,20 @@ class PrzeplywArkusz(unittest.TestCase):
         m = self.importuj('--zen', 'zen.csv', mies='2026-12')
         d = [d for d in m['decyzje'] if d['regula'] == 'SKLEP STALY'][0]
         self.assertEqual((m['auto'], d['kandydaci'], 'przypiecie_wpisu' in d, 'wR1' in d['uwaga']), ([], [], False, True))
+
+    def test_a2_okno_nie_siega_przez_przelom(self):
+        """Recenzja A-2: wpis bez pary z 1.12 nie ściąga płatności z 30.11 przy zamknięciu listopada, a wpis z 30.11
+        (sąsiedni miesiąc) – płatności z 1.12 przy zamknięciu grudnia; reguła „Zawsze” działa jak bez wpisu."""
+        for mies, wpisy, platnosc in (('2026-11', {'2026-12': [self.karta('wD1', '2026-12-01', 100.0)], '2026-11': []},
+                                       ('30 Nov 2026', 'SKLEP STALY', '-115.00')),
+                                      ('2026-12', {'2026-11': [self.karta('wN1', '2026-11-30', 70.0)], '2026-12': []},
+                                       ('1 Dec 2026', 'SKLEP STALY', '-85.00'))):
+            for m_, ws in wpisy.items():
+                self.wpisz(m_, *ws)
+            self.zen_wiele(('29 Nov 2026', 'INNE', '-1.00'), platnosc, ('5 Dec 2026', 'INNE', '-1.00'))
+            m = self.importuj('--zen', 'zen.csv', mies=mies)
+            self.assertEqual([a['regula'] for a in m['auto']], ['SKLEP STALY'], mies)
+            self.assertFalse(any('może to wpis' in d['uwaga'] for d in m['decyzje']), mies)
 
     def test_a3_przychod_bez_plusa_paruje_sie_z_wplywem(self):
         """A-3: „100, z, pen” (przychód bez „+”) – w arkuszu +100, więc przy zamknięciu paruje się z wpływem jak „+100”."""

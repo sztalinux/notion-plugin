@@ -366,8 +366,12 @@ for u in sorted(jednostki, key=lambda u: u['data']):
                     uwaga='z wpisu – w wyciągu nie ma takiej płatności (±4 dni); inne konto albo inny miesiąc? Pomiń, jeśli to duplikat')
 
 # wpisy z kart bez pary (inna kwota niż płatność o więcej niż złotówkę – napiwek, literówka): płatność z tego samego konta
-# ±1 dzień nie wchodzi sama obok wpisu – decyzja z wierszem wpisu jako kandydatem
-BEZ_PARY = [u for u in jednostki if not u.get('t') and not u.get('pokryty')]
+# ±1 dzień nie wchodzi sama obok wpisu – decyzja bez propozycji (jawny wybór, nie „Zatwierdź propozycje”) z wierszem wpisu
+# jako kandydatem. Tylko wpisy z zamykanego miesiąca (płatności też są z niego), więc okno nie sięga przez przełom: wpis
+# z 1.–4. dnia następnego miesiąca nie ściąga płatności z 30., a wpis z końca poprzedniego – z 1. dnia. Wpis ze znacznikiem
+# zamknięcia (rozstrzygnięty ręcznym wierszem) się nie liczy.
+BEZ_PARY = [u for u in jednostki if not u.get('t') and not u.get('pokryty') and u['data'].strftime('%Y-%m') == MIES
+            and not all((w.get('arkusz') or {}).get('zamkniecie') for w in u['czesci'])]
 
 
 def wpis_bez_pary(t):
@@ -525,7 +529,7 @@ for t in sorted(teraz, key=lambda t: (t['data'], t['konto'])):
     if moze_juz:
         uw.insert(0, f"na tym koncie wpisane ręcznie do {ostatnia[t['konto']].strftime('%d.%m')} – sprawdź, czy nie siedzi w sumie")
     decyzja(b, pewnosc='Zwykle' if pew == 'Zawsze' else pew, regula=g['klucz'] if g else '',
-            propozycja=prop if pew in ('Zwykle', 'Zawsze') else None, opcje=opcje, uwaga='; '.join(uw), moze_juz=moze_juz,
+            propozycja=prop if pew in ('Zwykle', 'Zawsze') and not u_bp else None, opcje=opcje, uwaga='; '.join(uw), moze_juz=moze_juz,
             kandydaci=kand, **({'przypiecie_wpisu': przyp_u} if u_bp and przyp_u else {}))
 
 # --- zamówienia Allegro jako wydatki
