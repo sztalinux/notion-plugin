@@ -53,7 +53,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    w folderze budowy treścią pobranej strony (jedyne odświeżenie kopii; bez dostępu do plików → „kopia instrukcji: do odświeżenia”).
    **Zdjęcia, kopie i jakość wiedzy (bez zmian w Notion i w repo):** `python3 tools/zdjecia.py stan` (etap, ostatni przebieg rozkładania zdjęć,
    blokada; liczby plików w `Zdjęcia/_nowe` na Dysku automat nie widzi – podaj „niesprawdzone”, sprawdza je „rozłóż zdjęcia” w Claude Code), `python3 tools/kopia.py stan --cicho` (kopia dokumentów) i `python3 tools/wiedza_jakosc.py przypomnij --cicho` (jedna linia, gdy
-   raport jakości czeka); polecenie niedostępne → „niesprawdzone”. Coś do zrobienia (pliki w `_nowe`, kopia po terminie, alarm jakości) → jeden
+   raport jakości czeka; przebieg złoty robi przed przebiegiem sam skrypt automatu – linii „przebieg złoty należny / nie mieści się” nie wpisuj do 🔔, to nie czynność inwestora: powtarza się → Usterka, `rozwoj-harnessu`, D); polecenie niedostępne → „niesprawdzone”. Coś do zrobienia (pliki w `_nowe`, kopia po terminie, alarm jakości) → jeden
    komunikat 🔔 z kluczem `zdjecia-i-kopie` (`wpisy/references/pytania.md`, C; „Co możesz zrobić”: np. „napisz w Claude Code »rozłóż zdjęcia«”); w tygodniowym
    wpisie tylko liczby.
    **Kopie zapasowe:** `python3 tools/kopie.py stan --cicho` (tylko odczyt; brak wyjścia = wszystko aktualne; polecenie

@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.26.2] – 2026-11-24 (ZP-4)
+
+- `przeglad-tygodnia-osobisty`: linia „przebieg złoty należny / nie mieści się” z `wiedza_jakosc.py przypomnij` nie trafia
+  do 🔔 `zdjecia-i-kopie` – to nie czynność inwestora. Przebieg złoty robi przed przebiegiem tygodniowym skrypt automatu
+  (poza repo); gdyby linia wracała → Usterka.
+
+## dom-budowa [3.19.2] – 2026-11-24 (ZP-4)
+
+- `wiedza/references/indeks-jakosc.md`: opis `przypomnij` – gdy poprzedni przebieg złoty trwał ≥ 10 s, zostaje tylko linia
+  „przebieg złoty należny”; w sesji Claude Code agent uruchamia `zloty` sam, w automatach robi to skrypt tygodniowy.
+
 ## ja [1.26.1] – 2026-11-19
 
 Poprawki po recenzji paragonów i budżetu domowego.

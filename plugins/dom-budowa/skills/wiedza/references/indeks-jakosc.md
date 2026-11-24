@@ -33,7 +33,10 @@ Narzędzie: `python3 tools/wiedza_jakosc.py` – tylko Claude Code na Macu (na c
   `pokaz [--pytania 30]` – lokalny HTML: pytanie → indeks → Notion (opis w `indeks-sedzia.md`).
 - `przypomnij --cicho` – przegląd tygodniowy (`przeglad-tygodnia-osobisty`) i polecenie ręczne: jedna linia, gdy raport tygodniowy czeka, są niepotwierdzone alarmy
   albo obserwator nie działa („obserwator nie działa: Typ” – najwyżej raz w tygodniu). Raz w tygodniu sam robi
-  przebieg `zloty`; przebieg odrzucony przez równoległy sync albo dłuższy niż 10 s – kolejna próba po dobie.
+  przebieg `zloty`, gdy poprzedni trwał < 10 s; przebieg odrzucony przez równoległy sync albo dłuższy niż 10 s –
+  kolejna próba po dobie. Poprzedni trwał ≥ 10 s → tylko linia „przebieg złoty należny”: w sesji Claude Code uruchom
+  `zloty` sam (nie przekazuj tego inwestorowi). Przebiegi automatu mają `zloty` zabronione – przed przebiegiem
+  tygodniowym uruchamia je skrypt automatu (bez progu 10 s), więc ta linia nie trafia do 🔔.
 
 Pytania: `.dom/wiedza/jakosc/pytania.json`, przy pierwszym użyciu kopia `tools/wiedza_jakosc_pytania.json` (pytania
 wymyślone, bez treści bazy). Format: `{"zestawy": {"NAZWA": [{"q": "pytanie", "wzory": ["drena", "glebok|poziom"]}]}}` –
