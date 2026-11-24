@@ -84,7 +84,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
 1. **Ostatni szybki przebieg** – jak A.1–A.4, ale bez reguły 15 minut (wieczorem przetwórz wszystko, co jednoznaczne).
    Komunikaty 🔔 z linią `→ ZP-n`: sprawdź Status tych wierszy Rodzaj Usterka w „🤖 Zmiany asystenta” (wyszukiwarka z parametrem bazy) –
    „Zrobione” albo „Odrzucone” → blok do „Przetworzone” (`wpisy/references/pytania.md`, C.5). Wiersze widoku „🧯 Otwarte usterki”
-   ze Statusem „Czeka na mnie” bez bloku 🔔 → dodaj blok (tamże, C.5).
+   ze Statusem „Czeka na mnie” bez pytania w bloku 🔔 → dodaj / popraw blok (tamże, C.5).
 2. **Pomysły, rozmowy i porządki** – bez analizy pomysłów (tylko na prośbę inwestora, `rozwoj-harnessu`, C) i bez odczytu tablicy
    pomysłów ani stron osób: kontrole spójności P (pomysł ↔ wdrożenie) i R (zadanie rozmowy ↔ „💬 Do przegadania”) robi przegląd
    tygodnia. Nocą tylko odpowiedzi: blok 🔔 `KS-P…` albo `KS-R…` z ☑ lub dopiskiem → zastosuj wg
@@ -124,7 +124,7 @@ zadanie prywatne z pustym Obszarem znaczy „Dom” i bez uzupełnienia trafiło
    **Uzupełnij luki** w tych wierszach według `zadania`, sekcja D (tylko wskazane pola; Status i When nie zmieniaj; wątpliwości
    → jeden zbiorczy blok 🔔 (`wpisy/references/pytania.md`, C.7)). Zapis wsadowy, jedna edycja na wiersz. Do wpisu w przeglądzie
    (krok 8) i do linii „🤖” weź liczby per kategoria, nazwy zamkniętych i zmienionych (max 5 na obszar, reszta „+k”) i listę
-   uzupełnionych pól. **Odpowiedzi na dawne bloki `luki-zadan-<dd.mm>` i `praca-…`:** to-do = uzupełnij pole wg propozycji albo przenieś zadanie do WORK (`zadania`, D; dopisek ma pierwszeństwo), blok → „Przetworzone”; nowy blok ma ten klucz.
+   uzupełnionych pól. **Odpowiedzi na dawne bloki `luki-zadan-<dd.mm>` i `praca-…`:** to-do = uzupełnij pole wg propozycji albo przenieś zadanie do WORK (`zadania`, D; dopisek ma pierwszeństwo), blok → „Przetworzone”; nowy zbiorczy blok luk ma klucz `luki-zadan-<dd.mm>`.
 
    **5a. Kontrola spójności** – `references/kontrola-spojnosci.md`: zastosuj odpowiedzi inwestora na dawne flagi `KS-…`, potem
    wychwyć nowe rozjazdy (dziś: zadanie budowy ↔ krok Harmonogramu) na wierszach z kroku 5, które mają relację Harmonogram.

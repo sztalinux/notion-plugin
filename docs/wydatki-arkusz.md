@@ -16,7 +16,7 @@ Gdzie co jest opisane:
 ## 1. Przepływ danych
 
 ```
-wpis w 📓 Dzienniku  ·  wiadomość do asystenta  ·  zdjęcie faktury  ·  wiersz dodany ręcznie w Notion
+wpis w 📝 Wpisach  ·  wiadomość do asystenta  ·  zdjęcie faktury  ·  wiersz dodany ręcznie w Notion
    │  agent wg koszty B/B2/B3 zapisuje stronę z Arkusz = „Do arkusza”
    ▼
 💸 Wydatki → arkusz   (baza Notion na DOM, collection://72cff09c-609b-405d-a32c-263271b3b59c)

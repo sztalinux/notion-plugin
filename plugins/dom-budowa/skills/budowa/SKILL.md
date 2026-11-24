@@ -54,7 +54,7 @@ Jedna rozmowa może wymagać kilku procedur (np. oferta → koszty → notatka).
 
 ## Luźny wpis z Dziennika
 
-Inwestor wpisuje wszystko na stronę „📓 Dziennik”; skill `wpisy` (plugin `ja`) rozpoznaje obszar „Budowa” i przekazuje wpis
+Inwestor wpisuje wszystko na stronę „📝 Wpisy”; skill `wpisy` (plugin `ja`) rozpoznaje obszar „Budowa” i przekazuje wpis
 tutaj (mechanika – strefy, pytania pod wpisem, „Przetworzone” – jest w `wpisy`). Dla każdego wpisu o budowie:
 
 1. **Klasa:** ustalenie/decyzja, pytanie do kogoś, ryzyko, zadanie z terminem, relacja z dnia na budowie, wiedza ogólna

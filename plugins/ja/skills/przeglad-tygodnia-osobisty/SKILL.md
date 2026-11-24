@@ -48,7 +48,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    - strona „💍 Wesele”: nowe punkty i zadania „Wesele:” z terminem w 30 dni;
    - Suple: Buy = tak (licznik, nazwy);
    - Zakupy: 🛒 Zakupy „Do kupienia” (licznik, najstarsze) i z Terminem w 7 dni (wymień).
-3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i bloki 🔔 starsze niż 7 dni bez odpowiedzi (wymień wpis i pytanie – sprawy budowy
+3. **Dziennik i harness** (odczyt): wpisy z okienkiem ❓ we „Wpisach” i bloki 🔔 starsze niż 7 dni bez odpowiedzi (poza blokami `ZP-n`; wymień wpis i pytanie – sprawy budowy
    tylko licznikiem, są w przeglądzie budowy); widok „📥 Zasady do wdrożenia” (Rodzaj Zasada) – wpisy do wdrożenia starsze niż 7 dni
    (przypomnienie: napisz „wdróż” w Claude Code). **Kontrola spójności pomysłów (grupa P)** – widok „🤖 Pomysły – kontrola
    wersji” (kilka wierszy) wg `przeglad-dnia/references/kontrola-spojnosci-pomysly.md`: wersję uzupełniasz tylko z nagłówka
@@ -103,7 +103,7 @@ Bez pytania (także w zaplanowanym przebiegu – to tylko ślad, linki są w doc
   (najpierw wklej na górę archiwum, sprawdź, potem zdejmij; podstronę archiwum na dole strony zostaw – przy zamianie treści
   przepisz jej znacznik `<page>` bez zmian). Stronę budowy archiwizuje tak samo `przeglad-tygodnia` (porządki).
 Do zatwierdzenia (propozycja w przeglądzie):
-- wpisy z okienkiem ❓ i bloki 🔔 bez odpowiedzi od 14 dni → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
+- wpisy z okienkiem ❓ i bloki 🔔 bez odpowiedzi od 14 dni (poza blokami `ZP-n`) → zamknąć jako „pominięte”, przeformułować pytanie czy zostawić;
 - obszar z bazy Obszary, do którego nic nie trafiło od 60 dni → wyłączyć (Aktywny = nie)?;
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
 - TASKS prywatne z Deadline ☑ po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (propozycja domyślna na pozycję –
