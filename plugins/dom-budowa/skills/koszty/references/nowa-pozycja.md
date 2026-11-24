@@ -108,8 +108,8 @@ był nigdy uruchomiony na żywym arkuszu, więc pierwsze prawdziwe wstawienie ro
 2. `python3 tools/wydatki.py pobierz` i kopia `Koszty/Kosztorys_google.json` jako
    `<hub>/.dom/wydatki/migawka-RRRR-MM-DD-przed-pierwsza-pozycja.json`. Z konektorem odczytaj też sumy nagłówka etapu, RAZEM
    i „Kontrolę powiązań”.
-3. Pierwsza pozycja z listy `sesja` (dokładny tekst pola): `python3 tools/wydatki.py nowa-pozycja "<tekst>" --proba` – plan
-   (Lp, wiersz, suma etapu, wzór). Potem to samo bez `--proba`.
+3. Pierwsza pozycja z listy `sesja` (tekst dosłownie z listy – pełny, z typem i jednostką):
+   `python3 tools/wydatki.py nowa-pozycja "<tekst>" --proba` – plan (Lp, wiersz, suma etapu, wzór). Potem to samo bez `--proba`.
 4. Konektorem: nowy wiersz (formuły jak w sąsiedniej pozycji, Lp tekstem, Klucz „Lp Nazwa”, Kontrola pusta), sumy nagłówka
    etapu (zakres obejmuje nowy wiersz, wartości jak przed), RAZEM i „Kontrola powiązań” jak przed. Bez konektora – `pobierz`
    i porównanie z migawką z kroku 2 (te same wartości plus nowy wiersz).

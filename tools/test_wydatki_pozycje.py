@@ -319,6 +319,15 @@ class SyncNowaPozycja(unittest.TestCase):
         self.assertEqual(licz["nowe_pozycje"], 1)
         self.assertFalse(WY.plik_sesji().exists())
 
+    def test_15_skrot_w_polu_pelny_tekst_na_liscie_sesji(self):
+        # pole „47 | Szafki” (typ i jednostka ze strony) – na liście `sesja` pełny tekst, który przyjmie `nowa-pozycja` (D.3)
+        WY.znacznik_sprawdzenia().unlink()
+        a = Atrapy(odpowiedzi={"47": {"ok": True, "juz": False, "lp": "47.2", "klucz": "47.2 Szafki", "wiersz": 89}})
+        self.uruchom([strona("a", nowa="47 | Szafki")], a)
+        tekst_ = json.loads(WY.plik_sesji().read_text(encoding="utf-8"))["pierwsze_sprawdzenie"]["pozycje"][0]
+        self.assertEqual(tekst_, "47 | Szafki | Materiał | szt")
+        self.assertEqual(WY.nowa_pozycja(tekst_, {"typ": "", "jedn": ""})[1], "")
+
     def test_proba_nie_wola_arkusza(self):
         a = Atrapy()
         WY.arkusz, WY.W.zadanie_http, WY.kolejka = a.arkusz, a.http, (lambda k: [strona("a", nowa="47 | Szafki | Materiał | kpl")])

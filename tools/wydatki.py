@@ -459,7 +459,8 @@ def dodaj_nowe_pozycje(k: dict, nowe: list, wersja: int, licz: dict, bledy: list
             continue
         if r.get("na_sucho"):
             pierwsze = pierwsze or {"pozycje": [], "strony": []}
-            pierwsze["pozycje"].append(w["nowa"])
+            # pełny tekst z typem i jednostką (pole bywa skrótem „etap | nazwa”) – `nowa-pozycja` w sesji nie zna pól strony
+            pierwsze["pozycje"].append(" | ".join(p[x] for x in ("etap", "nazwa", "typ", "jedn")))
             pierwsze["strony"].append(w["id"])
             licz["czekaja_na_etap"] += 1
             czeka(w, "czeka na pierwsze sprawdzenie w sesji Claude Code (koszty C.8) – potem pójdzie sama")
