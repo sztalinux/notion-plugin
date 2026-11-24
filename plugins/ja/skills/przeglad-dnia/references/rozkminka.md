@@ -36,7 +36,8 @@ Polecenie zawiera „Gotowe rozkminki: <token> <url>, …” – to nowa praca (
   `` `rozkminka-<token>` `` i punktami „Do decyzji” z podstrony jako checkboxy (`wpisy/references/pytania.md`, C.7; odpowiedzi
   obsługuje nocny przebieg – dopisek „zastosuję w nocnym przeglądzie”);
 - ślad w „Przetworzone” zmień z `→ 🧠 rozkminka w toku <token>` na `→ 🧠 rozkminka: <wzmianka podstrony>`.
-Po udanym przebiegu `przeglad.py` zdejmuje te adresy z listy.
+Na końcu odpowiedzi osobna linia `GOTOWE: <token>, …` – same tokeny, których blok 🔔 jest zapisany, bez komentarza. Po udanym przebiegu `przeglad.py`
+zdejmuje z listy tylko je; reszta wraca w następnym poleceniu – blok `rozkminka-<token>` już jest → nie dodawaj drugiego.
 
 ## 4. Nocny przegląd
 

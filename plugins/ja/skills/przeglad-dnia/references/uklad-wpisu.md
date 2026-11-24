@@ -83,8 +83,8 @@ w ciągu dnia (prośba „plan dnia”) = plan na dziś, z dopiskiem „(ręczne
 - Limity: ramka max 3 punkty; każda lista max 5, reszta „+k” z odesłaniem do zakładki; „Najbliższe 7 dni” max 4 na dzień,
   dni bez spraw pomiń. Pusta sekcja → pomiń; pusta zakładka → jedna linia („Nic na najbliższe dni.”).
 - Emocje i notatki o dziecku – tylko liczby; zadania dziecka nazwą (to zadania, nie notatki).
-- Weekend (dzień planu sob./nd. – przebieg w piątek i sobotę): **pracy nie rób** – bez odczytów Jiry, pliku pracy i WORK,
-  zakładki 💼 nie ma, w 🧭 nic z pracy. Plan na poniedziałek (przebieg w niedzielę) – pełna zakładka, „Wczoraj” = piątek.
+- Weekend (dzień planu sob./nd. – przebieg nocny w sobotę i niedzielę o 2:00): **pracy nie rób** – bez odczytów Jiry, pliku pracy i WORK,
+  zakładki 💼 nie ma, w 🧭 nic z pracy. Plan na poniedziałek (przebieg nocny w poniedziałek o 2:00) – pełna zakładka, „Wczoraj” = piątek.
 - Informacje techniczne (nieudany odczyt) – tylko kursywą na końcu zakładki 📊.
 
 **Ramka – co do niej trafia (max 3, w tej kolejności):** krok bez odwrotu albo bramka w dniu planu · sprawa z godziną w dniu
