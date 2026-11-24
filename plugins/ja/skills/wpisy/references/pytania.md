@@ -106,9 +106,10 @@ albo nie uruchomił, brak logowania MCP Notion, skrypt po przebiegu zwraca błą
    przebieg nie zrobi, wybierz jedno: (a) zrób część, którą możesz, i zadaj ❓ albo 🔔 z propozycją, na którą wystarczy krótka
    odpowiedź; (b) podaj w ❓ albo 🔔 dokładną czynność dla inwestora (gdzie kliknąć, co wpisać), a po jego „zrobione” dokończ;
    (c) tylko praca techniczna (skrypt, struktura arkusza): wiersz ZP (pkt 5) – naprawia go Claude Code na polecenie
-   „zrób ZP-n” (`rozwoj-harnessu`, D), nie „najbliższa sesja”. Usterka wymaga inwestora albo blokuje jego pracę →
-   Status „Czeka na mnie” i blok 🔔 według pkt 5 (w „Co zrobić” np. „napisz w Claude Code »zrób ZP-n«”); inaczej bez
-   nowego bloku 🔔. Wzorzec (a) – wydatek budowy bez pasującej pozycji w kosztorysie: ❓ z gotową propozycją nowej
+   „zrób ZP-n” (`rozwoj-harnessu`, D), nie „najbliższa sesja”. Usterka blokuje pracę inwestora albo powinien o niej
+   wiedzieć → blok 🔔 z linią `→ ZP-n (<status>)` (pkt 5, pierwszy akapit; „Co możesz zrobić: napisz w Claude Code
+   »zrób ZP-n«”); wymaga jego czynności (dostęp, kliknięcie, decyzja) → Status „Czeka na mnie” (pkt 5, drugi akapit);
+   inaczej bez bloku 🔔. Wzorzec (a) – wydatek budowy bez pasującej pozycji w kosztorysie: ❓ z gotową propozycją nowej
    pozycji, „tak” wystarcza, resztę robi automat albo pierwsza sesja Claude Code (`koszty`, B.2; plugin dom-budowa).
    **Wyjątek:** nowy etap kosztorysu i pierwsze sprawdzenie nowej pozycji (`koszty` C.7–C.8) czekają na sesję Claude Code
    z dopiskiem w polu Błąd strony 💸 – to nie adnotacja do pilnowania przez inwestora: sprawa jest w linii stanu sesji
