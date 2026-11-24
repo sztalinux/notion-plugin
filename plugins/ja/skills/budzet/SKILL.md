@@ -50,7 +50,7 @@ z polem `grupa`), część na budowę także do kolejki 💸. **Paragon bez „k
    `python3 tools/budzet/arkusz_budzetu.py sync`. Starsze zapisy
    (listopad) i te, których skrypt arkusza nie przyjął, dopisze zamknięcie miesiąca po ID. Usunięcie wydatku:
    `python3 tools/budzet/wpis.py usun RRRR-MM <id>` (w sesji potem `sync` – wiersz znika z arkusza).
-   Wydatek budowy: dodatkowo `--budowa <id strony 💸>` i `--gotowka` (Sposób = Gotówka); konto budowy: `wpis.py ustaw-konto-budowy <skrót>`
+   Wydatek budowy: dodatkowo `--budowa <id strony 💸>` i `--gotowka` (Sposób = Gotówka albo brak informacji – wtedy gotówka)
    (`dom-budowa/skills/koszty/references/wydatek-przeplyw.md`). Składnia jest tu – nie sprawdzaj `--help`; jedno polecenie na wywołanie, ścieżka względna od repo, bez `cd`, potoków i `;`.
 3. „✗ pierwsze pole to nie kwota” → wpis nie jest wydatkiem w skrócie; obsłuż go inną procedurą albo pytaniem ❓.
    „nieznany skrót kategorii” → zapis zostaje; pytanie pojawi się na stronie decyzji, a odpowiedź doda skrót.

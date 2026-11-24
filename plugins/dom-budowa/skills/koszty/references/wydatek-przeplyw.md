@@ -23,19 +23,16 @@ prywatne? (propozycja: …)”.
 
 ## 2. Konto (unikanie dubla przy zamknięciu miesiąca)
 
+Konto jest tylko w budżecie domowym. W kosztorysie wystarczy Sposób (Gotówka albo Przelew) – konta tam nie zapisuj.
+**Brak informacji o sposobie = gotówka** (inwestor napisze, gdy płaci inaczej): na stronie 💸 Sposób = Gotówka, w budżecie
+`--gotowka`. Nie pytaj o konto budowy i nie zakładaj o nie 🔔.
+
 - Strona 💸 ma Sposób = Gotówka → dopisz `--gotowka` (gotówka; nadpisuje też konto z treści). Wiersz w arkuszu budżetu:
   od 1.12.2026 w ciągu godziny (automat `arkusz_budzetu.py sync`), starsze – przy zamknięciu miesiąca.
-- Sposób = Przelew / Karta / BLIK albo pusty, a we wpisie nie ma konta → **nie podawaj konta**: `wpis.py` z `--budowa` sam weźmie
-  `konto_budowy` z `ustawienia.json` (w folderze danych budżetu, poza repo). Konto z wyciągiem: przy zamknięciu płatność
-  z wyciągu (kwota do złotówki, ±4 dni) przypina się do wiersza z wpisu – bez drugiego wiersza.
-- Konto podane we wpisie („150, z, dom”) – zostaje.
-- **Brak klucza `konto_budowy`** → `wpis.py` zapisze gotówkę (jak dotąd) i wypisze uwagę. Wtedy jeden blok 🔔 we „Wpisach”
-  (`wpisy/references/pytania.md`, C; klucz `konto-budowy` – aktualizuj, nie dubluj; odpowiedź obsługuje nocny przebieg): „Wskaż konto, z którego płacisz za
-  budowę (wpiszę je do ustawień budżetu)”. Jednorazowo w tym samym bloku lista wpisów z `budowa` zapisanych na gotówce
-  w bieżącym miesiącu (`python3 tools/budzet/wpis.py lista RRRR-MM` – wiersze ze znacznikiem `[budowa]` na gotówce; do bloku przepisz tylko datę, kwotę i ID, bez opisów) z pytaniem, czy je
-  przepisać na to konto. **Danych nie zmieniaj bez odpowiedzi.** Po odpowiedzi (przebieg albo Claude Code):
-  `python3 tools/budzet/wpis.py ustaw-konto-budowy <skrót konta>`, a przepisanie zatwierdzonych = `wpis.py dodaj` z tymi samymi `--id` (bez prefiksu `w`), `--data`
-  i `--budowa` oraz skrótem konta w treści; blok → „Przetworzone”.
+- Konto podane we wpisie („150, z, dom”) – zostaje. Konto z wyciągiem: przy zamknięciu płatność z wyciągu (kwota do złotówki,
+  ±4 dni) przypina się do wiersza z wpisu – bez drugiego wiersza.
+- Sposób = Przelew / Karta / BLIK, a we wpisie nie ma konta → do budżetu z wpisu **nie zapisuj** (zapis bez konta byłby gotówką
+  i dublem): płatność wejdzie z wyciągu przy zamknięciu miesiąca. W Notatkach strony 💸 „budżet – z wyciągu”.
 - Wydatek prywatny bez szczegółów – bez zmian (gotówka drugiej osoby, `budzet` A).
 
 ## 3. Kanały

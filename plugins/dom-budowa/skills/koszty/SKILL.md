@@ -46,7 +46,7 @@ Zdjęcie paragonu z dopiskiem „kto i czym”, także mieszanego (budowa + pryw
 – stamtąd wraca tu tylko po stronę 💸 dla części budowlanej (paragon w całości na budowę – zwykły wydatek z tej sekcji).
 
 1. Wyciągnij: datę, kwotę **brutto** (tyle, ile zapłacono), na co, przy materiale ilość i jednostkę, typ (Materiał /
-   Robocizna / Sprzęt / Usługa / Formalności – zawsze, także poza stanem zero), sposób (Przelew / Gotówka / Karta / BLIK), płatność (Zrealizowane =
+   Robocizna / Sprzęt / Usługa / Formalności – zawsze, także poza stanem zero), sposób (Przelew / Gotówka / Karta / BLIK; brak informacji = Gotówka, konta w kosztorysie nie zapisuj), płatność (Zrealizowane =
    zapłacone; Do zapłaty = faktura albo transza czeka), dostawcę / nr FV. Datę względną przelicz na datę; daty brak →
    dzień wpisu albo wiadomości i w Notatkach „data = dzień zgłoszenia”. Niepewny opis albo typ („chyba rynny”) nie blokuje
    zapisu – zapisz najlepszą wersję i w Notatkach „do potwierdzenia: …”. Pytaj tylko o brakującą kwotę albo niepewną pozycję.
@@ -72,7 +72,7 @@ Zdjęcie paragonu z dopiskiem „kto i czym”, także mieszanego (budowa + pryw
    Ilość + Jedn. (materiał – obowiązkowo), Płatność, Sposób, Dostawca / nr FV, VAT % (stawka z faktury, gdy znana – arkusz
    policzy netto; nie zgaduj), Notatki, **Arkusz = „Do arkusza”**
    (puste działa tak samo; „Nie wysyłać” wstrzymuje). Wydatek wpisany ręcznie w arkuszu nie idzie do kolejki – jedna droga.
-   Brakujące pole, które da się uzupełnić później (sposób, nr FV) – zostaw puste; brak kwoty albo pozycji → pytanie
+   Brakujące pole, które da się uzupełnić później (nr FV) – zostaw puste; brak kwoty albo pozycji → pytanie
    zamiast zapisu (brak daty – krok 1: dzień wpisu albo wiadomości).
 5. Wysyłka zależy od kanału:
    - **Claude Code z inwestorem:** po zapisie `python3 tools/wydatki.py sync` – od razu w arkuszu; podaj wiersz

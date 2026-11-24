@@ -95,7 +95,7 @@ class Przeplyw(unittest.TestCase):
 
     def setUp(self):
         self.dane = Path(tempfile.mkdtemp())
-        self.ustaw(konto_budowy='K-bank')
+        self.ustaw()
         (self.dane / 'kategorie.json').write_text(json.dumps({'Inwestycja': {'Dom': []}, 'Wydatek': {'Inne wydatki': []}}))
         (self.dane / 'reguly.json').write_text(json.dumps({'reguly': [], 'skroty': {'dom': ['Inwestycja', 'Dom', ''],
                                                                                     'pen': ['Przychód', 'Inne przychody', '']}}))
@@ -122,7 +122,7 @@ class Przeplyw(unittest.TestCase):
                                            f'"6 Oct 2026,Transfer,""HURTOWNIA TESTOWA"",{kwota},PLN,{kwota},PLN,1,,,,900.00"\n')
 
     def test_budowa_przelew_i_wyciag_jeden_wiersz(self):
-        out = self.uruchom('wpis.py', 'dodaj', '300, dom, stal', '--data', '2026-10-05', '--id', 'p1', '--budowa', 'p1')
+        out = self.uruchom('wpis.py', 'dodaj', '300, z, dom, stal', '--data', '2026-10-05', '--id', 'p1', '--budowa', 'p1')
         self.assertIn('K-bank', out)
         self.zen('-300.00')
         m = self.importuj('--zen', 'zen.csv')
@@ -139,25 +139,14 @@ class Przeplyw(unittest.TestCase):
             self.uruchom('wpis.py', 'dodaj', '80, dom', '--data', '2026-10-07', '--id', 'p3', '--budowa', 'p3')
         self.assertIn('2026-10: 1 wpisów', self.uruchom('wpis.py', 'lista', '2026-10'))
 
-    def test_brak_konta_budowy_gotowka_z_uwaga(self):
-        self.ustaw()
+    def test_budowa_bez_konta_gotowka_bez_uwagi(self):
         out = self.uruchom('wpis.py', 'dodaj', '50, dom', '--data', '2026-10-08', '--id', 'p4', '--budowa', 'p4')
         self.assertIn('Gotówka', out)
-        self.assertIn('konto_budowy', out)
-
-    def test_ustaw_konto_budowy(self):
-        self.ustaw()
-        self.assertIn('konto_budowy = K-bank', self.uruchom('wpis.py', 'ustaw-konto-budowy', 'z'))
-        u = json.loads((self.dane / 'ustawienia.json').read_text(encoding='utf-8'))
-        self.assertEqual((u['konto_budowy'], u['osoba_listy']), ('K-bank', 'Osoba B'))  # reszta ustawień zostaje
-        self.assertIn('K-bank', self.uruchom('wpis.py', 'dodaj', '70, dom', '--data', '2026-10-11', '--id', 'p8', '--budowa', 'p8'))
-        r = subprocess.run([sys.executable, str(NARZ / 'wpis.py'), 'ustaw-konto-budowy', 'xyz'],
-                           env=dict(os.environ, BUDZET_DANE=str(self.dane)), capture_output=True, text=True)
-        self.assertEqual(r.returncode, 1)
+        self.assertNotIn('uwaga', out)
 
     def gotowka(self, tekst, ark=None):
         """Lista drugiej osoby z kontem gotówki (osobnej listy gotówki już nie ma – gotówka idzie z wpisów)."""
-        self.ustaw(konto_budowy='K-bank', lista_domyslne_konto='Gotówka')
+        self.ustaw(lista_domyslne_konto='Gotówka')
         (self.dane / 'got.txt').write_text(tekst, encoding='utf-8')
         if ark:
             (self.dane / 'ark.json').write_text(json.dumps({'values': [['Data']] + ark}))

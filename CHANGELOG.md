@@ -4,6 +4,17 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.19.3] – 2026-11-24
+
+- HZ-16 (`koszty`, `wydatek-przeplyw.md`): brak informacji o sposobie płatności = gotówka; w kosztorysie tylko Sposób
+  (Gotówka / Przelew), konto wyłącznie w budżecie domowym. Bez pytania o konto budowy i bez 🔔 `konto-budowy`; przelew
+  bez konta we wpisie nie idzie do budżetu z wpisu – wejdzie z wyciągu przy zamknięciu miesiąca.
+
+## ja [1.26.3] – 2026-11-24
+
+- HZ-16 (`budzet`, `wpisy/references/pytania.md`): wydatek budowy bez konta = gotówka; usunięty klucz 🔔 `konto-budowy`.
+  `tools/budzet/wpis.py`: bez polecenia `ustaw-konto-budowy` i klucza `konto_budowy` – bez konta w treści zawsze gotówka, bez uwagi.
+
 ## ja [1.26.2] – 2026-11-24 (ZP-4)
 
 - `przeglad-tygodnia-osobisty`: linia „przebieg złoty należny / nie mieści się” z `wiedza_jakosc.py przypomnij` nie trafia
