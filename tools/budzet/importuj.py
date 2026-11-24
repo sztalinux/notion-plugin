@@ -175,15 +175,20 @@ for r in nasze:
 # ręczny wiersz z końca miesiąca, płatność zaksięgowana 1.–3. dnia następnego (albo odwrotnie): 1:1 przez przełom – dopiero
 # po wszystkich dopasowaniach w miesiącu i tylko gdy wyciąg konta obejmuje dzień wiersza (inaczej własna płatność wiersza
 # mogła być poza plikiem, a płatność z sąsiedniego miesiąca to osobny zakup)
+# Wiersz PO płatności (ręczny wiersz z 1.–3. dnia, płatność z końca poprzedniego miesiąca) – tylko gdy wyciąg sięga co
+# najmniej 3 dni za dzień wiersza: inaczej własna płatność wiersza może być jeszcze poza plikiem, a ta z końca miesiąca to
+# osobny zakup (wchodzi jak dotąd, nie znika jako „już w arkuszu”).
 PRZELOM_1_1 = 3
-POCZATEK_WYCIAGU = {}
+POCZATEK_WYCIAGU, KONIEC_WYCIAGU = {}, {}
 for t in bank:
     POCZATEK_WYCIAGU[t['konto']] = min(POCZATEK_WYCIAGU.get(t['konto'], t['data']), t['data'])
+    KONIEC_WYCIAGU[t['konto']] = max(KONIEC_WYCIAGU.get(t['konto'], t['data']), t['data'])
 for r in nasze:
     if r.get('uzyty') or not r['data'] or POCZATEK_WYCIAGU.get(r['konto'], r['data']) > r['data']:
         continue
+    po_wierszu = KONIEC_WYCIAGU.get(r['konto'], r['data']) >= r['data'] + timedelta(days=PRZELOM_1_1)
     k = [t for t in pozbank[r['konto']] if t['id'] not in para and t['mies'] != r['mies'] and abs(t['kwota']) == r['kwota']
-         and pasuje(r, t) and abs((t['data'] - r['data']).days) <= PRZELOM_1_1]
+         and pasuje(r, t) and abs((t['data'] - r['data']).days) <= PRZELOM_1_1 and (t['data'] >= r['data'] or po_wierszu)]
     if k:
         t = min(k, key=lambda t: abs((t['data'] - r['data']).days))
         para[t['id']] = (r, '1:1 (przez przełom miesiąca)')

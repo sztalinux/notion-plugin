@@ -390,6 +390,17 @@ class PrzeplywArkusz(unittest.TestCase):
         z = self.zapis('2026-12')
         self.assertEqual((z['wiersze'], z['zmiany'], z['do_wyjasnienia']), ([], [], []))
 
+    def test_a10_wiersz_po_platnosci_tylko_gdy_wyciag_siega_dalej(self):
+        """Recenzja A-10 (S6a): ręczny wiersz z 1.12, płatność 29.11 tej samej kwoty z regułą „Zawsze”. Wyciąg do 30.11
+        (własna płatność wiersza może być jeszcze poza plikiem) – płatność wchodzi jak na main; wyciąg do 4.12 bez innej
+        płatności wiersza – 1:1 przez przełom."""
+        self.ark(wiersz_ark('2026-12-01', 50.0, 'K-bank', ''))
+        for koniec, auto, sposob in (('30 Nov 2026', ['SKLEP STALY'], []), ('4 Dec 2026', [], ['1:1 (przez przełom miesiąca)'])):
+            self.zen_wiele(('20 Nov 2026', 'INNE', '-1.00'), ('29 Nov 2026', 'SKLEP STALY', '-50.00'), (koniec, 'INNE', '-1.00'))
+            m = self.importuj('--zen', 'zen.csv', mies='2026-11')
+            self.assertEqual(([a['regula'] for a in m['auto']], [j['sposob'] for j in m['juz'] if j['kwota'] == -50.0]),
+                             (auto, sposob), koniec)
+
     def test_a10_reczny_wiersz_przez_przelom_i_bez_kolumny_m(self):
         """A-10: ręczny wiersz z 30.11 i płatność 1.12 (reguła „Zawsze”) – 1:1, nie drugi wiersz; wiersz z pustą kolumną M –
         miesiąc z daty. Wyciąg bez dnia wiersza albo płatność dalej niż ±3 dni – osobny zakup, bez przełomu."""
