@@ -1,6 +1,6 @@
 ---
 name: wpisy
-description: Przetwarzanie luźnych wpisów inwestora ze strony „📝 Wpisy” (podstrona „📓 Dziennik”) w Notion i z pozycji „📥 Skrzynka” (myśli, emocje, zadania, sprawy budowy, dziecko, suplementy, książki – wpisane w biegu, z telefonu) – rozpoznanie obszaru według bazy „🧭 Obszary Dziennika”, wyjaśnienie niejasnych, przekazanie do właściwej procedury, ślad w „Przetworzone”. Używaj, gdy użytkownik mówi „przerób dziennik”, „ogarnij dziennik”, „co mam w dzienniku”, „odpowiedziałem w dzienniku”, „przerób inbox”, gdy przegląd dnia lub tygodnia pokazuje wpisy do przetworzenia, albo gdy wkleja kilka luźnych notatek naraz i prosi „wrzuć gdzie trzeba”.
+description: Przetwarzanie luźnych wpisów ze strony „📝 Wpisy” (pod „📓 Dziennikiem”) i z „📥 Skrzynki” – obszar wg bazy „🧭 Obszary Dziennika”, pytanie pod niejasnym wpisem, przekazanie do procedury, ślad w „Przetworzone”. Używaj, gdy użytkownik mówi „przerób dziennik”, „co mam w dzienniku”, „odpowiedziałem w dzienniku”, „przerób skrzynkę”, albo wkleja kilka luźnych notatek naraz („wrzuć gdzie trzeba”).
 ---
 
 # Dziennik → właściwe miejsca

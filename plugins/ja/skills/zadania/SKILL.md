@@ -1,6 +1,6 @@
 ---
 name: zadania
-description: Zadania inwestora poza budową (prywatne, dziecko – baza TASKS; praca – baza 🔨 TASKS na stronie WORK) w Notion oraz lista zakupów (baza 🛒 Zakupy) – nowe zadanie z terminem albo „kiedyś”, nowa rzecz do kupienia, zmiana statusu po wpisie „zrobiłem X”, „kupiłem X”, „zacząłem”, „czekam na”, „odpuszczam”, odczyt „co mam dziś / jutro / w tym tygodniu”, „co kupić”. Używaj, gdy użytkownik mówi „muszę…”, „trzeba…”, „przypomnij mi…”, „kupić…”, „umówić…”, „zrobiłem…”, „zrobione”, „kupiłem…”, „co mam jutro”, wkleja link do rzeczy do kupienia, albo gdy wpis z Dziennika ma obszar Zadanie, Status zadania lub Zakup. Zadania budowy prowadzą procedury notatka i harmonogram (plugin dom-budowa).
+description: "Zadania poza budową (TASKS; praca – 🔨 TASKS na WORK) i lista zakupów 🛒 Zakupy w Notion: nowe zadanie, rzecz do kupienia, zmiana statusu, odczyt. Używaj, gdy użytkownik mówi „muszę…”, „trzeba…”, „przypomnij mi…”, „umówić…”, „kupić…”, „zrobiłem X”, „zamówiłem X”, „czekam na…”, „odpuszczam”, „co mam dziś / jutro”, „co kupić”, link do produktu. Zadania budowy – notatka i harmonogram (dom-budowa)."
 ---
 
 # Zadania (wszystkie obszary poza budową)

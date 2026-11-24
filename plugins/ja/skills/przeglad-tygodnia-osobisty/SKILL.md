@@ -1,6 +1,6 @@
 ---
 name: przeglad-tygodnia-osobisty
-description: Cotygodniowy przegląd spraw osobistych (zadania prywatne, dziecko, praca, emocje i produktywność w liczbach, wesele, suplementy) i porządki w Dzienniku, z odnośnikiem do osobnego przeglądu tygodnia budowy; uruchamia też przegląd budowy (skill przeglad-tygodnia z pluginu dom-budowa). Używaj, gdy uruchamia go tygodniowy automat na Macu albo użytkownik mówi „przegląd tygodnia”, „podsumuj tydzień”, „jak minął tydzień”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – harmonogram), „posprzątaj dziennik”.
+description: Cotygodniowy przegląd spraw osobistych (zadania, dziecko, praca, emocje, suplementy) i porządki w Dzienniku; uruchamia też przegląd budowy (przeglad-tygodnia, dom-budowa). Używaj, gdy uruchamia go tygodniowy automat na Macu albo użytkownik mówi „przegląd tygodnia”, „podsumuj tydzień”, „jak minął tydzień”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne), „posprzątaj dziennik”.
 ---
 
 # Przegląd tygodnia – sprawy osobiste

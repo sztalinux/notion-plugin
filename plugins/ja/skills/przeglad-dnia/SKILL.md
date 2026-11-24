@@ -1,6 +1,6 @@
 ---
 name: przeglad-dnia
-description: Zaplanowane przebiegi bez inwestora (launchd na Macu przez claude -p) w dwóch trybach – SZYBKI (co godzinę w ciągu dnia) rozkłada nowe wpisy ze „📝 Wpisów” i Skrzynki na bieżąco i kończy się od razu, gdy nic nie ma; WIECZORNY (dla inwestora – nocny) robi podsumowanie dnia (z ręcznymi zmianami w zadaniach i uzupełnieniem ich pustych kolumn) i plan dnia na stronie „☀️ Dziś” w zakładkach (przegląd, budowa, prywatne, praca, wczoraj; historia w „📆 Przeglądy dzienne”), budowa dodatkowo w „📆 Przeglądy dzienne – budowa” na DOM – i linię „🤖” w Dzienniku, plus rozkminki, o które inwestor prosi we wpisie („przygotuj mi…”, „jakie pytania…”). Używaj, gdy uruchamia go automat na Macu („Dziennik – szybki przebieg”, „Przegląd dnia”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „wieczorny przegląd”, „ogarnij dzisiejsze”.
+description: "Przebiegi bez inwestora na Macu (launchd, claude -p): szybki co godzinę rozkłada nowe wpisy ze „📝 Wpisów” i „📥 Skrzynki”, nocny robi podsumowanie dnia, zmiany i luki w zadaniach oraz plan dnia na stronie „☀️ Dziś”. Używaj, gdy uruchamia go automat („Dziennik – szybki przebieg”) albo użytkownik mówi „przegląd dnia”, „podsumuj dzień”, „plan na jutro”, „plan dnia”, „ogarnij dzisiejsze”."
 ---
 
 # Przegląd dnia – tryb szybki i wieczorny

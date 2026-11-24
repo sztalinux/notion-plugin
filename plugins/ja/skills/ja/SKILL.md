@@ -1,6 +1,6 @@
 ---
 name: ja
-description: Kontekst osobisty użytkownika i mapa obszarów jego Dziennika w Notion (emocje, praca, dziecko, zadania, suplementy, książki, budowa). Używaj na początku każdej rozmowy o jego dniu, emocjach, pracy, dziecku, zadaniach, suplementach, Dzienniku, przeglądzie dnia albo o samym asystencie – gdy pada „zapisz w dzienniku”, „przerób dziennik”, „zrobiłem…”, „muszę…”, „przypomnij mi”, „czuję…”, „kończy się…”, „co mam jutro”, „przegląd dnia”, „zapamiętaj na przyszłość”, „mam pomysł na asystenta”. Przy tematach budowy kieruje do skilla budowa (plugin dom-budowa).
+description: Kontekst osobisty użytkownika, zasady i mapa procedur jego Dziennika w Notion (emocje, praca, dziecko, zadania, suplementy, budżet). Używaj na początku każdej rozmowy o jego dniu, sprawach osobistych albo o samym asystencie – „zapisz w dzienniku”, „zrobiłem…”, „muszę…”, „przypomnij mi”, „czuję…”, „kończy się…”, „co mam jutro”, „mam pomysł na asystenta”. Budowa → skill budowa (dom-budowa).
 ---
 
 # Ja – kontekst i mapa procedur

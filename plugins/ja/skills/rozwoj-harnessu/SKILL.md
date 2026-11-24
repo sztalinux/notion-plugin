@@ -1,6 +1,6 @@
 ---
 name: rozwoj-harnessu
-description: Zgłaszanie i wdrażanie zmian w harnessie (pluginy dom-budowa i ja – procedury, zasady, szablony w repozytorium harnessu) przez bazę „🤖 Zmiany asystenta” w Notion (zasady, pomysły, usterki) oraz analiza pomysłów na rozwój setupu (Rodzaj Pomysł w bazie „🤖 Zmiany asystenta”). Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „źle to zapisałeś”, „zapamiętaj na przyszłość”), chce nową procedurę, zmienia strukturę Notion/arkusza, mówi „wdróż zmiany”, „zaktualizuj harness”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-3”, „zrób ZP-2”, „znane problemy”, albo pyta o przeniesienie harnessu do innego AI.
+description: "Zmiany w harnessie (pluginy ja i dom-budowa) przez bazę „🤖 Zmiany asystenta” w Notion: zasady, pomysły, usterki. Używaj, gdy użytkownik poprawia sposób pracy asystenta („zawsze rób X”, „nie rób Y”, „zapamiętaj na przyszłość”), chce nową procedurę, mówi „wdróż”, „mam pomysł na…”, „przeanalizuj pomysły”, „zrób POM-n”, „zrób ZP-n”, albo pyta o przeniesienie harnessu do innego AI."
 ---
 
 # Rozwój harnessu
