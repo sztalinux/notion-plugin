@@ -134,7 +134,8 @@ kwota) nie wchodzi sama, nawet z regułą „Zawsze” – decyzja z wierszem wp
    Import tamtego miesiąca pominie wpływ (bez dubla), a import tego miesiąca doda kwotę do `korekty` salda.
 7. Zakupy na budowę („Dom”) bez wpisu z `--budowa`: strona pokazuje „w kosztorysie / nie ma w kosztorysie”. Tylko brakujące
    zaproponuj dodać (procedura `koszty`), jedną listą.
-8. **Kontrola:** pobierz Transakcje jeszcze raz (plik jak w B.4) i `python3 tools/budzet/kontrola.py --arkusz <plik> --rok RRRR`.
+8. **Kontrola:** pobierz Transakcje jeszcze raz (plik jak w B.4) i `python3 tools/budzet/kontrola.py --arkusz <plik> --rok RRRR --miesiac RRRR-MM`
+   (zamykany miesiąc – bez niego ostatni miesiąc w danych, np. grudzień, nie ma sprawdzanego wiersza przychodu z sald).
    Pewne poprawki techniczne (kwota tekstem → liczba, brak Osoby w wierszu konta drugiej osoby, Osoba w przelewie) zrób sam;
    duplikat sprawdź z wyciągiem (w wyciągu raz, w arkuszu dwa razy) i usuń dopiero po zgodzie inwestora.
 9. Podsumowanie: policz miesiąc wg kategorii vs średnia 3 poprzednich, dopisz do `miesiace/RRRR-MM.json` pole

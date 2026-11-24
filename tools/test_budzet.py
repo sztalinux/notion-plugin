@@ -591,6 +591,17 @@ class PrzeplywArkusz(unittest.TestCase):
         self.assertIn('usunięto (1)', self.uruchom('wpis.py', 'usun', '2026-12', 'q9'))
         self.assertIn('2027-01: 0 wpisów', self.uruchom('wpis.py', 'lista', '2027-01'))
 
+    def test_a13_kontrola_zamykanego_grudnia(self):
+        """A-13: przy zamknięciu grudnia (--rok) grudzień jest ostatnim miesiącem – z --miesiac też ma mieć wiersz z sald."""
+        self.ustaw(przychod_z_sald=dict(kategoria='Przychód z sald', etykieta_roku='do dodania', wiersz_konta=9))
+        ps = lambda d: wiersz_ark(d, 10.0, '', '', typ='Przychód', kat='Przychód z sald', pod='')
+        self.ark(wiersz_ark('2026-11-05', 10.0, 'K-bank', ''), ps('2026-11-30'), wiersz_ark('2026-12-05', 10.0, 'K-bank', ''))
+        kontrola = lambda *a: self.uruchom('kontrola.py', '--arkusz', 'ark.json', *a)
+        self.assertNotIn('2026-12: 0', kontrola('--rok', '2026'))  # dotychczas: grudzień „otwarty”
+        self.assertIn('2026-12: 0', kontrola('--rok', '2026', '--miesiac', '2026-12'))
+        self.assertIn('2026-12: 0', kontrola('--miesiac', '2026-12'))
+        self.assertNotIn('2026-11', kontrola('--miesiac', '2026-11'))
+
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')
         p = self.dane / 'listy' / '2026-12-wpisy.jsonl'
