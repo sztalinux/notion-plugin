@@ -324,21 +324,34 @@ class Lokalnie(WlasneDane):
         self.assertTrue((self.hub / ruchy[0]["do"] / ruchy[0]["nowa_nazwa"]).exists())
 
     def test_pominiety_ruch_bez_wpisu(self):
-        # cel już istnieje (inna treść) → ruch pominięty i nie trafia do dziennika – cofnij nie zabierze cudzego pliku (F-5)
-        p = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)
-        cel = self.hub / p["ruchy"][0]["do"] / p["ruchy"][0]["nowa_nazwa"]
-        cel.parent.mkdir(parents=True)
-        cel.write_bytes(b"INNY")
-        self.assertEqual(Z.wykonaj_lokalnie(p, self.hub), 0)
+        # cel pojawia się między planem a ruchem (inna treść) → `rozloz --wykonaj` pomija ruch i nie zapisuje go
+        # do dziennika – cofnij nie zabierze cudzego pliku (F-5)
+        kroki = self.dane / "kroki.json"
+        kroki.write_text(json.dumps(KONF, ensure_ascii=False), encoding="utf-8")
+        planuj = Z.planuj
+
+        def planuj_i_wyscig(lista, konf, teraz=None):
+            p = planuj(lista, konf, TERAZ)
+            cel = self.hub / p["ruchy"][0]["do"] / p["ruchy"][0]["nowa_nazwa"]
+            cel.parent.mkdir(parents=True)
+            cel.write_bytes(b"INNY")
+            return p
+        with mock.patch.object(Z, "planuj", planuj_i_wyscig), mock.patch.object(Z, "exif_mdls", return_value=None), \
+                mock.patch("sys.stdout", new_callable=io.StringIO):
+            self.assertEqual(Z.main(["rozloz", "--wykonaj", "--kroki", str(kroki)]), 0)
         self.assertEqual([r for r in Z.wczytaj_ruchy() if "nazwa" in r], [])
+        self.assertTrue((self.hub / "Zdjęcia/_nowe/wykop/PXL_20261118_090000000.jpg").exists())
 
     def test_mdls_bez_exif_daje_date_z_nazwy(self):
-        wynik = subprocess.CompletedProcess([], 0, "2026-11-25 07:00:00 +0000\x002026-11-25 07:00:00 +0000", "")
-        with mock.patch.object(Z.subprocess, "run", return_value=wynik):
-            lista = Z.lista_lokalna(self.hub)
-        p = Z.planuj(lista, KONF, TERAZ)
-        self.assertEqual(p["ruchy"][0]["nowa_nazwa"], "2026-11-18_PXL_20261118_090000000.jpg")
-        self.assertEqual(p["ruchy"][0]["data_zrodlo"], "nazwa")
+        # data treści = data pliku → nazwa; data treści inna (prawdziwy EXIF) → EXIF (F-7)
+        rowne = subprocess.CompletedProcess([], 0, "2026-11-25 07:00:00 +0000\x002026-11-25 07:00:00 +0000", "")
+        rozne = subprocess.CompletedProcess([], 0, "2026-11-17 09:00:00 +0000\x002026-11-25 07:00:00 +0000", "")
+        for wynik, nazwa, zrodlo in ((rowne, "2026-11-18_PXL_20261118_090000000.jpg", "nazwa"),
+                                     (rozne, "2026-11-17_PXL_20261118_090000000.jpg", "exif")):
+            with mock.patch.object(Z.subprocess, "run", return_value=wynik):
+                lista = Z.lista_lokalna(self.hub)
+            p = Z.planuj(lista, KONF, TERAZ)
+            self.assertEqual((p["ruchy"][0]["nowa_nazwa"], p["ruchy"][0]["data_zrodlo"]), (nazwa, zrodlo))
 
     def test_wg_dni(self):
         p = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)

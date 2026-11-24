@@ -531,7 +531,9 @@ def exif_mdls(p: Path):
                               str(p)], capture_output=True, text=True, timeout=10).stdout
     except (OSError, subprocess.SubprocessError):
         return None
-    wartosci = (out or "").split("\0")  # -raw: wartości w kolejności -name, rozdzielone bajtem NUL
+    # -raw: wartości rozdzielone bajtem NUL, alfabetycznie wg nazwy atrybutu (nie wg kolejności -name):
+    # kMDItemContentCreationDate < kMDItemFSCreationDate. Trzeci atrybut zmieni indeksy.
+    wartosci = (out or "").split("\0")
     tresc = _data_mdls(wartosci[0])
     if not tresc:
         return None
