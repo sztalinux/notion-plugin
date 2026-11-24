@@ -7,7 +7,8 @@
 Okres (--od, --do) to daty pierwszego i ostatniego kroku etapu z Harmonogramu – podaje je asystent, skrypt nie czyta Notion.
 Źródła w folderze budowy (DOM_HUB), wybór wg układu folderów (plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md):
   Umowy/Protokoły/       protokoły – data w nazwie od --od do --do + --zapas dni (odbiór bywa po ostatnim kroku)
-  Faktury/RRRR/          faktury – data w nazwie w okresie
+  Faktury/RRRR/          faktury – data w nazwie od --od − --zapas-faktur do --do + --zapas-faktur (materiał kupiony przed
+                         pierwszym krokiem, faktura za transzę po odbiorze); w spisie – „sprawdź, czy dotyczą etapu”
   Dziennik budowy KB/    wpisy kierownika – data w nazwie w okresie
   Dostawy/<Etap>/        WZ, deklaracje, karty produktów – cały folder etapu
   --dodaj ŚCIEŻKA        dowolny plik z folderu budowy (np. skan wyceny, umowa) – do działu „Dodatkowe”
@@ -42,6 +43,11 @@ DZIALY = [  # klucz, folder w teczce, tytuł w spisie
     ("dodatkowe", "5 Dodatkowe", "Dodatkowe (wskazane ręcznie)"),
 ]
 TYTULY = {k: t for k, _, t in DZIALY}
+
+
+def uwaga_faktur(w: dict) -> str:
+    return (f"faktury z okresu ±{w['zapas_faktur']} dni – sprawdź, czy każda dotyczy tego etapu (mogą być z sąsiedniego); "
+            "cudzą usuń z działu 2 Faktury")
 
 
 def nfc(s: str) -> str:
@@ -100,7 +106,8 @@ def wg_dat(pliki, od: date, do: date):
     return wybrane, bez_daty
 
 
-def zbierz(hub: Path, etap: str, od: date, do: date, zapas: int = ZAPAS_PROTOKOLU, dodaj=(), zdjecia=()) -> dict:
+def zbierz(hub: Path, etap: str, od: date, do: date, zapas: int = ZAPAS_PROTOKOLU, dodaj=(), zdjecia=(),
+           zapas_faktur: int = ZAPAS_PROTOKOLU) -> dict:
     """Wybiera składniki teczki. Nic nie zapisuje. Zwraca dane do spisu i raportu."""
     hub = hub.resolve()
     if od > do:
@@ -118,7 +125,8 @@ def zbierz(hub: Path, etap: str, od: date, do: date, zapas: int = ZAPAS_PROTOKOL
 
     kat = podfolder(hub, "Faktury")
     if kat:
-        skladniki["faktury"], nd = wg_dat(pliki_pod(kat), od, do)
+        zakres = timedelta(days=zapas_faktur)   # materiał przed pierwszym krokiem, faktura za transzę po odbiorze
+        skladniki["faktury"], nd = wg_dat(pliki_pod(kat), od - zakres, do + zakres)
         bez_daty += nd
     if not skladniki["faktury"]:
         braki.append("brak faktur z okresu (data w nazwie pliku) – sprawdź Faktury/RRRR/ i Wydatki w arkuszu")
@@ -153,8 +161,8 @@ def zbierz(hub: Path, etap: str, od: date, do: date, zapas: int = ZAPAS_PROTOKOL
     if not zdjecia:
         braki.append("brak linków do zdjęć (folder kroków i „przed zakryciem” na Dysku) – podaj --zdjecia ETYKIETA=ADRES")
 
-    return {"etap": etap, "od": od, "do": do, "zapas": zapas, "skladniki": skladniki, "bez_daty": bez_daty,
-            "braki": braki, "uwagi": uwagi, "zdjecia": list(zdjecia)}
+    return {"etap": etap, "od": od, "do": do, "zapas": zapas, "zapas_faktur": zapas_faktur, "skladniki": skladniki,
+            "bez_daty": bez_daty, "braki": braki, "uwagi": uwagi, "zdjecia": list(zdjecia)}
 
 
 def bezpieczna_nazwa(s: str) -> str:
@@ -190,6 +198,8 @@ def spis_md(hub: Path, w: dict, dzis: date, skopiowane: dict) -> str:
         pliki = skopiowane.get(klucz) or []
         L += [f"## {folder} – {tytul} ({len(pliki)})", ""]
         L += [f"- `{cel}` ← `{zrodlo}`" for cel, zrodlo in pliki] or ["- (brak)"]
+        if klucz == "faktury" and pliki and w["zapas_faktur"]:
+            L.append(f"- ⚠ {uwaga_faktur(w)}")
         L.append("")
     L += ["## Zdjęcia (linki do folderów na Dysku, pliki nie są kopiowane)", ""]
     L += [f"- {z}" for z in w["zdjecia"]] or ["- (brak linków)"]
@@ -237,6 +247,8 @@ def raport(hub: Path, w: dict, z: dict, wykonaj: bool) -> str:
         L += [f"      {cel}  ←  {zrodlo}" for cel, zrodlo in pliki[:8]]
         if len(pliki) > 8:
             L.append(f"      … i {len(pliki) - 8} więcej")
+        if klucz == "faktury" and pliki and w["zapas_faktur"]:
+            L.append(f"      ⚠ {uwaga_faktur(w)}")
     L += [f"  ⚠ {b}" for b in w["braki"]]
     L += [f"  ? bez daty w nazwie (nie wchodzi): {rel(hub, p)}" for p in w["bez_daty"]]
     L += [f"  ? {u}" for u in w["uwagi"]]
@@ -253,13 +265,15 @@ def main(argv=None) -> int:
     a.add_argument("--od", required=True, type=data_arg)
     a.add_argument("--do", required=True, type=data_arg)
     a.add_argument("--zapas", type=int, default=ZAPAS_PROTOKOLU, help="dni po --do, w których szukamy protokołu (14)")
+    a.add_argument("--zapas-faktur", type=int, default=ZAPAS_PROTOKOLU,
+                   help="dni przed --od i po --do, w których szukamy faktur (14)")
     a.add_argument("--dodaj", action="append", default=[], metavar="ŚCIEŻKA", help="plik z folderu budowy do działu 5")
     a.add_argument("--zdjecia", action="append", default=[], metavar="ETYKIETA=ADRES", help="link folderu zdjęć do spisu")
     a.add_argument("--wykonaj", action="store_true")
     arg = ap.parse_args(argv)
     bledy = []
     try:
-        w = zbierz(HUB, arg.etap, arg.od, arg.do, arg.zapas, arg.dodaj, arg.zdjecia)
+        w = zbierz(HUB, arg.etap, arg.od, arg.do, arg.zapas, arg.dodaj, arg.zdjecia, arg.zapas_faktur)
         z = zloz(HUB, w, datetime.now().date(), arg.wykonaj)
         print(raport(HUB, w, z, arg.wykonaj))
     except (ValueError, OSError) as e:
