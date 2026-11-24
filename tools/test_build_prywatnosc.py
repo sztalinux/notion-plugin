@@ -30,6 +30,18 @@ LISTA = f"# zmyślona lista testowa\n{ASCII}\n{OGONEK}\n{DWA}\n"
 BLAD_LISTY = "słowo z listy zakazanych"
 
 
+class JakoTekst(unittest.TestCase):
+    """F-1: UTF-16 bez BOM czytany jako tekst, binarne → None."""
+
+    def test_utf16_bez_bom(self):
+        for kod in ("utf-16-le", "utf-16-be"):
+            self.assertEqual(build.jako_tekst("notatka: zażółć gęślą\n".encode(kod)), "notatka: zażółć gęślą\n")
+
+    def test_binarne(self):
+        self.assertIsNone(build.jako_tekst(b"PK\x03\x04\x14\x00\x00\x00\x08\x00abc\x00\x01"))
+        self.assertIsNone(build.jako_tekst(b"\x00\x00\x00\x01Bud1\x00\x00\x10\x00\x00\x00\x08\x00a\x00b"))
+
+
 def git_env() -> dict:
     env = {k: v for k, v in os.environ.items()
            if k not in ("DOM_HUB", "DOM_BEZ_LISTY") and not k.startswith("GIT_")}
@@ -152,6 +164,26 @@ class Hooki(unittest.TestCase):
         self.git("add", "docs/s.md")
         self.przeszedl(self.git("commit", "-q", "--no-verify", "--no-edit", sprawdz=False))
         self.zablokowany(self.push("HEAD:refs/heads/scalenie"), "docs/s.md:1: " + BLAD_LISTY, "Push zablokowany")
+
+    # --- F-1: treść nieczytelna jako tekst -------------------------------------------------------------
+    def test_binarne_i_nieznane(self):
+        zip_bez_rozszerzenia = b"PK\x03\x04\x14\x00\x00\x00\x08\x00" + ASCII.encode() + b"\x00\x01\x02"
+        for sciezka, tresc in (("docs/kosztorys.xlsm", b"PK\x03\x04 arkusz"), ("docs/kosztorys", zip_bez_rozszerzenia),
+                               ("docs/notatka.txt", f"notatka {OGONEK}\n".encode("utf-16-le"))):
+            with self.subTest(sciezka):
+                self.setUp()
+                self.plik(sciezka, tresc)
+                self.zablokowany(self.commit(sciezka), "Commit zablokowany")
+                self.przeszedl(self.commit(sciezka, bez_hookow=True))
+                self.zablokowany(self.push("HEAD:refs/heads/binarne"), sciezka, "Push zablokowany")
+
+    def test_utf16_bez_bom_czysty_przechodzi(self):
+        self.plik("docs/notatka.txt", "Zwykła notatka w UTF-16.\n".encode("utf-16-le"))
+        self.przeszedl(self.commit("docs/notatka.txt"))
+
+    def test_ignorowany_binarny_wymuszony_do_indeksu(self):
+        self.plik(".DS_Store", b"\x00\x00\x00\x01Bud1\x00\x00\x10\x00")
+        self.zablokowany(self.commit(".DS_Store"), ".DS_Store", "Commit zablokowany")
 
     # --- kopia robocza git (worktree), folder budowy bez DOM_HUB --------------------------------------
     def test_worktree(self):

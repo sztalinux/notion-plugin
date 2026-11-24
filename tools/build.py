@@ -196,7 +196,11 @@ BINARNE = {".xlsx", ".xls", ".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png", ".
            ".csv", ".tsv", ".ods", ".odt", ".rtf", ".pages", ".numbers", ".eml", ".msg",
            ".webp", ".gif", ".tif", ".tiff", ".mp4", ".mov", ".m4a", ".mp3", ".wav",
            ".sqlite", ".sqlite3", ".db", ".sqlite-wal", ".sqlite-shm", ".sqlite-journal",
-           ".sqlite3-wal", ".sqlite3-shm", ".sqlite3-journal", ".db-wal", ".db-shm", ".db-journal"}
+           ".sqlite3-wal", ".sqlite3-shm", ".sqlite3-journal", ".db-wal", ".db-shm", ".db-journal",
+           ".xlsm", ".xltx", ".xlsb", ".docm", ".dotx", ".pptx", ".key", ".7z", ".rar", ".gz", ".tgz", ".tar",
+           ".bz2", ".bak"}
+# treść nieczytelna jako tekst (jako_tekst → None) = błąd; wyjątki tylko z tej listy (ścieżki względem repo) – dziś żadnych
+DOZWOLONE_BINARNE: set = set()
 # dane obserwatora jakości wyszukiwania (tools/wiedza_jakosc.py): słowa wierszy indeksu i zapytania inwestora
 DANE_OBSERWATORA = re.compile(r"(^|/)jakosc/|(^|/)(szukaj\.log.*\.jsonl|ki\.json|wlasne\.json|reczna-.*\.jsonl"
                               r"|porownanie-.*\.html|historia\.sqlite)$", re.I)
@@ -233,11 +237,41 @@ def jako_tekst(dane: bytes):
         except UnicodeDecodeError:
             return None
     if b"\0" in dane:
-        return None
+        return utf16_bez_bom(dane)
     try:
         return dane.decode("utf-8")
     except UnicodeDecodeError:
         return dane.decode("cp1250", errors="replace")
+
+
+def utf16_bez_bom(dane: bytes):
+    """UTF-16 bez BOM (eksport „Tekst Unicode”, notatka z Windows): bajt NUL na co najmniej 70% pozycji jednej
+    parzystości i na żadnej z drugiej (pliki binarne, np. .DS_Store z nazwami w UTF-16, mają NUL po obu stronach)."""
+    if len(dane) < 4 or len(dane) % 2:
+        return None
+    pol = len(dane) // 2
+    parzyste, nieparzyste = dane[0::2].count(0), dane[1::2].count(0)
+    for zera, inne, kod in ((nieparzyste, parzyste, "utf-16-le"), (parzyste, nieparzyste, "utf-16-be")):
+        if inne == 0 and zera >= 0.7 * pol:
+            try:
+                return dane.decode(kod)
+            except UnicodeDecodeError:
+                return None
+    return None
+
+
+def nieczytelne(etykieta: str) -> str:
+    return f"{etykieta}: plik binarny albo nieczytelny jako tekst – nie da się sprawdzić, czy nie ma w nim danych; " \
+           "dokumenty i dane trzymaj w folderze budowy"
+
+
+def zignorowane(sciezki: list) -> set:
+    """Ścieżki ignorowane przez git (.gitignore) – nie trafią do commita bez `git add -f`, który łapie pre-push."""
+    if not sciezki:
+        return set()
+    r = subprocess.run(["git", "check-ignore", "--stdin", "-z"], cwd=ROOT, capture_output=True,
+                       input="\0".join(sciezki).encode())
+    return set(r.stdout.decode().split("\0")) - {""} if r.returncode == 0 else set()
 
 
 def sprawdz_tekst(etykieta: str, tekst: str, zakazane: list) -> list:
@@ -257,7 +291,7 @@ def sprawdz_tekst(etykieta: str, tekst: str, zakazane: list) -> list:
 
 def kontrola_prywatnosci() -> list:
     """Dane osobowe/projektowe w plikach roboczych repo."""
-    bledy, zakazane = [], zakazane_slowa()
+    bledy, zakazane, binarne = [], zakazane_slowa(), []
     for f in sorted(ROOT.rglob("*")):
         rel = f.relative_to(ROOT)
         if (not f.is_file() or set(rel.parts) & POMIJANE_KATALOGI
@@ -267,9 +301,15 @@ def kontrola_prywatnosci() -> list:
             bledy.append(f"{rel}: plik z danymi w repo – dokumenty trzymaj w folderze budowy")
             continue
         tekst = jako_tekst(f.read_bytes())
-        if tekst is not None:
-            bledy += sprawdz_tekst(str(rel), tekst, zakazane)
-    return bledy
+        if tekst is None:
+            if rel.as_posix() not in DOZWOLONE_BINARNE:
+                binarne.append(rel.as_posix())
+            continue
+        bledy += sprawdz_tekst(str(rel), tekst, zakazane)
+    # w drzewie roboczym wyjątek tylko dla plików ignorowanych przez git (np. .DS_Store Findera) – w indeksie
+    # (pre-commit) i w commitach (pre-push) nieczytelna treść zawsze jest błędem
+    pominiete = zignorowane(binarne)
+    return bledy + [nieczytelne(s) for s in binarne if s not in pominiete]
 
 
 def git(*args) -> str:
@@ -322,8 +362,11 @@ def kontrola_commitow(zakres: list) -> list:
                 continue
             r = subprocess.run(["git", "show", f"{sha}:{sciezka}"], cwd=ROOT, capture_output=True)
             tresc = jako_tekst(r.stdout) if r.returncode == 0 else None
-            if tresc is not None:
-                bledy += sprawdz_tekst(f"{k} {sciezka}", tresc, zakazane)
+            if tresc is None:
+                if sciezka not in DOZWOLONE_BINARNE:
+                    bledy.append(nieczytelne(f"{k} {sciezka}"))
+                continue
+            bledy += sprawdz_tekst(f"{k} {sciezka}", tresc, zakazane)
     return bledy
 
 
