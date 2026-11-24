@@ -52,13 +52,10 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
    (dokleja je `przeglad.py`) to kolejne źródła – bez odczytu.
    Nie pobieraj jeszcze Obszarów, przewodnika ani baz. Strony Dziennika (bloki 1. poziomu) i stron z widgetu **nie czytasz** –
    nie są źródłem wpisów (`wpisy`, „Źródła wpisów”); przejścia 1.1 i 1.2 robi tylko nocny przebieg (`references/przejscia.md`).
-2. **Nic nowego → koniec.** Brak bloków w treści „Wpisów” (wpis z okienkiem ❓ bez
-   odpowiedzi się nie liczy) i podstron w „Wpisach”, brak pozycji w „Nowe”
-   Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; szybki obsługuje tylko ❓ pod wpisami oraz 🔔 z automatów, kolejki 💸 i `SP-n`; **wszystkie inne bloki 🔔** (`KS-…`, `RES-n`, `luki-zadan-…`, `praca-…`, `porzadki-…`, `rozkminka-…`, `ZP-n`) obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
+2. **Nic nowego → koniec.** Brak bloków w treści „Wpisów” (wpis z okienkiem ❓ bez odpowiedzi się nie liczy) i podstron
+   w „Wpisach”, brak pozycji w „Nowe” Skrzynki i brak odpowiedzi inwestora w okienku ❓ (`wpisy/references/pytania.md`; szybki obsługuje tylko ❓ pod wpisami oraz 🔔 z automatów, kolejki 💸 i `SP-n`; **wszystkie inne bloki 🔔** (`KS-…`, `RES-n`, `luki-zadan-…`, `praca-…`, `porzadki-…`, `rozkminka-…`, `ZP-n`) obsługuje tylko nocny przebieg – **nie liczysz ich** tutaj), brak wierszy w widoku błędów i komunikatów 💸, których strona nie jest już
    „Błąd”, brak list od automatu w poleceniu (komunikaty, gotowe rozkminki) i brak odpowiedzi pod blokami 🔔 (blok 🔔 bez odpowiedzi się nie liczy – inaczej
-   każdy przebieg przestałby być tani) → odpowiedz jedną linią „Wpisy: nic nowego (<godzina>;
-   Skrzynka: 0)”
-   i zakończ. **Zero zapisów** – nie dopisuj linii „🤖”, nie zmieniaj strony.
+   każdy przebieg przestałby być tani) → odpowiedz jedną linią „Wpisy: nic nowego (<godzina>; Skrzynka: 0)” i zakończ. **Zero zapisów** – nie dopisuj linii „🤖”, nie zmieniaj strony.
 3. **Inwestor może jeszcze pisać – oceniaj każde źródło osobno** (treść „Wpisów”, każda podstrona, Skrzynka). Źródło edytowane mniej niż 15 minut temu (czas ostatniej edycji strony), którego najnowszy wpis
    jest pusty albo urwany w pół zdania, pomiń w tym przebiegu – następny je weźmie; **pozostałe źródła przetwórz**. Sam
    brak kropki to nie urwanie (z telefonu inwestor pisze bez kropek). Tylko gdy pominąłeś wszystko, co nowe →
@@ -68,9 +65,8 @@ Nazwa: tryb `wieczorny` (klucz w `przeglad.py`, logach i `stan.json`) to dla inw
    krótka, z godziną, bez wyliczania zapisów (te są w podpunktach wpisów, `wpisy` krok 6): `🤖 11:00: przetworzono 2
    (zadania 1, emocje 1), czeka na Ciebie 1, świeże pominięte 1`; liczby per źródło – tylko w odpowiedzi (log). Kolejne
    przebiegi tego dnia dopisują swoje linie (każdą z jej śladem) na górze tego samego bloku, nad wcześniejszymi
-   (`wpisy` krok 7); tytuł bloku pokazuje sumę dnia. W odpowiedzi
-   podaj nowe wpisy per źródło – „Wpisy n · Skrzynka n” – żeby było
-   widać, że przebieg sprawdził oba.
+   (`wpisy` krok 7); tytuł bloku pokazuje sumę dnia. W odpowiedzi podaj nowe wpisy per źródło – „Wpisy n · Skrzynka n” –
+   żeby było widać, że przebieg sprawdził oba.
 5. Bez „jutra”, bez wpisów w przeglądach – to robi noc. Rozkminki w ciągu dnia (tryb godzinowy, „Gotowe rozkminki”) i tryb `rozkminka`: `references/rozkminka.md`.
 
 ## B. Tryb wieczorny – podsumowanie i plan
