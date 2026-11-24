@@ -553,13 +553,17 @@ for z in zam:
             opcje=([prop] if prop else []) + [rozbij(o) for o in z.get('opcje', [])],
             uwaga='Allegro Pay – spłata w kolejnym miesiącu zostanie pominięta' if z['pay'] else '')
 
-if teraz:  # każde konto z wyciągiem, także bez wpisów: transakcji spoza zakresu pliku nie wczyta import żadnego miesiąca
-    for konto in KONTA_A:
-        if konto and konto not in niepelne and ZASIEG.get(konto, POCZ) < KONIEC:
-            niepelne[konto] = ZASIEG.get(konto)
 for konto, koniec in sorted(niepelne.items()):
     braki.append(f"wyciąg {konto} " + (f"kończy się {koniec.strftime('%d.%m')}" if koniec else 'brak') +
                  ' – pobierz cały miesiąc (wpisy z kart bez pary są na stronie decyzji albo czekają na kolejny import)')
+# każde konto z wyciągiem, także bez wpisów: transakcji spoza zakresu pliku nie wczyta import żadnego miesiąca. Ostatnia
+# operacja do 3 dni przed końcem miesiąca to nie brak (konto bywa bez ruchu w ostatnie dni; plik ucięty na końcu miesiąca).
+CISZA_NA_KONCU = 3
+if teraz:
+    for konto in KONTA_A:
+        if konto and konto not in niepelne and ZASIEG.get(konto, POCZ) < KONIEC - timedelta(days=CISZA_NA_KONCU):
+            braki.append(f"wyciąg {konto} " + (f"– ostatnia operacja {ZASIEG[konto].strftime('%d.%m')}" if konto in ZASIEG
+                                                 else 'brak') + ' – sprawdź, czy plik obejmuje cały miesiąc')
 
 # ---------- lista skrótów drugiej osoby (gotówka tylko z wpisów)
 KONTA = U.get('konta_list', {})

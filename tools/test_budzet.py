@@ -612,8 +612,10 @@ class PrzeplywArkusz(unittest.TestCase):
         """A-4: wyciąg kończący się w połowie miesiąca – linia w „Brakuje” także bez wpisów; podany, a brakujący plik – stop."""
         self.zen_wiele(('3 Dec 2026', 'SKLEP STALY', '-10.00'))
         m = self.importuj('--zen', 'zen.csv', mies='2026-12')
-        self.assertTrue(any('K-bank kończy się 03.12' in b for b in m['braki']), m['braki'])
+        self.assertTrue(any('K-bank – ostatnia operacja 03.12' in b for b in m['braki']), m['braki'])
         self.assertTrue(any('wyciąg K-mb brak' in b for b in m['braki']), m['braki'])
+        self.zen_wiele(('3 Dec 2026', 'SKLEP STALY', '-10.00'), ('28 Dec 2026', 'INNE', '-1.00'))  # cisza w ostatnie 3 dni
+        self.assertFalse(any('K-bank' in b for b in self.importuj('--zen', 'zen.csv', mies='2026-12')['braki']))
         kod, out = Przeplyw.proces(self, 'importuj.py', '--miesiac', '2026-12', '--arkusz', 'ark.json', '--zen', 'zen.csv',
                                    '--mbank', 'wyciagi/mbank-grudzien.csv')
         self.assertEqual((kod, '✗ brak pliku wyciągu' in out, 'Traceback' in out), (1, True, False), out)
