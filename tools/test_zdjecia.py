@@ -3,13 +3,17 @@
 
     python3 tools/test_zdjecia.py
 """
+import io
 import json
 import os
+import subprocess
 import sys
 import tempfile
+import time
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest import mock
 
 TMP = tempfile.mkdtemp(prefix="zdjecia-test-")
 os.environ["ZDJECIA_DANE"] = str(Path(TMP) / "dane")
@@ -27,8 +31,24 @@ KONF = {
     "tematy": ["Przyłącza"],
     "dni": {"2026-11-18": ["03 Zbrojenie płyty"], "2026-11-19": ["03 Zbrojenie płyty", "04 Zbrojenie ścian"]},
 }
+KONF_DATY = {"etap": "Etap A", "tematy": [], "dni": {}, "kroki": [  # numery kroków = dni miesiąca z nazw folderów
+    {"nazwa": "01 Wykop", "folder": "Zdjęcia/Etap A/01 Wykop"},
+    {"nazwa": "05 Zbrojenie płyty", "folder": "Zdjęcia/Etap A/05 Zbrojenie płyty"},
+    {"nazwa": "08 Hydroizolacja ścian", "folder": "Zdjęcia/Etap A/08 Hydroizolacja ścian"}]}
 TERAZ = datetime(2026, 11, 20, 12, 0, tzinfo=timezone.utc)
 STARE = "2026-11-20T10:00:00Z"
+
+
+class WlasneDane(unittest.TestCase):
+    """Każdy test z własnym dziennikiem ruchów, blokadą i folderem budowy (katalog tymczasowy)."""
+
+    def setUp(self):
+        self.dane = Path(tempfile.mkdtemp(prefix="dane-", dir=TMP))
+        self.hub = Path(tempfile.mkdtemp(prefix="hub-", dir=TMP))
+        for nazwa, wartosc in (("DANE", self.dane), ("HUB", self.hub)):
+            p = mock.patch.object(Z, nazwa, wartosc)
+            p.start()
+            self.addCleanup(p.stop)
 
 
 def plik(nazwa, folder="", rozmiar=100, utworzono=STARE, zmieniono=None, zrobiono=None, i=[0]):
@@ -86,6 +106,23 @@ class Dopasowanie(unittest.TestCase):
 
     def test_zaden(self):
         self.assertIsNone(Z.dopasuj_krok("wakacje nad morzem", KONF["kroki"])[0])
+
+    def test_data_w_nazwie_folderu_to_nie_numer_kroku(self):
+        # „8.11 zbrojenie płyty” to data (8 listopada), nie krok 08 (F-6)
+        for folder, krok in (("8.11 zbrojenie płyty", "05 Zbrojenie płyty"), ("5.11 hydroizolacja", "08 Hydroizolacja ścian"),
+                             ("1.12 zbrojenie płyty", "05 Zbrojenie płyty"), ("05.11 wykop", "01 Wykop"),
+                             ("8-11 zbrojenie płyty", "05 Zbrojenie płyty"), ("08/11 wykop", "01 Wykop")):
+            k, powod = Z.dopasuj_krok(folder, KONF_DATY["kroki"])
+            self.assertEqual((k or {}).get("nazwa"), krok, (folder, powod))
+        self.assertIsNone(Z.dopasuj_krok("8.11", KONF_DATY["kroki"])[0])
+
+    def test_numer_sprzeczny_ze_slowami_pyta(self):
+        k, powod = Z.dopasuj_krok("5 wykop", KONF_DATY["kroki"])
+        self.assertIsNone(k)
+        self.assertIn("numer", powod)
+        self.assertEqual(Z.dopasuj_krok("05 zbrojenie", KONF_DATY["kroki"])[0]["nazwa"], "05 Zbrojenie płyty")
+        self.assertEqual(Z.dopasuj_krok("krok 8", KONF_DATY["kroki"])[0]["nazwa"], "08 Hydroizolacja ścian")
+        self.assertEqual(Z.dopasuj_krok("03_zbrojenie", KONF["kroki"])[0]["nazwa"], "03 Zbrojenie płyty")
 
     def test_spacja_na_koncu(self):
         self.assertEqual(Z.dopasuj_krok("wykop ", KONF["kroki"])[0]["nazwa"], "01 Wykop i odbiór dna")

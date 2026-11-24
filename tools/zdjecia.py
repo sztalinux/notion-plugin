@@ -159,18 +159,18 @@ def _rdzenie(s: str):
     return {w[:5] for w in proste(s).split() if len(w) >= 4 and not w.isdigit()}
 
 
+DATA_NA_POCZATKU = re.compile(r"^\s*(?:krok\s*)?\d{1,2}[.\-/_]\d", re.I)  # „8.11 zbrojenie” = data, nie krok 8
+
+
 def numer_kroku(s: str):
+    if DATA_NA_POCZATKU.match(nfc(s)):
+        return None
     m = re.match(r"^\s*(?:krok\s*)?0*(\d{1,2})\b", proste(s))
     return int(m.group(1)) if m else None
 
 
-def dopasuj_krok(nazwa_folderu: str, kroki: list):
-    """(krok | None, powód). Pewne tylko jedno najlepsze dopasowanie; remis albo zero → None."""
-    n = numer_kroku(nazwa_folderu)
-    if n is not None:
-        trafione = [k for k in kroki if numer_kroku(k["nazwa"]) == n]
-        if len(trafione) == 1:
-            return trafione[0], "numer"
+def _po_slowach(nazwa_folderu: str, kroki: list):
+    """(krok | None, powód) – dopasowanie po rdzeniach słów z nazwy kroku."""
     slowa = _rdzenie(nazwa_folderu) - _rdzenie(" ".join(SLOWA_PRZED))
     if not slowa:
         return None, "brak słów do dopasowania"
@@ -180,6 +180,20 @@ def dopasuj_krok(nazwa_folderu: str, kroki: list):
     if len(wyniki) > 1 and wyniki[1][0] == wyniki[0][0]:
         return None, "kilka kroków: " + ", ".join(kroki[i]["nazwa"] for s, i in wyniki if s == wyniki[0][0])
     return kroki[wyniki[0][1]], "słowa"
+
+
+def dopasuj_krok(nazwa_folderu: str, kroki: list):
+    """(krok | None, powód). Pewne tylko jedno najlepsze dopasowanie; remis albo zero → None.
+    Numer kroku wygrywa, chyba że słowa jednoznacznie wskazują inny krok – wtedy pytanie."""
+    n = numer_kroku(nazwa_folderu)
+    if n is not None:
+        trafione = [k for k in kroki if numer_kroku(k["nazwa"]) == n]
+        if len(trafione) == 1:
+            ze_slow, _ = _po_slowach(nazwa_folderu, kroki)
+            if ze_slow is not None and ze_slow is not trafione[0]:
+                return None, f"numer wskazuje „{trafione[0]['nazwa']}”, słowa – „{ze_slow['nazwa']}”"
+            return trafione[0], "numer"
+    return _po_slowach(nazwa_folderu, kroki)
 
 
 def rodzaj_dokumentu(nazwa_folderu: str):
