@@ -231,7 +231,7 @@ class Wycofaj(Podmiana):
         self.assertEqual((licz["plany"], zakresy(a), stany(a, "p")), (0, [], ["Nie wysyłać"]))
 
 
-class Wycofaj(Podmiana):
+class WycofajPlan(Podmiana):
     def test_plan_czysci_komorke_i_wpis_w_planach(self):
         s = T.strona("p", pozycja="47.1 Pozycja A", rodzaj="Plan", kwota=700, wiersz=88)
         WY.zapisz_plany({"p": "47.1", "q": "03.5"})
