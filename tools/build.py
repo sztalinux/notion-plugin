@@ -287,7 +287,8 @@ def nieczytelne(etykieta: str) -> str:
 
 
 def zignorowane(sciezki: list) -> set:
-    """Ścieżki ignorowane przez git (.gitignore) – nie trafią do commita bez `git add -f`, który łapie pre-push."""
+    """Ścieżki ignorowane przez git (.gitignore) – nie trafią do commita bez `git add -f`, który łapie kontrola
+    indeksu (pre-commit) i pre-push."""
     if not sciezki:
         return set()
     r = subprocess.run(["git", "check-ignore", "--stdin", "-z"], cwd=ROOT, capture_output=True,
@@ -432,19 +433,28 @@ def kontrola_commitow(zakres: list) -> list:
         # -c: w scaleniu pliki różne od wszystkich rodziców – treść wniesiona przy rozwiązaniu konfliktu
         for sciezka in filter(None, git("diff-tree", "-z", "-c", "--no-commit-id", "-r", "--root", "--name-only",
                                         "--diff-filter=AMR", sha).split("\0")):
-            bledy += sprawdz_tekst(f"{k} {sciezka} (nazwa)", sciezka, zakazane)
-            if (Path(sciezka).suffix.lower() in BINARNE or DANE_OBSERWATORA.search(sciezka)
-                    or sciezka.startswith("dane/")):
-                bledy.append(f"{k} {sciezka}: plik z danymi w commicie")
-                continue
-            r = subprocess.run(["git", "show", f"{sha}:{sciezka}"], cwd=ROOT, capture_output=True)
-            tresc = jako_tekst(r.stdout) if r.returncode == 0 else None
-            if tresc is None:
-                if sciezka not in DOZWOLONE_BINARNE:
-                    bledy.append(nieczytelne(f"{k} {sciezka}"))
-                continue
-            bledy += sprawdz_tekst(f"{k} {sciezka}", tresc, zakazane)
+            bledy += sprawdz_plik_gita(f"{k} {sciezka}", sciezka, f"{sha}:{sciezka}", zakazane)
     return bledy
+
+
+def sprawdz_plik_gita(etykieta: str, sciezka: str, obiekt: str, zakazane: list) -> list:
+    """Nazwa i treść pliku z gita (`<sha>:<ścieżka>` w commicie, `:<ścieżka>` w indeksie); nieczytelna treść = błąd."""
+    bledy = sprawdz_tekst(f"{etykieta} (nazwa)", sciezka, zakazane)
+    if Path(sciezka).suffix.lower() in BINARNE or DANE_OBSERWATORA.search(sciezka) or sciezka.startswith("dane/"):
+        return bledy + [f"{etykieta}: plik z danymi w commicie"]
+    r = subprocess.run(["git", "show", obiekt], cwd=ROOT, capture_output=True)
+    tresc = jako_tekst(r.stdout) if r.returncode == 0 else None
+    if tresc is None:
+        return bledy + ([nieczytelne(etykieta)] if sciezka not in DOZWOLONE_BINARNE else [])
+    return bledy + sprawdz_tekst(etykieta, tresc, zakazane)
+
+
+def kontrola_indeksu() -> list:
+    """pre-commit: nazwy i treść plików w indeksie – to, co naprawdę wejdzie do commita (plik dodany z danymi
+    i poprawiony potem tylko na dysku). Uzupełnia pełny skan drzewa roboczego, nie zastępuje go."""
+    zakazane = zakazane_slowa()
+    return [b for sciezka in filter(None, git("diff", "--cached", "-z", "--name-only", "--diff-filter=ACMRT").split("\0"))
+            for b in sprawdz_plik_gita(f"(indeks) {sciezka}", sciezka, f":{sciezka}", zakazane)]
 
 
 def kontrola_refow(nazwy: list, obiekt: str) -> list:
@@ -538,6 +548,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--tylko-walidacja", action="store_true")
     ap.add_argument("--kopiuj-dowiazania", action="store_true")
+    ap.add_argument("--indeks", action="store_true", help="pre-commit: także nazwy i treść plików w indeksie git")
     ap.add_argument("--tozsamosc", action="store_true", help="pre-commit: autor i commiter")
     ap.add_argument("--wiadomosc", metavar="PLIK", help="commit-msg: treść wiadomości")
     ap.add_argument("--commity", metavar="ZAKRES", help="pre-push: zakres dla git rev-list, np. 'a..b' lub 'sha --not --remotes'")
@@ -554,7 +565,7 @@ def main() -> int:
         for b in bledy:
             print("  ✗", b)
         return 1 if bledy else 0
-    bledy = waliduj()
+    bledy = waliduj() + (kontrola_indeksu() if a.indeks else [])
     if bledy:
         print("WALIDACJA – BŁĘDY:")
         for b in bledy:

@@ -254,6 +254,13 @@ class Hooki(unittest.TestCase):
         self.git("tag", f"v-{ASCII}")
         self.zablokowany(self.push(f"v-{ASCII}"), BLAD_LISTY, "Push zablokowany")
 
+    # --- F-17: treść z indeksu --------------------------------------------------------------------------
+    def test_pre_commit_tresc_z_indeksu(self):
+        self.plik("docs/probka.txt", f"notatka {OGONEK}\n")
+        self.git("add", "docs/probka.txt")
+        self.plik("docs/probka.txt", "czysta treść na dysku\n")
+        self.zablokowany(self.git("commit", "-q", "-m", "docs: próbka", sprawdz=False), "docs/probka.txt", BLAD_LISTY)
+
     # --- kopia robocza git (worktree), folder budowy bez DOM_HUB --------------------------------------
     def test_worktree(self):
         wt = self.repo / ".claude" / "worktrees" / "wt"
