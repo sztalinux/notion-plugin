@@ -75,7 +75,7 @@ który nie jest takim indeksem, program nigdy nie nadpisuje.
 
 Komunikaty celowo nie niosą wartości pól, tylko typ błędu i linię. Przy ręcznym uruchomieniu włącz pełny ślad:
 `WIEDZA_DEBUG=1 python3 tools/wiedza.py sync`. Ślad może zawierać fragmenty danych – nie wklejaj go do notatek ani do repo.
-Ślad pojawia się tylko w terminalu i bez `--cicho`, więc zmienna ustawiona na stałe nie trafi do wyjścia listy startowej ani nocnych skryptów.
+Ślad pojawia się tylko w terminalu i bez `--cicho`, więc zmienna ustawiona na stałe nie trafi do wyjścia polecenia „odśwież indeks” ani nocnych skryptów.
 
 ## Uprawnienia i dane
 
