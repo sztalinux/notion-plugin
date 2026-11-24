@@ -96,7 +96,8 @@ z pierwszej wiadomości. Polecenia w katalogu repo harnessu.
    z kroku 1 czeka też pierwsze sprawdzenie → bez odblokowania i bez `sync` od razu sekcja D (oba w D.5).
 5. Meldunek jedną linią (bez kwot): „Kosztorys: dodałem etap NN Nazwa (stan) z pozycją NN.1 – wydatek w arkuszu, wiersz N.”
    Nie wyszło → „Kosztorys: etapu NN nie dodałem – <przyczyna>; wydatek czeka w kolejce.” i blokada zdjęta; ta sama przyczyna
-   drugi raz → wiersz Usterka (`rozwoj-harnessu`, D).
+   drugi raz → wiersz Usterka (`rozwoj-harnessu`, D). Z pierwszym sprawdzeniem na liście meldunek pada dopiero po `sync`
+   z D.5; sesja kończy na D.1 albo D.6 → „…z pozycją NN.1 – wydatek wyśle najbliższy automat (pozycja już jest).”
 
 ## D. Pierwsze sprawdzenie nowej pozycji (linia stanu „nowa pozycja kosztorysu: pierwsze sprawdzenie”)
 
@@ -114,8 +115,8 @@ był nigdy uruchomiony na żywym arkuszu, więc pierwsze prawdziwe wstawienie ro
    etapu (zakres obejmuje nowy wiersz, wartości jak przed), RAZEM i „Kontrola powiązań” jak przed. Bez konektora – `pobierz`
    i porównanie z migawką z kroku 2 (te same wartości plus nowy wiersz).
 5. Zgodne → `python3 tools/wydatki.py nowa-pozycja --potwierdz` (znacznik), `sesja --odblokuj`, potem
-   `python3 tools/wydatki.py sync` (strona dostanie istniejący Lp, wydatek pójdzie). Meldunek: „Kosztorys: pierwsza nowa pozycja NN.n sprawdzona – od teraz
-   automat dodaje je sam.”
+   `python3 tools/wydatki.py sync` (strona dostanie istniejący Lp, wydatek pójdzie). Meldunek: „Kosztorys: pierwsza nowa
+   pozycja NN.n sprawdzona – od teraz automat dodaje je sam.”
 6. Niezgodne → konektorem usuń własny wiersz i przywróć formuły sum nagłówka z migawki. Bez konektora blok 🔔
    (`pytania.md`, C) z dokładną czynnością: „Plik → Historia wersji → przywróć wersję sprzed <gg:mm>”. Znacznika nie twórz.
    Wiersz Usterka (`rozwoj-harnessu`, D) z przyczyną, `sesja --odblokuj`.
