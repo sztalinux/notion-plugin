@@ -1,6 +1,6 @@
 ---
 name: model-3d
-description: Model 3D domu i ogrodu w Blenderze, po którym można chodzić – zmiany w modelu przez pliki danych (JSON) i przebudowę skryptem, podgląd przed/po, rendery kontrolne, praca przez konektor Blendera albo bez okna. Używaj, gdy użytkownik mówi „przebuduj model 3D”, „zmień podłogę w salonie”, „dodaj okno dachowe”, „podnieś taras”, „przesuń ścianę w modelu”, „pokaż widok z kuchni na ogród”, „dodaj drzewo / rabatę w modelu”, „zapisz model”, „zrób rendery elewacji”, „dostałem DWG rzutów od architekta”, „co w modelu jest przybliżone”, albo pyta, jak chodzić po modelu, „wprowadź poprawki modelu”, „zrób M3D-n” (lista poprawek w Notion).
+description: Model 3D domu i ogrodu w Blenderze – zmiany przez pliki danych (JSON) i przebudowę skryptem, podgląd przed/po, rendery. Używaj, gdy użytkownik mówi „przebuduj model 3D”, „zmień podłogę w salonie”, „dodaj okno dachowe”, „przesuń ścianę w modelu”, „pokaż widok z kuchni na ogród”, „zrób rendery elewacji”, „dostałem DWG rzutów”, „wprowadź poprawki modelu”, „zrób M3D-n”.
 ---
 
 # Model 3D domu i ogrodu
@@ -36,7 +36,8 @@ procedur, commitów harnessu ani do Notion bez prośby.
 4. **Fakt z projektu ≠ szacunek.** W odpowiedzi rozróżniaj: wymiar z rysunku, wartość przyjęta, pomysł do decyzji.
    Decyzje budowlane (układ, materiały, otwory) należą do inwestora – zapytaj z propozycją domyślną; wariant techniczny
    modelowania wybierz sam.
-5. **Bez zasobów z internetu.** Materiały są proceduralne, w realnej skali; meble i rośliny buduje skrypt.
+5. **Zasoby z internetu tylko po zgodzie inwestora na listę** (źródło, licencja, rozmiar); domyślnie proceduralnie: materiały
+   w realnej skali, meble i rośliny buduje skrypt.
 6. **Blender jest jeden.** Budowanie i zrzuty rób sam, po kolei; czytanie rysunków możesz rozdzielić na pomocników
    (każdy zwraca fragment danych z niepewnościami), w miarę możliwości na tańszym modelu.
 

@@ -1,6 +1,6 @@
 ---
 name: pulpit
-description: Synchronizacja pulpitu budowy (artefakt claude.ai z decyzjami, rozbieżnościami, krokami etapu, checklistą i zadaniami) z Notion – odczyt tego, co inwestor zaznaczył na stronie, zapis do Notion, odświeżenie danych strony i publikacja pod stałym adresem. Tylko sesja interaktywna Claude Code. Używaj, gdy użytkownik mówi „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło” (pulpit), „przenieś decyzje z pulpitu”, „opublikuj pulpit”, wkleja polecenie z przycisku „Odśwież” na stronie pulpitu, albo pyta, co pulpit zapisał w Notion i które konflikty czekają.
+description: Synchronizacja pulpitu budowy (artefakt claude.ai z decyzjami, krokami, checklistą i zadaniami) z Notion – zapis zaznaczeń, odświeżenie danych, publikacja. Tylko sesja interaktywna Claude Code. Używaj, gdy użytkownik mówi „zsynchronizuj pulpit”, „odśwież pulpit”, „pokaż, co by się zmieniło” (pulpit), „przenieś decyzje z pulpitu”, „opublikuj pulpit” albo wkleja polecenie z przycisku „Odśwież”.
 ---
 
 # Pulpit budowy – synchronizacja

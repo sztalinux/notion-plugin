@@ -29,10 +29,11 @@ na pogodę, którą inwestor wpisał z datą w Uwagach kroku Harmonogramu (np. �
 Inne dni, robota bez daty w Uwagach albo robota spoza tabeli → nic: bez prognozy, bez linii i bez dopisku „bez robót
 wrażliwych”. Krok „Zrobione” nie wyłącza dni pielęgnacji. Przebieg ma być tani.
 
-**Odczyt:** widok Harmonogramu „📅 Oś czasu” (ID w `budowa/references/notion-mapa.md`; ten sam odczyt co reszta kroku 2
-wieczoru) – kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra, **także ze Statusem „Zrobione”**; w ich
-Uwagach szukaj roboty z tabeli z datą. Widok nie pokazuje Uwag → strony tych kroków pojedynczo, max 5. Nic nie pasuje →
-koniec, bez szukania prognozy.
+**Odczyt** (jedyne miejsce tej reguły – `budowa/references/wieczorem.md`, krok 2, odsyła tutaj; ID widoków
+w `budowa/references/notion-mapa.md`): jeden odczyt widoku „📅 Oś czasu” (bez filtra, pokazuje Uwagi;
+„🤖 Najbliższe 7 dni” pomija kroki „Zrobione”) – kroki, których Termin zachodzi na okres od jutra − 7 dni do jutra,
+w każdym Statusie, z ich Uwagami; stron kroków nie otwieraj.
+W ich Uwagach szukaj roboty z tabeli z datą. Nic nie pasuje → koniec, bez szukania prognozy.
 
 1. **Miejscowość** weź ze ściągi (Notion → DOM → „📐 Dane projektu”). Do wyszukiwania w sieci podaj **tylko miejscowość** –
    bez adresu, numeru działki i innych danych. Miejscowości w ściądze brak → pomiń prognozę, dopisz linię

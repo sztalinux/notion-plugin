@@ -1,6 +1,6 @@
 ---
 name: analiza-techniczna
-description: Analiza dokumentacji budowy (projekt techniczny, rysunki KT/arch., opinie geotechniczne, umowy z wykonawcami, karty produktów, normy) i odpowiedzi na pytania techniczne. Używaj, gdy użytkownik dołącza PDF/rysunek projektu lub umowę, pyta „czy to dobrze zaprojektowane”, „co z tego wynika”, „jak to wykonać”, „ile tego potrzeba”, o technologię (hydroizolacja, drenaż, beton, zbrojenie, izolacje, instalacje), albo prosi o listę pytań do projektanta.
+description: Analiza dokumentacji budowy (projekt, rysunki KT/arch., opinia geotechniczna, umowy, karty produktów, normy) i odpowiedzi na pytania techniczne. Używaj, gdy użytkownik dołącza PDF/rysunek projektu lub umowę, pyta „czy to dobrze zaprojektowane”, „co z tego wynika”, „jak to wykonać”, „ile tego potrzeba”, o technologię (hydroizolacja, drenaż, beton, zbrojenie) albo prosi o pytania do projektanta.
 ---
 
 # Analiza techniczna
