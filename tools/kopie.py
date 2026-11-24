@@ -82,14 +82,19 @@ def dokumenty(hub: Path, dzis: date) -> dict:
     if not kiedy and not stan.get("potwierdzone"):
         return poz("dokumenty", "✗", opis, gdzie, None, "kopia.py nie był uruchamiany")
     potwierdzone = {k: v for k, v in (stan.get("potwierdzone") or {}).items() if kopia.dozwolony(k)}
-    teraz = kopia.skanuj(hub, {**(stan.get("potwierdzone") or {}), **(stan.get("ostatni_skan") or {})})
-    r = kopia.roznice(potwierdzone, teraz)
+    bledy = []
+    try:
+        teraz = kopia.skanuj(hub, {**(stan.get("potwierdzone") or {}), **(stan.get("ostatni_skan") or {})}, bledy)
+    except OSError as e:
+        return poz("dokumenty", "✗", opis, gdzie, kiedy, f"błąd odczytu folderu budowy ({e})")
+    r = kopia.roznice(potwierdzone, kopia.z_nieczytelnymi(teraz, potwierdzone, bledy))
     n = sum(len(r[k]) for k in ("nowe", "zmienione", "przeniesione", "usuniete"))
     czeka = [x["data"] for x in stan.get("paczki", []) if not x.get("wgrana")]
-    szczegol = f"zmian od kopii: {n}" + (f" · paczki do wgrania: {', '.join(czeka)}" if czeka else "")
+    szczegol = (f"zmian od kopii: {n}" + (f" · paczki do wgrania: {', '.join(czeka)}" if czeka else "")
+                + (f" · nieczytelne: {len(bledy)} (zepsute dowiązanie? {bledy[0]}) – bez kopii" if bledy else ""))
     if not kiedy:
         s = "✗"
-    elif (n or czeka) and dni_od(kiedy, dzis) > DOKUMENTY_DNI:
+    elif bledy or ((n or czeka) and dni_od(kiedy, dzis) > DOKUMENTY_DNI):
         s = "⚠"
     else:
         s = "✓"

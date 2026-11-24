@@ -3,13 +3,17 @@
 
     python3 tools/test_zdjecia.py
 """
+import io
 import json
 import os
+import subprocess
 import sys
 import tempfile
+import time
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest import mock
 
 TMP = tempfile.mkdtemp(prefix="zdjecia-test-")
 os.environ["ZDJECIA_DANE"] = str(Path(TMP) / "dane")
@@ -27,8 +31,24 @@ KONF = {
     "tematy": ["Przyłącza"],
     "dni": {"2026-11-18": ["03 Zbrojenie płyty"], "2026-11-19": ["03 Zbrojenie płyty", "04 Zbrojenie ścian"]},
 }
+KONF_DATY = {"etap": "Etap A", "tematy": [], "dni": {}, "kroki": [  # numery kroków = dni miesiąca z nazw folderów
+    {"nazwa": "01 Wykop", "folder": "Zdjęcia/Etap A/01 Wykop"},
+    {"nazwa": "05 Zbrojenie płyty", "folder": "Zdjęcia/Etap A/05 Zbrojenie płyty"},
+    {"nazwa": "08 Hydroizolacja ścian", "folder": "Zdjęcia/Etap A/08 Hydroizolacja ścian"}]}
 TERAZ = datetime(2026, 11, 20, 12, 0, tzinfo=timezone.utc)
 STARE = "2026-11-20T10:00:00Z"
+
+
+class WlasneDane(unittest.TestCase):
+    """Każdy test z własnym dziennikiem ruchów, blokadą i folderem budowy (katalog tymczasowy)."""
+
+    def setUp(self):
+        self.dane = Path(tempfile.mkdtemp(prefix="dane-", dir=TMP))
+        self.hub = Path(tempfile.mkdtemp(prefix="hub-", dir=TMP))
+        for nazwa, wartosc in (("DANE", self.dane), ("HUB", self.hub)):
+            p = mock.patch.object(Z, nazwa, wartosc)
+            p.start()
+            self.addCleanup(p.stop)
 
 
 def plik(nazwa, folder="", rozmiar=100, utworzono=STARE, zmieniono=None, zrobiono=None, i=[0]):
@@ -56,6 +76,17 @@ class Daty(unittest.TestCase):
     def test_brak_daty_w_pliku_data_wgrania(self):
         d = Z.data_zrobienia({"nazwa": "zdjecie.jpg", "utworzono": "2026-11-18T23:30:00Z"})
         self.assertEqual(d, ("2026-11-19", True, "wgranie"))
+
+    def test_mdls_data_pliku_to_nie_exif(self):
+        # plik bez EXIF: Spotlight podaje datę utworzenia pliku (rozpakowania) – to nie jest data zrobienia (F-7)
+        rowne = subprocess.CompletedProcess([], 0, "2026-11-20 07:00:00 +0000\x002026-11-20 07:00:00 +0000", "")
+        rozne = subprocess.CompletedProcess([], 0, "2026-11-05 09:15:00 +0000\x002026-11-20 07:00:00 +0000", "")
+        with mock.patch.object(Z.subprocess, "run", return_value=rowne):
+            self.assertIsNone(Z.exif_mdls(Path("IMG_20261105_101500.jpg")))
+            d = Z.data_zrobienia({"nazwa": "IMG_20261105_101500.jpg", "zrobiono": Z.exif_mdls(Path("x.jpg"))})
+        self.assertEqual(d, ("2026-11-05", False, "nazwa"))
+        with mock.patch.object(Z.subprocess, "run", return_value=rozne):
+            self.assertEqual(Z.exif_mdls(Path("x.jpg"))[:10], "2026-11-05")
 
     def test_komunikator(self):
         self.assertEqual(Z.data_zrobienia({"nazwa": "Image 2026-11-18 at 14.02.11.jpeg"})[0], "2026-11-18")
@@ -86,6 +117,23 @@ class Dopasowanie(unittest.TestCase):
 
     def test_zaden(self):
         self.assertIsNone(Z.dopasuj_krok("wakacje nad morzem", KONF["kroki"])[0])
+
+    def test_data_w_nazwie_folderu_to_nie_numer_kroku(self):
+        # „8.11 zbrojenie płyty” to data (8 listopada), nie krok 08 (F-6)
+        for folder, krok in (("8.11 zbrojenie płyty", "05 Zbrojenie płyty"), ("5.11 hydroizolacja", "08 Hydroizolacja ścian"),
+                             ("1.12 zbrojenie płyty", "05 Zbrojenie płyty"), ("05.11 wykop", "01 Wykop"),
+                             ("8-11 zbrojenie płyty", "05 Zbrojenie płyty"), ("08/11 wykop", "01 Wykop")):
+            k, powod = Z.dopasuj_krok(folder, KONF_DATY["kroki"])
+            self.assertEqual((k or {}).get("nazwa"), krok, (folder, powod))
+        self.assertIsNone(Z.dopasuj_krok("8.11", KONF_DATY["kroki"])[0])
+
+    def test_numer_sprzeczny_ze_slowami_pyta(self):
+        k, powod = Z.dopasuj_krok("5 wykop", KONF_DATY["kroki"])
+        self.assertIsNone(k)
+        self.assertIn("numer", powod)
+        self.assertEqual(Z.dopasuj_krok("05 zbrojenie", KONF_DATY["kroki"])[0]["nazwa"], "05 Zbrojenie płyty")
+        self.assertEqual(Z.dopasuj_krok("krok 8", KONF_DATY["kroki"])[0]["nazwa"], "08 Hydroizolacja ścian")
+        self.assertEqual(Z.dopasuj_krok("03_zbrojenie", KONF["kroki"])[0]["nazwa"], "03 Zbrojenie płyty")
 
     def test_spacja_na_koncu(self):
         self.assertEqual(Z.dopasuj_krok("wykop ", KONF["kroki"])[0]["nazwa"], "01 Wykop i odbiór dna")
@@ -186,9 +234,46 @@ class Plan(unittest.TestCase):
         self.assertIn("01 Wykop i odbiór dna (2) https://example.invalid/f1", pole)
 
 
-class Lokalnie(unittest.TestCase):
+class Dziennik(WlasneDane):
+    def test_konektor_z_tylko_zapisuje_pusty_folder(self):
+        # droga konektorowa zawsze z --tylko: pusty folder też musi trafić do dziennika, inaczej cofnij go nie zna (F-4)
+        p = plan([plik("PXL_20261118_090000000.jpg", "wykop"), plik("PXL_20261118_100000000.jpg", "wykop"),
+                  plik("PXL_20261118_110000000.jpg")])
+        self.assertEqual(len(p["puste_foldery"]), 1)
+        Z.zapisz_ruchy(p, "konektor", {r["id"] for r in p["ruchy"]})
+        c = Z.plan_cofniecia(Z.wczytaj_ruchy())
+        self.assertEqual(len(c["ruchy"]), 3)
+        self.assertEqual(c["foldery"], [{"folder": "wykop", "z": Z.ARCH_PUSTE, "do": "Zdjęcia/_nowe", "nowa_nazwa": "wykop"}])
+
+    def test_konektor_czesc_plikow_folder_zostaje(self):
+        p = plan([plik("PXL_20261118_090000000.jpg", "wykop"), plik("PXL_20261118_100000000.jpg", "wykop")])
+        Z.zapisz_ruchy(p, "konektor", {p["ruchy"][0]["id"]})
+        c = Z.plan_cofniecia(Z.wczytaj_ruchy())
+        self.assertEqual((len(c["ruchy"]), c["foldery"]), (1, []))
+
+    def test_stary_i_nowy_format_folderu(self):
+        # stary wpis (bez nazwy w archiwum) – nazwa z ścieżki; nowy – nazwa z dopiskiem _2 (F-12)
+        wpisy = [{"przebieg": "P1", "czas": "c", "kto": "konektor", "folder": "Zdjęcia/_nowe/wykop", "do": Z.ARCH_PUSTE},
+                 {"przebieg": "P2", "czas": "c", "kto": "skrypt", "folder": "Zdjęcia/_nowe/wykop", "do": Z.ARCH_PUSTE,
+                  "w_archiwum": "wykop_2"}]
+        self.assertEqual(Z.plan_cofniecia(wpisy[:1])["foldery"][0],
+                         {"folder": "wykop", "z": Z.ARCH_PUSTE, "do": "Zdjęcia/_nowe", "nowa_nazwa": "wykop"})
+        self.assertEqual(Z.plan_cofniecia(wpisy)["foldery"][0],
+                         {"folder": "wykop_2", "z": Z.ARCH_PUSTE, "do": "Zdjęcia/_nowe", "nowa_nazwa": "wykop"})
+
+
+def wgraj(hub, folder, nazwa, tresc):
+    p = hub / "Zdjęcia" / "_nowe" / folder / nazwa
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_bytes(tresc)
+    dawno = time.time() - 86400  # wgrane wczoraj – nie „wgrywanie trwa”, niezależnie od dzisiejszej daty
+    os.utime(p, (dawno, dawno))
+    return p
+
+
+class Lokalnie(WlasneDane):
     def setUp(self):
-        self.hub = Path(tempfile.mkdtemp(prefix="hub-", dir=TMP))
+        super().setUp()
         n = self.hub / "Zdjęcia" / "_nowe"
         (n / "wykop").mkdir(parents=True)
         (n / "wykop" / "PXL_20261118_090000000.jpg").write_bytes(b"a" * 10)
@@ -207,15 +292,66 @@ class Lokalnie(unittest.TestCase):
         self.assertTrue(cel.exists())
         self.assertTrue((self.hub / "_Archiwum/Puste foldery/wykop").exists())
         self.assertTrue((self.hub / "Zdjęcia/_nowe/nieznane/PXL_20261118_090000000.jpg").exists())
-        Z.zapisz_ruchy(p, "skrypt")
-        c = Z.plan_cofniecia(Z.wczytaj_ruchy())
+        c = Z.plan_cofniecia(Z.wczytaj_ruchy())  # dziennik zapisuje samo wykonanie
         self.assertEqual(len(c["ruchy"]), 1)
         self.assertEqual(c["ruchy"][0]["do"], "Zdjęcia/_nowe/wykop")
+        self.assertEqual(len(c["foldery"]), 1)
         Z.oznacz_cofniety(c["przebieg"], "skrypt")
         self.assertIsNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
         # ponowny przebieg: nic do zrobienia poza czekającym
         p2 = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)
         self.assertEqual(p2["ruchy"], [])
+
+    def test_przerwanie_w_polowie_dziennik_ma_wykonane(self):
+        # Ctrl-C / uśpienie przy 2. ruchu: pierwszy przeniesiony plik musi być w dzienniku (F-5)
+        nowy = wgraj(self.hub, "wykop", "PXL_20261117_090000000.jpg", b"c" * 10)
+        stare = datetime(2026, 11, 20, 10, tzinfo=timezone.utc).timestamp()
+        os.utime(nowy, (stare, stare))
+        p = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)
+        self.assertEqual(len(p["ruchy"]), 2)
+        prawdziwy, licznik = Z.shutil.move, [0]
+
+        def move(a, b):
+            licznik[0] += 1
+            if licznik[0] == 2:
+                raise KeyboardInterrupt("przerwano")
+            return prawdziwy(a, b)
+        with mock.patch.object(Z.shutil, "move", side_effect=move):
+            with self.assertRaises(KeyboardInterrupt):
+                Z.wykonaj_lokalnie(p, self.hub)
+        ruchy = Z.wczytaj_ruchy()
+        self.assertEqual(len(ruchy), 1)
+        self.assertTrue((self.hub / ruchy[0]["do"] / ruchy[0]["nowa_nazwa"]).exists())
+
+    def test_pominiety_ruch_bez_wpisu(self):
+        # cel pojawia się między planem a ruchem (inna treść) → `rozloz --wykonaj` pomija ruch i nie zapisuje go
+        # do dziennika – cofnij nie zabierze cudzego pliku (F-5)
+        kroki = self.dane / "kroki.json"
+        kroki.write_text(json.dumps(KONF, ensure_ascii=False), encoding="utf-8")
+        planuj = Z.planuj
+
+        def planuj_i_wyscig(lista, konf, teraz=None):
+            p = planuj(lista, konf, TERAZ)
+            cel = self.hub / p["ruchy"][0]["do"] / p["ruchy"][0]["nowa_nazwa"]
+            cel.parent.mkdir(parents=True)
+            cel.write_bytes(b"INNY")
+            return p
+        with mock.patch.object(Z, "planuj", planuj_i_wyscig), mock.patch.object(Z, "exif_mdls", return_value=None), \
+                mock.patch("sys.stdout", new_callable=io.StringIO):
+            self.assertEqual(Z.main(["rozloz", "--wykonaj", "--kroki", str(kroki)]), 0)
+        self.assertEqual([r for r in Z.wczytaj_ruchy() if "nazwa" in r], [])
+        self.assertTrue((self.hub / "Zdjęcia/_nowe/wykop/PXL_20261118_090000000.jpg").exists())
+
+    def test_mdls_bez_exif_daje_date_z_nazwy(self):
+        # data treści = data pliku → nazwa; data treści inna (prawdziwy EXIF) → EXIF (F-7)
+        rowne = subprocess.CompletedProcess([], 0, "2026-11-25 07:00:00 +0000\x002026-11-25 07:00:00 +0000", "")
+        rozne = subprocess.CompletedProcess([], 0, "2026-11-17 09:00:00 +0000\x002026-11-25 07:00:00 +0000", "")
+        for wynik, nazwa, zrodlo in ((rowne, "2026-11-18_PXL_20261118_090000000.jpg", "nazwa"),
+                                     (rozne, "2026-11-17_PXL_20261118_090000000.jpg", "exif")):
+            with mock.patch.object(Z.subprocess, "run", return_value=wynik):
+                lista = Z.lista_lokalna(self.hub)
+            p = Z.planuj(lista, KONF, TERAZ)
+            self.assertEqual((p["ruchy"][0]["nowa_nazwa"], p["ruchy"][0]["data_zrodlo"]), (nazwa, zrodlo))
 
     def test_wg_dni(self):
         p = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, TERAZ)
@@ -229,6 +365,153 @@ class Lokalnie(unittest.TestCase):
             with self.assertRaises(Z.Zajete):
                 with Z.Blokada("konektor"):
                     pass
+
+
+class Polecenia(WlasneDane):
+    """main(): rozloz --wykonaj, cofnij --wykonaj, blokada drogi konektorowej (F-12, F-13, F-20)."""
+
+    def setUp(self):
+        super().setUp()
+        self.kroki = self.dane / "kroki.json"
+        self.kroki.write_text(json.dumps(KONF, ensure_ascii=False), encoding="utf-8")
+        self.cicho = mock.patch("sys.stdout", new_callable=io.StringIO)
+        self.cicho.start()
+        self.addCleanup(self.cicho.stop)
+
+    def rozloz(self):
+        with mock.patch.object(Z, "exif_mdls", return_value=None):
+            return Z.main(["rozloz", "--wykonaj", "--kroki", str(self.kroki)])
+
+    def test_rozloz_i_cofnij_wykonaj(self):
+        wgraj(self.hub, "wykop", "PXL_20261118_090000000.jpg", b"a" * 10)
+        wgraj(self.hub, "nieznane", "PXL_20261118_100000000.jpg", b"b" * 10)
+        self.assertEqual(self.rozloz(), 0)
+        cel = self.hub / "Zdjęcia/Etap A/01 Wykop i odbiór dna/2026-11-18_PXL_20261118_090000000.jpg"
+        self.assertTrue(cel.exists())
+        self.assertEqual(len(Z.wczytaj_ruchy()), 2)  # plik i pusty folder
+        self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 0)
+        self.assertFalse(cel.exists())
+        self.assertTrue((self.hub / "Zdjęcia/_nowe/wykop/PXL_20261118_090000000.jpg").exists())
+        self.assertFalse((self.hub / Z.ARCH_PUSTE / "wykop").exists())
+        self.assertIsNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
+
+    def test_cofniecie_bierze_wlasny_folder_z_archiwum(self):
+        # drugi pusty folder o tej samej nazwie dostaje _2 – cofnięcie ma wziąć właśnie jego (F-12)
+        wgraj(self.hub, "wykop", "PXL_20261118_090000000.jpg", b"a" * 10)
+        p1 = Z.planuj(Z.lista_lokalna(self.hub, exif=lambda p: None), KONF, datetime.now(timezone.utc) - timedelta(hours=1))
+        Z.wykonaj_lokalnie(p1, self.hub)
+        wgraj(self.hub, "wykop", "PXL_20261119_090000000.jpg", b"b" * 11)
+        self.assertEqual(self.rozloz(), 0)
+        arch = self.hub / Z.ARCH_PUSTE
+        self.assertEqual(sorted(x.name for x in arch.iterdir()), ["wykop", "wykop_2"])
+        self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 0)
+        self.assertEqual(sorted(x.name for x in arch.iterdir()), ["wykop"])
+        self.assertEqual([x.name for x in (self.hub / "Zdjęcia/_nowe/wykop").iterdir()], ["PXL_20261119_090000000.jpg"])
+
+    def lista(self, *pliki) -> Path:
+        lista = self.dane / "lista.json"
+        lista.write_text(json.dumps({"nowe": list(pliki), "istniejace": []}), encoding="utf-8")
+        return lista
+
+    def plan_zablokuj(self, lista, wyjscie=None) -> int:
+        with mock.patch("sys.stderr", new_callable=io.StringIO):
+            return Z.main(["plan", "--lista", str(lista), "--kroki", str(self.kroki), "--teraz", "2026-11-20T12:00:00+00:00",
+                           "--wyjscie", str(wyjscie or self.dane / "plan.json"), "--zablokuj"])
+
+    def test_nieudany_plan_i_plan_bez_ruchow_nie_blokuja(self):
+        # zła ścieżka listy, zły JSON, plan z samymi pytaniami → bez blokady (F-13)
+        with self.assertRaises(FileNotFoundError):
+            self.plan_zablokuj(self.dane / "nie-ma.json")
+        zla = self.dane / "zla.json"
+        zla.write_text("{nowe:", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            self.plan_zablokuj(zla)
+        self.assertEqual(self.plan_zablokuj(self.lista(plik("PXL_20261118_090000000.jpg", "urodziny"))), 0)
+        self.assertFalse((self.dane / "blokada.json").exists())
+        self.assertIn("brak ruchów", sys.stdout.getvalue())
+
+    def test_blokada_konektora_odswiezana_i_zdejmowana(self):
+        lista = self.lista(plik("PXL_20261118_090000000.jpg", "wykop"))
+        self.assertEqual(self.plan_zablokuj(lista), 0)
+        b1 = json.loads((self.dane / "blokada.json").read_text())
+        self.assertEqual(b1["kto"], "konektor")
+        self.assertEqual(self.plan_zablokuj(lista), 0)  # ponowny plan tej sesji odświeża blokadę
+        self.assertGreaterEqual(json.loads((self.dane / "blokada.json").read_text())["t"], b1["t"])
+        wgraj(self.hub, "wykop", "PXL_20261118_100000000.jpg", b"a" * 10)
+        self.assertEqual(self.rozloz(), 0)  # skrypt czeka (komunikat, kod 0 – automat)
+        self.assertTrue((self.hub / "Zdjęcia/_nowe/wykop/PXL_20261118_100000000.jpg").exists())
+        ids = ",".join(r["id"] for r in json.loads((self.dane / "plan.json").read_text())["ruchy"])
+        self.assertEqual(Z.main(["zapisz-ruchy", str(self.dane / "plan.json"), "--tylko", ids]), 0)
+        self.assertFalse((self.dane / "blokada.json").exists())  # koniec przebiegu konektora zwalnia blokadę
+        Z.zablokuj("konektor")
+        self.assertEqual(Z.main(["odblokuj"]), 0)
+        self.assertFalse((self.dane / "blokada.json").exists())
+
+    def test_blokada_skryptu_zatrzymuje_konektor_i_cofanie(self):
+        lista = self.lista(plik("PXL_20261118_090000000.jpg", "wykop"))
+        Z.zapisz_ruchy(Z.planuj(json.loads(lista.read_text()), KONF, TERAZ), "konektor")
+        with Z.Blokada("skrypt"):
+            self.assertEqual(self.plan_zablokuj(lista), 1)
+            self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 1)
+            self.assertEqual(json.loads((self.dane / "blokada.json").read_text())["kto"], "skrypt")
+        self.assertIsNotNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
+
+    def test_czas_zycia_blokady_i_stan(self):
+        def blokada(kto, minut_temu):
+            (self.dane / "blokada.json").write_text(json.dumps(
+                {"kto": kto, "t": time.time() - minut_temu * 60, "od": "2026-11-20T08:00+01:00"}))
+
+        def stan():
+            out = io.StringIO()
+            with mock.patch("sys.stdout", out):
+                Z.main(["stan"])
+            return out.getvalue()
+        self.assertIn("blokada: nie", stan())
+        blokada("konektor", 10)
+        self.assertIsNotNone(Z._blokada_aktywna())
+        self.assertIn("blokada: konektor od 2026-11-20T08:00+01:00", stan())
+        blokada("konektor", 31)  # konektor – 30 min
+        self.assertIsNone(Z._blokada_aktywna())
+        self.assertIn("blokada: porzucona (konektor od 2026-11-20T08:00+01:00) – `zdjecia.py odblokuj`", stan())
+        self.assertEqual(self.plan_zablokuj(self.lista(plik("PXL_20261118_090000000.jpg", "wykop"))), 0)
+        blokada("skrypt", 31)  # skrypt – 2 h
+        self.assertIn("blokada: skrypt od", stan())
+        blokada("skrypt", 121)
+        self.assertIn("blokada: porzucona (skrypt", stan())
+
+    def test_zapisz_ruchy_puste_tylko_to_blad(self):
+        # --tylko "" (nic nie wykonano) nie może zapisać całego planu jako wykonanego
+        lista = self.lista(plik("PXL_20261118_090000000.jpg", "wykop"))
+        self.assertEqual(self.plan_zablokuj(lista), 0)
+        with mock.patch("sys.stderr", new_callable=io.StringIO):
+            self.assertEqual(Z.main(["zapisz-ruchy", str(self.dane / "plan.json"), "--tylko", ""]), 1)
+            self.assertEqual(Z.main(["zapisz-ruchy", str(self.dane / "plan.json"), "--tylko", " , "]), 1)
+        self.assertEqual(Z.wczytaj_ruchy(), [])
+        self.assertTrue((self.dane / "blokada.json").exists())
+
+    def test_cofnij_z_konfliktami_nie_zamyka_przebiegu(self):
+        # inwestor przemianował jeden rozłożony plik i wgrał do _nowe nowy plik o nazwie drugiego → cofnięcie
+        # częściowe: konflikty, kod 1, przebieg dalej do cofnięcia; po rozwiązaniu ponowne cofnij kończy resztę
+        for n in "123":
+            wgraj(self.hub, "wykop", f"PXL_2026111{n}_090000000.jpg", n.encode() * 10)
+        self.assertEqual(self.rozloz(), 0)
+        krok = self.hub / "Zdjęcia/Etap A/01 Wykop i odbiór dna"
+        (krok / "2026-11-11_PXL_20261111_090000000.jpg").rename(krok / "2026-11-11_narożnik.jpg")
+        wgraj(self.hub, "wykop", "PXL_20261112_090000000.jpg", b"NOWE")
+        self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 1)
+        wyjscie = sys.stdout.getvalue()
+        self.assertIn("nie cofnięto 2", wyjscie)
+        self.assertIsNotNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
+        nowe = self.hub / "Zdjęcia/_nowe/wykop"
+        self.assertEqual((nowe / "PXL_20261113_090000000.jpg").read_bytes(), b"3" * 10)
+        self.assertEqual((nowe / "PXL_20261112_090000000.jpg").read_bytes(), b"NOWE")  # nic nie nadpisane
+        # rozwiązanie: inwestor odsuwa nowy plik i przywraca nazwę – cofnij dokańcza tylko brakujące
+        (nowe / "PXL_20261112_090000000.jpg").rename(self.hub / "odsuniety.jpg")
+        (krok / "2026-11-11_narożnik.jpg").rename(krok / "2026-11-11_PXL_20261111_090000000.jpg")
+        self.assertEqual(Z.main(["cofnij", "--wykonaj"]), 0)
+        self.assertEqual(sorted(x.name for x in nowe.iterdir()),
+                         ["PXL_20261111_090000000.jpg", "PXL_20261112_090000000.jpg", "PXL_20261113_090000000.jpg"])
+        self.assertIsNone(Z.plan_cofniecia(Z.wczytaj_ruchy())["przebieg"])
 
 
 if __name__ == "__main__":
