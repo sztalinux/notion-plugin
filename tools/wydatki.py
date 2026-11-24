@@ -25,9 +25,9 @@ w arkuszu. Rodzaj „Zwrot” (pieniądze oddane – różnica VAT, zwrot towaru
 Rodzaj „Wycena” (oferta dostawcy, cena za jednostkę w polu Kwota) idzie do arkusza Cennik;
 ponowne wysłanie tej samej strony aktualizuje jej wiersz (np. Status wyceny = Wybrana). Rodzaj „Plan” (plan całej pozycji
 brutto) nie idzie do Apps Script jako wiersz – `sync` wpisuje go w Kosztorys „Plan ręczny” (kolumna i wiersz po nagłówkach),
-inny plan nadpisuje tylko strona, która go ustawiła, albo z „Nadpisz plan”. Każde wysłanie czyści pole Zgłoszono (pytanie
-o błąd we Wpisach zakłada przebieg Claude, nie ten skrypt). Wyceny wymagają kodu Apps Script
-w wersji ≥ 2 i Cennika w nowym układzie (ping: cennik_ok) – inaczej czekają w kolejce.
+inny plan nadpisuje tylko strona, która go ustawiła (<hub>/.dom/wydatki/plany.json: id strony → Lp), albo z „Nadpisz
+plan”. Każde wysłanie czyści pole Zgłoszono (pytanie o błąd we Wpisach zakłada przebieg Claude, nie ten skrypt).
+Wyceny wymagają kodu Apps Script w wersji ≥ 2 i Cennika w nowym układzie (ping: cennik_ok) – inaczej czekają w kolejce.
 Pole „Nowa pozycja” strony („<etap> | <nazwa> | <typ> | <jedn.>”, POM-31; tylko Wydatek i Wycena; prawidłowa Pozycja
 wygrywa, a pole jest czyszczone): `sync` woła akcję Apps Script „dodaj_pozycje” (kod ≥ 5; starszy – strona czeka), ustawia
 Pozycję na nowy Lp i wysyła wydatek w tym samym przebiegu. Bezpiecznik: dopóki nie ma znacznika
@@ -72,6 +72,7 @@ TYPY = ("Materiał", "Robocizna", "Sprzęt", "Usługa", "Formalności")
 JEDNOSTKI = ("kpl", "m³", "m²", "mb", "kg", "t", "szt", "h", "dzień", "mies.", "l")   # lista Kosztorys kol. E
 STANY = ("Koszty ogólne", "Stan zero", "SSO", "Deweloperski", "Wykończenie", "Teren")
 PLIK_SESJI = "kosztorys-do-sesji.json"  # w <hub>/.dom/wydatki/: nowe etapy i pierwsze sprawdzenie – linia stanu sesji, `sesja`
+PLIK_PLANOW = "plany.json"              # w <hub>/.dom/wydatki/: {id strony Plan: Lp}, której pozycji plan ta strona wpisała
 BLOKADA_SESJI = "kosztorys-sesja.lock"  # katalog-blokada: jedna sesja Claude Code naraz (nowy etap, pierwsze sprawdzenie)
 BLOKADA_WAZNA_S = 2 * 3600
 ZNACZNIK_SPRAWDZENIA = "nowa-pozycja-sprawdzona"   # bez niego `sync` nie wstawia wierszy (bezpiecznik pierwszego użycia)
@@ -665,10 +666,37 @@ def liczba(x):
     return x if isinstance(x, (int, float)) and not isinstance(x, bool) else None
 
 
+def plik_planow() -> Path:
+    return W.CONF / "wydatki" / PLIK_PLANOW
+
+
+def klucz_strony(id_: str) -> str:
+    return id_.replace("-", "")
+
+
+def wczytaj_plany() -> dict:
+    """{id strony bez myślników: Lp} – plany ręczne wpisane przez strony Plan; '' = plan przejęła inna strona
+    (dane prywatne – folder budowy)."""
+    try:
+        d = json.loads(plik_planow().read_text(encoding="utf-8"))
+        return d if isinstance(d, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def zapisz_plany(d: dict):
+    plik = plik_planow()
+    plik.parent.mkdir(parents=True, exist_ok=True)
+    tymczasowy = plik.with_suffix(".tmp")
+    tymczasowy.write_text(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
+    os.replace(tymczasowy, plik)
+
+
 def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset()):
     """Rodzaj „Plan” → komórka „Plan ręczny” pozycji w Kosztorysie. Pusta albo równa – zapis; inna wartość – tylko gdy ta
-    strona już tę komórkę ustawiła (Wiersz arkusza) albo ma zaznaczone „Nadpisz plan”; inaczej Błąd z pytaniem."""
+    strona już tę komórkę ustawiła (plany.json) albo ma zaznaczone „Nadpisz plan”; inaczej Błąd z pytaniem."""
     m = mapa_planu(k)
+    zapisane = wczytaj_plany()
     for w in plany:
         p = m["pozycje"].get(w["lp"])
         if not p:
@@ -676,9 +704,11 @@ def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset()):
             oznacz(k, w["id"], BLAD, czysc_nowa=w["id"] in czysc, blad=f"pozycja {w['lp']} nie istnieje w Kosztorysie")
             continue
         obecny = liczba(p["plan"])
-        # własny plan = ta strona już raz wpisała plan swojej pozycji (Lp strony); numer wiersza się nie liczy, bo
-        # automatyczne wstawienia pozycji przesuwają wiersze
-        wlasny = w["wiersz_ark"] is not None
+        # własny plan = ta strona już raz wpisała plan tej pozycji (Lp z plany.json – wiersze przesuwają automatyczne
+        # wstawienia pozycji); strona sprzed pliku – stary warunek: ten sam wiersz. Sam Wiersz arkusza nie wystarcza
+        # (strona Wydatek przestawiona na Plan, zmieniona Pozycja).
+        klucz = klucz_strony(w["id"])
+        wlasny = zapisane[klucz] == w["lp"] if klucz in zapisane else w["wiersz_ark"] == p["wiersz"]
         if obecny not in (None, 0) and obecny != w["kwota"] and not (wlasny or w["nadpisz"]):
             licz["bledy"] += 1
             oznacz(k, w["id"], BLAD, czysc_nowa=w["id"] in czysc, blad=f"pozycja {w['lp']} ma już inny plan ręczny – zaznacz „Nadpisz plan”, "
@@ -687,6 +717,13 @@ def wyslij_plany(k: dict, plany: list, licz: dict, czysc=frozenset()):
         if obecny != w["kwota"]:
             a1 = f"{m['kolumna']}{p['wiersz']}"
             arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Kosztorys", "a1": a1, "wartosci": [[w["kwota"]]]}])
+        # przed zapisem Notion – jego błąd nie odbiera stronie planu; plan należy do strony, która wpisała go ostatnia
+        # (poprzednia dostaje '' – bez planu, także bez starego warunku wiersza)
+        nowe_wpisy = {s: ("" if lp == w["lp"] else lp) for s, lp in zapisane.items()}
+        nowe_wpisy[klucz] = w["lp"]
+        if nowe_wpisy != zapisane:
+            zapisane = nowe_wpisy
+            zapisz_plany(zapisane)
         uwaga = ("uwaga: pozycja ma wybraną ofertę – PLAN liczy się z oferty × ilość, plan ręczny jest zapasowy"
                  if (liczba(p["oferta"]) or 0) > 0 else "")
         licz["plany"] += 1
@@ -714,6 +751,9 @@ def wycofaj(k: dict, ids: list) -> dict:
                 arkusz(k, "zmien", operacje=[{"op": "zakres", "arkusz": "Kosztorys",
                                               "a1": f"{m['kolumna']}{p['wiersz']}", "wartosci": [[""]]}])
                 licz["plany"] += 1
+        zapisane = wczytaj_plany()
+        if [zapisane.pop(klucz_strony(w["id"])) for w in plany if klucz_strony(w["id"]) in zapisane]:
+            zapisz_plany(zapisane)
         id_planow = {w["id"].replace("-", "") for w in plany}
         ids = [i for i in ids if i.replace("-", "") not in id_planow]
         for w in plany:
