@@ -156,17 +156,36 @@ def zbuduj_paczke(hub: Path, r: dict, teraz: dict, data: str, wykonaj: bool) -> 
     return {"folder": str(cel.relative_to(hub)), "pliki": pliki, "spis": spis}
 
 
-def kopiuj_do_aplikacji(hub: Path, dysk: Path, r: dict, wykonaj: bool, data: str) -> list:
-    """Tryb aplikacji: nowe/zmienione → Dysk; poprzednia wersja i usunięte → _Archiwum/RRRR-MM-DD; nic nie kasuje."""
+def wolna_sciezka(p: Path) -> Path:
+    """Ścieżka, której jeszcze nie ma: zajęta → dopisek _2, _3 (nic nie nadpisujemy)."""
+    while p.exists():
+        m = re.match(r"^(.*)_(\d+)$", p.stem)
+        p = p.with_name((f"{m.group(1)}_{int(m.group(2)) + 1}" if m else f"{p.stem}_2") + p.suffix)
+    return p
+
+
+def brak_na_dysku(dysk: Path, teraz: dict, r: dict) -> list:
+    """Pliki bez zmian od potwierdzonej kopii, których nie ma na Dysku (usunięte tam ręcznie)."""
+    zmiany = set(r["nowe"]) | set(r["zmienione"]) | {p["do"] for p in r["przeniesione"]}
+    return [s for s in sorted(teraz) if s not in zmiany and not (dysk / s).exists()]
+
+
+def kopiuj_do_aplikacji(hub: Path, dysk: Path, r: dict, wykonaj: bool, data: str, teraz: dict = None) -> list:
+    """Tryb aplikacji: nowe/zmienione → Dysk; poprzednia wersja i usunięte → _Archiwum/RRRR-MM-DD; nic nie kasuje.
+    Z `teraz` (skan Maca) porównuje też z Dyskiem: brakujące tam pliki kopiuje ponownie."""
     log = []
     arch = dysk / "_Archiwum" / data
+
+    def archiwizuj(s: str, dopisek: str = ""):
+        cel = wolna_sciezka(arch / s)
+        log.append(f"archiwum: {s}{dopisek}" + (f" (jako {cel.name})" if cel.name != Path(s).name else ""))
+        if wykonaj:
+            cel.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(dysk / s), str(cel))
+
     for s in r["zmienione"] + r["usuniete"]:
-        stary = dysk / s
-        if stary.exists():
-            log.append(f"archiwum: {s}")
-            if wykonaj:
-                (arch / s).parent.mkdir(parents=True, exist_ok=True)
-                shutil.move(str(stary), str(arch / s))
+        if (dysk / s).exists():
+            archiwizuj(s)
     for p in r["przeniesione"]:
         z, do = dysk / p["z"], dysk / p["do"]
         log.append(f"przeniesiony: {p['z']} → {p['do']}")
@@ -176,11 +195,18 @@ def kopiuj_do_aplikacji(hub: Path, dysk: Path, r: dict, wykonaj: bool, data: str
     for s in r["nowe"] + r["zmienione"] + [p["do"] for p in r["przeniesione"]]:
         do = dysk / s
         if do.exists() and s not in r["zmienione"]:
-            continue
+            if do.stat().st_size == (hub / s).stat().st_size:
+                continue  # już jest (rozmiar jak na Macu; sumy nie liczymy – czytanie z Dysku pobiera plik)
+            archiwizuj(s, " – na Dysku była inna wersja pod tą samą ścieżką")
         log.append(f"kopia: {s}")
         if wykonaj:
             do.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(hub / s, do)
+    for s in brak_na_dysku(dysk, teraz, r) if teraz else []:
+        log.append(f"brak na Dysku (usunięty tam?) – kopia ponownie: {s}")
+        if wykonaj:
+            (dysk / s).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(hub / s, dysk / s)
     return log
 
 
@@ -237,11 +263,13 @@ def main(argv=None):
 
     if a.cmd == "stan":
         czeka = [p["data"] for p in stan.get("paczki", []) if not p.get("wgrana")]
+        brak = brak_na_dysku(dysk, teraz, r) if dysk else []
         linia = (f"[kopia] tryb: {'aplikacja' if dysk else 'paczka'} · potwierdzona: {stan.get('potwierdzono') or 'nigdy'} · "
                  f"zmian od niej: {n} (nowe {len(r['nowe'])}, zmienione {len(r['zmienione'])}, "
                  f"przeniesione {len(r['przeniesione'])}, usunięte {len(r['usuniete'])})"
+                 + (f" · brak na Dysku: {len(brak)}" if brak else "")
                  + (f" · paczki do wgrania: {', '.join(czeka)}" if czeka else ""))
-        if not (a.cicho and n == 0 and not czeka):
+        if not (a.cicho and n == 0 and not czeka and not brak):
             print(linia)
         zapisz_stan(stan)
         return 0
@@ -286,7 +314,7 @@ def main(argv=None):
         if not dysk:
             print("[kopia] brak lokalnego folderu Dysku – użyj trybu paczki (`kopia.py paczka`)")
             return 1
-        log = kopiuj_do_aplikacji(HUB, dysk, r, a.wykonaj, data)
+        log = kopiuj_do_aplikacji(HUB, dysk, r, a.wykonaj, data, teraz)
         for x in tylko_na_dysku(dysk, teraz):
             log.append(f"tylko na Dysku (pobierz na Maca ręcznie): {x}")
         print(("[kopia] wykonano:" if a.wykonaj else "[kopia] PLAN (na sucho):") + f" {len(log)} pozycji")

@@ -86,6 +86,39 @@ class Paczka(unittest.TestCase):
         self.assertEqual((dysk / "_Archiwum/2026-11-21/Projekty/a.pdf").read_bytes(), b"a")
         self.assertTrue((dysk / "_Archiwum/2026-11-21/Umowy/b.pdf").exists())
 
+    def test_aplikacja_archiwum_bez_nadpisania(self):
+        # druga zmiana tego samego pliku tego samego dnia nie nadpisuje wersji już zarchiwizowanej (F-10)
+        dysk = Path(tempfile.mkdtemp(prefix="dysk-", dir=TMP))
+        pot = K.skanuj(self.hub)
+        K.kopiuj_do_aplikacji(self.hub, dysk, K.roznice({}, pot), True, "2026-11-20")
+        for tresc in (b"v2", b"v3-dluzsza"):  # inna długość – skan porównuje rozmiar i mtime
+            (self.hub / "Projekty/a.pdf").write_bytes(tresc)
+            teraz = K.skanuj(self.hub, pot)
+            K.kopiuj_do_aplikacji(self.hub, dysk, K.roznice(pot, teraz), True, "2026-11-21", teraz)
+            pot = teraz
+        arch = dysk / "_Archiwum/2026-11-21/Projekty"
+        self.assertEqual(sorted(x.read_bytes() for x in arch.iterdir()), [b"a", b"v2"])
+        self.assertEqual((dysk / "Projekty/a.pdf").read_bytes(), b"v3-dluzsza")
+
+    def test_aplikacja_porownuje_z_dyskiem(self):
+        # (a) plik usunięty ręcznie na Dysku wraca; (b) nowy plik z Maca, a na Dysku inny pod tą samą ścieżką –
+        # wersja z Dysku do _Archiwum, kopia z Maca i wpis w logu (F-11)
+        dysk = Path(tempfile.mkdtemp(prefix="dysk-", dir=TMP))
+        pot = K.skanuj(self.hub)
+        K.kopiuj_do_aplikacji(self.hub, dysk, K.roznice({}, pot), True, "2026-11-20", pot)
+        (dysk / "Umowy/b.pdf").unlink()
+        (dysk / "Projekty/n.pdf").write_bytes(b"WERSJA-Z-DYSKU")
+        (self.hub / "Projekty/n.pdf").write_bytes(b"WERSJA-Z-MACA")
+        teraz = K.skanuj(self.hub, pot)
+        r = K.roznice(pot, teraz)
+        self.assertEqual(K.brak_na_dysku(dysk, teraz, r), ["Umowy/b.pdf"])
+        log = K.kopiuj_do_aplikacji(self.hub, dysk, r, True, "2026-11-21", teraz)
+        self.assertEqual((dysk / "Umowy/b.pdf").read_bytes(), b"b")
+        self.assertEqual((dysk / "Projekty/n.pdf").read_bytes(), b"WERSJA-Z-MACA")
+        self.assertEqual((dysk / "_Archiwum/2026-11-21/Projekty/n.pdf").read_bytes(), b"WERSJA-Z-DYSKU")
+        self.assertTrue(any("inna wersja" in x for x in log))
+        self.assertTrue(any("brak na Dysku" in x for x in log))
+
     def test_zepsute_dowiazanie_pominiete(self):
         # zepsute dowiązanie nie wywraca skanu – pozycja w błędach odczytu (F-15)
         os.symlink(self.hub / "nie-ma.pdf", self.hub / "Projekty/skrot.pdf")

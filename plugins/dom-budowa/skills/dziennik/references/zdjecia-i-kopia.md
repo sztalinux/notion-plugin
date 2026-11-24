@@ -164,7 +164,9 @@ To jedna z pozycji planu kopii zapasowych – całość (dysk zewnętrzny, ekspo
   wymień w komunikacie 🔔 z kluczem `kopia` jako „do pobrania na Maca”.
 - **Tryb aplikacji**: `kopia.py aplikacja [--wykonaj]` – kopiuje do lokalnego folderu Dysku według tych samych reguł,
   pliki tylko na Dysku wypisuje do pobrania na Maca. Plik zmieniony po obu stronach → obie wersje (Dysk do `_Archiwum`)
-  i komunikat. Arkusze i dokumenty Google nie mają pliku na Macu – zostają tylko na Dysku.
+  i komunikat. Porównuje też z Dyskiem: plik usunięty tam ręcznie kopiuje ponownie (`stan`: „brak na Dysku”); nowy plik
+  z Maca, a na Dysku inny pod tą samą ścieżką (inny rozmiar) → wersja z Dysku do `_Archiwum` i komunikat. Arkusze
+  i dokumenty Google nie mają pliku na Macu – zostają tylko na Dysku.
 - Kontrola Dysku: lista z konektora (ścieżki) → `kopia.py sprawdz-dysk <lista.json>` – na Dysku nie może być `.dom`,
   `AI`, `.git` ani plików z sekretami.
 - Kopia `.dom/` (dane asystenta i sekrety) nie idzie na Dysk – osobny pomysł o kopiach zapasowych (Time Machine albo
@@ -272,8 +274,8 @@ z dowiązaniami.
 | Notion nie odpowiada | ruch zostaje, ślad przy następnym przebiegu (plan w `.dom/zdjecia/`) | – |
 | faktura na kilku zdjęciach, korekta, nieczytelna data, WZ bez dostawcy, PDF | sekcja 4 | – (agent) |
 | pliki tymczasowe, blokady biurowe | pomijane | `test_pliki_tymczasowe_pomijane`, `test_nigdy` |
-| plik zmieniony po obu stronach | obie wersje, Dysk do `_Archiwum`, komunikat | `test_aplikacja_archiwizuje_nie_kasuje` |
-| plik usunięty ręcznie na Dysku | wraca z Maca przy kopii | – |
+| plik zmieniony po obu stronach | obie wersje, Dysk do `_Archiwum` (druga tego dnia z `_2`), komunikat | `test_aplikacja_archiwizuje_nie_kasuje`, `test_aplikacja_archiwum_bez_nadpisania` |
+| plik usunięty ręcznie na Dysku | tryb aplikacji – wraca przy `kopia.py aplikacja`; tryb paczki – skrypt tego nie widzi (porównuje Maca z potwierdzoną kopią, nie z Dyskiem; `sprawdz-dysk` szuka tylko `.dom`, `AI`, sekretów) – zauważony brak: inwestor wgrywa plik z Maca ręcznie | `test_aplikacja_porownuje_z_dyskiem` |
 | arkusze i dokumenty Google | tylko na Dysku | – |
 | brak miejsca na Macu | kopia lokalna zdjęć wyłączona (dziś: dysk zajęty w 97%) | – |
 | paczka niewgrana; ta sama wgrana dwa razy | następna zawiera wcześniejsze zmiany; druga kopia do `_Archiwum` | `test_paczka_tylko_dozwolone_i_kolejna_zawiera_niewgrane` |
