@@ -1,6 +1,6 @@
 ---
 name: zadania
-description: "Zadania poza budową (TASKS; praca – 🔨 TASKS na WORK) i lista zakupów 🛒 Zakupy w Notion: nowe zadanie, rzecz do kupienia, zmiana statusu, odczyt. Używaj, gdy użytkownik mówi „muszę…”, „trzeba…”, „przypomnij mi…”, „umówić…”, „kupić…”, „zrobiłem X”, „zamówiłem X”, „czekam na…”, „odpuszczam”, „co mam dziś / jutro”, „co kupić”, link do produktu. Zadania budowy – notatka i harmonogram (dom-budowa)."
+description: "Zadania poza budową (TASKS; praca – 🔨 TASKS na WORK) i lista zakupów 🛒 Zakupy w Notion: nowe zadanie, rzecz do kupienia, zmiana statusu, odczyt. Używaj, gdy użytkownik mówi „muszę…”, „przypomnij mi…”, „umówić…”, „kupić…”, „kupiłem X”, „zrobiłem X”, „zamówiłem X”, „czekam na…”, „odpuszczam”, „co mam dziś / jutro”, „co kupić”, link do produktu. Zadania budowy – notatka i harmonogram (dom-budowa)."
 ---
 
 # Zadania (wszystkie obszary poza budową)
