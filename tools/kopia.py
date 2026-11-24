@@ -25,8 +25,10 @@ import unicodedata
 from datetime import datetime
 from pathlib import Path
 
+import hub
+
 REPO = Path(__file__).resolve().parent.parent
-HUB = Path(os.environ.get("DOM_HUB") or REPO.parent.parent).expanduser().resolve()
+HUB = hub.folder_budowy(REPO)
 STAN_DIR = Path(os.environ.get("KOPIA_DANE") or HUB / ".dom" / "kopia")
 DOZWOLONE = ("Projekty", "Dokumenty", "Umowy", "Faktury", "Wyceny", "Materiały", "Koszty", "Media", "Dostawy",
              "Dziennik budowy KB")
@@ -123,6 +125,8 @@ def wczytaj_stan(katalog: Path = None) -> dict:
 
 
 def zapisz_stan(stan: dict):
+    if hub.tylko_odczyt(REPO, STAN_DIR):  # kopia robocza: tryby na sucho czytają prawdziwy stan, nie zapisują go
+        return
     STAN_DIR.mkdir(parents=True, exist_ok=True)
     tmp = STAN_DIR / "stan.json.tmp"
     tmp.write_text(json.dumps(stan, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
@@ -257,6 +261,8 @@ def main(argv=None):
     a = sub.add_parser("sprawdz-dysk")
     a.add_argument("lista")
     a = ap.parse_args(argv)
+    if (a.cmd == "wgrane" or a.cmd in ("paczka", "aplikacja") and a.wykonaj) and hub.zapis_zablokowany(REPO, HUB, STAN_DIR):
+        return 1
     data = datetime.now().strftime("%Y-%m-%d")
     stan = wczytaj_stan()
 

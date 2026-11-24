@@ -13,7 +13,6 @@ lub rejestru → pozycja z czytelnym opisem (co poprawić), nie wyjątek.
 """
 import argparse
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -22,9 +21,10 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import hub  # noqa: E402
 import kopia  # noqa: E402  – te same reguły folderów i porównanie co kopia dokumentów
 
-HUB = Path(os.environ.get("DOM_HUB") or REPO.parent.parent).expanduser().resolve()
+HUB = hub.folder_budowy(REPO)
 REJESTR = "kopie-zapasowe.json"
 
 # Kopie ręczne: klucz → (opis, gdzie leży kopia, termin w dniach; None = jednorazowo). Progi: docs/kopie-zapasowe.md, 3.
@@ -222,6 +222,8 @@ def main(argv=None):
     dzis = date.today()
 
     if a.cmd == "potwierdz":
+        if hub.zapis_zablokowany(REPO, HUB):
+            return 1
         kiedy = a.data or dzis.isoformat()
         try:
             if date.fromisoformat(kiedy) > dzis:
