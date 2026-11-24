@@ -613,6 +613,21 @@ class PrzeplywArkusz(unittest.TestCase):
         self.assertIn('2026-12: 0', kontrola('--miesiac', '2026-12'))
         self.assertNotIn('2026-11', kontrola('--miesiac', '2026-11'))
 
+    def test_a18_allegro_platnosc_za_dwa_zamowienia_i_pay(self):
+        """A-18: płatność Allegro = suma dwóch zamówień – pominięta (wydatki z listy zamówień), zamówienia na stronie decyzji;
+        zakup Allegro Pay – korekta salda (spłata w kolejnym miesiącu)."""
+        self.ustaw(allegro={'platnosci': ['ALLEGRO'], 'pay': 'ALLEGRO PAY', 'karta_podarunkowa': 'KARTA PODARUNKOWA'})
+        zam = lambda s, kw, pay=False: dict(data='2026-12-03', sprzedawca=s, suma=kw, pay=pay, zwrocony=False, produkty=['P'],
+                                            prop='', opcje=[])
+        (self.dane / 'allegro.json').write_text(json.dumps({'zamowienia': [zam('sklep_a', 30.0), zam('sklep_b', 20.0),
+                                                                           zam('sklep_c', 15.0, pay=True)]}))
+        self.zen_wiele(('4 Dec 2026', 'ALLEGRO SP Z O O', '-50.00'), ('30 Dec 2026', 'INNE', '-1.00'))
+        m = self.importuj('--zen', 'zen.csv', '--allegro', 'allegro.json', mies='2026-12')
+        self.assertEqual([p['powod'] for p in m['pominiete'] if p['kwota'] == -50.0],
+                         ['zapłata za zamówienia: sklep_a 30.00, sklep_b 20.00'])
+        self.assertEqual(sorted(d['kwota'] for d in m['decyzje'] if d['zrodlo'] == 'allegro'), [-30.0, -20.0, -15.0])
+        self.assertEqual([k['kwota'] for k in m['salda']['korekty']['pozycje']], [-15.0])
+
     def test_wpis_przenosi_znacznik_i_usuwa_po_wysylce(self):
         self.uruchom('wpis.py', 'dodaj', '10, zak', '--data', '2026-12-30', '--id', 'q1')
         p = self.dane / 'listy' / '2026-12-wpisy.jsonl'

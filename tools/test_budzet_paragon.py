@@ -4,7 +4,7 @@ import email.message, io, json, os, subprocess, sys, tempfile, unittest
 from contextlib import redirect_stdout
 from pathlib import Path
 
-os.environ.setdefault('BUDZET_DANE', tempfile.mkdtemp())
+os.environ['BUDZET_DANE'] = tempfile.mkdtemp()  # nigdy folder z powłoki (prawdziwe dane)
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'budzet'))
 import arkusz_budzetu as AB  # noqa: E402
