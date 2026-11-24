@@ -1,6 +1,6 @@
 ---
 name: zadania
-description: Zadania inwestora poza budową (prywatne, dziecko – baza TASKS; praca – baza 🔨 TASKS na stronie WORK) w Notion oraz lista zakupów (baza 🛒 Zakupy) – nowe zadanie z terminem albo „kiedyś”, nowa rzecz do kupienia, zmiana statusu po wpisie „zrobiłem X”, „kupiłem X”, „zacząłem”, „czekam na”, „odpuszczam”, odczyt „co mam dziś / jutro / w tym tygodniu”, „co kupić”. Używaj, gdy użytkownik mówi „muszę…”, „trzeba…”, „przypomnij mi…”, „kupić…”, „umówić…”, „zrobiłem…”, „zrobione”, „kupiłem…”, „co mam jutro”, wkleja link do rzeczy do kupienia, albo gdy wpis z Dziennika ma obszar Zadanie, Status zadania lub Zakup. Zadania budowy prowadzą procedury notatka i harmonogram (plugin dom-budowa).
+description: "Zadania poza budową (TASKS; praca – 🔨 TASKS na WORK) i lista zakupów 🛒 Zakupy w Notion: nowe zadanie, rzecz do kupienia, zmiana statusu, odczyt. Używaj, gdy użytkownik mówi „muszę…”, „przypomnij mi…”, „umówić…”, „kupić…”, „kupiłem X”, „zrobiłem X”, „zamówiłem X”, „czekam na…”, „odpuszczam”, „co mam dziś / jutro”, „co kupić”, link do produktu. Zadania budowy – notatka i harmonogram (dom-budowa)."
 ---
 
 # Zadania (wszystkie obszary poza budową)
@@ -54,7 +54,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
    Name „Kupić X”, Kategoria Zakup, Obszar jak w zakupie, relacja Zadanie w Zakupach.
 4. „Kupiłem X” → Zakupy: Status Kupione + Kupione dnia (rzecz na budowę lub działkę → `zakupy` z `dom-budowa`, sekcja 0); powiązane zadanie DONE (sekcja B). „Zamówiłem X” → Zamówione.
    Pozycji X nie ma w 🛒 (szukanie jak w pkt 1) → nie zakładaj jej; w śladzie „→ zakup bez pozycji na liście” – lista zakupów
-   to plan, nie historia wydatków.
+   to plan, nie historia wydatków. Otwarte zadanie „Kupić X” / „Zamówić X” zamyka sekcja B (tabela) – także bez pozycji w 🛒.
    „Odpuszczam X” → Odpuszczone (powiązane zadanie ARCHIVED). Ręczne zmiany inwestora w Notion (status zakupu, zamknięcie zadania)
    wyrównuje wieczorem `przeglad-dnia`, krok 5b – blokiem 🔔 (`KS-Z…`), nie samowolnie.
 5. Odczyt „co kupić”: widok „🛒 Do kupienia” (grupy wg Gdzie), „📦 Zamówione – czekam”, „✅ Kupione” (ID w `ja/references/notion-mapa.md`);
@@ -66,6 +66,7 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 | Inwestor pisze | Status |
 |---|---|
 | „zrobiłem X”, „X zrobione”, „załatwione” | DONE |
+| „zamówiłem X”, „kupiłem X” przy otwartym zadaniu „Zamówić X” / „Kupić X” o tej jednej rzeczy | DONE (pozycja w 🛒 – pkt 2); zadanie zbiorcze („Zamówić suple: a, b, c”) – pkt 2, wyjątek; pasują dwa zadania → nic nie zamykaj, ślad jak w „Zakupy”, pkt 4 |
 | „zacząłem”, „w toku”, „robię” | IN PROGRESS |
 | „czekam na … (od kogo)” | WAITING (+ kto w Desc albo Kto) |
 | „przesuwam na …”, „w przyszłym tygodniu” | zostaje, When = nowy termin |
@@ -74,26 +75,28 @@ Obszary (nadrzędny wobec poniższego opisu pól), **nie jako zadanie** – list
 1. Szukaj we **wszystkich obszarach** wśród niezakończonych (wyszukiwarka z parametrem bazy TASKS – słowa z wpisu, potem porównanie treści i statusu;
    sprawa z pracy albo brak trafienia → także baza 🔨 TASKS na WORK; te same statusy).
    Brak trafienia → sprawdź jeszcze zadania zamknięte (DONE, ARCHIVED) z ostatnią edycją w ostatnich 7 dniach: inwestor zamyka
-   zadania także ręcznie w Notion, więc wpis „zrobiłem X” bywa spóźniony. Jest takie → nic nie zmieniaj, w śladzie
+   zadania także ręcznie w Notion, więc wpis „zrobiłem X” bywa spóźniony. Jest takie → nic nie zmieniaj w zadaniu (pozycja 🛒 – „Zakupy”, pkt 4), w śladzie
    „→ już zamknięte (ręcznie)” z odnośnikiem.
 2. Jedno trafienie → zmień status; w treści strony dopisz linię „<data>: <co się stało> (z Dziennika)”. Zadanie budowy
    (Obszar Dom/puste) z powiązanym krokiem Harmonogramu → status kroku zostaw bez zmian – zmienia go odbiór
    (`etap`, krok 7) albo relacja z końca kroku (`dziennik` A.2); w śladzie wzmianka kroku.
    Zadanie z pozycją w 🛒 Zakupach (relacja Zadanie – jest tylko po stronie Zakupów, w zadaniu jej nie widać: przy
-   Kategorii Zakup pozycję znajdź wyszukiwarką z parametrem bazy Zakupów po rzeczy z nazwy „Kupić X”) – w tej samej pracy pozycja: DONE → Kupione + Kupione dnia,
-   ARCHIVED → Odpuszczone (sekcja „Zakupy”, pkt 4, w drugą stronę); w śladzie obie wzmianki. Wyjątek: zadanie „Zamówić
+   Kategorii Zakup pozycję znajdź wyszukiwarką z parametrem bazy Zakupów po rzeczy z nazwy „Kupić X”) – w tej samej pracy Status pozycji wg „Zakupy”, pkt 4: „kupiłem” albo DONE → Kupione + Kupione dnia,
+   „zamówiłem” → Zamówione (bez daty), ARCHIVED → Odpuszczone; w śladzie obie wzmianki. Wyjątek: zadanie „Zamówić
    suple” – DONE → Buy = nie suplementom wymienionym w zadaniu (Name i treść strony), w śladzie „suple: Buy odznaczone n”;
-   ARCHIVED → Buy zostaje (`przeglad-dnia`, B.6).
+   ARCHIVED → Buy zostaje (`przeglad-dnia`, B.6). Zadanie zbiorcze (kilka rzeczy w nazwie) zamyka tylko wpis o całości
+   („zamówiłem suple”) albo wymieniający wszystkie; wpis o części → zadanie zostaje otwarte, Buy pozostałych bez zmian,
+   w treści zadania dopisek, co zamówione.
    Zadanie zakupu budowy „na już” (pozycja w 🧱 Zakupach budowy ma w Uwagach wzmiankę o zadaniu; znajdź ją wyszukiwarką
    z parametrem bazy 🧱 po rzeczy z nazwy) – przy DONE w tej samej pracy zmień też Status pozycji wg `zakupy` (plugin
    `dom-budowa`, 0.3): kupione → Dostarczone + Dostawa = data, tylko zamówione → Zamówione; w śladzie obie wzmianki.
-3. Brak trafienia także wśród świeżo zamkniętych → pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4): „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
+3. Brak trafienia także wśród świeżo zamkniętych: „kupiłem / zamówiłem X” → sekcja „Zakupy”, pkt 4, bez pytania; inaczej pytanie pod wpisem w „📝 Wpisy” (`wpisy`, krok 4): „Nie znalazłem zadania »…« – utworzyć jako zrobione (ślad) czy pominąć?”.
 4. Kilka trafień → pytanie pod wpisem z nazwami do wyboru (max 3, z terminem).
 
 ## C. Odczyt
 
 Strona ✅ Zadania ma zakładki: 📅 Dziś i tydzień (wszystkie obszary; widoki „📅 Dziś” – po terminie i na dziś, „🗓 Tydzień (7 dni)”),
-🛒 Zakupy, 🏠 Prywatne (z pracą), 🏗 Budowa, 👪 Dziecko. „Co mam dziś / w tym tygodniu” → widoki „📅 Dziś” i „🗓 Tydzień (7 dni)”;
+🛒 Zakupy, 🏠 Prywatne, 🏗 Budowa, 👪 Dziecko (praca – baza 🔨 TASKS na 💼 WORK). „Co mam dziś / w tym tygodniu” → widoki „📅 Dziś” i „🗓 Tydzień (7 dni)”;
 jutro → „📅 Jutro – wszystko”; sprawy jednego obszaru → widok jego zakładki (ID: `ja/references/notion-mapa.md`).
 Pokaż w tabeli: zadanie | obszar | termin | status; zadania po terminie (tylko z Deadline ☑ – sekcja niżej) osobno na górze,
 orientacyjne po dacie w zwykłej kolejności. SOMEDAY pokazuj tylko licznikiem, chyba że pyta o nie wprost.
@@ -126,7 +129,7 @@ Puste Obszar znaczy w starych wierszach Dom, więc zadanie prywatne z pustym Obs
 
 | Pole (puste) | Uzupełnij |
 |---|---|
-| Obszar | **Dom** – gdy Kategoria jest budowlana (Media, Kredyt, Czyszczenie działki, Stan zero, SSO, Ogrodzenie, Teren, Przygotowanie do budowy, Wiata kontener, Projektowanie, Zakup działki, Ogród). **Prywatne** – Kategoria Zdrowie lub Nauka. Inaczej z nazwy i opisu, tylko gdy jednoznaczne (dziecko, praca, zwykła sprawa prywatna); wątpliwość → „❓” |
+| Obszar | **Dom** – gdy Kategoria jest budowlana (Media, Kredyt, Czyszczenie działki, Stan zero, SSO, Ogrodzenie, Teren, Przygotowanie do budowy, Wiata kontener, Projektowanie, Zakup działki, Ogród). **Prywatne** – Kategoria Zdrowie lub Nauka. Inaczej z nazwy i opisu, tylko gdy jednoznaczne (dziecko, zwykła sprawa prywatna); wątpliwość → „❓”. **Sprawa z pracy** → Obszar „Praca” (pusty znaczy Dom – zadanie wpadłoby do budowy) i jeden blok 🔔 z kluczem stałym `praca-<8 pierwszych znaków ID wiersza>` (wiersz z Obszarem nie jest już luką – pytanie nie wraca): to-do „Przenieść do 🔨 TASKS (WORK)?” – ☑ = nowy wiersz w 🔨 TASKS (Name, When, Status, Priority, Desc jak w sekcji A), a wiersz TASKS → ARCHIVED z dopiskiem w treści „przeniesione do WORK: <wzmianka>” |
 | Kto | Ja – chyba że Status WAITING albo nazwa lub opis wskazuje kogoś innego (wtedy 🔔 `luki-zadan-<dd.mm>`) |
 | Priority | Medium |
 | Kategoria | Obszar inny niż Dom: z nazwy (Zakup, Zdrowie, Nauka), niejasne → Inne. Obszar Dom zostaw (kategorię nadają `notatka` i `harmonogram`) |

@@ -1,6 +1,6 @@
 ---
 name: emocje
-description: Zapis emocji do bazy „Wpisy emocji” i dnia pracy do „Dziennika produktywności (praca)” w Notion, podsumowania emocji na prośbę. Używaj, gdy użytkownik opisuje emocję lub reakcję ciała („czułem złość na 7, kiedy…”, „smutek”, „ścisk w gardle”, „odraza”, „napięcie”), opisuje dzień w pracy („dziś w pracy…”, godziny, ocena produktywności, przeszkadzajki), prosi „podsumuj moje emocje z tygodnia”, albo gdy wpis z Dziennika ma obszar Emocja lub Praca – produktywność.
+description: Zapis emocji do „Wpisów emocji” i dnia pracy do „Dziennika produktywności (praca)” w Notion; podsumowania emocji na prośbę. Używaj, gdy użytkownik opisuje emocję lub reakcję ciała („czułem złość na 7, kiedy…”, „ścisk w gardle”), dzień w pracy („dziś w pracy…”, ocena produktywności, przeszkadzajki), prosi „podsumuj moje emocje”, albo wpis z Dziennika ma obszar Emocja lub Praca – produktywność.
 ---
 
 # Emocje i dzień pracy

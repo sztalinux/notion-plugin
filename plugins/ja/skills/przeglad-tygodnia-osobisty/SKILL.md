@@ -1,6 +1,6 @@
 ---
 name: przeglad-tygodnia-osobisty
-description: Cotygodniowy przegląd spraw osobistych (zadania prywatne, dziecko, praca, emocje i produktywność w liczbach, wesele, suplementy) i porządki w Dzienniku, z odnośnikiem do osobnego przeglądu tygodnia budowy; uruchamia też przegląd budowy (skill przeglad-tygodnia z pluginu dom-budowa). Używaj, gdy uruchamia go tygodniowy automat na Macu albo użytkownik mówi „przegląd tygodnia”, „podsumuj tydzień”, „jak minął tydzień”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne; budowa – harmonogram), „posprzątaj dziennik”.
+description: Cotygodniowy przegląd spraw osobistych (zadania, dziecko, praca, emocje, suplementy) i porządki w Dzienniku; uruchamia też przegląd budowy (przeglad-tygodnia, dom-budowa). Używaj, gdy uruchamia go tygodniowy automat na Macu albo użytkownik mówi „przegląd tygodnia”, „podsumuj tydzień”, „jak minął tydzień”, „co mnie czeka w tym / przyszłym tygodniu” (sprawy prywatne), „posprzątaj dziennik”.
 ---
 
 # Przegląd tygodnia – sprawy osobiste
@@ -34,7 +34,9 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
      (`przeglad-dnia/references/uklad-wpisu.md`, A, „Naprawa raz w tygodniu”) – bez pytania, to tylko format;
    - TASKS widok „🤖 Tydzień – prywatne” (`view://3faf5982-09e7-81b5-ad0a-000c1cfabfa0`): zamknięte w tygodniu, po terminie
      (tylko Deadline ☑ i „czekam na” – WAITING, Kto ≠ Ja; orientacyjne po dacie – sam licznik, `zadania`, „Termin twardy czy orientacyjny”),
-     z terminem w 7 dni (osobno Prywatne / Dziecko / Praca); SOMEDAY tylko licznikiem;
+     z terminem w 7 dni (osobno Prywatne / Dziecko); SOMEDAY tylko licznikiem;
+   - praca – baza 🔨 TASKS na 💼 WORK, widok „🤖 Plan dnia – otwarte i zamknięte w 7 dni” (ID w `ja/references/notion-mapa.md`):
+     zamknięte w tygodniu i z terminem w 7 dni (baza nie ma pola Deadline – praca nie bywa „po terminie”);
    - Wpisy emocji widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81ec-83af-000c8b518d37`): liczba wpisów, najczęstsze
      emocje, średnia intensywność, powtarzające się triggery i potrzeby (kilka słów, bez cytatów);
    - Dziennik produktywności widok „🤖 Ostatni tydzień” (`view://3faf5982-09e7-81af-9ea1-000cbe3dd643`): dni zapisane,
@@ -69,7 +71,7 @@ i zadania z terminem w tym zakresie, bez wpisu (sprawy budowy – `harmonogram`,
    z punktami; najpierw po terminie i czekające; nieudane odczyty jedną linią na końcu):
    ```
    **Po terminie:** zadanie z Deadline – od kiedy → zamknąć, przesunąć czy odpuścić? · czekam na – przypomnij się <komu> · po dacie orientacyjnej: n (bez pytań)
-   **Czeka na Ciebie:** n pytań pod wpisami i w ❓ (najstarsze: …), HZ-x do wdrożenia
+   **Czeka na Ciebie:** n pytań pod wpisami i w 🔔 (najstarsze: …), HZ-x do wdrożenia
    **Zrobione:** 3–6 punktów (prywatne / dziecko / praca)
    **Najbliższy tydzień:** zadania z terminem wg dni, wesele (30 dni), „kupić: n suplementów, n pozycji z zakupów (z terminem: …)”
    **Emocje i praca (liczby):** n wpisów emocji, najczęściej: …, śr. intensywność x; praca: n dni, śr. ocena y; wzorzec: …
@@ -105,5 +107,5 @@ Do zatwierdzenia (propozycja w przeglądzie):
 - wpisy pomijane wielokrotnie z tym samym typem treści → propozycja nowego wiersza w Obszarach;
 - TASKS prywatne z Deadline ☑ po terminie od 14 dni → zamknąć / przesunąć / SOMEDAY (pytanie zbiorcze); zadań z terminem
   orientacyjnym nie proponuj przesuwać ani zamykać (`zadania`, „Termin twardy czy orientacyjny”);
-Odpowiedź (☑ albo dopisek pod to-do) czyta nocny przebieg (`przeglad-dnia`, B; klucz `porzadki-…`) – wykonaj wtedy
+Odpowiedź (☑ albo dopisek pod to-do) czyta nocny przebieg (`przeglad-dnia`, B.2; klucz `porzadki-<RRRR-Www>`) – wykonaj wtedy
 zatwierdzone porządki wsadowo (`ja`, zasada 2), punkt do „Przetworzone”. Niczego innego nie usuwaj. Archiwum tylko do wglądu – nie zapisuj tam nic nowego.

@@ -114,10 +114,10 @@ Przegląd
 - <zadanie> 🏗 – od 10.11
 - +1 w zakładkach
 
-**❓ Czeka na Ciebie (4)**
+**❓ Czeka na Ciebie (3)**
 
 - <SP-n> 🏗 – decyzja przed betonem (do 18.11)
-- 2 pytania pod wpisami (<wzmianka 📝 Wpisy>) · 1 w ❓ Dziennika
+- 2 pytania pod wpisami (<wzmianka 📝 Wpisy>)
 
 **📅 Najbliższe 7 dni**
 

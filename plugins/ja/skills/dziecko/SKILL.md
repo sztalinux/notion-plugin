@@ -1,6 +1,6 @@
 ---
 name: dziecko
-description: Notatki o dziecku na jego stronie w Notion – obserwacje i informacje (zachowanie, sen, zdrowie, przedszkole, cytaty), tematy do przegadania z dzieckiem lub do pracy nad sobą jako rodzic, pomysły na prezenty, zabawy, wyjazdy i książki, zalecenia specjalistów; odczyt „co mam przegadać”, „pomysły na prezent”. Używaj, gdy użytkownik pisze o dziecku (imię, „mała”, „córka”), mówi „porozmawiać z nią o…”, „pomysł na prezent”, „fizjoterapeutka zaleciła…”, albo gdy wpis z Dziennika ma obszar Dziecko. Zadania z terminem dla dziecka idą do TASKS (skill zadania).
+description: "Notatki o dziecku na jego stronie w Notion: obserwacje, tematy do przegadania, prezenty i pomysły, zalecenia specjalistów. Używaj, gdy użytkownik pisze o dziecku („mała”, „córka”, imię), mówi „porozmawiać z nią o…”, „pomysł na prezent dla niej”, „fizjoterapeutka zaleciła…”, „co mam z nią przegadać”, albo wpis z Dziennika ma obszar Dziecko."
 ---
 
 # Dziecko
