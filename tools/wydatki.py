@@ -34,7 +34,8 @@ Pozycję na nowy Lp i wysyła wydatek w tym samym przebiegu. Bezpiecznik: dopók
 <hub>/.dom/wydatki/nowa-pozycja-sprawdzona (`nowa-pozycja --potwierdz` po pierwszym sprawdzeniu w sesji), `sync` woła akcję
 tylko na sucho – istniejąca pozycja przechodzi, nowa czeka. Etapu, którego nie ma w Kosztorysie, skrypt nie dodaje. Strony
 czekające na sesję mają „Do arkusza” i dopisek w polu Błąd (bez 🔔), a sprawa trafia do <hub>/.dom/wydatki/kosztorys-do-sesji.json
-– stąd linia stanu sesji i polecenie `sesja`; czekanie dłużej niż 3 dni = kod 1 (🔔 z przebiegu).
+– stąd linia stanu sesji i polecenie `sesja`; czekanie dłużej niż 3 dni = kod 1 (🔔 z przebiegu). Przy świeżej blokadzie
+sesji (`sesja --zablokuj`) `sync` nie wstawia pozycji w żadnym etapie – strony z „Nową pozycją” czekają.
 Zmiany układu arkusza (kolumny, formuły, kolory) idą bez ponownego importu: plik zmian JSON z operacjami
 (akcja „zmien” w Apps Script). Skrypt ma dostęp tylko do tego arkusza (@OnlyCurrentDoc) – bez kopii na Dysku; zmianę
 cofa się z historii wersji arkusza.
@@ -427,11 +428,18 @@ def dodaj_nowe_pozycje(k: dict, nowe: list, wersja: int, licz: dict, bledy: list
         licz["czekaja_na_etap"] += 1
         czeka(w, f"czeka na etap {p['etap']} – doda go najbliższa sesja Claude Code (koszty C.7)")
 
+    if blokada_swieza():
+        # sesja Claude Code zmienia właśnie Kosztorys – automat nie wstawia pozycji w żadnym etapie: wstawienie przesunęłoby
+        # wiersze, a etap w budowie (kolumna A pusta do końca) wpadłby do bloku sąsiedniego. Plik spraw bez zmian.
+        for w in nowe:
+            if w["poz"]["etap"] in zajete:
+                na_etap(w, w["poz"])
+            else:
+                wyjete.add(w["id"])
+                licz["czekaja"] += 1
+        return wyjete
     for w in nowe:
         p = w["poz"]
-        if p["etap"] in zajete:   # sesja właśnie dodaje ten etap – nie wchodź jej w drogę
-            na_etap(w, p)
-            continue
         try:
             r = arkusz(k, "dodaj_pozycje", pozycja={x: p[x] for x in ("etap", "nazwa", "typ", "jedn")},
                        na_sucho=not sprawdzona)["wynik"]

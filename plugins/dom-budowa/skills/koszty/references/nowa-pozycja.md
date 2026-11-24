@@ -45,7 +45,8 @@ Mechanizm: `docs/wydatki-arkusz.md` (akcja Apps Script „dodaj_pozycje”, kod 
   Istniejąca pozycja przechodzi, a nowa czeka na pierwsze sprawdzenie w sesji (sekcja D). W polu Błąd jest wtedy dopisek, bez 🔔.
 - Kod Apps Script < 5 → strony czekają „Do arkusza”, `sync` kończy się kodem 1 z linią „… czeka: arkusz ma kod w wersji …”.
 - Etapu nie ma w Kosztorysie albo jego nagłówek nie ma pozycji → strona czeka „Do arkusza” (bez 🔔). W polu Błąd jest
-  dopisek „czeka na etap NN – doda go najbliższa sesja Claude Code”. Ta sama sytuacja przy świeżej blokadzie sesji dla tego etapu.
+  dopisek „czeka na etap NN – doda go najbliższa sesja Claude Code”. Przy świeżej blokadzie sesji
+  automat nie wstawia pozycji w żadnym etapie – strony czekają do przebiegu po `sesja --odblokuj`.
 - Sprawy dla sesji (nowe etapy, pierwsze sprawdzenie) trafiają do `<hub>/.dom/wydatki/kosztorys-do-sesji.json`, a z niego do
   linii stanu sesji: „nowy etap kosztorysu: NN”, „nowa pozycja kosztorysu: pierwsze sprawdzenie”. Podgląd:
   `python3 tools/wydatki.py sesja`.

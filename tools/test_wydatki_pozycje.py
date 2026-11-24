@@ -230,6 +230,23 @@ class SyncNowaPozycja(unittest.TestCase):
         self.assertEqual((bledy, licz["czekaja_na_etap"], licz["bledy"]), ([], 1, 0))
         self.assertNotIn("dodaj_pozycje", [x for x, _ in a.akcje])
 
+    def test_13_swieza_blokada_zadnej_pozycji_takze_w_innym_etapie(self):
+        # sesja buduje etap 41 (kolumna A pusta) – wstawienie w etapie 47 wciągnęłoby go do sąsiedniego bloku (B-2)
+        WY.zapisz_sesje({"41": {"etap": "41", "nazwa": "", "stan": "", "pozycje": [], "strony": ["x"]}},
+                        {"pozycje": ["03 | Pozycja Q | Materiał | kpl"], "strony": ["y"]})
+        WY.sesja(zablokuj=True)
+        przed = WY.plik_sesji().read_text(encoding="utf-8")
+        a = Atrapy(odpowiedzi={"47": {"ok": True, "juz": False, "lp": "47.2", "klucz": "47.2 Szafki", "wiersz": 89}})
+        licz, bledy = self.uruchom([strona("b", nowa="47 | Szafki | Materiał | kpl"), strona("c", pozycja="47.1 Pozycja A")], a)
+        self.assertEqual((bledy, licz["czekaja"], licz["czekaja_na_etap"], licz["nowe_pozycje"]), ([], 1, 0, 0))
+        self.assertNotIn("dodaj_pozycje", [x for x, _ in a.akcje])
+        self.assertEqual([w["id"] for w in a.dopisane], ["c"])               # zwykły wydatek idzie dalej
+        self.assertEqual([i for i, _ in a.patche], ["c"])                    # strona „b” bez dopisku „czeka na etap 47”
+        self.assertEqual(WY.plik_sesji().read_text(encoding="utf-8"), przed)  # pierwsze sprawdzenie zostaje na liście
+        WY.sesja(odblokuj=True)
+        licz, _ = self.uruchom([strona("b", nowa="47 | Szafki | Materiał | kpl")], Atrapy(odpowiedzi=a.odpowiedzi))
+        self.assertEqual((licz["nowe_pozycje"], licz["dopisane"]), (1, 1))
+
     def test_13_etap_bez_pozycji_czeka(self):
         a = Atrapy(odpowiedzi={"41": {"ok": True, "brak_etapu": True, "bez_pozycji": True, "etap": "41"}})
         licz, bledy = self.uruchom([strona("a", nowa="41 | Pozycja Z | Robocizna | m²")], a)
