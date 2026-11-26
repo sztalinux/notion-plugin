@@ -4,6 +4,10 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## ja [1.28.2] – 2026-11-26
+
+- Mapa Notion: widok TASKS „⏰ Tydzień – z deadline” w zakładce 📅 Dziś i tydzień na ✅ Zadania (tydzień, tylko Deadline ☑).
+
 ## dom-budowa [3.22.0] – 2026-11-26
 
 - **Przegląd nocny rozkłada zdjęcia z `Zdjęcia/_nowe`** (test T9 zaliczony: przebieg `claude -p` na Macu ma konektor
