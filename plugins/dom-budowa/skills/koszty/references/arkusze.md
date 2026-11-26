@@ -48,12 +48,16 @@ powiązań” w Podsumowaniu (pod nią trzy wiersze kontroli). Zmiana tekstu = a
   Q Cena brutto za jednostkę bazową (t → kg) · H Dostawca ·
   I Pozycja kosztorysu (lista) · J Status (Oferta / Wybrana / Odrzucona) · K Najtańsza (formuła ★, porównanie brutto w obrębie
   pozycji) · L Ważna do · M Uwagi · N Źródło (`notion:<id>` = wycena z kolejki; ponowne wysłanie aktualizuje wiersz).
-- **Podsumowanie!B** – rezerwa na stan zero (%). Górna tabela to tylko stan zero (etapy 02–08); etap 01
-  (Przygotowanie do budowy) jest w tabeli „Cała budowa wg stanów”. Kol. M–O – szacunek AI etapów stanu zero (materiał / robocizna / razem); tabela H:M
-  „Szacunek AI całej budowy wg stanów” (szacunek materiał / robocizna / razem, plan, wydane) i pod nią „Kontrola powiązań”
-  (PLAN Kosztorys − Etapy, WYDANE Wydatki − Etapy, liczba ⚠ w Kosztorysie – wszystko powinno dawać 0). Obie tabele „wg stanów”
-  sumują Etapy po nazwie stanu (SUMIFS) – nowy stan w Etapy kol. B wymaga wiersza w obu tabelach i na liście walidacji
-  Etapy kol. B, inaczej znika z RAZEM bez ostrzeżenia kontroli.
+- **Podsumowanie** (od 26.11.2026) – bloki wg stanów w kolejności budowy (dziś: Przygotowanie do budowy, Stan zero,
+  Wykończenie): wiersz nagłówka „STAN”, wiersze etapów (`=Etapy!<kol><n>`, te same kolumny co nagłówek w wierszu 5: umowa,
+  plan materiał / ekipa / inne, wydane, pozostało, do zapłaty ekipie, szacunek AI), „<Stan> razem”, a w stanie zero
+  i wykończeniu także „Rezerwa na <stan>” (B – %, kremowe) i „… z rezerwą”. Koszty ogólne i Teren nie mają bloku. Pod blokami
+  „Do zapłaty”, legenda i jedna tabela „Cała budowa wg stanów” (wszystkie stany: PLAN, WYDANE, pozostało, szacunek AI
+  materiał / robocizna / razem – SUMIFS po nazwie stanu z Etapy kol. B i z zakładki szacunku). Nowy stan w Etapy kol. B
+  wymaga wiersza w tej tabeli i na liście walidacji Etapy kol. B. Obok „Kontroli danych” – „Kontrola powiązań” (automat
+  czyta trzy pierwsze wiersze po etykiecie): PLAN Kosztorys − Etapy, WYDANE Wydatki − Etapy, liczba ⚠ w Kosztorysie, potem
+  „Stany: tabela − Etapy” i „Bloki stanów − tabela” (suma bloku vs wiersz stanu, łapie etap bez wiersza w bloku) – wszystko 0.
+  Wykres pod spodem – etapy stanu zero. Dodanie etapu lub bloku: `references/nowa-pozycja.md`, C.2.7.
 - **Szacunek AI 10.2026!A:L** – A Stan · B Etap (wycena AI) · C Lp · D Pozycja · E Typ · F Ilość · G Jedn. · H Cena · I Wartość AI ·
   J Etap kosztorysu · K Pozycja kosztorysu (J–K: przypisanie, kremowe; uzupełnia asystent) · L Uwagi.
 

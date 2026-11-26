@@ -85,6 +85,14 @@ z pierwszej wiadomości. Polecenia w katalogu repo harnessu.
    5. Kontrola: „Kontrola powiązań” i RAZEM jak przed, nowa pozycja w zakresach RAZEM (`$5:$<n>`), T puste, M = „NN.1 Nazwa”.
       Różnica → usuń wstawione wiersze, wyczyść A:B nowego wiersza Etapów, punkt 5 z przyczyną.
    6. Szacunek AI: przypisz pasujące wiersze w kol. J:K (`koszty` C.4), gdy są jednoznaczne.
+   7. **Podsumowanie – blok stanu** (Koszty ogólne i Teren bez bloku). Stan ma blok → wstaw wiersz nad „<Stan> razem”,
+      formuły i format z wiersza etapu wyżej (odwołania do nowego wiersza Etapów, K = F − J), zakresy SUM w wierszu „razem”
+      popraw na cały blok. Stan bez bloku → nowy blok przed wierszem „Do zapłaty…”, w kolejności stanów (Przygotowanie,
+      Stan zero, SSO, Deweloperski, Wykończenie); wzór – blok Wykończenia: nagłówek, etap (kol. A – format z Etapów),
+      „<Stan> razem”, „Rezerwa na <stan>” (B 10%), „<STAN> z rezerwą”; formatowanie warunkowe kol. K rozciągnij na blok.
+      Do „Bloki stanów − tabela” (Kontrola powiązań) dopisz `+ABS(F<razem>-B<wiersz stanu>)+ABS(J<razem>-C<wiersz stanu>)`.
+      Kontrola: „Stany: tabela − Etapy” i „Bloki stanów − tabela” = 0. Bez konektora (krok 3) blok pomiń – tabela „wg stanów”
+      i tak liczy stan; w meldunku dopisz „blok w Podsumowaniu – w sesji z konektorem”.
 3. **Bez konektora** (albo jego błąd): plik zmian i `python3 tools/wydatki.py migruj` (`docs/wydatki-arkusz.md`, 8).
    - Operacja `wstaw`: Kosztorys, `przed` = wiersz z kroku 2.3, `ile` 2.
    - Operacje `zakres` z tymi samymi formułami, wartościami i tłem (`tla`) co w kroku 2, w tej samej kolejności: kolumna A na

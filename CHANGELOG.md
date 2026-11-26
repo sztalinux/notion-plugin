@@ -8,6 +8,13 @@ PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury 
 
 - Mapa Notion: widok TASKS „⏰ Tydzień – z deadline” w zakładce 📅 Dziś i tydzień na ✅ Zadania (tydzień, tylko Deadline ☑).
 
+## dom-budowa [3.22.1] – 2026-11-26
+
+- **Kosztorys – Podsumowanie w blokach wg stanów**: osobne bloki Przygotowanie do budowy, Stan zero i Wykończenie (każdy
+  z sumą, stan zero i wykończenie z własną rezerwą), jedna tabela „Cała budowa wg stanów” ze wszystkimi stanami (zamiast
+  dwóch) i dwie nowe kontrole („Stany: tabela − Etapy”, „Bloki stanów − tabela”). `nowa-pozycja.md` C.2.7: nowy etap
+  trafia do bloku swojego stanu, nowy stan (np. SSO) dostaje blok; `arkusze.md` opisuje układ.
+
 ## dom-budowa [3.22.0] – 2026-11-26
 
 - **Przegląd nocny rozkłada zdjęcia z `Zdjęcia/_nowe`** (test T9 zaliczony: przebieg `claude -p` na Macu ma konektor
