@@ -48,8 +48,8 @@ powiązań” w Podsumowaniu (pod nią trzy wiersze kontroli). Zmiana tekstu = a
   Q Cena brutto za jednostkę bazową (t → kg) · H Dostawca ·
   I Pozycja kosztorysu (lista) · J Status (Oferta / Wybrana / Odrzucona) · K Najtańsza (formuła ★, porównanie brutto w obrębie
   pozycji) · L Ważna do · M Uwagi · N Źródło (`notion:<id>` = wycena z kolejki; ponowne wysłanie aktualizuje wiersz).
-- **Podsumowanie!B** – rezerwa na stan zero (%). Górna tabela pokazuje też wiersz 01 (kursywa, nad kreską) – „STAN ZERO razem”
-  liczy wiersze 02–08. Kol. M–O – szacunek AI etapów stanu zero (materiał / robocizna / razem); tabela H:M
+- **Podsumowanie!B** – rezerwa na stan zero (%). Górna tabela to tylko stan zero (etapy 02–08); etap 01
+  (Przygotowanie do budowy) jest w tabeli „Cała budowa wg stanów”. Kol. M–O – szacunek AI etapów stanu zero (materiał / robocizna / razem); tabela H:M
   „Szacunek AI całej budowy wg stanów” (szacunek materiał / robocizna / razem, plan, wydane) i pod nią „Kontrola powiązań”
   (PLAN Kosztorys − Etapy, WYDANE Wydatki − Etapy, liczba ⚠ w Kosztorysie – wszystko powinno dawać 0). Obie tabele „wg stanów”
   sumują Etapy po nazwie stanu (SUMIFS) – nowy stan w Etapy kol. B wymaga wiersza w obu tabelach i na liście walidacji
