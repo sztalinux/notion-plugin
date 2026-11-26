@@ -6,7 +6,8 @@
    z kroku 1 przebiegu – `przeglad-dnia` B.9), Dziennik budowy z dzisiejszą
    datą, Notatnik i TASKS (Obszar Dom/puste) zamknięte lub dodane dziś, nowe decyzje czekające na inwestora (❓ o budowie, SP),
    błędy kolejki 💸 zgłoszone we „Wpisach” (`koszty` E) – licznik, bez powtarzania pytań. **Najpierw domknij decyzje wpisane** w Rejestrze (widok
-   „🤖 Decyzja wpisana – do domknięcia”) wg `wiedza/references/sprzecznosci.md`, „Bez inwestora” – jedyny zapis tego kroku. Z konektorem Dysku: „zdjęcia: w `_nowe` czeka n” (bez rozkładania – `dziennik/references/zdjecia-i-kopia.md`, 6).
+   „🤖 Decyzja wpisana – do domknięcia”) wg `wiedza/references/sprzecznosci.md`, „Bez inwestora” – jedyny zapis tego kroku. **Zdjęcia**: rozłóż `Zdjęcia/_nowe` wg `dziennik/references/zdjecia-i-kopia.md`, sekcja 8, „Przebieg nocny” (tylko przebieg
+nocny; ręczny przegląd dnia – sama linia „w `_nowe` czeka n”).
 2. **Jutro i najbliższe 7 dni** (odczyt; „jutro” = dzień planu, `przeglad-dnia` B.8): widok Harmonogramu „🤖 Najbliższe 7 dni
    (plan dnia)” (ID w mapie – jeden mały odczyt; „📅 Oś czasu” tylko do ostrzeżenia pogodowego niżej) – kroki z Terminem w 7 dni i zaległe, kroki startujące jutro (krok „bez odwrotu” → przypomnij bramkę wg `etap`, bez zadania), dostawy
    jutro i „dostawa po terminie” (🧱 z Dostawą przed dniem planu, Status nadal „Zamówione” / „Potwierdzone”), 🧱 Zakupy budowy z „Zamówić do” w oknie przypomnienia wg Rodzaju (`zakupy`, „Przypomnienie”) lub po terminie, Status przed

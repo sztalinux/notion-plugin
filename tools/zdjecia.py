@@ -13,7 +13,7 @@
 Reguły (pełny opis dla agentów: plugins/dom-budowa/skills/dziennik/references/zdjecia-i-kopia.md):
 - Nic nie jest kasowane ani nadpisywane. Kolizja nazwy przy innej treści → dopisek `_2`; ta sama nazwa i rozmiar →
   duplikat do `_Archiwum/Duplikaty/`. Pusty folder po rozłożeniu → `_Archiwum/Puste foldery/`.
-- Data zrobienia: EXIF (tylko lokalnie, `mdls`) → nazwa pliku z telefonu (PXL_ w UTC, IMG_/VID_/RRRRMMDD_ lokalnie) →
+- Data zrobienia: EXIF (tylko lokalnie, `mdls`) → nazwa pliku z telefonu (PXL_ w UTC, IMG_/VID_/RRRRMMDD_ lokalnie, sam dzień PXL_RRRRMMDD_…) →
   data wgrania (`createdTime`, UTC → czas polski) ze znakiem `~` w prefiksie („data wg wgrania”).
 - Plik zmieniony mniej niż 15 min temu albo folder z takim plikiem → następny przebieg (wgrywanie trwa).
 - Folder w `_nowe`: nazwa → krok (numer albo słowa z nazwy kroku); słowa „przed zakryciem”, „z miarą”… → podfolder
@@ -77,6 +77,8 @@ NAZWY_TELEFONU = [  # (wzorzec, strefa: "utc" | "lokalna")
     (re.compile(r"^(?:IMG|VID|PANO|MVIMG)_(\d{8})_(\d{6})"), "lokalna"),
     (re.compile(r"^(?:Screenshot_)?(\d{8})[_-](\d{6})"), "lokalna"),
     (re.compile(r"(\d{4}-\d{2}-\d{2}) at (\d{2})\.(\d{2})\.(\d{2})"), "lokalna"),  # komunikatory
+    # nazwa zmieniona ręcznie na telefonie: sam dzień bez godziny (PXL_20261118_faktura…) – dzień lokalny (26.11.2026)
+    (re.compile(r"^(?:PXL|IMG|VID|PANO|MVIMG)_(\d{8})(?=[_.\- ]|$)"), "dzien"),
 ]
 
 
@@ -124,6 +126,8 @@ def data_z_nazwy(nazwa: str):
         try:
             if len(m.groups()) == 4:
                 d = datetime.strptime(f"{m.group(1)} {m.group(2)}{m.group(3)}{m.group(4)}", "%Y-%m-%d %H%M%S")
+            elif strefa == "dzien":
+                d = datetime.strptime(m.group(1), "%Y%m%d").replace(hour=12)  # południe – dzień się nie przesunie
             else:
                 d = datetime.strptime(m.group(1) + m.group(2), "%Y%m%d%H%M%S")
         except ValueError:
@@ -255,6 +259,9 @@ def planuj(lista: dict, konf: dict, teraz: datetime = None) -> dict:
             if temat:
                 return f"{ZDJECIA}/{bezpieczna(temat)}", "zdjęcie", "temat"
             return None, None, powod
+        rodzaj, wzor = rodzaj_dokumentu(re.sub(r"\.[^.]+$", "", nfc(plik.get("nazwa", ""))))
+        if rodzaj:  # luźny plik ze słowem dokumentu w nazwie (np. „PXL_20261118_faktura_beton”) – jak folder dokumentu
+            return wzor.format(r=(data or "")[:4] or "bez daty", etap=etap), rodzaj, "dokument (nazwa pliku): " + rodzaj
         if not data:
             return None, None, "brak daty"
         dzien = dni.get(data) or []

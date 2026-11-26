@@ -66,6 +66,17 @@ class Daty(unittest.TestCase):
         # 23:30 UTC 17.11 = 00:30 18.11 w Polsce – dzień liczony po polsku
         self.assertEqual(Z.data_zrobienia({"nazwa": "PXL_20261117_233000123.jpg"})[:2], ("2026-11-18", False))
 
+    def test_sam_dzien_w_nazwie(self):
+        # nazwa zmieniona na telefonie, bez godziny – dzień z nazwy, nie z daty wgrania (26.11.2026)
+        self.assertEqual(Z.data_zrobienia({"nazwa": "PXL_20261118_faktura_beton.jpg", "utworzono": "2026-11-24T06:02:16Z"})[:2],
+                         ("2026-11-18", False))
+        self.assertEqual(Z.data_zrobienia({"nazwa": "PXL_20261118.jpg"})[0], "2026-11-18")
+
+    def test_luzna_faktura_po_nazwie_pliku(self):
+        p = plan([plik("PXL_20261118_faktura_beton.jpg")])
+        self.assertEqual(p["ruchy"][0]["do"], "Faktury/2026")
+        self.assertEqual(p["ruchy"][0]["rodzaj"], "faktura")
+
     def test_img_lokalny(self):
         self.assertEqual(Z.data_zrobienia({"nazwa": "IMG_20261118_081500.heic"})[0], "2026-11-18")
 

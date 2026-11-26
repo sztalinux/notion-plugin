@@ -35,7 +35,8 @@ Gdzie co jest opisane:
 9. **Zdjęcia oglądaj tylko w trzech sytuacjach**: luźne pliki bez folderu, których nie da się przypisać po dniu;
    kontrola ujęć przed zakryciem (miara, ostrość, komplet); wyszukiwanie na prośbę. Najwyżej 10 zdjęć na przebieg.
 10. **Pierwsze uruchomienie każdego nowego polecenia – na sucho**: plan ruchów do zatwierdzenia przez inwestora; dopiero
-    po „ok” wykonanie. Do odwołania dotyczy to też każdego przebiegu bez inwestora (sekcja 6).
+    po „ok” wykonanie. Przegląd nocny (bez inwestora): pierwszy plan na sucho do „ok”, potem sam wykonuje tylko pewne
+    ruchy zdjęć (sekcja 8, „Przebieg nocny”; decyzja inwestora 26.11.2026).
 
 ## 2. Układ na Dysku (`Mój dysk/Dom`) i na Macu
 
@@ -65,7 +66,7 @@ z aplikacją albo AirDropem (kopia lokalna, gdy jest miejsce na dysku).
 
 **Data zrobienia** (dzień zawsze wg czasu polskiego, także po północy): EXIF (tylko lokalnie, `mdls`) → nazwa pliku
 z telefonu (`PXL_RRRRMMDD_GGMMSS` – czas UTC; `IMG_`/`VID_`/`RRRRMMDD_GGMMSS`, komunikatory „RRRR-MM-DD at …” – czas
-lokalny) → data wgrania (`createdTime` Dysku, UTC) z `~` w prefiksie: `RRRR-MM-DD~_nazwa` = „data wg wgrania”.
+lokalny; nazwa zmieniona na telefonie z samym dniem, np. `PXL_RRRRMMDD_faktura…` – ten dzień) → data wgrania (`createdTime` Dysku, UTC) z `~` w prefiksie: `RRRR-MM-DD~_nazwa` = „data wg wgrania”.
 Gdy plik z `~` wróci do `_nowe` i wyjdzie dokładna data (aplikacja, EXIF), skrypt poprawia `~` na nią; plików już
 rozłożonych nie rusza. Zdjęcie z komunikatora albo zrzut
 ekranu zwykle nie ma daty zrobienia – inwestor wgrywa oryginały z galerii.
@@ -83,7 +84,7 @@ sumy kontrolnej – porównanie po nazwie i rozmiarze.)
 3. temat z listy tematów (`kroki.json`, pole `tematy`) → `Zdjęcia/<Temat>/`;
 4. nic → zostaje w `_nowe`, pytanie.
 
-**Luźne pliki w `_nowe`**: w Dzienniku budowy z dnia zrobienia jest dokładnie jeden krok → ten krok; nie ma wpisu albo
+**Luźne pliki w `_nowe`**: słowo dokumentu w nazwie pliku (jak w pkt 1, np. `PXL_…_faktura_beton`) → dokument (sekcja 4); dalej: w Dzienniku budowy z dnia zrobienia jest dokładnie jeden krok → ten krok; nie ma wpisu albo
 są dwa kroki → zostają, pytanie z propozycją (w sesji z inwestorem możesz obejrzeć zdjęcie – zasada 9).
 
 **Kroki** (`.dom/zdjecia/kroki.json`, zapisuje asystent przed każdym planem):
@@ -139,7 +140,7 @@ brak → paczka. Czat i telefon bez konektora nie czytają dokumentów z Dysku �
 | Claude Code z folderem budowy | tak – plan, zatwierdzenie, ruchy konektorem lub skryptem | tak (z odczytem pliku) | tak (`kopia.py`) | tak |
 | Czat / telefon z konektorem Dysku | tylko plan słowami i ruchy po „ok” inwestora; bez skryptu reguły z sekcji 3 stosujesz ręcznie, ruchy wpisujesz do komunikatu 🔔 „do zapisania w dzienniku ruchów” | tak, bez wydatku | nie | tak |
 | Czat bez konektora | nie – powiedz, gdzie wgrać (sekcja 9) | nie | nie | nie |
-| Przebieg bez inwestora (automat launchd na Macu) | **na razie nie** – nie wiadomo, czy ma konektor Dysku (test T9); tylko licznik „w `_nowe` czeka n” w przeglądzie, jeśli konektor jest | nie | `kopia.py stan --cicho` (sama informacja) | nie |
+| Przebieg bez inwestora (automat launchd na Macu; konektor Dysku jest – T9, 26.11.2026) | przegląd nocny: pewne ruchy zdjęć i duplikatów po zgodzie (sekcja 8, „Przebieg nocny”); szybki i tygodniowy – nie (tygodniowy: liczba w `_nowe`) | nie – czeka w `_nowe`, linia w 🔔 `zdjecia` | `kopia.py stan --cicho` (sama informacja) | tak (ślad po ruchach) |
 | Inne AI | tylko odczyt reguł i podpowiedź, gdzie wgrać | nie | nie | nie |
 
 ## 7. Kopia dokumentów Mac → Dysk – `tools/kopia.py`
@@ -206,6 +207,26 @@ od razu. Brak `kroki.json` → zbuduj go (sekcja 3); bez kroków plan zostawia w
 6. `python3 tools/zdjecia.py slad <plan>` → ślad w Dzienniku budowy (sekcja 10, `dziennik` E).
 7. Pytania z planu → jeden komunikat 🔔 z kluczem `zdjecia` (aktualizowany, nie powielany).
 
+**Przebieg nocny** (przegląd wieczorny bez inwestora – `budowa/references/wieczorem.md`, krok 1). Przebieg ma konektor
+Dysku i zapis plików tylko w `.dom/zdjecia/`; nigdy `trash_file`, `share_file`, `copy_file`, `download_file_content`
+(zdjęć nie oglądasz – zasada 9 tylko z inwestorem), `zdjecia.py rozloz` ani `cofnij`.
+1. `python3 tools/zdjecia.py stan` – blokada (skrypt albo konektor) → pomiń do następnej nocy, bez komunikatu.
+2. Lista `_nowe` jak w kroku 2 wyżej; pusto → koniec. Odśwież `kroki.json` (sekcja 3), zapisz listę, potem
+   `python3 tools/zdjecia.py plan --lista <lista> --zablokuj`.
+3. **Pewne ruchy** = `rodzaj` „zdjęcie” albo „duplikat”, bez luźnego pliku z datą przybliżoną (`przyblizona` – `~`).
+   Reszta zostaje w `_nowe`: dokumenty (nazwa wymaga odczytu pliku – „dokument czeka, powiedz »rozłóż zdjęcia« w Claude
+   Code”) i pytania z planu → jeden blok 🔔 `zdjecia` (zasada 3).
+4. **Zgoda**: przeczytaj `.dom/zdjecia/nocny.json`. Brak pliku albo `"ruchy": false` → na sucho: pewne ruchy jako lista
+   w 🔔 `zdjecia` („rozłożę: n zdjęć → <krok>; …”), w „Co możesz zrobić”: „odpowiedz »ok« – od następnej nocy rozkładam
+   sam”; `zdjecia.py odblokuj`, koniec. Odpowiedź „ok” pod tym blokiem (każdy przebieg, `wpisy/references/pytania.md`, C.4)
+   → zapisz `nocny.json` = `{"ruchy": true, "od": "<RRRR-MM-DD>"}`, blok do „Przetworzone” (`→ zgoda, rozkłada przegląd
+   nocny`); „nie” → `{"ruchy": false}` i plany zostają na sucho.
+5. `"ruchy": true` → pewne ruchy konektorem jak w kroku 4 wyżej, potem
+   `python3 tools/zdjecia.py zapisz-ruchy <plan> --kto automat --tylko <id wykonanych>` i `python3 tools/zdjecia.py slad <plan>`
+   (krok 5–6). Błąd konektora → zatrzymaj się (zasada 7), wykonane zapisz, 🔔 `zdjecia`. Nic nie wykonano → `odblokuj`.
+6. Do przeglądu dnia jedna linia: „zdjęcia: rozłożono n (<kroki>), w `_nowe` czeka m” (oba zera → nic). „Cofnij ostatnie
+   rozłożenie” działa jak przy sesji (`--kto automat` w dzienniku ruchów).
+
 **„wgrałem fakturę”** – jak wyżej (folder „faktura …” w `_nowe` albo luzem), potem odczyt i nazwa wg sekcji 4; bez
 wydatku (o wydatek zapytaj jednym zdaniem – inwestor może chcieć go zapisać; wtedy `koszty` B).
 **„gdzie są zdjęcia zbrojenia”** – dopasuj krok w Harmonogramie (kilka pasuje → wymień je z linkami) i podaj link z pola
@@ -239,8 +260,8 @@ z dowiązaniami.
 2. Tego samego dnia: Dysk → `Dom/Zdjęcia` → folder kroku albo nowy folder w `_nowe` z nazwą, co na nich jest
    („zbrojenie płyty z miarą”). Zawsze oryginały z galerii, nie przez komunikator.
 3. Faktura papierowa, WZ, wpis kierownika: zdjęcie do `_nowe`, najlepiej w folderze „faktura …”, „WZ …”, „dziennik KB”.
-4. Powiedz w Claude Code „rozłóż zdjęcia” (przebiegi automatyczne jeszcze tego nie robią). Pytania i problemy pojawiają
-   się we „📝 Wpisach” pod 🔔.
+4. Zdjęcia rozkłada sam przegląd nocny (pewne dopasowania, po pierwszym „ok” – sekcja 8); od razu albo dokumenty:
+   „rozłóż zdjęcia” w Claude Code. Pytania i problemy pojawiają się we „📝 Wpisach” pod 🔔.
 5. Szukanie: Dysk → Zdjęcia → etap → krok; Dziennik budowy → dzień → link; data w wyszukiwarce Dysku.
 6. Kopia dokumentów bez aplikacji: przeciągnij folder z datą z `_Na Dysk` (Mac) do `Dom/_Kopie` (Dysk w przeglądarce)
    i napisz „wgrałem kopię”.
@@ -272,6 +293,7 @@ z dowiązaniami.
 | dwa możliwe kroki albo żaden | zostaje, pytanie | `test_remis_nie_zgaduje`, `test_zaden` |
 | zdjęcia prywatne wgrane przez pomyłkę | brak dopasowania → zostają z pytaniem | `test_prywatne_zostaja` |
 | zdjęcie dokumentu w folderze zdjęć i odwrotnie | słowa folderu decydują; luźne – agent ogląda (zasada 9) | `test_faktura` |
+| nazwa zmieniona na telefonie: sam dzień, słowo dokumentu (`PXL_20261118_faktura_beton.jpg`) | dzień z nazwy; luźny plik → dokument | `test_sam_dzien_w_nazwie`, `test_luzna_faktura_po_nazwie_pliku` |
 | brak wpisu Dziennika z dnia; dwa wpisy z dnia | luźne czekają z pytaniem; ślad: wpis minimalny / pasujący | `test_luzem_brak_wpisu_dnia` |
 | inwestor sam przeniósł zdjęcia | skrypt pomija brakujące źródło; konektor – plik nie jest już w `_nowe` | `test_rozloz_cofnij` |
 | wgrywanie trwa | folder czeka do następnego przebiegu | `test_wgrywanie_trwa` |
@@ -293,7 +315,7 @@ z dowiązaniami.
 ## 12. Testy i stan wdrożenia
 
 Testy na żywo (specyfikacja POM-1, sekcja 10): T1 zapis konektorem – zaliczony 10.11.2026. T2/T3 (aplikacja Dysku,
-dostęp automatu) – czekają na działającą aplikację. T4–T8 i T9 (czy przebieg bez inwestora ma konektor Dysku) – do zrobienia
-przy pierwszych zdjęciach. Do czasu T9 przebiegi automatyczne nie rozkładają zdjęć (sekcja 6).
+dostęp automatu) – czekają na działającą aplikację. T9 (przebieg bez inwestora ma konektor Dysku) – zaliczony 26.11.2026
+(odczyt `_nowe` przez `claude -p`; przenoszenie w przebiegu – pierwszy nocny po zgodzie). T4–T8 – przy pierwszych zdjęciach.
 Kryteria odbioru (20 zdjęć trzema sposobami, faktura, zmieniony PDF, próba bez aplikacji, kontrola Dysku, liczby plików)
 – przy pierwszym dniu z dużą liczbą zdjęć, z inwestorem.

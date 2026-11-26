@@ -4,6 +4,21 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.22.0] – 2026-11-26
+
+- **Przegląd nocny rozkłada zdjęcia z `Zdjęcia/_nowe`** (test T9 zaliczony: przebieg `claude -p` na Macu ma konektor
+  Dysku). Tylko pewne ruchy – zdjęcia dopasowane do kroku albo tematu i duplikaty; dokumenty, luźne pliki z datą
+  przybliżoną i pytania zostają w `_nowe` z blokiem 🔔 `zdjecia`. Pierwszy plan na sucho do „ok” inwestora, potem sam
+  (zgoda w `.dom/zdjecia/nocny.json`). Bez kosza, udostępniania, kopii i pobierania plików (`zdjecia-i-kopia.md`, 1, 6, 8, 9, 12;
+  `budowa/references/wieczorem.md`, krok 1). Automat Maca: pozwolenia Dysku i `zdjecia.py` w `przeglad.py` (repo automatów).
+- `zdjecia.py`: nazwa zmieniona na telefonie z samym dniem (`PXL_RRRRMMDD_…`) daje dzień zrobienia zamiast daty wgrania;
+  luźny plik ze słowem dokumentu w nazwie („faktura”, „WZ”…) idzie jak dokument (testy `test_sam_dzien_w_nazwie`,
+  `test_luzna_faktura_po_nazwie_pliku`).
+
+## ja [1.28.1] – 2026-11-26
+
+- `przeglad-tygodnia-osobisty`: liczba plików w `Zdjęcia/_nowe` z konektora Dysku (automat go ma); rozkłada przegląd nocny.
+
 ## dom-budowa [3.21.1] – 2026-11-26
 
 - **Kosztorys – nowy stan „Przygotowanie do budowy”** (przed stanem zero): etap 01 nie wlicza się już do sumy stanu zero
