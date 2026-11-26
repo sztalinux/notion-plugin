@@ -16,7 +16,7 @@ Mechanizm: `docs/wydatki-arkusz.md` (akcja Apps Script „dodaj_pozycje”, kod 
    - typ – Materiał / Robocizna / Sprzęt / Usługa / Formalności (zwykle typ wydatku); jednostka – kpl, m³, m², mb, kg, t, szt,
      h, dzień, mies., l (rzecz liczona w sztukach albo całość – kpl);
    - **żaden etap nie pasuje** → nowy etap: numer z zakładki „Szacunek AI 10.2026” (etap szacunku, np. wykończenie 40–46),
-     a gdy go tam nie ma – kolejny wolny (`references/arkusze.md`, Etapy); nazwa etapu i stan (Koszty ogólne, Stan zero, SSO,
+     a gdy go tam nie ma – kolejny wolny (`references/arkusze.md`, Etapy); nazwa etapu i stan (Koszty ogólne, Przygotowanie do budowy, Stan zero, SSO,
      Deweloperski, Wykończenie, Teren): „**Nowy etap 41 Etap Y (Wykończenie) i pozycja: 41 | Pozycja X | Materiał | kpl – tak?**”.
 3. Odpowiedź (`pytania.md`, A – „Odczyt odpowiedzi”): „tak” / „ok” = propozycja; sama nazwa = propozycja z tą nazwą; inny
    etap, typ albo jednostka w odpowiedzi – weź je. Potem strona wydatku jak w `koszty` B.4: Pozycja **pusta**, pole

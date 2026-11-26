@@ -4,6 +4,12 @@ Od 15.10.2026 repo ma dwa pluginy – nagłówek wpisu: `## <plugin> [wersja] �
 Starsze wpisy `## [wersja]` dotyczą `dom-budowa`. Wersjonowanie semver osobno dla każdego pluginu:
 PATCH = poprawka treści, MINOR = nowa procedura/pole, MAJOR = zmiana struktury danych.
 
+## dom-budowa [3.21.1] – 2026-11-26
+
+- **Kosztorys – nowy stan „Przygotowanie do budowy”** (przed stanem zero): etap 01 nie wlicza się już do sumy stanu zero
+  ani do jego rezerwy. `wydatki.py` (STANY, nowa pozycja / nowy etap) i `nowa-pozycja.md` znają nowy stan;
+  `arkusze.md` opisuje układ Podsumowania i pułapkę tabel „wg stanów” (SUMIFS po nazwie stanu).
+
 ## ja [1.28.0] – 2026-11-24 (przegląd jakości)
 
 Przegląd jakości całego harnessu (sześć obszarów, każda poprawka po niezależnej recenzji). Bez nowych procedur.

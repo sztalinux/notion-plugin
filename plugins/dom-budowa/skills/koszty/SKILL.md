@@ -37,6 +37,7 @@ Układ arkuszy i kolumn: `references/arkusze.md`. Pola bazy 💸 Wydatki: `notat
    „Do zapłaty ekipie”).
 4. Dla stanu zero podawaj podział z Podsumowania: materiał / ekipa / inne per etap (płyta, ściany, izolacje, strop…),
    plan, wydane i szacunek AI (kolumna obok; całość budowy wg stanów – tabela „Szacunek AI całej budowy”). Na końcu 3 największe odchylenia z komentarzem i suma wydatków stanu zero bez typu (psuje podział).
+   Etap 01 (Przygotowanie do budowy) to osobny stan przed stanem zero – podawaj go osobno, nie w sumie stanu zero.
 
 ## B. Wydatek (Dziennik, rozmowa, faktura, paragon, przelew)
 

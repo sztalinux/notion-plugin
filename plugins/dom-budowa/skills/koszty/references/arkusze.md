@@ -1,4 +1,4 @@
-# Arkusz „Kosztorys budowy” – układ (stan: 2026-11-18)
+# Arkusz „Kosztorys budowy” – układ (stan: 2026-11-26)
 
 Arkusz Google prowadzi inwestor i nie jest wgrywany ponownie (zmiany układu: `docs/wydatki-arkusz.md`, sekcja 8); kopia wartości do analiz: `Koszty/Kosztorys_google.json` w folderze budowy (`tools/wydatki.py
 pobierz`). Jeśli arkusz wygląda inaczej niż tu opisano – pracuj na faktycznym układzie i zgłoś aktualizację tego pliku
@@ -9,7 +9,8 @@ bez zmiany `tools/wydatki.py` i kodu Apps Script (`docs/wydatki-arkusz.md`).
 Instrukcja · Podsumowanie · Wydatki ⚙ · Cennik ⚙ · Etapy · Kosztorys ⚙ · Szacunek AI 10.2026 (pełna wycena AI, wartości).
 
 ## Etapy
-Stan zero = etapy z umowy z ekipą: 01 Przygotowanie i obsługa · 02 Droga dojazdowa · 03 Płyta fundamentowa · 04 Ściany
+Przygotowanie do budowy (stan przed stanem zero, od 26.11.2026): 01 Przygotowanie i obsługa – poza sumą stanu zero
+i jego rezerwą. Stan zero = etapy z umowy z ekipą: 02 Droga dojazdowa · 03 Płyta fundamentowa · 04 Ściany
 piwnicy · 05 Izolacje i zasypka · 06 Strop i schody · 07 Rozszalowanie i sprzątanie · 08 Rezerwa i roboty dodatkowe.
 Koszty ogólne (stan w Etapy kol. B; do 10.11.2026 „Organizacja”): P1–P4 (sprzed budowy), 15 Obsługa budowy – kolejne etapy, 16 Narzędzia. Teren: 50 Przyłącza, zbiorniki, zjazd.
 Wykończenie: 47 Wyposażenie domu (meble – zakupy na zapas; od 18.11.2026). Numer nowego etapu bierz z zakładki szacunku AI
@@ -47,9 +48,12 @@ powiązań” w Podsumowaniu (pod nią trzy wiersze kontroli). Zmiana tekstu = a
   Q Cena brutto za jednostkę bazową (t → kg) · H Dostawca ·
   I Pozycja kosztorysu (lista) · J Status (Oferta / Wybrana / Odrzucona) · K Najtańsza (formuła ★, porównanie brutto w obrębie
   pozycji) · L Ważna do · M Uwagi · N Źródło (`notion:<id>` = wycena z kolejki; ponowne wysłanie aktualizuje wiersz).
-- **Podsumowanie!B** – rezerwa na stan zero (%). Kol. M–O – szacunek AI etapów stanu zero (materiał / robocizna / razem); tabela H:M
+- **Podsumowanie!B** – rezerwa na stan zero (%). Górna tabela pokazuje też wiersz 01 (kursywa, nad kreską) – „STAN ZERO razem”
+  liczy wiersze 02–08. Kol. M–O – szacunek AI etapów stanu zero (materiał / robocizna / razem); tabela H:M
   „Szacunek AI całej budowy wg stanów” (szacunek materiał / robocizna / razem, plan, wydane) i pod nią „Kontrola powiązań”
-  (PLAN Kosztorys − Etapy, WYDANE Wydatki − Etapy, liczba ⚠ w Kosztorysie – wszystko powinno dawać 0).
+  (PLAN Kosztorys − Etapy, WYDANE Wydatki − Etapy, liczba ⚠ w Kosztorysie – wszystko powinno dawać 0). Obie tabele „wg stanów”
+  sumują Etapy po nazwie stanu (SUMIFS) – nowy stan w Etapy kol. B wymaga wiersza w obu tabelach i na liście walidacji
+  Etapy kol. B, inaczej znika z RAZEM bez ostrzeżenia kontroli.
 - **Szacunek AI 10.2026!A:L** – A Stan · B Etap (wycena AI) · C Lp · D Pozycja · E Typ · F Ilość · G Jedn. · H Cena · I Wartość AI ·
   J Etap kosztorysu · K Pozycja kosztorysu (J–K: przypisanie, kremowe; uzupełnia asystent) · L Uwagi.
 
