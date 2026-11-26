@@ -64,7 +64,11 @@ powiązań” w Podsumowaniu (pod nią trzy wiersze kontroli). Zmiana tekstu = a
 ## Trzy warstwy liczb
 PLAN = Kosztorys kol. G (sumy w Etapy D–G); UMÓWIONE = Etapy kol. C (umowa z ekipą) i wybrane oferty;
 WYDANE = Wydatki „Zrealizowane”; zobowiązania = Wydatki „Do zapłaty” i Etapy kol. N.
-Kolory: każdy etap ma własny pastel (pasek w kol. A Kosztorysu i Etapów, kol. Etap w Wydatkach); materiał – brzoskwiniowy,
+Kolory stanów (od 26.11.2026; tło / tekst): Koszty ogólne e7e9ee / 4a5568 · Przygotowanie do budowy dcebdd / 3f6b47 ·
+Stan zero f1e6d2 / 7a5c2e · SSO d9e6f2 / 2f5d8a · Deweloperski e4ddf0 / 5b4b8a · Wykończenie f2dce3 / 8a3d57 · Teren d5ecea / 2e6e68.
+Etapy kol. A:B – formatowanie warunkowe wg kol. B (nowy etap dostaje kolor sam); Podsumowanie – nagłówek bloku (tło + kreska
+w kolorze tekstu), kol. A etapów bloku i wiersze tabeli „wg stanów” (wpisane, nowy blok dostaje kolor swojego stanu).
+Kosztorys kol. A i kol. Etap w Wydatkach – nadal własny pastel każdego etapu. Materiał – brzoskwiniowy,
 ekipa – zielony, inne – fioletowy, plan – niebieski, wydane – piaskowy, pozostało – miętowy, zakończone – zielony znacznik w kol. K.
 Wydatki: wiersze po dacie, odcień wiersza wg kwoty (do 500 / 500–5 000 / 5 000–50 000 / 50 000+ zł), niebieski = „Do zapłaty”,
 żółty = ⚠ w Kontroli; Status, Etap i Typ jako kolorowe pola. Cennik: wybrana oferta – zielony wiersz, odrzucona – szary tekst.

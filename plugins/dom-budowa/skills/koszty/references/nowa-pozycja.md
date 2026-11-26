@@ -89,7 +89,8 @@ z pierwszej wiadomości. Polecenia w katalogu repo harnessu.
       formuły i format z wiersza etapu wyżej (odwołania do nowego wiersza Etapów, K = F − J), zakresy SUM w wierszu „razem”
       popraw na cały blok. Stan bez bloku → nowy blok przed wierszem „Do zapłaty…”, w kolejności stanów (Przygotowanie,
       Stan zero, SSO, Deweloperski, Wykończenie); wzór – blok Wykończenia: nagłówek, etap (kol. A – format z Etapów),
-      „<Stan> razem”, „Rezerwa na <stan>” (B 10%), „<STAN> z rezerwą”; formatowanie warunkowe kol. K rozciągnij na blok.
+      „<Stan> razem”, „Rezerwa na <stan>” (B 10%), „<STAN> z rezerwą”; nagłówek i kol. A etapów w kolorze stanu
+      (`references/arkusze.md`, kolory stanów); formatowanie warunkowe kol. K rozciągnij na blok.
       Do „Bloki stanów − tabela” (Kontrola powiązań) dopisz `+ABS(F<razem>-B<wiersz stanu>)+ABS(J<razem>-C<wiersz stanu>)`.
       Kontrola: „Stany: tabela − Etapy” i „Bloki stanów − tabela” = 0. Bez konektora (krok 3) blok pomiń – tabela „wg stanów”
       i tak liczy stan; w meldunku dopisz „blok w Podsumowaniu – w sesji z konektorem”.
