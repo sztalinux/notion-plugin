@@ -54,10 +54,10 @@ powiązań” w Podsumowaniu (pod nią trzy wiersze kontroli). Zmiana tekstu = a
   i wykończeniu także „Rezerwa na <stan>” (B – %, kremowe) i „… z rezerwą”. Koszty ogólne i Teren nie mają bloku. Pod blokami
   „Do zapłaty”, legenda i jedna tabela „Cała budowa wg stanów” (wszystkie stany: PLAN, WYDANE, pozostało, szacunek AI
   materiał / robocizna / razem – SUMIFS po nazwie stanu z Etapy kol. B i z zakładki szacunku). Nowy stan w Etapy kol. B
-  wymaga wiersza w tej tabeli i na liście walidacji Etapy kol. B. Obok „Kontroli danych” – „Kontrola powiązań” (automat
-  czyta trzy pierwsze wiersze po etykiecie): PLAN Kosztorys − Etapy, WYDANE Wydatki − Etapy, liczba ⚠ w Kosztorysie, potem
+  wymaga wiersza w tej tabeli i na liście walidacji Etapy kol. B. Pod „Kontrolą danych” (kol. A–C) – „Kontrola powiązań”
+  (automat czyta trzy pierwsze wiersze po etykiecie): PLAN Kosztorys − Etapy, WYDANE Wydatki − Etapy, liczba ⚠ w Kosztorysie, potem
   „Stany: tabela − Etapy” i „Bloki stanów − tabela” (suma bloku vs wiersz stanu, łapie etap bez wiersza w bloku) – wszystko 0.
-  Wykres pod spodem – etapy stanu zero. Dodanie etapu lub bloku: `references/nowa-pozycja.md`, C.2.7.
+  Wykres pod kontrolami – etapy stanu zero. Styl: nagłówek bloku = podkreślony tytuł, „razem” = jasny szaroniebieski pasek. Dodanie etapu lub bloku: `references/nowa-pozycja.md`, C.2.7.
 - **Szacunek AI 10.2026!A:L** – A Stan · B Etap (wycena AI) · C Lp · D Pozycja · E Typ · F Ilość · G Jedn. · H Cena · I Wartość AI ·
   J Etap kosztorysu · K Pozycja kosztorysu (J–K: przypisanie, kremowe; uzupełnia asystent) · L Uwagi.
 
